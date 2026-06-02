@@ -1,0 +1,60 @@
+.flex {
+  display: flex;
+}
+
+.flex-all {
+  flex: 1;
+}
+
+.fd-column {
+  flex-direction: column;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+.jc-left {
+  justify-content: left;
+}
+
+.ai-center {
+  align-items: center;
+}
+
+.jc-space-between {
+  justify-content: space-between;
+}
+
+.jc-end {
+  justify-content: end;
+}
+
+.flex-warp {
+  flex-wrap: wrap;
+}
+
+.flex-ai-center{
+  display: flex;
+  align-items: center;
+}
+
+.flex-jc-ai-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-align {
+  text-align: center;
+}
+
+// 鼠标样式
+.pointer {
+  cursor: pointer;
+}
+
+// 鼠标样式 禁止点击
+.notAllowed {
+  cursor: not-allowed !important; // 表示一个红色的圈加一个斜杠
+}

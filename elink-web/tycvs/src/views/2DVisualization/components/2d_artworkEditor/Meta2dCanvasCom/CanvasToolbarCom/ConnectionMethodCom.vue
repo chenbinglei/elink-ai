@@ -1,0 +1,69 @@
+<template>
+  <div class="connectionMethodCom">
+    <template v-for="(item,index) in list" :key="index">
+      <div class="content_list_li" @click="clickItemFun(item)">
+        <div class="content_list_li_left">{{ item.name }}</div>
+        <div class="content_list_li_right">
+          <span :class="item.iconName" class="iconfont"></span>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+import {useStore} from "vuex";
+import {lineNameArray} from "@/utils/publicParam";
+import {reactive, toRefs, defineComponent, computed, getCurrentInstance} from "vue";
+
+export default defineComponent({
+  name: 'ConnectionMethodCom',
+  setup() {
+
+    const store = useStore();
+    const {emit} = getCurrentInstance();
+
+    const canvasMeta2d = computed(() => {
+      return store.state.meta2d.canvasMeta2d;
+    });
+
+    const that = reactive({
+      list: lineNameArray
+    })
+
+    const clickItemFun = (data) => {
+      canvasMeta2d.value.setOptions({ drawingLineName: data.fieldName });
+      emit("changEvent",{ fieldName: "connection—method",iconName: data.iconName });
+    }
+
+    return {...toRefs(that), clickItemFun, canvasMeta2d}
+  }
+})
+</script>
+<style lang="scss" scoped>
+.connectionMethodCom {
+  width: 100%;
+
+  .content_list_li {
+    height: 35px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color);
+
+    .content_list_li_left {
+      font-size: 12px;
+    }
+
+    .iconfont {
+      font-size: 28px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: var(--el-menu-hover-bg-color);
+    }
+  }
+}
+</style>

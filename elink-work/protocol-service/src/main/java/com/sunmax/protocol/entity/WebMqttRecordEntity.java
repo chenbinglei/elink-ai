@@ -1,0 +1,66 @@
+package com.sunmax.protocol.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+
+import java.time.LocalDateTime;
+
+import static javax.persistence.GenerationType.AUTO;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "b_web_mqtt_record")
+public class WebMqttRecordEntity {
+
+    /**
+     * 主键id
+     */
+    @Id
+    @Column(name = "id", columnDefinition = "varchar(32) comment '主键id'")
+    @GeneratedValue(strategy = AUTO, generator = "idGenerator")
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    private String id;
+
+    /**
+     * 主题
+     */
+    @Column(name = "topic", columnDefinition = "varchar(255) comment '主题'")
+    private String topic;
+
+    /**
+     * 设备编号
+     */
+    @Column(name = "device_code", columnDefinition = "varchar(64) comment '设备编号'")
+    private String deviceCode;
+
+    /**
+     * 数据内容
+     */
+    @Column(name = "content", columnDefinition = "longtext comment '数据内容'")
+    private String content;
+
+    /**
+     * 报文类型 0-发送 1-接收
+     */
+    @Column(name = "type", columnDefinition = "tinyint(1) NOT NULL comment '报文类型 0-发送 1-接收'")
+    private Integer type;
+
+    /**
+     * 创建时间
+     */
+    @CreatedDate
+    @Column(name = "create_time", columnDefinition = "datetime(0) NOT NULL comment '创建时间'")
+    private LocalDateTime createTime;
+
+}

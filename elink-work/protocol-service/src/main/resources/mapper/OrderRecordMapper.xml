@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunmax.protocol.mapper.OrderRecordMapper">
+
+    <select id="countPileOrderSumData" parameterType="java.util.List" resultType="com.sunmax.protocol.model.OrderSumModel">
+        SELECT
+        pile_code pileCode,
+        gun_code gunCode,
+        COUNT(*) totalCount,
+        SUM(total_qt) totalQt,
+        SUM(total_cost) totalCost,
+        SUM(j_qt) jQt,
+        SUM(f_qt) fQt,
+        SUM(p_qt) pQt,
+        SUM(g_qt) gQt
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY pile_code, gunCode
+    </select>
+
+</mapper>

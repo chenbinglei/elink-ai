@@ -1,0 +1,79 @@
+server:
+  port: 60002
+  servlet:
+    context-path: /system
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    #mysql 数据库配置
+    mysql-server:
+      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://${MYSQL_HOST:121.41.109.130}:13006/sunos-system?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+      username: root
+      password: ${MYSQL_PASSWORD}
+      hikari:
+        minimum-idle: 1
+        idle-timeout: 600000
+        maximum-pool-size: 10
+        auto-commit: true
+        pool-name: MyHikariCP
+        max-lifetime: 1800000
+        connection-timeout: 30000
+        connection-test-query: SELECT 1
+    sunos-log:
+      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://${MYSQL_HOST:121.41.109.130}:13006/sunos-log?serverTimezone=GMT%2B8&autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      username: root
+      password: ${MYSQL_PASSWORD}
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL55Dialect
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true         #生成统计信息
+        jdbc.batch_size: 50                #开启批次储存,一批次储存量为10,如有100条数据则储存十次
+
+  redis:
+    port: 6379
+    host: ${MYSQL_HOST:121.41.109.130}
+    password: ${REDIS_PASSWORD}
+    timeout: 60s
+    database: 1
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 10
+        # 连接池中的最大空闲连接
+        max-idle: 100
+        # 连接池的最大数据库连接数
+        max-active: 200
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 1000
+mybatis:
+  typeAliasesPackage: com.taosdata.jdbc.springbootdemo.domain
+  call-setters-on-nulls: true #设置查询字段为空时，也返回该字段
+  map-underscore-to-camel-case: true
+
+security:
+  oauth2:
+    client:
+      client-id: sunos-client
+      client-secret: sunos-client
+      access-token-uri: http://localhost:60001/sauth/oauth/token
+      user-authorization-uri: http://localhost:60001/sauth/oauth/authorize
+    resource:
+      token-info-uri: http://localhost:60001/sauth/oauth/check_token

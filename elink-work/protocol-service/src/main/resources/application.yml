@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: test
+  application:
+    name: sunos-protocol-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000

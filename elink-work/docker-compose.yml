@@ -1,0 +1,508 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --requirepass 123456 --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "123456", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  emqx1:
+    image: emqx/emqx:5.1.0
+    container_name: emqx1
+    environment:
+      - EMQX_NAME=emqx1
+      - EMQX_LOADED_MODULES=emqx_mod_acl_internal,emqx_mod_presence
+      - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
+      - EMQX_DASHBOARD__DEFAULT_PASSWORD=public
+      - TZ=Asia/Shanghai
+    ports:
+      - "1883:1883"
+      - "18083:18083"
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  emqx2:
+    image: emqx/emqx:5.1.0
+    container_name: emqx2
+    environment:
+      - EMQX_NAME=emqx2
+      - EMQX_LOADED_MODULES=emqx_mod_acl_internal,emqx_mod_presence
+      - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
+      - EMQX_DASHBOARD__DEFAULT_PASSWORD=public
+      - EMQX_LISTENERS__TCP__DEFAULT__BIND=2883
+      - EMQX_DASHBOARD__HTTP_PORT=28083
+      - TZ=Asia/Shanghai
+    ports:
+      - "2883:2883"
+      - "28083:28083"
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  nacos:
+    image: nacos/nacos-server:v2.1.0
+    container_name: nacos
+    environment:
+      - MODE=standalone
+      - JVM_XMS=256m
+      - JVM_XMX=512m
+      - JVM_XMN=256m
+      - TZ=Asia/Shanghai
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: auth-service
+    ports:
+      - "60001:60001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./auth-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/auth-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60001/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  sunmax-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: sunmax-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./sunmax-gateway/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms256m", "-Xmx256m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/sunmax-gateway-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:5000/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+
+  system-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: system-service
+    ports:
+      - "60002:60002"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./system-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/system-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60002/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  device-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: device-service
+    ports:
+      - "60003:60003"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./device-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/device-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60003/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  data-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: data-service
+    ports:
+      - "60004:60004"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+      - LD_LIBRARY_PATH=/usr/lib:/usr/local/taos/driver
+      - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+    volumes:
+      - ./data-service/target:/app/target:ro
+      - ./backups:/app/backups
+      - /usr/lib/libtaos.so.1:/usr/lib/libtaos.so.1:ro
+      - /usr/local/taos/driver/libtaos.so.3.0.7.1:/usr/local/taos/driver/libtaos.so.3.0.7.1:ro
+      - /etc/taos/taos.cfg:/etc/taos/taos.cfg:ro
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/data-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60004/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  protocol-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: protocol-service
+    ports:
+      - "60005:60005"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - WAIT_FOR_SERVICE=device-service
+      - WAIT_MAX_RETRIES=60
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./protocol-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/protocol-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      emqx1:
+        condition: service_healthy
+      device-service:
+        condition: service_started
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60005/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 8
+      start_period: 40s
+
+  crontab-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: crontab-service
+    ports:
+      - "60006:60006"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - WAIT_FOR_SERVICE=together-service
+      - WAIT_MAX_RETRIES=60
+      - TZ=Asia/Shanghai
+      - LD_LIBRARY_PATH=/usr/lib:/usr/local/taos/driver
+      - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+    volumes:
+      - ./crontab-service/target:/app/target:ro
+      - ./backups:/app/backups
+      - /usr/lib/libtaos.so.1:/usr/lib/libtaos.so.1:ro
+      - /usr/local/taos/driver/libtaos.so.3.0.7.1:/usr/local/taos/driver/libtaos.so.3.0.7.1:ro
+      - /etc/taos/taos.cfg:/etc/taos/taos.cfg:ro
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/scrontab-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      together-service:
+        condition: service_started
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60006/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 8
+      start_period: 40s
+
+  devops-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: devops-service
+    ports:
+      - "60007:60007"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./devops-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/devops-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60007/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  configure-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: configure-service
+    ports:
+      - "60008:60008"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./configure-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/configure-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      emqx1:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60008/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  together-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: together-service
+    ports:
+      - "60009:60009"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./together-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/together-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60009/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+  webapp-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: elink-base:latest
+    container_name: webapp-service
+    ports:
+      - "60010:60010"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - NACOS_HOST=192.168.2.158
+      - NACOS_PORT=8848
+      - SPRING_CLOUD_NACOS_DISCOVERY_IP=192.168.2.158
+      - SERVER_SHUTDOWN=graceful
+      - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
+      - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./webapp-service/target:/app/target:ro
+      - ./backups:/app/backups
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/webapp-service-exec.jar"]
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - elink-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60010/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+
+networks:
+  elink-network:
+    driver: bridge
+
+volumes:
+  redis-data:

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunmax.device.mapper.access.SiteInfoMapper">
+
+    <insert id="batchInsertSiteInfoList" parameterType="java.util.List">
+        INSERT INTO b_site_info
+        (`id`, `tenant_id`, `site_code`, `property_id`, `operator_id`, `site_name`, `site_status`, `site_describe`, `scenario_types`,
+         `site_model_id`, `site_readwrite_object`, `image_path`, `is_delete`, `source_type`, `create_time`)
+        VALUES
+        <foreach collection="siteInfoChangeVos" item="item" index="index" separator=",">
+            (#{item.id}, #{item.tenantId},#{item.siteCode},#{item.propertyId},#{item.operatorId},#{item.siteName},#{item.siteStatus}, #{item.siteDescribe}, #{item.scenarioTypes},#{item.siteModelId}, #{item.siteReadwriteObject},
+            #{item.imagePath}, #{item.isDelete}, #{item.sourceType}, NOW())
+        </foreach>
+    </insert>
+
+</mapper>

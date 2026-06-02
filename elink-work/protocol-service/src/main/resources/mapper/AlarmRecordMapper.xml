@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunmax.protocol.mapper.AlarmRecordMapper">
+
+    <select id="countDeviceAlarmNum" parameterType="java.util.List" resultType="com.sunmax.common.dto.protocol.AlarmNumDto">
+        SELECT
+            device_code deviceCode,
+            COUNT(*) alarmNum
+        FROM `b_alarm_record`
+        WHERE device_code IN
+        <foreach collection="deviceCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY device_code
+    </select>
+
+</mapper>

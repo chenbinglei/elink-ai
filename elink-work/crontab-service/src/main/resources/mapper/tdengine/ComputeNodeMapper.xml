@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sunmax.crontab.mapper.tdengine.ComputeNodeMapper">
+
+    <!--查询表是否存在-->
+    <select id="findTableIfExists" resultType="java.util.Map">
+        SHOW TABLES LIKE '${tableName}'
+    </select>
+
+    <!--创建超级表-->
+    <update id="createSuperTable">
+        CREATE STABLE IF NOT EXISTS ${stableName}
+        (
+        ts
+        TIMESTAMP,
+        result_value
+        FLOAT,
+        update_time
+        TIMESTAMP
+        )
+        TAGS
+        (`site_id` BINARY(32), `storage_id` BIGINT)
+    </update>
+
+    <!--删除表-->
+    <delete id="dropTable" parameterType="java.lang.String">
+        DROP TABLE IF EXISTS ${tableName}
+    </delete>
+
+    <!--查询超级表-->
+    <select id="findSTableIfExists" resultType="java.util.Map">
+        SHOW STABLES LIKE '${stableName}'
+    </select>
+
+    <!--创建节点表-->
+    <update id="createTaosTable" parameterType="java.lang.String">
+        CREATE TABLE IF NOT EXISTS ${tableName} USING ${stableName} TAGS
+        (
+            #{siteId},
+            #{storageId}
+        )
+    </update>
+
+    <!--根据时间间隔查询节点时间段数据-->
+    <select id="findNodeDataListByTimeInterval" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select
+            _WEND ts,
+            _WSTART firstTs,
+            last(result_value) resultValue,
+            first(result_value) firstResultValue
+        from ${tableName}
+        WHERE ts &gt;= #{startTime}
+          AND ts &lt;= #{endTime} INTERVAL (${timeInterval}) FILL (null)
+    </select>
+
+    <!--查询最新一条节点数据-->
+    <select id="findNodeLastDataByTableName" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select last(ts) ts, last(result_value) resultValue from ${tableName}
+    </select>
+
+    <!--根据时间段查询节点数据-->
+    <select id="findNodeDataByTime" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select
+            ts,
+            result_value resultValue
+        from ${tableName}
+        WHERE ts &gt;= #{startTime}
+          AND ts &lt;= #{endTime}
+    </select>
+
+    <!--查询最新一条节点临近值数据-->
+    <select id="findNodeFirstDataByTableName" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select first(ts) ts, first(result_value) resultValue from ${tableName}
+    </select>
+
+    <!--获取周期内的第一个临近值-->
+    <select id="findNodeFirstDataByTime" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select
+            first(ts) ts,
+            first(result_value) resultValue
+        from ${tableName}
+        WHERE ts &gt;= #{startTime}
+          AND ts &lt;= #{endTime}
+    </select>
+
+    <!--添加表数据-->
+    <insert id="insertTableData" parameterType="java.lang.String">
+        INSERT INTO ${tableName} USING ${stableName} TAGS (#{siteId}, #{storageId})
+        VALUES (#{ts}, #{taosNodeValue}, NOW())
+    </insert>
+
+    <!--获取节点时间段统计值数据-->
+    <select id="findNodeCountDataListByTimeInterval" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select
+            _WSTART ts,
+            ${countFun}(result_value) resultValue
+        from ${tableName}
+        WHERE ts &gt;= #{startTime}
+          AND ts &lt;= #{endTime}
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+    </select>
+
+    <!--查询指定时间的计算节点值-->
+    <select id="findNodeAppointTimeDataByTableName" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select ts, result_value resultValue from ${tableName} WHERE ts BETWEEN CONCAT(#{startTime}, '.000') AND CONCAT(#{startTime}, '.999')
+    </select>
+
+    <!--查询表数据-->
+    <select id="findNodeTaosDataList" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        SELECT
+        <choose>
+            <when test="timeInterval != null and timeInterval != ''">
+                _WSTART ts,
+            </when>
+            <otherwise>
+                ts,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="timeInterval != null and timeInterval != ''">
+                LAST(result_value) resultValue
+            </when>
+            <otherwise>
+                result_value resultValue
+            </otherwise>
+        </choose>
+        FROM ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+        <if test="limitSize != null and limitSize != ''">
+            ORDER BY ts LIMIT ${limitSize}
+        </if>
+    </select>
+
+    <!--删除指定表指定时间段的数据-->
+    <delete id="deleteDataByTimeBetween" parameterType="java.lang.String">
+        delete
+        from ${tableName}
+        WHERE ts &gt;= #{startTime}
+          AND ts &lt;= #{endTime}
+    </delete>
+
+    <!--批量添加表数据-->
+    <insert id="batchInsertTableData" parameterType="java.util.List">
+        INSERT INTO ${tableName} USING ${stableName} TAGS (#{siteId}, #{storageId})
+        VALUES
+        <foreach collection="nodeHistoryDataDtoList" item="nodeHistoryDataDto" separator=",">
+            (#{nodeHistoryDataDto.ts},#{nodeHistoryDataDto.resultValue},NOW())
+        </foreach>
+    </insert>
+
+    <!--获取节点时间段统计值数据-->
+    <select id="findNodeTaosCountFunDataByIds" resultType="com.sunmax.common.dto.crontab.NodeHistoryDataDto">
+        select
+        <choose>
+            <when test="timeInterval != null and timeInterval != ''">
+                _WSTART ts,
+                ${countFun}(result_value) resultValue
+            </when>
+            <otherwise>
+                ${countFun}(result_value) resultValue
+            </otherwise>
+        </choose>
+        from ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN '${startTime}' AND '${endTime}'
+        </if>
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+    </select>
+</mapper>

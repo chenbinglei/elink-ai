@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: test
+  application:
+    name: sunos-data-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.2.158}:8848

@@ -1,0 +1,282 @@
+{
+    "menuList": [
+        {
+            "id": 1,
+            "parentId": 0,
+            "name": "首页",
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "icon-shouye",
+            "url": "homePage/index"
+        },
+        {
+            "id": 2,
+            "parentId":0,
+            "name": "模型中心",
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-moxingguanli",
+            "url": "modelCenter/modelCenter"
+        },
+        {
+            "id": 200001,
+            "parentId":2,
+            "name": "模型管理",
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "modelManagement",
+            "url": "modelCenter/modelManagement"
+        },
+        {
+            "id": 200002,
+            "parentId":2,
+            "name": "模型分类",
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "modelClassification",
+            "url": "modelCenter/modelClassification"
+        },
+        {
+            "id": 200003,
+            "parentId":2,
+            "name": "模型分类详情",
+            "isLayout": 1,
+            "isHidden": true,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "modelCenter/modelClassDetails"
+        },
+        {
+            "id": 200004,
+            "parentId":2,
+            "name": "标准功能",
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "standardFunction",
+            "url": "modelCenter/standardFunction"
+        },
+        {
+            "id": 200005,
+            "parentId":2,
+            "name": "扩展属性",
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "extendedAttribute",
+            "url": "modelCenter/extendedAttribute"
+        },
+        {
+            "id": 200006,
+            "parentId":2,
+            "name": "模型详情",
+            "isLayout": 1,
+            "isHidden": true,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "modelCenter/modelDetails"
+        },
+        {
+            "id": 3,
+            "parentId": 0,
+            "name": "租户管理",
+            "isHidden": false,
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-yonghuxinxi",
+            "url": "tenantManagement/tenantManagement"
+        },
+        {
+            "id": 300001,
+            "parentId": 3,
+            "name": "租户列表",
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "tenantTabulation",
+            "url": "tenantManagement/tenantTabulation"
+        },
+        {
+            "id": 300002,
+            "parentId":3,
+            "name": "租户详情",
+            "isLayout": 1,
+            "isHidden": true,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "tenantManagement/tenantDetails"
+        },
+        {
+            "id": 4,
+            "parentId":0,
+            "name": "设备中心",
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-shebeiguanli",
+            "url": "deviceCenter/deviceCenter"
+        },
+        {
+            "id": 400001,
+            "parentId": 4,
+            "name": "设备列表",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "deviceCenter/deviceList"
+        },
+        {
+            "id": 400002,
+            "parentId": 4,
+            "name": "设备接入",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "deviceCenter/deviceAccess"
+        },
+        {
+            "id": 400003,
+            "parentId": 4,
+            "name": "设备详情",
+            "isHidden": true,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "deviceCenter/deviceDetails"
+        },
+        {
+            "id": 5,
+            "parentId": 0,
+            "name": "站点中心",
+            "isHidden": false,
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-changzhanguanli",
+            "url": "siteCenter/siteCenter"
+        },
+        {
+            "id": 500001,
+            "parentId": 5,
+            "name": "站点列表",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "siteCenter/siteList"
+        },
+        {
+            "id": 600002,
+            "parentId":6,
+            "name": "站点详情",
+            "isLayout": 1,
+            "isHidden": true,
+            "directoryDesc": 1,
+            "iconPath": "",
+            "url": "siteCenter/sitDetails"
+        },
+        {
+            "id": 6,
+            "parentId": 0,
+            "name": "配置中心",
+            "isHidden": false,
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-quanjupeizhi",
+            "url": "configCenter/configCenter"
+        },
+        {
+            "id": 600001,
+            "parentId": 6,
+            "name": "权限管理",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "authorityManagement",
+            "url": "configCenter/authorityManagement"
+        },
+        {
+            "id": 7,
+            "parentId": 0,
+            "name": "系统管理",
+            "isHidden": false,
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-systemLayout",
+            "url": "systemManagement/systemManagement"
+        },
+        {
+            "id": 700001,
+            "parentId": 7,
+            "name": "用户管理",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "userManagement",
+            "url": "systemManagement/userManagement"
+        },
+        {
+            "id": 700002,
+            "parentId": 7,
+            "name": "用户组管理",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "userGroupManagement",
+            "url": "systemManagement/userGroupManagement"
+        },
+        {
+            "id": 8,
+            "parentId": 0,
+            "name": "数据管理",
+            "isHidden": false,
+            "isLayout": 0,
+            "directoryDesc": 1,
+            "iconPath": "icon-dataManage",
+            "url": "dataManagement/dataManagement"
+        },
+        {
+            "id": 800001,
+            "parentId": 8,
+            "name": "数据查询",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "dataQuery",
+            "url": "dataManagement/dataQuery"
+        },
+        {
+            "id": 800002,
+            "parentId": 8,
+            "name": "系统变量",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "variableLibrary",
+            "url": "dataManagement/variableLibrary"
+        },
+        {
+            "id": 800003,
+            "parentId": 8,
+            "name": "计算节点",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "userGroupManagement",
+            "url": "dataManagement/userGroupManagement"
+        },
+        {
+            "id": 800004,
+            "parentId": 8,
+            "name": "数据补录",
+            "isHidden": false,
+            "isLayout": 1,
+            "directoryDesc": 1,
+            "iconPath": "userGroupManagement",
+            "url": "dataManagement/userGroupManagement"
+        }
+    ],
+    "userInfo":{
+        "userName":"刘哈哈",
+        "accessToken":"asdsafrefdsc61651asdasd",
+        "userId": "4028827b8c583a2b018c584dcad80006",
+        "tenantId": "4028827b8c57b2a7018c5832d12d0000"
+    }
+}

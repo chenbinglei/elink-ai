@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: test
+  application:
+    name: together-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+ribbon:
+  ReadTimeout: 65000
+  ConnectTimeout: 65000

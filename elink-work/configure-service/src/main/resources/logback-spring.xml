@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" scanPeriod="10 seconds">
+    <!--日志名称-->
+    <contextName>protocol-service</contextName>
+    <!--日志加载路径-->
+    <property name="load.path" value="com.sunmax.configure" />
+    <!-- 日志的输出目录 -->
+    <property name="log.path" value="~/logs/sunos-sunmax-configure" />
+
+    <!-- 日志输出格式 -->
+    <property name="console.log.pattern" value="%clr(%d{${yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%4.20t]){faint} %clr(%-40.40logger{39}){cyan} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="file.log.pattern" value="%d{${yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -&#45;&#45; [%4.20t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 定义调试的时候控制台输出 日志等级为INFO-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${console.log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--定义输出格式 业务类日志已封装具体的日志信息 只打印出时间和具体的日志信息即可-->
+        <encoder>
+            <!--            <pattern>[%d] - %msg%n</pattern>-->
+            <pattern>${file.log.pattern}</pattern>
+        </encoder>
+        <file>${log.path}/info.log</file>
+        <!--定义日志滚动的策略 超过30天或者大于5GB开始进行压缩-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/info/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!-- 输出业务日志，只输出INFO级别 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤的级别 -->
+            <level>INFO</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志文档输出格式-->
+        <encoder>
+            <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>-->
+            <pattern>${file.log.pattern}</pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+        <file>${log.path}/error.log</file>
+        <!--定义日志滚动的策略 超过30天或者大于5GB开始进行压缩-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!-- 输出业务日志，只输出ERROR级别 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤的级别 -->
+            <level>ERROR</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <root name= "${load.path}" level="INFO">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="fileErrorLog"/>
+        <appender-ref ref="fileInfoLog"/>
+    </root>
+
+    <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="off" />
+    <logger name="org.apache.flink.runtime.checkpoint.CheckpointCoordinator" level="off" />
+    <logger name="io.lettuce.core.protocol.ReconnectionHandler" level="off" />
+    <logger name="io.lettuce.core.protocol.ConnectionWatchdog" level="off" />
+
+</configuration>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta content="HangZhou_ShengMan" name="author">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta content="no-cache, no-store, must-revalidate" http-equiv="content-type" />
+
+  <!-- Mapbox CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  <!-- 解决数据可视化平台-地图的报错 -->
+  <meta name="referrer" content="no-referrer" />
+  <!-- Mapbox JS -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <meta content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    name="viewport" />
+  <style>
+    html,
+    body,
+    #app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: rgba(0, 0, 0, 1);
+    }
+  </style>
+  <title>综合能源聚合管理平台</title>
+  <script type="module" src="/config.js"></script>
+  <script defer src="/l7-mapbox/l7.js"></script>
+  <script defer src="/l7-mapbox/mapbox-gl.js"></script>
+  <script defer src="/l7-mapbox/l7-draw.min.js"></script>
+</head>
+
+<body class="ui-design">
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunmax.together.mapper.OrderRecordMapper">
+    <select id="countOrderBySiteIds" parameterType="java.util.List" resultType="com.sunmax.together.model.OrderCountModel">
+        SELECT site_id siteId,
+               pile_code pileCode,
+               run_mode runMode,
+               COUNT(*) totalCount,
+               SUM(total_qt) totalQt,
+               SUM(total_cost) totalMoney
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND (abnormal_code IS NULL OR abnormal_code NOT LIKE '%4%')
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY site_id, pile_code, run_mode
+    </select>
+
+    <select id="countOrderByPileCodes" parameterType="java.util.List" resultType="com.sunmax.together.model.OrderCountModel">
+        SELECT site_id siteId,
+               pile_code pileCode,
+               run_mode runMode,
+               COUNT(*) totalCount,
+               SUM(total_qt) totalQt,
+               SUM(total_cost) totalMoney
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND (abnormal_code IS NULL OR abnormal_code NOT LIKE '%4%')
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY site_id, pile_code, run_mode
+    </select>
+
+    <select id="countChargeOrderNormalNum" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status = 2 AND run_mode = 0
+        AND (abnormal_code IS NULL OR abnormal_code NOT LIKE '%4%')
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+
+    <select id="countChargeOrderTotalNum" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status != 1 AND order_status != 6 AND run_mode = 0
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+
+    <select id="countChargeOrderNormalNumBySiteIds" parameterType="java.util.List" resultType="java.util.Map">
+        SELECT
+            site_id siteId,
+            COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status = 2 AND run_mode = 0
+        AND (abnormal_code IS NULL OR abnormal_code NOT LIKE '%4%')
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY site_id
+    </select>
+
+    <select id="countChargeOrderTotalNumBySiteIds" parameterType="java.util.List" resultType="java.util.Map">
+        SELECT
+            site_id siteId,
+            COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status != 1 AND order_status != 6 AND run_mode = 0
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY site_id
+    </select>
+
+    <select id="countChargeOrderNormalNumByPileCodes" parameterType="java.util.List" resultType="java.util.Map">
+        SELECT
+        pile_code pileCode,
+        COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status = 2 AND run_mode = 0
+        AND (abnormal_code IS NULL OR abnormal_code NOT LIKE '%4%')
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY pile_code
+    </select>
+
+    <select id="countChargeOrderTotalNumByPileCodes" parameterType="java.util.List" resultType="java.util.Map">
+        SELECT
+        pile_code pileCode,
+        COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status != 1 AND order_status != 6 AND run_mode = 0
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY pile_code
+    </select>
+
+    <select id="countChargeAbOrderNum" parameterType="java.util.List" resultType="com.sunmax.together.model.ChargeOrderQtModel">
+        SELECT
+        <if test="dateType == 1">
+            LEFT(update_time, 10) dataTime,
+        </if>
+        <if test="dateType == 2">
+            LEFT(update_time, 7) dataTime,
+        </if>
+        COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status != 1 AND order_status != 6 AND run_mode = 0 AND abnormal_code IS NOT NULL
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType == 1">
+            GROUP BY LEFT(update_time, 10)
+        </if>
+        <if test="dateType == 2">
+            GROUP BY LEFT(update_time, 7)
+        </if>
+    </select>
+
+    <select id="countChargeOrderNormalNumList" parameterType="java.util.List" resultType="com.sunmax.together.model.ChargeOrderQtModel">
+        SELECT
+        <if test="dateType == 1">
+            LEFT(end_time, 10) dataTime,
+        </if>
+        <if test="dateType == 2">
+            LEFT(end_time, 7) dataTime,
+        </if>
+        COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status = 2 AND run_mode = 0
+        AND (abnormal_code IS NULL OR abnormal_code NOT LIKE '%4%')
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType == 1">
+            GROUP BY LEFT(end_time, 10)
+        </if>
+        <if test="dateType == 2">
+            GROUP BY LEFT(end_time, 7)
+        </if>
+    </select>
+
+    <select id="countChargeOrderTotalNumList" parameterType="java.util.List" resultType="com.sunmax.together.model.ChargeOrderQtModel">
+        SELECT
+        <if test="dateType == 1">
+            LEFT(update_time, 10) dataTime,
+        </if>
+        <if test="dateType == 2">
+            LEFT(update_time, 7) dataTime,
+        </if>
+        COUNT(*) totalCount
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND order_status != 1 AND order_status != 6 AND run_mode = 0
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType == 1">
+            GROUP BY LEFT(update_time, 10)
+        </if>
+        <if test="dateType == 2">
+            GROUP BY LEFT(update_time, 7)
+        </if>
+    </select>
+
+    <select id="countOrderDataByPileCodes" parameterType="java.util.List" resultType="com.sunmax.together.model.ChargeOrderQtModel">
+        SELECT
+        <if test="dateType == 1">
+            LEFT(update_time, 10) dataTime,
+        </if>
+        <if test="dateType == 2">
+            LEFT(update_time, 7) dataTime,
+        </if>
+        <if test="dateType == 3">
+            LEFT(update_time, 4) dataTime,
+        </if>
+        COUNT(*) totalCount,
+        SUM(total_qt) totalQt,
+        SUM(j_qt) jQt,
+        SUM(f_qt) fQt,
+        SUM(p_qt) pQt,
+        SUM(g_qt) gQt
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType == 1">
+            GROUP BY LEFT(update_time, 10)
+        </if>
+        <if test="dateType == 2">
+            GROUP BY LEFT(update_time, 7)
+        </if>
+        <if test="dateType == 3">
+            GROUP BY LEFT(update_time, 4)
+        </if>
+    </select>
+
+    <select id="findSiteOrderSumData" parameterType="java.util.List" resultType="com.sunmax.together.model.OrderSumDataModel">
+        SELECT site_id siteId,
+        pile_code pileCode,
+        gun_code gunCode,
+        COUNT(*) totalCount,
+        TIMESTAMPDIFF(SECOND, start_time, end_time) chargeDuration,
+        SUM(total_qt) totalQt,
+        SUM(j_qt) jQt,
+        SUM(f_qt) fQt,
+        SUM(p_qt) pQt,
+        SUM(g_qt) gQt
+        FROM `b_order_record`
+        WHERE site_id IN
+        <foreach collection="siteIds" item="item" index="index" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="platformLogo != null and platformLogo != ''">
+            AND platform_logo = '${platformLogo}'
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        AND TIMESTAMPDIFF(SECOND, start_time, end_time) IS NOT NULL
+        GROUP BY site_id, pile_code, chargeDuration, gunCode
+    </select>
+
+    <select id="findPileOrderSumData" parameterType="java.util.List" resultType="com.sunmax.together.model.OrderSumDataModel">
+        SELECT
+               pile_code pileCode,
+               gun_code gunCode,
+               COUNT(*) totalCount,
+               TIMESTAMPDIFF(SECOND, start_time, end_time) chargeDuration,
+               SUM(total_qt) totalQt,
+               SUM(j_qt) jQt,
+               SUM(f_qt) fQt,
+               SUM(p_qt) pQt,
+               SUM(g_qt) gQt
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodeList" item="item" index="index" open="(" separator="," close=")">
+            '${item}'
+        </foreach>
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="platformLogo != null and platformLogo != ''">
+            AND platform_logo = '${platformLogo}'
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND end_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        AND TIMESTAMPDIFF(SECOND, start_time, end_time) IS NOT NULL
+        GROUP BY pile_code, chargeDuration, gunCode
+    </select>
+
+    <select id="countOrderTotalQtByPileCodes" parameterType="java.util.List" resultType="com.sunmax.together.model.ChargeOrderQtModel">
+        SELECT
+        COUNT(*) totalCount,
+        SUM(total_qt) totalQt,
+        SUM(j_qt) jQt,
+        SUM(f_qt) fQt,
+        SUM(p_qt) pQt,
+        SUM(g_qt) gQt
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="countOrderTotalMoneyBySiteId" parameterType="java.lang.String" resultType="com.sunmax.together.model.ChargeOrderCostModel">
+        SELECT
+        <if test="dateType != null and dateType == 1">
+            LEFT(update_time, 10) dataTime,
+        </if>
+        <if test="dateType != null and dateType == 2">
+            LEFT(update_time, 7) dataTime,
+        </if>
+        COUNT(*) totalCount,
+        SUM(total_cost) totalCost,
+        SUM(total_qt) totalQt
+        FROM `b_order_record`
+        WHERE site_id = #{siteId}
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType != null and dateType == 1">
+            GROUP BY LEFT(update_time, 10)
+        </if>
+        <if test="dateType != null and dateType == 2">
+            GROUP BY LEFT(update_time, 7)
+        </if>
+    </select>
+
+    <select id="countOrderActualMoneyBySiteId" parameterType="java.lang.String" resultType="com.sunmax.together.model.ChargeOrderCostModel">
+        SELECT
+        <if test="dateType != null and dateType == 1">
+            LEFT(o.update_time, 10) dataTime,
+        </if>
+        <if test="dateType != null and dateType == 2">
+            LEFT(o.update_time, 7) dataTime,
+        </if>
+        COUNT(*) totalCount,
+        SUM(s.actual_total_cost) totalCost,
+        SUM(o.total_qt) totalQt
+        FROM b_order_record o
+        LEFT JOIN b_settlement_record s ON o.order_num = s.order_num
+        WHERE o.site_id = #{siteId}
+        <if test="runMode != null">
+            <choose>
+                <when test='runMode == 1'>
+                    AND o.run_mode IN (1, 2)
+                </when>
+                <otherwise>
+                    AND o.run_mode = #{runMode}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND o.update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType != null and dateType == 1">
+            GROUP BY LEFT(o.update_time, 10)
+        </if>
+        <if test="dateType != null and dateType == 2">
+            GROUP BY LEFT(o.update_time, 7)
+        </if>
+    </select>
+
+    <select id="countOrderTotalQtGroupByDateType" parameterType="java.lang.String" resultType="com.sunmax.together.model.ChargeOrderCostModel">
+        SELECT
+        <if test="dateType != null and dateType == 1">
+            LEFT(update_time, 10) dataTime,
+        </if>
+        <if test="dateType != null and dateType == 2">
+            LEFT(update_time, 7) dataTime,
+        </if>
+        <if test="dateType != null and dateType == 3">
+            LEFT(update_time, 4) dataTime,
+        </if>
+        run_mode runMode,
+        COUNT(*) totalCount,
+        SUM(total_cost) totalCost,
+        SUM(total_qt) totalQt
+        FROM `b_order_record`
+        WHERE pile_code IN
+        <foreach collection="pileCodes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND update_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="dateType != null and dateType == 1">
+            GROUP BY run_mode,LEFT(update_time, 10)
+        </if>
+        <if test="dateType != null and dateType == 2">
+            GROUP BY run_mode,LEFT(update_time, 7)
+        </if>
+        <if test="dateType != null and dateType == 3">
+            GROUP BY run_mode,LEFT(update_time, 4)
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,128 @@
+
+html:root {
+  --el-menu-bg-color: #FFFFFF;
+  --el-menu-item-height: 40px;
+  --el-menu-sub-item-height: 40px;
+  --el-menu-active-bg-color: #E7ECEF;
+  --el-menu-hover-bg-color: rgba(231, 236, 239, .8); // 左侧树形鼠标滑动背景样式
+}
+
+
+//下拉选中的样子
+.el-select-dropdown__item.is-selected {
+  background: linear-gradient(270deg, rgba(0, 127, 235, 0) 0%, rgba(0, 127, 235, .2) 100%);
+}
+
+
+//表格颜色
+.el-table {
+  --el-text-color-regular: #121C3F;
+  --el-text-color-secondary: #242424;
+  --el-table-header-bg-color: #F5F5F5 !important;
+
+  //表格头部添加 红色*
+  .headerClass .cell {
+    &::before {
+      content: '*';
+      color: #ff1818;
+    }
+  }
+}
+
+//  自定义消息提示框样式
+.el-popper {
+  min-width: inherit !important;
+}
+
+.el-row {
+  width: 100%;
+}
+
+.el-timeline{
+  .el-timeline-item{
+    &:last-child{
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+/*自定义弹框样式------------------------------*/
+
+.el-message-box {
+
+  .el-message-box__content {
+    .deleteName {
+      color: #FF7B7B;
+      font-weight: bold;
+    }
+
+    .highlightText {
+      color: #1F74E2;
+      font-weight: bold;
+    }
+  }
+}
+
+//(带有确认取消按钮的弹框)
+.deleteMsgBoxClass, .elMessageBoxWarning {
+
+  .el-message-box__btns {
+
+    .el-button {
+      color: #121C3F;
+      font-size: 14px;
+      border-radius: 4px;
+      background: #F1F3FA;
+    }
+
+    .el-button--primary {
+      color: #FFFFFF;
+      --el-color-primary: #FF7B7B;
+      background: #FF7B7B !important;
+      --el-button-active-color: #FF7B7B;
+      --el-button-hover-bg-color: #FF7B7B;
+      --el-button-hover-border-color: #FF7B7B;
+    }
+  }
+}
+
+/*自定义弹框样式end------------------------------*/
+
+
+//全局修改输入框、选择框、时间选择样式
+.el-select,.el-input,.el-date-editor{
+  --el-border-color: none;
+  --el-border-radius-base: 6px;
+  --el-fill-color-blank: #F1F3FA;
+
+  .is-focused,.is-focus{
+    --el-fill-color-blank: #FFFFFF;
+    --el-input-bg-color: #FFFFFF;
+  }
+}
+
+.el-date-editor.is-active{
+  --el-fill-color-blank: #FFFFFF;
+}
+
+// 输入框 前面嵌套 下拉选择样式
+.selectAndInput {
+
+  .el-select {
+    min-width: 100px !important;
+    --el-fill-color-blank: #E3E6EF;
+
+    .el-select__wrapper {
+      border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
+    }
+
+    .el-input__validateIcon{
+      display: none !important;
+    }
+  }
+
+  .el-input__wrapper{
+    line-height: 30px;
+    padding: 0 12px 0 0;
+  }
+}

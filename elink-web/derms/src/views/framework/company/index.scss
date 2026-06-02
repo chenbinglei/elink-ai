@@ -1,0 +1,113 @@
+.company-info-wrap {
+  box-sizing: border-box;
+  background: url("@/assets/image/station-details/sta-detail-bg.png") no-repeat;
+  background-size: 100% 100%;
+  padding: 24px;
+  height: calc(100vh - 190px);
+  overflow: hidden;
+
+  .company-head {
+    color: #fff;
+
+
+    .logo {
+      width: 122px;
+      height: 90px;
+      background: url("@/assets/image/company-logo-bac.png") no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .info {
+      flex: 1;
+      padding: 15px 0;
+      background: url("@/assets/image/company-r-bac.png") no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .account {
+      box-sizing: border-box;
+      padding: 11px 32px;
+      line-height: 20px;
+      width: 162px;
+      height: 60px;
+      margin-left: 65px;
+      background: url("@/assets/image/user-bac.png") no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .user {
+      width: 162px;
+      height: 60px;
+      background: url("@/assets/image/account-bac.png") no-repeat;
+      background-size: 100% 100%;
+    }
+  }
+
+  .company-inner {
+    height: 96%;
+    overflow: hidden;
+
+    .company-inner-left {
+      width: 360px;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .company-inner-right {
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+.handleMenus {
+  width: 148px;
+  height: 32px;
+  margin-right: -10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: url("@/assets/images/组 10859.png") no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
+.el-table-company {
+  height: 76%;
+}
+
+.paginationCurrentPage {
+  position: absolute;
+  right: 0;
+}
+
+.handleMenus_span {
+  font-family: Microsoft YaHei, Microsoft YaHei;
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.handleMenus_active {
+  width: 148px;
+  height: 32px;
+  margin-right: -10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: url("@/assets/images/组 10861.png") no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
+
+.handleMenus_span_active {
+  font-family: Microsoft YaHei, Microsoft YaHei;
+  font-weight: bold;
+  font-size: 16px;
+  color: #7dcbff;
+  white-space: nowrap;
+  cursor: pointer;
+}

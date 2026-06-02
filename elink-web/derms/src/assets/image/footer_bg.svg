@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="34px" viewBox="0 0 1920 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>底部装饰</title>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="49.9993602%" id="linearGradient-1">
+            <stop stop-color="#4583FF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#4583FF" stop-opacity="0.2" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="1920 14 400 14 380 30 0 30 0 0 1920 0"></polygon>
+        <filter x="-0.2%" y="-10.0%" width="100.3%" height="120.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="-6" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.270588235   0 0 0 0 0.51372549   0 0 0 0 1  0 0 0 0.2 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <polygon id="path-4" points="4 0 8 0 4 4 0 4"></polygon>
+        <filter x="-150.0%" y="-300.0%" width="400.0%" height="700.0%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.215686275   0 0 0 0 0.701960784   0 0 0 0 0.8  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-6" points="12 0 16 0 12 4 8 4"></polygon>
+        <filter x="-150.0%" y="-300.0%" width="400.0%" height="700.0%" filterUnits="objectBoundingBox" id="filter-7">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.215686275   0 0 0 0 0.701960784   0 0 0 0 0.8  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="电信机房" transform="translate(0.000000, -1046.000000)">
+            <g id="底部装饰" transform="translate(0.000000, 1050.000000)">
+                <g id="路径" transform="translate(960.000000, 15.000000) scale(1, -1) translate(-960.000000, -15.000000) ">
+                    <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                </g>
+                <polyline id="路径" stroke-opacity="0.5" stroke="#4583FF" stroke-width="2" transform="translate(960.000000, 8.000000) scale(1, -1) translate(-960.000000, -8.000000) " points="1920 0 400 5.68434189e-14 380 16 0 16"></polyline>
+                <g id="编组-12" transform="translate(398.000000, 4.000000)">
+                    <g id="矩形" transform="translate(4.000000, 2.000000) scale(-1, 1) translate(-4.000000, -2.000000) ">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                        <use fill="#B6EFF2" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    </g>
+                    <g id="矩形" opacity="0.600000024" transform="translate(12.000000, 2.000000) scale(-1, 1) translate(-12.000000, -2.000000) ">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-7)" xlink:href="#path-6"></use>
+                        <use fill="#B6EFF2" fill-rule="evenodd" xlink:href="#path-6"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

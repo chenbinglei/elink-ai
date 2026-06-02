@@ -1,0 +1,160 @@
+server:
+  port: 5000
+spring:
+  application:
+    name: sunmax-gateway
+  security:
+    user:
+      name: ${GATEWAY_USER:root}
+      password: ${GATEWAY_PASSWORD:root}
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+    gateway:
+      httpclient:
+        connect-timeout: 600000
+        response-timeout: 60s
+      discovery:
+        locator:
+          enabled: true
+      globals:
+        cors-configurations:
+          '[/**]':
+            allow-credentials: true
+            allowed-origins: "*"
+            allowed-headers: "*"
+            allowed-methods:
+              - OPTIONS
+              - GET
+              - POST
+              - PUT
+              - DELETE
+      routes:
+        - id: sauth-service
+          uri: lb://sauth-service
+          predicates:
+            - Path=/sauth/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: system-service
+          uri: lb://system-service
+          predicates:
+            - Path=/system/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: device-service
+          uri: lb://device-service
+          predicates:
+            - Path=/device/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: sunos-data-service
+          uri: lb://sunos-data-service
+          predicates:
+            - Path=/data/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackcmd-back
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: sunos-protocol-service
+          uri: lb://sunos-protocol-service
+          predicates:
+            - Path=/protocol/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: swebapp-service
+          uri: lb://swebapp-service
+          predicates:
+            - Path=/swebapp/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackcmd-back
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: together-service
+          uri: lb://together-service
+          predicates:
+            - Path=/together/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: configure-service
+          uri: lb://configure-service
+          predicates:
+            - Path=/configure/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: energy-service
+          uri: lb://energy-service
+          predicates:
+            - Path=/energy/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+        - id: devops-service
+          uri: lb://devops-service
+          predicates:
+            - Path=/devops/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: Hystrix
+              args:
+                name: fallbackCmd
+                fallbackUri: forward:/defaultFallback
+                retries: 3
+
+hystrix:
+  command:
+    default:
+      timeout:
+        enabled: false
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000
+    fallbackcmd-back:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000

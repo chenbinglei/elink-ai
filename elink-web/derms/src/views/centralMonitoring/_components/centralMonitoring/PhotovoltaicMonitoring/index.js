@@ -1,0 +1,2 @@
+export {default as PhotovoltaicStationMonitoring} from './PhotovoltaicStationMonitoring.vue'; // 光伏电站监测
+export {default as PhotovoltaicInverterMonitoring} from './PhotovoltaicInverterMonitoring.vue'; // 逆变器监控

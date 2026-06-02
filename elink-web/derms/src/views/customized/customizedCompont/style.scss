@@ -1,0 +1,233 @@
+.line-test {
+  position: absolute;
+  top: 43%;
+  left: 16%;
+  width: 1px;
+  height: 32%;
+  // background: #375463;
+  transform: rotate(34deg);
+  overflow: hidden;
+  transform-origin: left center;
+  /* 以左边为中心旋转 */
+  z-index: 999;
+}
+
+/* 流动流光 */
+.line-test::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 100%;
+  filter: brightness(10);
+  background: linear-gradient(to bottom, transparent, #00ffff, transparent);
+  animation: flow-line 1.8s linear infinite;
+}
+
+@keyframes flow-line {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+// /* 关键：横向移动（X轴） */
+@keyframes flow-line-right {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.line-test1 {
+  position: absolute;
+  top: 74.9%;
+  left: 11%;
+  width: 8%;
+  height: 1px;
+  // background: #D7F8F9;
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+}
+
+/* 流动流光 */
+.line-test1::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, #03053d, transparent);
+  filter: brightness(10);
+  animation: flow-line-right 1.8s linear infinite;
+}
+
+/* 流动流光 */
+.line-test7::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, #00ffff, transparent);
+  filter: brightness(10);
+  animation: flow-line-right 1.8s linear infinite;
+}
+
+.line-test2 {
+  position: absolute;
+  top: 59%;
+  left: 21.48%;
+  width: 1px;
+  height: 17%;
+  // background: #D7F8F9;
+  transform: rotate(27deg);
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+}
+
+/* 流动流光 */
+.line-test2::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  /* 流光高度，不会溢出 */
+  background: linear-gradient(to top, transparent, #03053d, transparent);
+  animation: flow-line-up 1.8s linear infinite;
+}
+
+.line-test4::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  /* 流光高度，不会溢出 */
+  background: linear-gradient(to top, transparent, #03053d, transparent);
+  animation: flow-line-up 1.8s linear infinite;
+}
+
+/* 向上流动动画 */
+@keyframes flow-line-up {
+  0% {
+    transform: translateY(100%);
+    /* 从底部开始 */
+  }
+
+  100% {
+    transform: translateY(-100%);
+    /* 向顶部走 */
+  }
+}
+
+.line-test3 {
+  position: absolute;
+  top: 76%;
+  left: 11.5%;
+  width: 16.8%;
+  height: 1px;
+  // background: #D7F8F9;
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+}
+
+.line-test5 {
+  position: absolute;
+  top: 77%;
+  left: 11.2%;
+  width: 46.4%;
+  height: 1px;
+  // background: #D7F8F9;
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+}
+.line-test6{
+    position: absolute;
+    top: 74%;
+    left: 57.7%;
+    width: 1px;
+    height: 3.2%;
+    transform: rotate(-5deg);
+    overflow: hidden;
+    transform-origin: left center;
+    z-index: 999;
+}
+.line-test7 {
+  position: absolute;
+  top: 42%;
+  left: 33.2%;
+  width: 38.9%;
+  height: 1px;
+  // background: #375463;
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+
+}
+
+.line-test8 {
+  position: absolute;
+  top: 45.5%;
+  left: 21.2%;
+  width: 52.9%;
+  height: 1px;
+  // background: #375463;
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+}
+
+/* 流动流光 */
+.line-test8::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, #00ffff, transparent);
+  animation: flow-line-left 1.8s linear infinite;
+  filter: brightness(10);
+}
+
+/* 关键：横向移动（X轴） */
+@keyframes flow-line-left {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.line-test-1 {
+  position: absolute;
+  top: 42.8%;
+  left: 73.9%;
+  width: 1px;
+  height: 3%;
+  transform: rotate(-29deg);
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+
+}
+
+.line-test4 {
+  position: absolute;
+  top: 73%;
+  left: 28.58%;
+  width: 1px;
+  height: 3%;
+  // background: #D7F8F9;
+  transform: rotate(20deg);
+  overflow: hidden;
+  transform-origin: left center;
+  z-index: 999;
+}

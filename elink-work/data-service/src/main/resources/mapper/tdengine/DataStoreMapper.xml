@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sunmax.data.mapper.tdengine.DataStoreMapper">
+
+    <!--查询表是否存在-->
+    <select id="findTableIfExists" resultType="java.util.Map">
+        SHOW
+        TABLES LIKE '${tableName}'
+    </select>
+
+    <!--查询全部表名-->
+    <select id="findAllTableIfExists" resultType="java.lang.String">
+        SHOW
+        TABLES
+    </select>
+
+    <!--根据表名称查询表字段名列表-->
+    <select id="findFieldNameTypeList" resultType="com.sunmax.data.model.TableFieldModel">
+        DESCRIBE ${tableName}
+    </select>
+
+    <!--创建通道表-->
+    <update id="createTable" parameterType="java.util.Map">
+        CREATE TABLE IF NOT EXISTS ${tableName}
+        (ts TIMESTAMP,
+        <foreach collection="fieldNameTypeMap.entrySet()" index="key" item="value" close=")" separator=",">
+            ${key} ${value}
+        </foreach>
+    </update>
+
+    <!--添加通道的多个列-->
+    <update id="addTableField" parameterType="java.lang.String">
+        <if test="tableName != null and fieldName != null and fieldType != null">
+            ALTER TABLE ${tableName} ADD COLUMN ${fieldName} ${fieldType}
+        </if>
+    </update>
+
+    <!--修改表的多个列-->
+    <update id="updateTableField" parameterType="java.lang.String">
+        <if test="tableName != null and fieldName != null and fieldType != null">
+            ALTER TABLE ${tableName} MODIFY COLUMN ${fieldName} ${fieldType}
+        </if>
+    </update>
+
+    <!-- 删除表的列 -->
+    <update id="deleteTableField" parameterType="java.lang.String">
+        <if test="tableName != null and fieldName != null">
+            ALTER TABLE ${tableName} DROP COLUMN ${fieldName}
+        </if>
+    </update>
+
+    <!--批量删除表-->
+    <delete id="deleteTable" parameterType="java.lang.String">
+        <if test="tableName != null and tableName != ''">
+            DROP TABLE IF EXISTS ${tableName}
+        </if>
+    </delete>
+
+    <!--批量添加表数据-->
+    <insert id="batchAddTableData" parameterType="java.util.Map">
+        INSERT INTO ${tableName}
+        <foreach collection="fieldNameValueMap.keys" item="key" open="(" close=")" separator=",">
+            ${key}
+        </foreach>
+        VALUES
+        <foreach collection="fieldNameValueMap.values" item="value" open="(" close=")" separator=",">
+            #{value}
+        </foreach>
+    </insert>
+
+    <!--查询表数据-->
+    <select id="queryTableDataList" resultType="java.util.Map">
+        SELECT
+        <choose>
+            <when test="timeInterval != null and timeInterval != ''">
+                _WSTART ts,
+            </when>
+            <otherwise>
+                ts,
+            </otherwise>
+        </choose>
+        <foreach collection="columnNames" item="item" separator=",">
+            <choose>
+                <when test="timeInterval != null and timeInterval != ''">
+                    LAST(${item}) ${item}
+                </when>
+                <otherwise>
+                    ${item}
+                </otherwise>
+            </choose>
+        </foreach>
+        FROM ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+        <if test="limitSize != null and limitSize != ''">
+            ORDER BY ts DESC LIMIT ${limitSize}
+        </if>
+    </select>
+
+    <!--查询表first数据,支持查询单个时间点数据-->
+    <select id="queryfirstTableDataList" resultType="java.util.Map">
+        SELECT
+        <choose>
+            <when test="timeInterval != null and timeInterval != ''">
+                _WSTART ts,
+            </when>
+            <otherwise>
+                ts,
+            </otherwise>
+        </choose>
+        <foreach collection="columnNames" item="item" separator=",">
+            <choose>
+                <when test="timeInterval != null and timeInterval != ''">
+                    first(${item}) ${item}
+                </when>
+                <otherwise>
+                    ${item}
+                </otherwise>
+            </choose>
+        </foreach>
+        FROM ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+    </select>
+
+    <!--查询表原始数据,支持查询单个时间点数据-->
+    <select id="querySourceTableDataList" resultType="java.util.Map">
+        SELECT
+        ts,
+        <foreach collection="columnNames" item="item" separator=",">
+            ${item} ${item}
+        </foreach>
+        FROM ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="startTime != null and startTime != '' and endTime == null or endTime == ''">
+            AND ts = #{startTime}
+        </if>
+    </select>
+
+    <!--查询表统计数据-->
+    <select id="queryCountFunTableDataList" resultType="java.util.Map">
+        SELECT
+        <choose>
+            <!-- 1. 优先处理时间窗口下采样 (通常配合 INTERVAL 使用) -->
+            <when test="timeInterval != null and timeInterval != ''">
+                _WSTART ts,
+            </when>
+            <!-- 2. 处理 LAST 聚合 (使用 ignoreMatches 忽略大小写，代码更简洁) -->
+            <when test="cuntFun != null and cuntFun != '' and 'last'.equalsIgnoreCase(cuntFun)">
+                last(ts) ts,
+            </when>
+            <!-- 3. 处理 FIRST 聚合 -->
+            <when test="cuntFun != null and cuntFun != '' and 'first'.equalsIgnoreCase(cuntFun)">
+                first(ts) ts,
+            </when>
+            <!-- 4. 默认：查询原始时间戳 -->
+            <otherwise>
+                ts,
+            </otherwise>
+        </choose>
+        <foreach collection="columnNames" item="item" separator=",">
+            ${cuntFun}(${item})
+        </foreach>
+        FROM ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+    </select>
+
+    <!--查询设备功能点指定时间段内的last和first历史数据-->
+    <select id="findNodeDifHistoryList" resultType="java.util.Map">
+        SELECT
+        _WEND lastTs,
+        _WSTART firstTs,
+        <foreach collection="columnNames" item="item" separator=",">
+            last(${item}) last${item},
+            first(${item}) first${item}
+        </foreach>
+        FROM ${tableName}
+        WHERE
+        1 = 1
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND ts BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="timeInterval != null and timeInterval != ''">
+            INTERVAL(${timeInterval}) FILL(null)
+        </if>
+    </select>
+
+</mapper>

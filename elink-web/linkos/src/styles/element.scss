@@ -1,0 +1,115 @@
+
+:root {
+  --el-mask-color: rgba(51,51,51,0.8); // 遮罩颜色
+  --el-menu-bg-color: #FFFFFF !important;
+  --el-menu-item-height: 40px !important;
+  --el-menu-sub-item-height: 40px !important;
+  --el-menu-active-bg-color: #E7ECEF;
+  --el-menu-hover-bg-color: rgba(231,236,239,.8) !important;  // 左侧树形鼠标滑动背景样式
+}
+
+
+.el-scrollbar {
+  --el-scrollbar-bg-color: #1F74E2 !important;
+  --el-scrollbar-hover-bg-color: #1F74E2 !important;
+}
+
+  // 左侧树形收起样式
+.el-menu--popup {
+  .el-menu-item.is-active {
+    transition: all 0.28s;
+    background-color: var(--el-menu-active-bg-color);
+  }
+}
+
+//表格颜色
+.el-table {
+  --el-text-color-secondary: #242424;
+  --el-table-header-bg-color: #F5F5F5 !important;
+}
+
+//  自定义消息提示框样式
+.el-popper {
+  min-width: inherit !important;
+}
+
+.el-row {
+  width: 100%;
+}
+
+//清除弹框内边距
+.clearDialogPadding {
+  .el-dialog__body {
+    --el-dialog-padding-primary: 0px;
+  }
+}
+
+/*自定义弹框样式------------------------------*/
+
+.el-message-box{
+
+  .el-message-box__header{
+    background: #EEEEEE;
+  }
+
+  .el-message-box__content{
+    .deleteName{
+      color: #FF7B7B;
+      font-weight: bold;
+    }
+    .highlightText{
+      color: #1F74E2;
+      font-weight: bold;
+    }
+  }
+}
+
+//(带有确认取消按钮的弹框)
+.deleteMsgBoxClass,.elMessageBoxWarning{
+  .el-message-box__btns{
+
+    .el-button{
+      color: #BBBBBB;
+      font-size: 14px;
+      border-radius: 4px;
+      background: #EEEEEE;
+    }
+
+    .el-button--primary{
+      color: #FFFFFF;
+      --el-color-primary: #FF7B7B;
+      background: #FF7B7B !important;
+      --el-button-active-color: #FF7B7B;
+      --el-button-hover-bg-color: #FF7B7B;
+      --el-button-hover-border-color: #FF7B7B;
+    }
+  }
+}
+
+/*自定义弹框样式end------------------------------*/
+
+
+// 输入框 前面嵌套 下拉选择样式
+.selectAndInput {
+
+  .el-select {
+    max-width: 110px;
+
+    .el-input__wrapper{
+      padding: 0 12px;
+      border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
+    }
+  }
+
+  .el-input__wrapper{
+    padding: 0 12px 0 0;
+  }
+}
+
+
+// 上传图片 达到限制 隐藏 +
+.showAddImageIcon .el-upload--picture-card {
+  transition: all 0.28s;
+  display: none !important;
+  border: 1px dashed var(--el-border-color-darker);
+}

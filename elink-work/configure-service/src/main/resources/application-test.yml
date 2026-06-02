@@ -1,0 +1,98 @@
+server:
+  port: 60008
+  servlet:
+    context-path: /configure
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${NACOS_HOST:192.168.2.158}:3306/sunos-configure?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    username: root
+    password: ${MYSQL_PASSWORD}
+    type: com.zaxxer.hikari.HikariDataSource
+    filters: stat,wall,config
+    maxActive: 100
+    initial-size: 5
+    max-wait: 60000
+    min-idle: 5
+    time-between-eviction-runs-millis: 600000
+    min-evictable-idle-time-millis: 30000
+    validation-query: select 1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    pool-prepared-statements: false
+    max-pool-prepared-statement-per-connection-size: 20
+    pool-name: primarypool
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL55Dialect
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true
+        jdbc.batch_size: 50
+
+  redis:
+    port: 6379
+    host: ${NACOS_HOST:192.168.2.158}
+    password: ${REDIS_PASSWORD}
+    timeout: 60s
+    database: 1
+    lettuce:
+      pool:
+        min-idle: 10
+        max-idle: 100
+        max-active: 200
+        max-wait: 1000ms
+
+mybatis:
+  typeAliasesPackage: com.taosdata.jdbc.springbootdemo.domain
+  call-setters-on-nulls: true
+  map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.sunmax.protocolserver.mapper.mysql.ChargerRecordMapper: debug
+
+security:
+  oauth2:
+    client:
+      client-id: sunos-client
+      client-secret: sunos-client
+      access-token-uri: http://${NACOS_HOST:192.168.2.158}:60001/sauth/oauth/token
+      user-authorization-uri: http://${NACOS_HOST:192.168.2.158}:60001/sauth/oauth/authorize
+    resource:
+      token-info-uri: http://${NACOS_HOST:192.168.2.158}:60001/sauth/oauth/check_token
+
+mqtt:
+  qos: 2
+  timeout: 60
+  keep-alive: 60
+  expire: 5
+  web:
+    username: admin
+    password: ${EMQX_PASSWORD}
+    host-url: tcp://${NACOS_HOST:192.168.2.158}:1883
+    client-id: emqx${random.value}
+    client-topic: webTopic
+
+platform:
+  id: MACQKWDXI
+  secret: JbhI7olOTAKs2ZNU
+  data-secret: RVPxJ4aiZwMxnGri
+  data-secret-iv: kWKNeZyRYVCgYlX1
+  sig-secret: WRfsTnyTI4r17b55
+  #城市充电平台测试地址
+  interflow-url: http://1.95.55.247/api/interflow-service/interFlow/XC59EF6B6/evcs/version/

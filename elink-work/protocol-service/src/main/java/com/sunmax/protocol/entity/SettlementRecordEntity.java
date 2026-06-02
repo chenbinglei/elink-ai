@@ -1,0 +1,92 @@
+package com.sunmax.protocol.entity;
+
+import com.sunmax.common.entity.BaseTimeEntity;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+
+/**
+ * 结算记录实体类
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "b_settlement_record")
+public class SettlementRecordEntity extends BaseTimeEntity {
+
+    /**
+     * 所属订单号
+     */
+    @Column(name = "order_num", columnDefinition = "varchar(32) comment '订单号'")
+    private String orderNum;
+
+    /**
+     * 结算状态 0-未结算 1-结算关闭 2-结算失败 3-结算成功
+     */
+    @Column(name = "settlement_state",columnDefinition = "tinyint(1) comment '结算状态 0-未结算 1-结算关闭 2-结算失败 3-结算成功'")
+    private Integer settlementState;
+
+    /**
+     * 支付方式 1-免支付 2-微信支付 3-支付宝支付
+     */
+    @Column(name = "pay_way",columnDefinition = "tinyint(1) comment '支付方式 1-免支付 2-微信支付 3-支付宝支付'")
+    private Integer payWay;
+
+    /**
+     * 原价总金额
+     */
+    @Column(name = "original_cost", columnDefinition = "decimal(9,2) comment '原价总金额'")
+    @Builder.Default
+    private BigDecimal originalCost = new BigDecimal("0.0");
+
+    /**
+     * 实付金额
+     */
+    @Column(name = "actual_total_cost", columnDefinition = "decimal(9,2) comment '实付金额'")
+    @Builder.Default
+    private BigDecimal actualTotalCost = new BigDecimal("0.0");
+
+    /**
+     * 实付电费
+     */
+    @Column(name = "actual_total_elect", columnDefinition = "decimal(9,2) comment '实付电费'")
+    @Builder.Default
+    private BigDecimal actualTotalElect = new BigDecimal("0.0");
+
+    /**
+     * 实付服务费
+     */
+    @Column(name = "actual_total_fee", columnDefinition = "decimal(9,2) comment '实付服务费'")
+    @Builder.Default
+    private BigDecimal actualTotalFee = new BigDecimal("0.0");
+
+    /**
+     * 电费减免
+     */
+    @Column(name = "total_elect_reduction", columnDefinition = "decimal(9,2) comment '电费减免'")
+    @Builder.Default
+    private BigDecimal totalElectReduction = new BigDecimal("0.0");
+
+    /**
+     * 服务费减免
+     */
+    @Column(name = "total_fee_reduction", columnDefinition = "decimal(9,2) comment '服务费减免'")
+    @Builder.Default
+    private BigDecimal totalFeeReduction = new BigDecimal("0.0");
+
+    /**
+     * 退款金额
+     */
+    @Column(name = "refund_money",columnDefinition = "decimal(9,2) comment '退款金额'")
+    @Builder.Default
+    private BigDecimal refundMoney = new BigDecimal("0.0");
+}

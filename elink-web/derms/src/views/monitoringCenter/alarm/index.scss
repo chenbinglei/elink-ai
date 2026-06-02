@@ -1,0 +1,123 @@
+.box-border{
+  width: 100%;
+  height: 100%; /* 视口高度 */
+  box-sizing: border-box;
+  padding: 0 24px;
+  background: url("@/assets/image/station-details/sta-detail-bg.png") no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
+  .wrap{
+    height: 100%;
+    color: #fff;
+    .wrap-left{
+      width: 25%;
+      flex-shrink: 0;
+      padding-right: 24px;
+    }
+    .wrap-right{
+      box-sizing: border-box;
+      width: 75%;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      .wrap-right-echart{
+        background: url('@/assets/image/row-bac-text.png') no-repeat;
+        background-size: 100% 100%;
+        padding-left: 10px;
+        padding-top: 40px;
+        // .title{
+        //   padding: 10px 0;
+        //   padding-left: 40px;
+        //   position: relative;
+        //   font-family: zihun35hao-jindianyahei, zihun35hao-jindianyahei;
+        //   font-weight: 400;
+        //   font-size: 18px;
+        //   &::before{
+        //     display: inline-block;
+        //     content: '';
+        //     position: absolute;
+        //     left: 20px;
+        //     top: 10px;
+        //     width: 2px;
+        //     height: 20px;
+        //     background: #fff;
+        //     box-shadow: 0px 0px 6px 1px #FFFFFF;
+        //   }
+        // }
+      }
+      .wrap-right-echartBottom{
+        background: url('@/assets/image/row-bac-text2.png') no-repeat;
+        background-size: 100% 100%;
+        padding-left: 10px;
+        padding-top: 40px;
+      }
+      .alarmwrap{
+        width: 100%;height: 100%;position: relative;
+      }
+      .alLeBg{
+        background: url('@/assets/image/echartBg.png') no-repeat;
+        background-size: 100% 100% ;
+        width: 179px;
+        height: 169px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 20px;
+        right: 0;
+        margin: auto;
+        text-align: center;
+        align-items: center;
+        font-family: Agency FB, Agency FB;
+        font-weight: 400;
+        font-size: 30px;
+        p{
+          font-weight: bold;
+          background: linear-gradient(to right, #0BCEFF, #fff);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          text-fill-color: transparent;
+          background-size: 200% auto;
+          animation: gradientShift 3s linear infinite;
+          position: relative;
+          top: 10px;
+        }
+        @keyframes gradientShift {
+          to { background-position: 200% center; }
+        }
+      }
+      .warning-text{
+        font-size: 13px;
+        padding: 10px 0 10px;
+        background: url('@/assets/image/li-bac.png') no-repeat;
+        background-size: 100% 100%;
+      }
+      .infinite-list{
+        font-weight: 400;
+        font-size: 14px;
+        height: 55%;
+        li{
+          padding: 15px 0 11px 0;
+          background: url('@/assets/image/li-bac.png') no-repeat;
+          background-size: 100% 100%;
+        }
+      }
+      .special-text{
+        color: #3BAAF5;
+      }
+    }
+  }
+  .dateTab{
+    padding: 21px 0;
+    span{
+      cursor: pointer;
+      font-size: 14px;
+      padding: 10px 24px;
+      line-height: 50px;
+      color: #7DCBFF;
+    }
+    .active{
+      background: linear-gradient( 180deg, rgba(0,168,255,0) 0%, rgba(79,176,251,0.3) 100%);
+    }
+  }
+}

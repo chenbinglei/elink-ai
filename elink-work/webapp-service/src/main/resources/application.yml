@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: test
+  application:
+    name: swebapp-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+wechatpay:
+  payUrl: https://q58g558210.zicp.fun/swebapp/trade/wechatPayNotifyUrl
+  refundUrl: https://q58g558210.zicp.fun/swebapp/trade/wechatRefundNotifyUrl
+  transferUrl: https://q58g558210.zicp.fun/swebapp/trade/wechatTransferNotifyUrl

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunmax.together.mapper.ElectricCardMapper">
+    <select id="queryElectricCards" parameterType="map" resultType="com.sunmax.together.model.ElectricCardModel">
+        SELECT id AS electricCardId,
+        card_type AS cardType,
+        single_limit AS singleLimit,
+        card_number AS cardNumber,
+        physical_card AS physicalCard,
+        cardholder AS cardHolder,
+        license_number AS licenseNumber,
+        current_balance AS currentBalance,
+        create_time AS createTime,
+        state
+        FROM b_electric_card
+        WHERE 1 = 1
+        <if test="electricCardId != null and electricCardId != ''">
+            AND id = #{electricCardId}
+        </if>
+        <if test="cardHolder != null and cardHolder != ''">
+            AND cardholder LIKE CONCAT('%', #{cardHolder}, '%')
+        </if>
+        <if test="cardNumber != null and cardNumber != ''">
+            AND card_number LIKE CONCAT('%', #{cardNumber}, '%')
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+</mapper>

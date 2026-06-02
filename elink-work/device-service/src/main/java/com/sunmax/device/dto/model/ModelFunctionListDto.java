@@ -1,0 +1,59 @@
+package com.sunmax.device.dto.model;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+@Data
+@ApiModel(value = "ModelFunctionListDto", description = "模型标准功能列表返回实体类")
+public class ModelFunctionListDto {
+
+    /**
+     * 关联主键id
+     */
+    @ApiModelProperty(value = "关联主键id")
+    private String id;
+
+    /**
+     * 功能id
+     */
+    @ApiModelProperty(value = "功能id")
+    private String functionId;
+
+    /**
+     * 功能名称
+     */
+    @ApiModelProperty(value = "功能名称")
+    private String functionName;
+
+    /**
+     * 功能标识
+     */
+    @ApiModelProperty(value = "功能标识")
+    private String functionLogo;
+
+    /**
+     * 功能类型 1-遥测 2-遥信 3-遥脉 4-遥控 5-遥调
+     */
+    @ApiModelProperty(value = "功能类型 1-遥测 2-遥信 3-遥脉 4-遥控 5-遥调")
+    private Integer functionType;
+
+    /**
+     * 数据类型 1-int32(整数) 2-int64(长整数型) 3-float(单精度浮点型) 4-double(双精度浮点型) 5-enum(枚举) 6-bool(布尔) 7-string(字符串) 8-array(数组) 9-date(时间)
+     */
+    @ApiModelProperty(value = "数据类型 1-int32(整数) 2-int64(长整数型) 3-float(单精度浮点型) 4-double(双精度浮点型) 5-enum(枚举) 6-bool(布尔) 7-string(字符串) 8-array(数组) 9-date(时间)", required = true)
+    private Integer dataType;
+
+//    /**
+//     * 取值范围
+//     */
+//    @ApiModelProperty(value = "取值范围")
+//    private String valueRange;
+
+    /**
+     * 数据对象 {key:value} 字符串直接存长度
+     */
+    @ApiModelProperty(value = "数据对象 {key:value} 字符串直接存长度")
+    private String dataObject;
+
+}
