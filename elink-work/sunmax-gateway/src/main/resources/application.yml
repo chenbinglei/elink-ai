@@ -12,7 +12,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        namespace: ${NACOS_NAMESPACE:public}
     gateway:
       httpclient:
         connect-timeout: 600000

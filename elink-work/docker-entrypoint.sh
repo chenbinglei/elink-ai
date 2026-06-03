@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-NACOS_HOST=${NACOS_HOST:-192.168.2.158}
+NACOS_HOST=${NACOS_HOST:-127.0.0.1}
 NACOS_PORT=${NACOS_PORT:-8848}
 
-# 初始化 TDengine 客户端库符号链接 (libtaos.so -> libtaos.so.1)
 if [ -f /usr/lib/libtaos.so.1 ] && [ ! -L /usr/lib/libtaos.so ]; then
     ln -s /usr/lib/libtaos.so.1 /usr/lib/libtaos.so 2>/dev/null || true
 fi
