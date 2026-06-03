@@ -1,15 +1,37 @@
 #!/bin/bash
 
-# 使用项目自带的 docker-compose 二进制
 COMPOSE="/work/elink-ai/docker-compose"
 PROJECT_DIR="/work/elink-ai/elink-work"
-NACOS_HOST="192.168.2.158"
-NACOS_PORT="8848"
+ENV_FILE="/work/elink-ai/.env"
+
+load_env_file() {
+    if [ ! -f "$ENV_FILE" ]; then
+        echo -e "\033[33m[WARN] .env 文件不存在: ${ENV_FILE}\033[0m"
+        return 1
+    fi
+    while IFS='=' read -r key value; do
+        key=$(echo "$key" | xargs)
+        value=$(echo "$value" | xargs)
+        case "$key" in
+            ''|\#*) continue ;;
+        esac
+        export "$key=$value"
+    done < "$ENV_FILE"
+    echo -e "\033[32m[INFO] 已加载 .env 文件: ${ENV_FILE}\033[0m"
+    return 0
+}
+
+load_env_file
+
+NACOS_HOST="${NACOS_HOST:-127.0.0.1}"
+NACOS_PORT="${NACOS_PORT:-8848}"
+export NACOS_IP="$NACOS_HOST"
+export NACOS_PORT="$NACOS_PORT"
 BACKUP_DIR="${PROJECT_DIR}/backups"
 LOG_DIR="${PROJECT_DIR}/logs"
 HISTORY_FILE="${LOG_DIR}/reload-history.log"
 HEALTH_TIMEOUT=180
-MONITOR_DURATION=15
+MONITOR_DURATION=10
 MAX_BACKUPS=5
 
 SERVICES=(
@@ -359,7 +381,7 @@ hot_reload_service() {
 
     log_info "[4/7] Restarting container ${service}..."
     cd "$PROJECT_DIR"
-    $COMPOSE up -d --no-build --force-recreate "$service"
+    $COMPOSE --env-file "$ENV_FILE" up -d --no-build --force-recreate "$service"
 
     log_info "[5/7] Waiting for health check..."
     if ! wait_for_healthy "$service" "$port" "$nacos_name" "$HEALTH_TIMEOUT"; then
@@ -368,7 +390,7 @@ hot_reload_service() {
         if [ -n "$backup_path" ] && [ -f "$backup_path" ]; then
             log_error "Initiating AUTOMATIC ROLLBACK..."
             restore_jar "$service" "$backup_path"
-            $COMPOSE up -d --no-build --force-recreate "$service"
+            $COMPOSE --env-file "$ENV_FILE" up -d --no-build --force-recreate "$service"
 
             log_info "Waiting for rollback to complete..."
             sleep 15
@@ -392,8 +414,8 @@ hot_reload_service() {
     log_info "[6/7] Monitoring resources for ${MONITOR_DURATION}s..."
     local monitor_elapsed=0
     while [ $monitor_elapsed -lt $MONITOR_DURATION ]; do
-        sleep 10
-        monitor_elapsed=$((monitor_elapsed + 10))
+        sleep 3
+        monitor_elapsed=$((monitor_elapsed + 3))
         local current_resources=$(capture_resource_snapshot "$service")
         log_debug "  Monitor [${monitor_elapsed}/${MONITOR_DURATION}s]: ${current_resources}"
     done
@@ -435,7 +457,7 @@ do_rollback() {
     restore_jar "$service" "$backup_path"
 
     cd "$PROJECT_DIR"
-    $COMPOSE up -d --no-build --force-recreate "$service"
+    $COMPOSE --env-file "$ENV_FILE" up -d --no-build --force-recreate "$service"
 
     log_info "Waiting for rollback to complete..."
     if wait_for_healthy "$service" "$port" "$nacos_name" "$HEALTH_TIMEOUT"; then

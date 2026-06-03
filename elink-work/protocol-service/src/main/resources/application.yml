@@ -1,12 +1,99 @@
+server:
+  port: 60005
+  servlet:
+    context-path: /protocol
+
 spring:
-  profiles:
-    active: test
   application:
     name: sunos-protocol-service
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        namespace: ${NACOS_NAMESPACE:public}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/sunos-operate?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD}
+    type: com.zaxxer.hikari.HikariDataSource
+    filters: stat,wall,config
+    maxActive: 100
+    initial-size: 5
+    max-wait: 60000
+    min-idle: 5
+    time-between-eviction-runs-millis: 600000
+    min-evictable-idle-time-millis: 30000
+    validation-query: select 1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    pool-prepared-statements: false
+    max-pool-prepared-statement-per-connection-size: 20
+    pool-name: primarypool
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL55Dialect
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true
+        jdbc.batch_size: 50
+
+  redis:
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:127.0.0.1}
+    password: ${REDIS_PASSWORD}
+    timeout: 60s
+    database: 1
+    lettuce:
+      pool:
+        min-idle: 10
+        max-idle: 100
+        max-active: 200
+        max-wait: 1000
+
+security:
+  oauth2:
+    client:
+      client-id: sunos-client
+      client-secret: sunos-client
+      access-token-uri: http://${AUTH_HOST:127.0.0.1}:${AUTH_PORT:60001}/sauth/oauth/token
+      user-authorization-uri: http://${AUTH_HOST:127.0.0.1}:${AUTH_PORT:60001}/sauth/oauth/authorize
+    resource:
+      token-info-uri: http://${AUTH_HOST:127.0.0.1}:${AUTH_PORT:60001}/sauth/oauth/check_token
+
+mqtt:
+  qos: 0
+  timeout: 60
+  keep-alive: 60
+  expire: 5
+  web:
+    username: ${EMQX1_USERNAME:admin}
+    password: ${EMQX1_PASSWORD:public}
+    host-url: tcp://${EMQX1_HOST:127.0.0.1}:${EMQX1_PORT:1883}
+    client-id: protocol-web
+    client-topic: webTopic
+  inter:
+    username: ${EMQX2_USERNAME:admin}
+    password: ${EMQX2_PASSWORD:public}
+    host-url: tcp://${EMQX2_HOST:127.0.0.1}:${EMQX2_PORT:2883}
+    client-id: protocol-inter
+    client-topic: interTopic
+
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
