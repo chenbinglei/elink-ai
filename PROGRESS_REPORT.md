@@ -331,7 +331,50 @@ allowed-origins:
 | 项目 | 级别 | 说明 | 建议措施 |
 |------|------|------|----------|
 | P1-T9 前置条件 | P1 | useSSL=true需MySQL服务端已配置SSL证书 | 确认生产MySQL SSL配置状态，开发环境可暂缓 |
-| P1-T3 前置条件 | P1 | ddl-auto改为validate后需确认数据库表结构与Entity同步 | 部署前执行数据库结构对比验证（已移至已完成） |
+| P1-T3 前置条件 | P1 | ddl-auto改为validate后需确认数据库表结构与Entity同步 | 已制定P1-T3-COMP补偿计划：引入Flyway+增量迁移脚本 |
+
+---
+
+## 5.5 R1性能基线测试结果（2026-06-05）
+
+**测试方式：** 30次迭代curl请求，直连服务端口
+
+| 端点 | 平均响应 | 最小 | 最大 | 状态 |
+|------|---------|------|------|------|
+| Gateway Health (5000) | 11ms | 8ms | 17ms | ✅ 正常 |
+| Auth Health (60001) | 14ms | 10ms | 21ms | ✅ 正常 |
+| System Health (60002) | 12ms | 9ms | 26ms | ✅ 正常 |
+| Device Health (60003) | 16ms | 10ms | 20ms | ✅ 正常 |
+| Data Health (60004) | 18ms | 12ms | 23ms | ✅ 正常 |
+| Protocol Health (60005) | 17ms | 12ms | 22ms | ✅ 正常 |
+| Crontab Health (60006) | 2ms | 1ms | 12ms | ⚠️ 返回404（actuator路径缺失） |
+| DevOps Health (60007) | 15ms | 10ms | 25ms | ✅ 正常 |
+| Configure Health (60008) | 14ms | 10ms | 22ms | ✅ 正常 |
+| **Together Health (60009)** | **2575ms** | **349ms** | **8132ms** | ❌ **严重异常** |
+| WebApp Health (60010) | 18ms | 12ms | 29ms | ✅ 正常 |
+| Auth Token (POST) | 19ms | 2ms | 503ms | ⚠️ 偶发慢请求 |
+| System User List | 6ms | 2ms | 112ms | ✅ 正常 |
+| Device Site List | 6ms | 2ms | 111ms | ✅ 正常 |
+
+**Docker容器内存占用：**
+
+| 服务 | 内存占用 | CPU% |
+|------|---------|------|
+| nacos | 1.154GiB | 11.16% |
+| device-service | 812.6MiB | 9.61% |
+| together-service | 838.9MiB | 1.48% |
+| system-service | 783.6MiB | 2.51% |
+| crontab-service | 768.9MiB | 2.61% |
+| configure-service | 751.2MiB | 1.37% |
+| auth-service | 748.7MiB | 1.76% |
+| emqx1 | 250.9MiB | 91.84% |
+
+**关键发现：**
+1. ❌ **Together-service健康检查严重慢**：平均2.5s，最大8.1s，需排查（可能原因：Nacos注册延迟/JVM GC/数据库慢查询）
+2. ⚠️ **Crontab-service actuator返回404**：Spring Boot Actuator端点路径未配置或未暴露
+3. ⚠️ **Auth Token偶发503ms延迟**：存在尖刺，需关注连接池配置
+4. ⚠️ **所有服务均未设置容器内存/CPU限制**（MEM USAGE / LIMIT 显示宿主机总内存62.52GiB）
+5. ⚠️ **emqx1 CPU 91.84%**：EMQX实例CPU占用异常高，需排查
 
 ---
 
@@ -339,7 +382,11 @@ allowed-origins:
 
 | 顺序 | 任务 | 预估影响 | 前置条件 |
 |------|------|----------|----------|
-| 1 | PHASE-2 框架升级（2.3→2.7） | 全局 | PHASE-1验证通过（已完成） |
+| 1 | P1-T3-COMP: 引入Flyway+ddl-auto validate | 数据库管理方式变更 | P1-T3回退已记录 |
+| 2 | P1-T9-COMP: MySQL SSL配置+useSSL=true | 数据库连接安全加固 | P1-T9回退已记录 |
+| 3 | 排查Together-service健康检查慢查询问题 | 性能优化 | R1基线数据 |
+| 4 | 排查emqx1 CPU占用异常 | 基础设施稳定性 | R1基线数据 |
+| 5 | PHASE-2 框架升级（2.3→2.7） | 全局 | P1-T3-COMP完成 |
 
 ---
 
@@ -351,3 +398,5 @@ allowed-origins:
 | v1.1 | 2026-06-03 | AI | 新增P1-T3完成记录，更新进度为50%，更新SEC-03已修复标记，调整下一步计划 |
 | v1.2 | 2026-06-03 | AI | 新增P1-T4~T9完成记录，更新进度为90%，更新SEC-04/SEC-02扩展/数据安全已修复标记，调整下一步计划为P1-V验证 |
 | v1.3 | 2026-06-03 | AI | 新增P1-V完成记录，PHASE-1进度100%，所有安全问题已修复验证，下一步进入PHASE-2 |
+| v1.4 | 2026-06-04 | AI | 复审验证更新，标注P1-T3/T9环境约束回退，新增P3-C2性能参数调整任务 |
+| v1.5 | 2026-06-05 | AI | 新增SUP-01~SUP-08补充执行记录，新增R1性能基线数据，更新风险项和下一步计划 |
