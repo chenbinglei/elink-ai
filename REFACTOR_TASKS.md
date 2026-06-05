@@ -12,7 +12,7 @@
 
 | 阶段 | 任务总数 | 已完成 | 进行中 | 待开始 | 完成率 |
 |------|---------|--------|--------|--------|--------|
-| PHASE-1 | 9+1(验证)+2(补偿) | 10 | 0 | 2 | 83% |
+| PHASE-1 | 9+1(验证)+2(补偿)+8(基础设施) | 18 | 0 | 2 | 90% |
 | PHASE-2 | 6 | 0 | 0 | 6 | 0% |
 | PHASE-3 | 5 | 0 | 0 | 5 | 0% |
 | PHASE-4 | 4 | 0 | 0 | 4 | 0% |
@@ -32,6 +32,14 @@
 | P1-T8 | configure-service 平台密钥硬编码外置 | 2026-06-03 | AI | yml 5个密钥+Java 1处硬密钥全部外置，编译通过 |
 | P1-T9 | 数据库连接 useSSL 修复 | 2026-06-03 | AI | 修改已执行，因MySQL未配置SSL证书手动回退为useSSL=false |
 | P1-V | PHASE-1 全量验证 | 2026-06-03 | AI | 编译+打包通过，9项残留0，修复1处遗漏IP，100%完成 |
+| SUP-09 | Nacos持久化Derby→MySQL | 2026-06-05 | AI | 创建nacos_config数据库12张表，docker-compose添加MySQL配置 |
+| SUP-10 | EMQX集群化配置 | 2026-06-05 | AI | 添加static集群策略+节点Cookie，emqx2依赖emqx1 |
+| SUP-11 | Docker容器资源限制 | 2026-06-05 | AI | 15个服务全部添加deploy.resources.limits/reservations |
+| SUP-12 | Redis持久化策略配置 | 2026-06-05 | AI | 添加appendfsync everysec + RDB快照策略 |
+| SUP-13 | 健康检查参数优化 | 2026-06-05 | AI | interval 10s→15s, start_period统一为60-75s |
+| SUP-14 | 基础镜像版本锁定 | 2026-06-05 | AI | openjdk:8-jre→8-jre-slim, 添加非root用户appuser |
+| SUP-15 | 环境变量路径规范化 | 2026-06-05 | AI | 11个服务env_file绝对路径→相对路径../.env |
+| SUP-16 | CI/CD流程文档化 | 2026-06-05 | AI | 新增docs/CI_CD_PROCESS.md完整流程规范 |
 
 ---
 
