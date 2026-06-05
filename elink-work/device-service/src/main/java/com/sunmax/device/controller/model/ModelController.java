@@ -1,7 +1,7 @@
 package com.sunmax.device.controller.model;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.dto.device.AssetTypeDto;
 import com.sunmax.common.dto.device.ModelDetailDto;

@@ -1,7 +1,7 @@
 package com.sunmax.webapp.util;
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONException;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.config.wechat.HttpRequestUtil;
 import com.sunmax.webapp.dto.AccessTokenDto;
 import com.sunmax.webapp.dto.JsapiTicketDto;

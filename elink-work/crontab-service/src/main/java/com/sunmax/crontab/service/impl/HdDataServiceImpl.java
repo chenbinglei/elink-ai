@@ -1,6 +1,6 @@
 package com.sunmax.crontab.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.configure.PowerControlResDto;
 import com.sunmax.common.dto.crontab.LocalCacheDto;

@@ -1,6 +1,6 @@
 package com.sunmax.configure.controller;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.configure.dto.PelDetailDto;
 import com.sunmax.configure.dto.PelListDto;

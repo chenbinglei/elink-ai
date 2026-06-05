@@ -1,6 +1,7 @@
 package com.sunmax.device.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.sunmax.common.config.redis.RedisDeviceUtil;
@@ -258,7 +259,7 @@ public class DeviceTaskServiceImpl implements DeviceTaskService {
             List<String> pileTypeIds = Arrays.asList("29", "30");
             if (pileTypeIds.contains(taskChangeVo.getTypeId())) {
                 //添加设备升级任务记录
-                List<String> deviceIds = JSONObject.parseArray(taskChangeVo.getDeviceIds(), String.class);
+                List<String> deviceIds = JSON.parseArray(taskChangeVo.getDeviceIds(), String.class);
                 List<DeviceEntity> deviceList = deviceDao.findAllById(deviceIds).stream().filter(d -> StringUtil.isNotEmpty(d.getDeviceNumber()))
                         .collect(Collectors.toList());
                 //根据多个站点id查询站点名称

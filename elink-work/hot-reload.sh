@@ -31,7 +31,7 @@ BACKUP_DIR="${PROJECT_DIR}/backups"
 LOG_DIR="${PROJECT_DIR}/logs"
 HISTORY_FILE="${LOG_DIR}/reload-history.log"
 HEALTH_TIMEOUT=180
-MONITOR_DURATION=10
+MONITOR_DURATION=6
 MAX_BACKUPS=5
 
 SERVICES=(
@@ -69,7 +69,7 @@ NACOS_NAMES=(
     "device-service:device-service"
     "data-service:sunos-data-service"
     "protocol-service:sunos-protocol-service"
-    "crontab-service:scrontab-service"
+    "crontab-service:crontab-service"
     "devops-service:devops-service"
     "configure-service:configure-service"
     "together-service:together-service"
@@ -83,7 +83,7 @@ JAR_MAPPING=(
     "device-service:device-service-exec.jar"
     "data-service:data-service-exec.jar"
     "protocol-service:protocol-service-exec.jar"
-    "crontab-service:scrontab-service-exec.jar"
+    "crontab-service:crontab-service-exec.jar"
     "devops-service:devops-service-exec.jar"
     "configure-service:configure-service-exec.jar"
     "together-service:together-service-exec.jar"

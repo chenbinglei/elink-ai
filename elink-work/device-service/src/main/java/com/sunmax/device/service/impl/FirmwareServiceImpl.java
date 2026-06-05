@@ -1,6 +1,6 @@
 package com.sunmax.device.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.sunmax.common.dto.PageDto;

@@ -1,7 +1,7 @@
 package com.sunmax.protocol.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.dto.protocol.PileResultDto;
 import com.sunmax.common.model.general.PileRealModel;
@@ -129,7 +129,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            platformPileStartVo = JSONObject.toJavaObject(dataMap, PlatformPileStartVo.class);
+            platformPileStartVo = dataMap.toJavaObject(PlatformPileStartVo.class);
             // 数据校验
             if (!isValidStart(platformPileStartVo)) {
                 return ResponseResult.paramError("启动充电桩入参数据校验失败");
@@ -274,7 +274,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            platformPileStopVo = JSONObject.toJavaObject(dataMap, PlatformPileStopVo.class);
+            platformPileStopVo = dataMap.toJavaObject(PlatformPileStopVo.class);
             // 数据校验
             if (!isValidStop(platformPileStopVo)) {
                 return ResponseResult.paramError("停止充电桩入参校验失败");
@@ -381,7 +381,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            platformPowerCtrlVo = JSONObject.toJavaObject(dataMap, PlatformPowerCtrlVo.class);
+            platformPowerCtrlVo = dataMap.toJavaObject(PlatformPowerCtrlVo.class);
             // 数据校验
             if (!isValidCtrl(platformPowerCtrlVo)) {
                 return ResponseResult.paramError("功率控制入参数据校验失败");

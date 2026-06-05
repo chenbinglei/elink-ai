@@ -10,7 +10,7 @@ const portNum = ":21010";
 // 请求目标服务器地址   http://192.168.2.158:9534   https://os.enlinkitech.com/   121.41.109.130
 const locationHost = location.hostname;
 const locationProtocol = location.protocol;
-const serverIpAddress = `${locationProtocol}//47.110.235.112${ portNum }`;
+const serverIpAddress = process.env.VUE_APP_API_HOST || `${locationProtocol}//${location.hostname}${ portNum }`;
 // const serverIpAddress = `${locationProtocol}//121.41.109.130${ portNum }`;
 const onlineServerIpAddress = `${locationProtocol}//${locationHost}${locationProtocol === "http:" ? portNum : ""}`;
 

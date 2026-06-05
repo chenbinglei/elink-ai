@@ -1,6 +1,6 @@
 package com.sunmax.together.service.operation.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
@@ -111,7 +111,7 @@ public class SeriesInfoServiceImpl implements SeriesInfoService {
     @Override
     @Transactional(transactionManager = "transactionManager", rollbackFor = Exception.class)
     public ResponseResult<String> batchDeleteModuleLibrary(String ids) {
-        moduleLibraryDao.deleteAll(moduleLibraryDao.findAllById(JSONArray.parseArray(ids, String.class)));
+        moduleLibraryDao.deleteAll(moduleLibraryDao.findAllById(JSON.parseArray(ids, String.class)));
         return ResponseResult.ok(ResponseResult.SUCCESS);
     }
 

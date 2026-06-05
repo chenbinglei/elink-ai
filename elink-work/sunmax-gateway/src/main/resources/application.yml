@@ -27,7 +27,10 @@ spring:
         cors-configurations:
           '[/**]':
             allow-credentials: true
-            allowed-origins: "*"
+            allowed-origins:
+              - https://os.enlinkitech.com
+              - https://derms.enlinkitech.com
+              - https://derms.enlinkitech.com:9536
             allowed-headers: "*"
             allowed-methods:
               - OPTIONS

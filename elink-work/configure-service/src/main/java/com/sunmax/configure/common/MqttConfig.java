@@ -1,6 +1,6 @@
 package com.sunmax.configure.common;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.model.general.GatewayRealModel;
 import com.sunmax.common.util.DateUtil;

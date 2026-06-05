@@ -1,9 +1,8 @@
 package com.sunmax.together.service.operation.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
@@ -1243,17 +1242,17 @@ public class OrderRecordServiceImpl implements OrderRecordService {
                         Map<String, Object> varNodeValueMap = deviceVarNodeValueByIds.get(deviceBasicInfoDto.getId());
                         //获取电枪电流数据
                         if (varNodeValueMap.containsKey(SystemVariableEnum.GUNOUTPUTCURRENT.getCode())) {
-                            result.setCurrentList(JSONArray.parseArray(JSON.toJSONString(varNodeValueMap.get(SystemVariableEnum.GUNOUTPUTCURRENT.getCode())), Double.class));
+                            result.setCurrentList(JSON.parseArray(JSON.toJSONString(varNodeValueMap.get(SystemVariableEnum.GUNOUTPUTCURRENT.getCode())), Double.class));
                         }
                         //获取电枪电压数据
                         if (varNodeValueMap.containsKey(SystemVariableEnum.GUNOUTPUTVOLTAGE.getCode())) {
-                            result.setVoltageList(JSONArray.parseArray(JSON.toJSONString(varNodeValueMap.get(SystemVariableEnum.GUNOUTPUTVOLTAGE.getCode())), Double.class));
+                            result.setVoltageList(JSON.parseArray(JSON.toJSONString(varNodeValueMap.get(SystemVariableEnum.GUNOUTPUTVOLTAGE.getCode())), Double.class));
                         }
                         //获取电枪功率数据
                         if (varNodeValueMap.containsKey(SystemVariableEnum.GUNPOWER.getCode())) {
-                            result.setPowerList(JSONArray.parseArray(JSON.toJSONString(varNodeValueMap.get(SystemVariableEnum.GUNPOWER.getCode())), Double.class));
+                            result.setPowerList(JSON.parseArray(JSON.toJSONString(varNodeValueMap.get(SystemVariableEnum.GUNPOWER.getCode())), Double.class));
                         }
-                        result.setXAxisList(JSONArray.parseArray(JSON.toJSONString(varNodeValueMap.get("xAxisList")), String.class));
+                        result.setXAxisList(JSON.parseArray(JSON.toJSONString(varNodeValueMap.get("xAxisList")), String.class));
                     }
                 }
             }

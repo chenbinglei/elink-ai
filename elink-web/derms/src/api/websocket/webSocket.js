@@ -9,7 +9,7 @@ const formalIpAddress = `${ locationProtocol === "http:" ? "ws:" : "wss:" }//${ 
 // const url = isDev() ? 'ws://192.168.2.155:5000' : formalIpAddress;
 
 // const url = isDev() ? 'ws://121.41.109.130:5000' : formalIpAddress;
-const url = isDev() ? 'ws://47.110.235.112:21010' : formalIpAddress;
+const url = isDev() ? (import.meta.env.VITE_WS_URL || `${locationProtocol === "http:" ? "ws:" : "wss:"}//${locationHost}${locationProtocol === "http:" ? ":21010" : ""}`) : formalIpAddress;
 
 let userInfo = JSON.parse(localStorage.getItem("USER_INFO")); //当前登录用户信息
 console.log("userInfo", userInfo);

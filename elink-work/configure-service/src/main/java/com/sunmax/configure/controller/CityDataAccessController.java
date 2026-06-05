@@ -1,8 +1,7 @@
 package com.sunmax.configure.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.system.SiteOperateDto;
 import com.sunmax.common.enums.ProtocolEnum;
@@ -96,7 +95,7 @@ public class CityDataAccessController {
                 Map<String, Object> requestDataMap = JSON.parseObject(data, new TypeReference<Map<String, Object>>() {});
                 List<String> stationIdList = null;
                 if (StringUtil.isNotEmpty(requestDataMap.get("StationIDs"))) {
-                    List<String> cityStationIdList = JSONObject.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
+                    List<String> cityStationIdList = JSON.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
                     //数据转发配置返回的站点id列表
                     List<SiteOperateDto> siteOperateList = responseDto.getSiteOperateList();
                     if (CollectionUtils.isNotEmpty(siteOperateList)) {

@@ -52,7 +52,7 @@ NACOS_SERVICE_NAMES=(
     device-service
     sunos-data-service
     sunos-protocol-service
-    scrontab-service
+    crontab-service
     devops-service
     configure-service
     together-service

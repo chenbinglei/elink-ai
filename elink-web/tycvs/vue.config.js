@@ -53,7 +53,7 @@ module.exports = defineConfig({
         port: 9002,
         proxy: {
             '/proxy': {
-                target: 'http://192.168.2.158:5000',
+                target: process.env.VUE_APP_PROXY_TARGET || 'http://localhost:5000',
                 changeOrigin: true,
                 pathRewrite: { '^/proxy': '' },
                 ws: true,

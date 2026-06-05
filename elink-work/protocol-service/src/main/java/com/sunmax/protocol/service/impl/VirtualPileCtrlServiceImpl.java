@@ -1,7 +1,7 @@
 package com.sunmax.protocol.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -53,7 +53,7 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            pileRealVo = JSONObject.toJavaObject(dataMap, VirtualPileRealVo.class);
+            pileRealVo = dataMap.toJavaObject(VirtualPileRealVo.class);
             if (pileRealVo == null || StringUtil.isEmpty(pileRealVo.getPileCodes())) {
                 return ResponseResult.paramError("获取电桩实时数据入参数据校验失败");
             }
@@ -105,7 +105,7 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            pileQtVo = JSONObject.toJavaObject(dataMap, VirtualPileQtVo.class);
+            pileQtVo = dataMap.toJavaObject(VirtualPileQtVo.class);
             // 数据校验
             if (!isValidPileQt(pileQtVo)) {
                 return ResponseResult.paramError("输入数据校验失败");

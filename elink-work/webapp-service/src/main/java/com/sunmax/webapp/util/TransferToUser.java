@@ -2,17 +2,13 @@ package com.sunmax.webapp.util;
 
 import cn.hutool.http.HttpRequest;
 import com.google.gson.annotations.SerializedName;
-import com.sunmax.common.util.oss.FileUtil;
-import com.sunmax.common.util.oss.OssFileUtil;
 import com.wechat.pay.java.core.util.PemUtil;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

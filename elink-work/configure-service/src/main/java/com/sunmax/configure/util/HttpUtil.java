@@ -1,6 +1,6 @@
 package com.sunmax.configure.util;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import okhttp3.*;
 
 import java.io.IOException;

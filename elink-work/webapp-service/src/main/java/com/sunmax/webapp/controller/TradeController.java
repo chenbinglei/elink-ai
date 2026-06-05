@@ -1,6 +1,6 @@
 package com.sunmax.webapp.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.webapp.dto.WechatMchTransferDto;
 import com.sunmax.webapp.dto.WechatTransferOrderDto;

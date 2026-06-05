@@ -111,7 +111,7 @@ export default defineConfig(({ mode }) => {
         // },
         // 请求目标服务器地址   http://192.168.2.158:5000  https://derms.enlinkitech.com  121.41.109.130
         "/proxy": {
-          target: "http://192.168.2.158:5000",
+          target: process.env.VITE_PROXY_TARGET || "http://localhost:5000",
 
           changeOrigin: true, // 是否跨域
           rewrite: (path) => path.replace(/^\/proxy/, ""),

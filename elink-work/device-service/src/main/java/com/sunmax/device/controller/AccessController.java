@@ -1,6 +1,6 @@
 package com.sunmax.device.controller;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dto.ChannelInfoDto;
 import com.sunmax.device.dto.ImportResultDto;

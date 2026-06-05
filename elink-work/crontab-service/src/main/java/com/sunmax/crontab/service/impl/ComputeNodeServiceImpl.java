@@ -1,6 +1,6 @@
 package com.sunmax.crontab.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
@@ -124,7 +124,7 @@ public class ComputeNodeServiceImpl implements ComputeNodeService {
                 //处理参数
                 String nodeParamInfos = computeNodeChangeVo.getNodeParamInfos();
                 if (StringUtil.isNotEmpty(nodeParamInfos)) {
-                    computeNodeTaskVo.setNodeParamInfoList(JSONArray.parseArray(nodeParamInfos, NodeParamInfoDto.class));
+                    computeNodeTaskVo.setNodeParamInfoList(JSON.parseArray(nodeParamInfos, NodeParamInfoDto.class));
                 }
                 //查询超级表在不在
                 Map<String, Object> stableIfExists = computeNodeMapper.findSTableIfExists(STABLE_NAME);
@@ -159,7 +159,7 @@ public class ComputeNodeServiceImpl implements ComputeNodeService {
                     //处理参数
                     String nodeParamInfos = computeNodeChangeVo.getNodeParamInfos();
                     if (StringUtil.isNotEmpty(nodeParamInfos)) {
-                        computeNodeTaskVo.setNodeParamInfoList(JSONArray.parseArray(nodeParamInfos, NodeParamInfoDto.class));
+                        computeNodeTaskVo.setNodeParamInfoList(JSON.parseArray(nodeParamInfos, NodeParamInfoDto.class));
                     }
                     nodeTaskService.updateComputeNodeListTask(Collections.singletonList(computeNodeTaskVo));
                 }
@@ -172,7 +172,7 @@ public class ComputeNodeServiceImpl implements ComputeNodeService {
                 if (CollectionUtils.isNotEmpty(nodeParamEntityList)) {
                     nodeParamDao.deleteAll(nodeParamEntityList);
                 }
-                nodeParamDao.saveAll(JSONArray.parseArray(nodeParamInfos, NodeParamEntity.class).stream().peek(n -> n.setNodeId(nodeId)).collect(Collectors.toList()));
+                nodeParamDao.saveAll(JSON.parseArray(nodeParamInfos, NodeParamEntity.class).stream().peek(n -> n.setNodeId(nodeId)).collect(Collectors.toList()));
             }
             return ResponseResult.ok(ResponseResult.SUCCESS);
         }

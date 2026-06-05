@@ -1,6 +1,6 @@
 package com.sunmax.configure.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.dto.crontab.ComputeNodeListDto;
 import com.sunmax.common.dto.device.ModelFunctionListDto;
 import com.sunmax.common.dto.device.SiteDeviceTreeDto;

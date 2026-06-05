@@ -1,6 +1,6 @@
 package com.sunmax.protocol.util.platform;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.util.DateUtil;
 import com.sunmax.common.util.StringUtil;

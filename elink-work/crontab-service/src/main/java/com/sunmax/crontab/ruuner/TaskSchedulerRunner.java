@@ -1,6 +1,6 @@
 package com.sunmax.crontab.ruuner;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.dto.system.DataForwardDto;
 import com.sunmax.common.dto.system.dynamic.MqttForwardDto;
 import com.sunmax.common.vo.system.MqttClientVo;

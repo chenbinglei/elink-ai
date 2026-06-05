@@ -1,6 +1,6 @@
 package com.sunmax.device.websocket;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.dto.protocol.mqtt.UpdateInfoDto;
 import com.sunmax.common.model.general.PileRealModel;

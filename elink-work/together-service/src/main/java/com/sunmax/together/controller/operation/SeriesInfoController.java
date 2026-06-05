@@ -1,6 +1,6 @@
 package com.sunmax.together.controller.operation;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.log.config.WebLog;
 import com.sunmax.together.dto.operation.seriesInfo.ModuleLibraryDto;
@@ -92,7 +92,7 @@ public class SeriesInfoController {
             @ApiImplicitParam(name = "seriesConfigChangeVos", value = "组串配置信息json字符串对象列表", dataType = "String", required = true)
     })
     public ResponseResult<String> saveSeriesConfigList(String deviceId, String seriesConfigChangeVos) {
-        return seriesInfoService.saveSeriesConfigList(deviceId, JSONArray.parseArray(seriesConfigChangeVos, SeriesConfigChangeVo.class));
+        return seriesInfoService.saveSeriesConfigList(deviceId, JSON.parseArray(seriesConfigChangeVos, SeriesConfigChangeVo.class));
     }
 
     @PostMapping("findSeriesConfigInfo")
@@ -113,7 +113,7 @@ public class SeriesInfoController {
             @ApiImplicitParam(name = "deviceIds", value = "多个所属设备id(['aaa','bbb'])", dataType = "String", required = true)
     })
     public ResponseResult<String> purgeSeriesConfigById(String deviceIds) {
-        return seriesInfoService.purgeSeriesConfigById(JSONArray.parseArray(deviceIds, String.class));
+        return seriesInfoService.purgeSeriesConfigById(JSON.parseArray(deviceIds, String.class));
     }
 
     @PostMapping("findInverterDeviceList")

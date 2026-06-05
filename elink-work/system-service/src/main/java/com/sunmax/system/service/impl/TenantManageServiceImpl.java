@@ -1,6 +1,6 @@
 package com.sunmax.system.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
@@ -551,7 +551,7 @@ public class TenantManageServiceImpl implements TenantManageService {
     @Transactional(transactionManager = "transactionManager", rollbackFor = Exception.class)
     public ResponseResult<String> saveTenantApplyEmpowerInfo(String tenantApplyEmpowerVos) {
         if (StringUtil.isNotEmpty(tenantApplyEmpowerVos)) {
-            List<TenantApplyEmpowerEntity> applyEmpowerEntities = JSONArray.parseArray(tenantApplyEmpowerVos, TenantApplyEmpowerEntity.class);
+            List<TenantApplyEmpowerEntity> applyEmpowerEntities = JSON.parseArray(tenantApplyEmpowerVos, TenantApplyEmpowerEntity.class);
             //先查询当前租户当前模块下所有配置，如果有则全部删掉重新添加
             List<TenantApplyEmpowerEntity> applyEmpowerEntityList = tenantApplyEmpowerDao.findAllByTenantIdAndModuleId(applyEmpowerEntities.get(0).getTenantId(), applyEmpowerEntities.get(0).getModuleId());
             if (CollectionUtils.isNotEmpty(applyEmpowerEntityList)) {
@@ -575,7 +575,7 @@ public class TenantManageServiceImpl implements TenantManageService {
             tenantApplyEmpowerDao.deleteAll(applyEmpowerEntityList);
         }
         if (StringUtil.isNotEmpty(tenantApplyVos)) {
-            List<TenantApplyEmpowerEntity> tenantApplyEmpowerList = JSONArray.parseArray(tenantApplyVos, TenantApplyEmpowerEntity.class);
+            List<TenantApplyEmpowerEntity> tenantApplyEmpowerList = JSON.parseArray(tenantApplyVos, TenantApplyEmpowerEntity.class);
             if (CollectionUtils.isNotEmpty(tenantApplyEmpowerList)) {
                 tenantApplyEmpowerDao.saveAll(tenantApplyEmpowerList.stream().peek(tenantApplyEmpowerEntity -> {
                     tenantApplyEmpowerEntity.setTenantId(tenantId);
@@ -795,7 +795,7 @@ public class TenantManageServiceImpl implements TenantManageService {
     @Transactional(transactionManager = "transactionManager", rollbackFor = Exception.class)
     public ResponseResult<String> batchSaveOrganEmpower(String organEmpowerInfoStr) {
         if (StringUtil.isNotEmpty(organEmpowerInfoStr)) {
-            List<OrganEmpowerEntity> organEmpowerEntityList = JSONArray.parseArray(organEmpowerInfoStr, OrganEmpowerEntity.class);
+            List<OrganEmpowerEntity> organEmpowerEntityList = JSON.parseArray(organEmpowerInfoStr, OrganEmpowerEntity.class);
             organEmpowerDao.saveAll(organEmpowerEntityList);
             return ResponseResult.ok(ResponseResult.SUCCESS);
         }

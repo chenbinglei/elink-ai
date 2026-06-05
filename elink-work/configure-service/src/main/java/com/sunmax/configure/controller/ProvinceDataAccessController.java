@@ -1,8 +1,8 @@
 package com.sunmax.configure.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.system.SiteOperateDto;
@@ -153,7 +153,7 @@ public class ProvinceDataAccessController {
                 });
                 List<SiteOperateDto> siteOperateList = Lists.newArrayList();
                 if (StringUtil.isNotEmpty(requestDataMap.get("StationIDs"))) {
-                    List<String> cityStationIdList = JSONObject.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
+                    List<String> cityStationIdList = JSON.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
                     //数据转发配置返回的站点id列表
                     siteOperateList = responseDto.getSiteOperateList();
                     if (CollectionUtils.isNotEmpty(siteOperateList)) {
