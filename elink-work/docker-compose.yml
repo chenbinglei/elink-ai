@@ -14,9 +14,9 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-123456}", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   emqx1:
     image: emqx/emqx:5.1.0
@@ -35,9 +35,9 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "emqx", "ctl", "status"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   emqx2:
     image: emqx/emqx:5.1.0
@@ -58,9 +58,9 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "emqx", "ctl", "status"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nacos:
     image: nacos/nacos-server:v2.1.0
@@ -81,8 +81,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/"]
       interval: 10s
       timeout: 5s
-      retries: 15
-      start_period: 20s
+      retries: 5
+      start_period: 30s
 
   auth-service:
     build:
@@ -101,6 +101,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60001
+      - HEALTH_CHECK_CONTEXT=/sauth
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./auth-service/target:/app/target:ro
@@ -112,13 +117,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60001/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60001/sauth/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
   sunmax-gateway:
     build:
@@ -137,6 +142,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=5000
+      - HEALTH_CHECK_CONTEXT=/
+      - HEALTH_CHECK_START_DELAY=40
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./sunmax-gateway/target:/app/target:ro
@@ -146,13 +156,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:5000/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 20s
+      test: ["CMD-SHELL", "curl -sf http://localhost:5000/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 40s
 
   system-service:
     build:
@@ -171,6 +181,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60002
+      - HEALTH_CHECK_CONTEXT=/system
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./system-service/target:/app/target:ro
@@ -182,13 +197,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60002/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60002/system/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
   device-service:
     build:
@@ -207,6 +222,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60003
+      - HEALTH_CHECK_CONTEXT=/device
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./device-service/target:/app/target:ro
@@ -218,13 +238,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60003/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60003/device/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
   data-service:
     build:
@@ -243,6 +263,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60004
+      - HEALTH_CHECK_CONTEXT=/data
+      - HEALTH_CHECK_START_DELAY=60
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
       - LD_LIBRARY_PATH=/usr/lib:/usr/local/taos/driver
       - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
@@ -259,13 +284,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60004/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60004/data/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 60s
 
   protocol-service:
     build:
@@ -284,6 +309,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60005
+      - HEALTH_CHECK_CONTEXT=/protocol
+      - HEALTH_CHECK_START_DELAY=60
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - WAIT_FOR_SERVICE=device-service
       - WAIT_MAX_RETRIES=60
       - TZ=Asia/Shanghai
@@ -301,13 +331,13 @@ services:
         condition: service_started
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60005/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 8
-      start_period: 40s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60005/protocol/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 60s
 
   crontab-service:
     build:
@@ -326,6 +356,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60006
+      - HEALTH_CHECK_CONTEXT=/crontab
+      - HEALTH_CHECK_START_DELAY=60
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - WAIT_FOR_SERVICE=together-service
       - WAIT_MAX_RETRIES=60
       - TZ=Asia/Shanghai
@@ -346,13 +381,13 @@ services:
         condition: service_started
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60006/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 8
-      start_period: 40s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60006/crontab/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 60s
 
   devops-service:
     build:
@@ -371,6 +406,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60007
+      - HEALTH_CHECK_CONTEXT=/devops
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./devops-service/target:/app/target:ro
@@ -382,13 +422,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60007/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60007/devops/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
   configure-service:
     build:
@@ -407,6 +447,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60008
+      - HEALTH_CHECK_CONTEXT=/configure
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./configure-service/target:/app/target:ro
@@ -420,13 +465,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60008/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60008/configure/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
   together-service:
     build:
@@ -445,6 +490,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60009
+      - HEALTH_CHECK_CONTEXT=/together
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./together-service/target:/app/target:ro
@@ -456,13 +506,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60009/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60009/together/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
   webapp-service:
     build:
@@ -481,6 +531,11 @@ services:
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
+      - HEALTH_CHECK_PORT=60010
+      - HEALTH_CHECK_CONTEXT=/swebapp
+      - HEALTH_CHECK_START_DELAY=50
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
+      - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./webapp-service/target:/app/target:ro
@@ -492,13 +547,13 @@ services:
         condition: service_healthy
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:60010/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 6
-      start_period: 30s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60010/swebapp/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 4
+      start_period: 50s
 
 networks:
   elink-network:

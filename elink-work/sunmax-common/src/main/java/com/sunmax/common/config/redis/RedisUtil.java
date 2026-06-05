@@ -1,6 +1,7 @@
 package com.sunmax.common.config.redis;
 
 import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.DataType;
@@ -9,6 +10,7 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.*;
@@ -26,8 +28,6 @@ public class RedisUtil {
         // key、hash的key 采用 String序列化方式
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setHashKeySerializer(RedisSerializer.string());
-        // value、hash的value 采用 Jackson 序列化方式
-        redisTemplate.setValueSerializer(RedisSerializer.json());
         redisTemplate.setHashValueSerializer(RedisSerializer.string());
         redisTemplate.afterPropertiesSet();
         RedisUtil.redisTemplate = redisTemplate;

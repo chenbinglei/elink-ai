@@ -6,12 +6,10 @@ import {getToken, removeToken, setToken} from "@/utils/auth";
 import { isDev } from "./env";
 
 // 自己的IP地址
-const portNum = ":21010";
-// 请求目标服务器地址   http://192.168.2.158:9534   https://os.enlinkitech.com/   121.41.109.130
+const portNum = ":5000";
 const locationHost = location.hostname;
 const locationProtocol = location.protocol;
 const serverIpAddress = process.env.VUE_APP_API_HOST || `${locationProtocol}//${location.hostname}${ portNum }`;
-// const serverIpAddress = `${locationProtocol}//121.41.109.130${ portNum }`;
 const onlineServerIpAddress = `${locationProtocol}//${locationHost}${locationProtocol === "http:" ? portNum : ""}`;
 
 const service = axios.create({

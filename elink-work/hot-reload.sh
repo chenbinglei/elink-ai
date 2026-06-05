@@ -31,7 +31,7 @@ BACKUP_DIR="${PROJECT_DIR}/backups"
 LOG_DIR="${PROJECT_DIR}/logs"
 HISTORY_FILE="${LOG_DIR}/reload-history.log"
 HEALTH_TIMEOUT=180
-MONITOR_DURATION=6
+MONITOR_DURATION=30
 MAX_BACKUPS=5
 
 SERVICES=(
@@ -74,6 +74,20 @@ NACOS_NAMES=(
     "configure-service:configure-service"
     "together-service:together-service"
     "webapp-service:swebapp-service"
+)
+
+CONTEXT_PATHS=(
+    "auth-service:/sauth"
+    "sunmax-gateway:"
+    "system-service:/system"
+    "device-service:/device"
+    "data-service:/data"
+    "protocol-service:/protocol"
+    "crontab-service:/crontab"
+    "devops-service:/devops"
+    "configure-service:/configure"
+    "together-service:/together"
+    "webapp-service:/swebapp"
 )
 
 JAR_MAPPING=(
@@ -142,6 +156,17 @@ get_nacos_name() {
     echo ""
 }
 
+get_context_path() {
+    local service=$1
+    for mapping in "${CONTEXT_PATHS[@]}"; do
+        if [ "${mapping%%:*}" = "$service" ]; then
+            echo "${mapping##*:}"
+            return
+        fi
+    done
+    echo ""
+}
+
 is_valid_service() {
     local service=$1
     for s in "${SERVICES[@]}"; do
@@ -178,9 +203,11 @@ check_container_health() {
 }
 
 check_http_health() {
-    local port=$1
-    local response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "http://localhost:${port}/" 2>/dev/null)
-    if [ -n "$response" ] && [ "$response" != "000" ]; then
+    local service=$1
+    local port=$(get_port "$service")
+    local context_path=$(get_context_path "$service")
+    local response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "http://localhost:${port}${context_path}/actuator/health" 2>/dev/null)
+    if [ -n "$response" ] && [ "$response" != "000" ] && [ "$response" != "503" ]; then
         return 0
     fi
     return 1
@@ -210,7 +237,7 @@ wait_for_healthy() {
         local http_ok=false
         local nacos_ok=false
 
-        if check_http_health "$port"; then
+        if check_http_health "$service"; then
             http_ok=true
         fi
 
@@ -395,7 +422,7 @@ hot_reload_service() {
             log_info "Waiting for rollback to complete..."
             sleep 15
 
-            if check_http_health "$port"; then
+            if check_http_health "$service"; then
                 log_info "Rollback SUCCESSFUL - ${service} restored to previous version"
                 log_history "ROLLBACK_OK | ${service} | Rolled back from failed reload"
             else
@@ -593,6 +620,127 @@ do_history() {
     else
         tail -30 "$HISTORY_FILE"
     fi
+}
+
+# 优雅停止单个服务
+do_stop() {
+    local service=$1
+    local timeout=${2:-30}
+
+    if ! is_valid_service "$service"; then
+        log_error "Unknown service: ${service}"
+        return 1
+    fi
+
+    local is_running=$(docker ps -q -f "name=^${service}$")
+    if [ -z "$is_running" ]; then
+        log_warn "Service ${service} is not running"
+        return 0
+    fi
+
+    local port=$(get_port "$service")
+    local nacos_name=$(get_nacos_name "$service")
+
+    log_info "=========================================="
+    log_info "Stopping service: ${service}"
+    log_info "  Port: ${port}"
+    log_info "  Graceful timeout: ${timeout}s"
+    log_info "=========================================="
+
+    # 先从 Nacos 注销服务，避免其他服务继续向其发送请求
+    if [ -n "$nacos_name" ]; then
+        log_info "[1/3] Deregistering from Nacos (${nacos_name})..."
+        local nacos_result=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X DELETE \
+            "http://${NACOS_HOST}:${NACOS_PORT}/nacos/v1/ns/instance?serviceName=${nacos_name}&ip=${NACOS_HOST}&port=${port}" 2>/dev/null)
+        if [ "$nacos_result" = "200" ] || [ "$nacos_result" = "204" ]; then
+            log_info "  Deregistered from Nacos ✓"
+        else
+            log_warn "  Failed to deregister from Nacos (HTTP ${nacos_result}), continuing..."
+        fi
+    fi
+
+    # 发送 SIGTERM 让 Spring Boot 优雅关闭
+    log_info "[2/3] Sending SIGTERM to ${service} (graceful shutdown ${timeout}s)..."
+    cd "$PROJECT_DIR"
+    $COMPOSE --env-file "$ENV_FILE" stop -t "$timeout" "$service"
+
+    local exit_code=$?
+    if [ $exit_code -eq 0 ]; then
+        log_info "  Service ${service} stopped gracefully ✓"
+    else
+        log_warn "  Graceful shutdown failed, forcing stop..."
+        $COMPOSE --env-file "$ENV_FILE" kill "$service"
+        log_info "  Service ${service} force-killed"
+    fi
+
+    log_info "[3/3] Verifying service is stopped..."
+    local still_running=$(docker ps -q -f "name=^${service}$")
+    if [ -z "$still_running" ]; then
+        log_info "=========================================="
+        log_info "Service ${service} STOPPED successfully"
+        log_info "=========================================="
+        log_history "STOP | ${service} | Stopped gracefully"
+        return 0
+    else
+        log_error "Service ${service} is still running!"
+        log_history "STOP_FAIL | ${service} | Still running after stop"
+        return 1
+    fi
+}
+
+# 停止所有后端服务（按依赖逆序）
+do_stop_all() {
+    local timeout=${1:-30}
+
+    log_info "=========================================="
+    log_info "Stopping ALL services (dependency reverse order)"
+    log_info "  Graceful timeout: ${timeout}s"
+    log_info "=========================================="
+
+    # 按启动顺序的逆序停止，确保依赖关系正确
+    local REVERSE_SERVICES=(
+        webapp-service
+        devops-service
+        crontab-service
+        together-service
+        configure-service
+        protocol-service
+        data-service
+        device-service
+        system-service
+        sunmax-gateway
+        auth-service
+    )
+
+    local failed=()
+    local stopped=()
+
+    for svc in "${REVERSE_SERVICES[@]}"; do
+        local is_running=$(docker ps -q -f "name=^${svc}$")
+        if [ -n "$is_running" ]; then
+            echo ""
+            if do_stop "$svc" "$timeout"; then
+                stopped+=("$svc")
+            else
+                failed+=("$svc")
+            fi
+        else
+            log_debug "Service ${svc} is not running, skipping"
+        fi
+    done
+
+    echo ""
+    log_info "=========================================="
+    log_info "Stop ALL Summary"
+    log_info "=========================================="
+    log_info "  Stopped: ${#stopped[@]} services"
+    if [ ${#failed[@]} -gt 0 ]; then
+        log_error "  Failed:  ${failed[*]}"
+    else
+        log_info "  All services stopped successfully ✓"
+    fi
+    log_history "STOP_ALL | Stopped ${#stopped[@]} services, ${#failed[@]} failed"
 }
 
 do_watch() {
@@ -830,12 +978,14 @@ do_watch_stop() {
 
 show_usage() {
     cat <<EOF
-elink-work Hot Reload Tool v2.0
+elink-work Hot Reload Tool v2.1
 
 用法:
   $0 reload <service>        热更新单个服务 (自动构建 + 重启 + 验证 + 回滚)
   $0 reload <service> skip   热更新服务 (跳过构建, 使用已有JAR)
   $0 all                      热更新所有服务
+  $0 stop <service> [timeout] 优雅停止单个服务 (默认30秒超时)
+  $0 stop-all [timeout]       优雅停止所有后端服务 (按依赖逆序, 默认30秒超时)
   $0 watch [services...]      前台监控模式 (检测JAR变化自动热更新)
   $0 watch-start [services...] 后台启动监控守护进程
   $0 watch-stop               停止后台监控守护进程
@@ -847,16 +997,20 @@ elink-work Hot Reload Tool v2.0
 
 特性:
   ✓ 实时文件监听: 使用 inotifywait 零延迟检测JAR变化 (回退2秒轮询)
-  ✓ 三层健康验证: Docker健康检查 + HTTP端口 + Nacos注册
+  ✓ 三层健康验证: Docker健康检查 + Actuator + Nacos注册
   ✓ 自动回滚: 热更新失败时恢复到上一稳定版本
+  ✓ 优雅停止: Nacos注销 + SIGTERM优雅关闭 + 超时强制终止
   ✓ 资源监控: 更新前后对比内存/CPU, 检测内存泄漏
-  ✓ 优雅关闭: 确保服务完成进行中请求后才停止
   ✓ 多版本备份: 保留最近${MAX_BACKUPS}个备份版本
 
 示例:
   $0 reload protocol-service          更新protocol-service
   $0 reload protocol-service skip     更新(不重新编译)
   $0 all                              更新所有服务
+  $0 stop protocol-service            优雅停止protocol-service
+  $0 stop protocol-service 60         停止(60秒超时)
+  $0 stop-all                         停止所有服务
+  $0 stop-all 60                      停止所有服务(60秒超时)
   $0 watch-start protocol-service     后台监控protocol-service变化
   $0 watch-start                      后台监控所有服务变化
   $0 rollback protocol-service        回滚protocol-service
@@ -865,6 +1019,11 @@ elink-work Hot Reload Tool v2.0
 
 可用服务:
 $(for s in "${SERVICES[@]}"; do echo "  - $s (port: $(get_port $s))"; done)
+
+注意事项:
+  - stop 和 stop-all 仅停止后端业务服务，不影响 Redis/Nacos/EMQX 等基础设施
+  - stop-all 按依赖逆序停止，确保上游服务先于下游服务关闭
+  - 优雅关闭期间服务会完成进行中的请求，超时后强制终止
 EOF
 }
 
@@ -929,6 +1088,18 @@ case "$1" in
         ;;
     watch-stop)
         do_watch_stop
+        ;;
+    stop)
+        if [ -z "$2" ]; then
+            log_error "Missing service name"
+            echo ""
+            show_usage
+            exit 1
+        fi
+        do_stop "$2" "${3:-30}"
+        ;;
+    stop-all)
+        do_stop_all "${2:-30}"
         ;;
     rollback)
         if [ -z "$2" ]; then

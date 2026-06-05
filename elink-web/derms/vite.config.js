@@ -105,11 +105,7 @@ export default defineConfig(({ mode }) => {
       open: false,
       overlay: false, // 关闭 Uncaught runtime errors 弹框
       proxy: {
-        // "/proxy/together/systemMonitor/getSystemTreeList": {
-        //   target: "http://127.0.0.1:5500",
-        //   bypass,
-        // },
-        // 请求目标服务器地址   http://192.168.2.158:5000  https://derms.enlinkitech.com  121.41.109.130
+        // 请求目标服务器地址（通过 VITE_PROXY_TARGET 环境变量配置）
         "/proxy": {
           target: process.env.VITE_PROXY_TARGET || "http://localhost:5000",
 

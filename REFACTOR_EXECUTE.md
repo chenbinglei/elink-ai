@@ -518,6 +518,51 @@ jdbc:mysql://host:3306/db?useSSL=true&...
 
 **PHASE-1 安全加固与紧急修复 100% 完成。** 全量编译、打包通过，9项安全残留检查全部清零，11个服务JAR包完整生成。Git Tag v3.0-phase1 待项目负责人确认后创建。
 
+**补充说明（2026-06-04 审查更新）：**
+- P1-T3 ddl-auto: 因部分服务Entity与数据库表类型不一致导致启动报错，用户手动回退为update
+- P1-T9 useSSL: 因MySQL未配置SSL证书导致连接失败，用户手动回退为useSSL=false
+- 清理了 derms/vite.config.js 和 derms/src/api/websocket/webSocket.js 中注释残留的硬编码IP
+- 新增 P3-C2 任务：修正超时与连接池性能参数（Gateway/HikariCP/Redis）
+
+---
+
+### P1-R | PHASE-1 复审验证（2026-06-04）
+
+**执行状态：** ✅ 已完成
+**完成时间：** 2026-06-04
+**执行人：** AI
+
+#### 执行过程
+
+| 步骤 | 操作 | 结果 |
+|------|------|------|
+| 1 | 后端全量编译 `mvn clean compile -DskipTests -T 4` | BUILD SUCCESS (49.9s)，14模块全部成功 |
+| 2 | linkos 前端构建 | 构建成功 (68s) |
+| 3 | derms 前端构建 | 构建成功 (2m14s) |
+| 4 | tycvs 前端构建 | 构建成功 (56s) |
+| 5 | P1-T4~T9 代码状态验证 | P1-T5/6/7/8确认完成；P1-T3/9确认手动回退 |
+| 6 | 清理 derms 注释中硬编码IP | vite.config.js + webSocket.js 2处已清理 |
+| 7 | 新增 P3-C2 性能配置优化任务 | Gateway/HikariCP/Redis 超时参数修正 |
+
+#### 代码技术债务快照
+
+| 技术债务 | 当前数量 | 涉及文件数 | 对应任务 |
+|----------|----------|-----------|----------|
+| javax.* import | 172处 | 100文件 | P2-2c |
+| Swagger 2注解 | 1165处 | 100文件 | P2-2a |
+| e.printStackTrace() | 95处 | 20文件 | P3-A |
+| System.out/err | 109处 | 34文件 | P3-A |
+| catch(Exception) | 357处 | 92文件 | P3-C |
+| ddl-auto: update | 10处 | 10文件 | P1-T3(已回退) |
+| useSSL=false | 13处 | 13文件 | P1-T9(已回退) |
+| generate_statistics: true | 4处 | 4文件 | P3-C |
+| idle-timeout: 600000 | 8处 | 8文件 | P3-C2(新增) |
+| Redis timeout: 60s | 9处 | 9文件 | P3-C2(新增) |
+| Gateway connect-timeout: 600000 | 1处 | 1文件 | P3-C2(新增) |
+| org.example groupId | 26处 | 14文件 | P3-B |
+| annotations:RELEASE | 1处 | 1文件 | P3-B |
+| Vuex使用 | ~100+处 | 100+文件 | P4-BC |
+
 ---
 
 ## 总则

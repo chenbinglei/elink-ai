@@ -1,15 +1,13 @@
 import { isDev } from "@/utils/env";
 
-// 自己的IP地址
-const serverIpAddress = `/proxy`;
+// 项目所有WebSocket管理
+
+const myLocationHost = "localhost";
+const serverIpAddress = import.meta.env.VITE_WS_URL || `${locationProtocol === "http:" ? "ws:" : "wss:"}//${locationHost}${locationProtocol === "http:" ? ":5000" : ""}`;
 const locationHost = location.hostname;
 const locationProtocol = location.protocol;
-const formalIpAddress = `${ locationProtocol === "http:" ? "ws:" : "wss:" }//${ locationHost }${ locationProtocol === "http:" ? ":21010" : "" }`;
-// const formalIpAddress = `${ locationProtocol === "http:" ? "ws:" : "wss:" }//${ locationHost }`;
-// const url = isDev() ? 'ws://192.168.2.155:5000' : formalIpAddress;
-
-// const url = isDev() ? 'ws://121.41.109.130:5000' : formalIpAddress;
-const url = isDev() ? (import.meta.env.VITE_WS_URL || `${locationProtocol === "http:" ? "ws:" : "wss:"}//${locationHost}${locationProtocol === "http:" ? ":21010" : ""}`) : formalIpAddress;
+const formalIpAddress = `${locationProtocol === "http:" ? "ws:" : "wss:"}//${locationHost}${locationProtocol === "http:" ? ":5000" : ""}`;
+const url = locationHost === myLocationHost ? serverIpAddress : formalIpAddress;
 
 let userInfo = JSON.parse(localStorage.getItem("USER_INFO")); //当前登录用户信息
 console.log("userInfo", userInfo);

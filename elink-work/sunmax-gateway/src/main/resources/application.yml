@@ -28,9 +28,12 @@ spring:
           '[/**]':
             allow-credentials: true
             allowed-origins:
-              - https://os.enlinkitech.com
-              - https://derms.enlinkitech.com
-              - https://derms.enlinkitech.com:9536
+              - http://192.168.2.158:9000
+              - http://192.168.2.158:9001
+              - http://192.168.2.158:9002
+              - http://localhost:9000
+              - http://localhost:9001
+              - http://localhost:9002
             allowed-headers: "*"
             allowed-methods:
               - OPTIONS

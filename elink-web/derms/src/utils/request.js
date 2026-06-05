@@ -6,7 +6,7 @@ import { getToken, removeToken, setToken } from "@/utils/auth";
 import { isDev } from "./env";
 
 // 自己的IP地址
-const portNum = ":21010";
+const portNum = ":5000";
 const locationHost = location.hostname;
 const locationProtocol = location.protocol;
 const serverIpAddress = `/proxy`;

@@ -105,7 +105,7 @@ export default {
     const initL7Map = () => {
       that.mapLoading = true;
 
-      mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+      mapboxgl.accessToken = process.env.VUE_APP_MAPBOX_ACCESS_TOKEN;
       const map = new mapboxgl.Map({
         zoom: 5,//初始化地图级别
         minZoom: 3,

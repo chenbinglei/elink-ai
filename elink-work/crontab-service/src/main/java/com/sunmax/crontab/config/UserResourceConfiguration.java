@@ -48,6 +48,7 @@ public class UserResourceConfiguration extends ResourceServerConfigurerAdapter {
                 .antMatchers("/doc.html").authenticated()
                 .antMatchers("/swagger-ui.html").authenticated() // 任意访问
                 .antMatchers("/feign/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
+                .antMatchers("/actuator/health").permitAll()//健康检查端点，供Docker healthcheck使用
                 .antMatchers("/configFuncPoint/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
                 .antMatchers("/*WebSocket/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
                 .antMatchers("/*Websocket/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
