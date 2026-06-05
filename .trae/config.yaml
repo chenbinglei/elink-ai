@@ -1,0 +1,186 @@
+# ============================================================================
+# Elink-AI 智能体配置文件
+# Agent Configuration
+# ============================================================================
+
+agent:
+  name: "elink-agent"
+  version: "1.0.0"
+  description: "Elink-AI 物联网平台智能体系统"
+  project_root: "/work/elink-ai"
+  backend_dir: "/work/elink-ai/elink-work"
+  frontend_dir: "/work/elink-ai/elink-web"
+
+# MCP核心配置
+mcp:
+  # 规则引擎
+  rules:
+    enabled: true
+    directory: ".trae/rules"
+    scene_mapping:
+      code_review: ["code-review.md", "security.md", "project-context.md"]
+      security: ["security.md", "code-review.md"]
+      docker_ops: ["docker-ops.md", "project-context.md"]
+      refactor_upgrade: ["refactor-upgrade.md", "security.md", "project-context.md"]
+      general: ["project-context.md"]
+
+  # 记忆管理
+  memory:
+    enabled: true
+    directory: ".trae/memory"
+    retention_days: 90
+    categories:
+      - decision      # 架构决策
+      - progress      # 重构进度
+      - issue         # 问题追踪
+      - context       # 上下文缓存
+      - execution     # 执行历史
+      - session       # 会话记录
+    gc_schedule: "weekly"  # 清理策略: daily|weekly|monthly
+
+  # 上下文构建
+  context:
+    max_rules: 5
+    max_memory_entries: 20
+    include_service_status: true
+    include_docker_status: true
+
+# 技能模块配置
+skills:
+  code-review:
+    enabled: true
+    script: ".trae/skills/code-review.sh"
+    scopes: ["backend", "frontend", "docker", "all"]
+    timeout: 120
+
+  security-scan:
+    enabled: true
+    script: ".trae/skills/security-scan.sh"
+    modes: ["fast", "full"]
+    timeout: 180
+
+  docker-ops:
+    enabled: true
+    script: ".trae/skills/docker-ops.sh"
+    actions: ["status", "reload", "rollback", "logs", "restart-all"]
+    timeout: 300
+
+  refactor:
+    enabled: true
+    script: ".trae/skills/refactor.sh"
+    phases: ["status", "phase1", "phase2", "phase3", "phase4", "phase5"]
+    timeout: 60
+
+  health-check:
+    enabled: true
+    script: ".trae/skills/health-check.sh"
+    modes: ["all", "infra", "single"]
+    timeout: 120
+
+# 服务清单
+services:
+  auth-service:
+    port: 60001
+    nacos: sauth-service
+    context: /sauth
+    database: sunos-system
+  sunmax-gateway:
+    port: 5000
+    nacos: sunmax-gateway
+    context: /
+    database: null
+  system-service:
+    port: 60002
+    nacos: system-service
+    context: /system
+    database: sunos-system
+  device-service:
+    port: 60003
+    nacos: device-service
+    context: /device
+    database: [sunos-model, sunos-access]
+  data-service:
+    port: 60004
+    nacos: sunos-data-service
+    context: /data
+    database: [sunos-data, sunosdata]
+    special: "TDengine JNI"
+  protocol-service:
+    port: 60005
+    nacos: sunos-protocol-service
+    context: /protocol
+    database: sunos-operate
+    special: "MQTT(web:1883, inter:2883)"
+  crontab-service:
+    port: 60006
+    nacos: scrontab-service
+    context: /scrontab
+    database: [sunos-access, sunosdbnode]
+    special: "TDengine JNI"
+  devops-service:
+    port: 60007
+    nacos: devops-service
+    context: /devops
+    database: sunos-operate
+  configure-service:
+    port: 60008
+    nacos: configure-service
+    context: /configure
+    database: sunos-configure
+    special: "MQTT(web:1883)"
+  together-service:
+    port: 60009
+    nacos: together-service
+    context: /together
+    database: [sunos-operate, sunos-log]
+  webapp-service:
+    port: 60010
+    nacos: swebapp-service
+    context: /swebapp
+    database: sunos-operate
+
+# 重构版本矩阵
+refactor_versions:
+  current:
+    java: "8"
+    spring_boot: "2.3.0.RELEASE"
+    spring_cloud: "Hoxton.SR1"
+    fastjson: "1.2.0"
+    swagger: "2.9.2"
+    redisson: "3.11.3"
+    oss_sdk: "2.8.3"
+  target:
+    java: "17"
+    spring_boot: "3.3.x"
+    spring_cloud: "2023.0.x"
+    spring_cloud_alibaba: "2023.0.3.2"
+    fastjson2: "2.0.52"
+    springdoc: "2.2.0"
+    redisson: "3.36.0"
+    oss_sdk: "3.17.4"
+
+# 安全基线
+security_baseline:
+  p0_critical:
+    - "硬编码IP/密钥清除"
+    - "CORS通配符收紧"
+    - "Fastjson 1.2.0替换"
+    - "OAuth2 client-secret外置"
+    - "平台密钥外置"
+  p1_high:
+    - "HikariCP连接池调整"
+    - "Gateway超时优化"
+    - "JPA ddl-auto修改"
+    - "Redis/EMQX默认密码修改"
+  p2_medium:
+    - "javax→jakarta迁移"
+    - "Swagger→SpringDoc迁移"
+    - "容器资源限制"
+    - "健康检查参数优化"
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG|INFO|WARN|ERROR
+  directory: ".trae/logs"
+  max_size: "10M"
+  max_files: 5
