@@ -37,6 +37,9 @@ Thumbs.db
 *.p12
 *.jks
 
+# Runtime
+**/.dev-pids/
+
 # Docker
 .docker/
 docker-compose
