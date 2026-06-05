@@ -1,6 +1,6 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v1.6 | 报告日期：2026-06-05 | 报告人：AI | 状态：PHASE-1+基础设施规范化完成
+> 版本：v1.4 | 报告日期：2026-06-04 | 报告人：AI | 状态：PHASE-1完成，复审验证通过
 >
 > 关联方案：[REFACTOR_PLAN.md v1.3](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v1.6](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
@@ -10,7 +10,7 @@
 
 | 阶段 | 状态 | 完成率 | 说明 |
 |------|------|--------|------|
-| PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 90% | P1-T1~T9+P1-V+8项基础设施全部完成，2项因环境限制手动回退 |
+| PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ⏳ 待开始 | 0% | 6项任务（含3项P2-2c子任务+Feign重构） |
 | PHASE-3：代码质量与性能优化 | ⏳ 待开始 | 0% | 5项任务（含新增P3-C2超时参数优化） |
 | PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
@@ -378,21 +378,6 @@ allowed-origins:
 
 ---
 
-## 5.6 SUP-09~SUP-16 基础设施优化执行记录（2026-06-05）
-
-| 任务 | 关键变更 | 验证结果 |
-|------|---------|---------|
-| SUP-09 Nacos持久化 | 创建nacos_config数据库12张表，docker-compose添加MySQL配置 | ✅ DB初始化成功 |
-| SUP-10 EMQX集群 | 添加static集群策略+节点Cookie | ✅ YAML语法通过 |
-| SUP-11 容器资源限制 | 15个服务添加deploy.resources | ✅ YAML语法通过 |
-| SUP-12 Redis持久化 | 添加appendfsync+RDB策略 | ✅ YAML语法通过 |
-| SUP-13 健康检查优化 | interval 15s, start_period 60-75s | ✅ YAML语法通过 |
-| SUP-14 镜像锁定 | 8-jre→8-jre-slim + 非root用户 | ✅ Dockerfile修改 |
-| SUP-15 路径规范化 | 绝对路径→相对路径../.env | ✅ YAML语法通过 |
-| SUP-16 CI/CD文档 | 新增docs/CI_CD_PROCESS.md | ✅ 文件已创建 |
-
----
-
 ## 六、下一步计划
 
 | 顺序 | 任务 | 预估影响 | 前置条件 |
@@ -402,8 +387,6 @@ allowed-origins:
 | 3 | 排查Together-service健康检查慢查询问题 | 性能优化 | R1基线数据 |
 | 4 | 排查emqx1 CPU占用异常 | 基础设施稳定性 | R1基线数据 |
 | 5 | PHASE-2 框架升级（2.3→2.7） | 全局 | P1-T3-COMP完成 |
-| 6 | 重启Nacos使MySQL持久化生效 | 配置持久化 | 需维护窗口 |
-| 7 | 重建基础镜像elink-base（非root用户） | 安全加固 | 需维护窗口 |
 
 ---
 

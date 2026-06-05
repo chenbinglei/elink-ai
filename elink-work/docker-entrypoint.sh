@@ -9,9 +9,6 @@ HEALTH_CHECK_FAIL_LIMIT=${HEALTH_CHECK_FAIL_LIMIT:-4}
 HEALTH_CHECK_INTERVAL=${HEALTH_CHECK_INTERVAL:-10}
 HEALTH_CHECK_CONTEXT=${HEALTH_CHECK_CONTEXT:-}
 
-# 确保日志目录可写
-mkdir -p /app/logs 2>/dev/null || true
-
 if [ -f /usr/lib/libtaos.so.1 ] && [ ! -L /usr/lib/libtaos.so ]; then
     ln -s /usr/lib/libtaos.so.1 /usr/lib/libtaos.so 2>/dev/null || true
 fi

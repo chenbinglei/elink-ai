@@ -4,7 +4,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: redis
-    command: redis-server --requirepass ${REDIS_PASSWORD:-123456} --appendonly yes --appendfsync everysec --save 900 1 --save 300 10 --save 60 10000
+    command: redis-server --requirepass ${REDIS_PASSWORD:-123456} --appendonly yes
     ports:
       - "6379:6379"
     volumes:
@@ -12,20 +12,11 @@ services:
     networks:
       - elink-network
     restart: always
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.1'
-          memory: 64M
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-123456}", "ping"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
 
   emqx1:
     image: emqx/emqx:5.1.0
@@ -35,9 +26,6 @@ services:
       - EMQX_LOADED_MODULES=emqx_mod_acl_internal,emqx_mod_presence
       - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
       - EMQX_DASHBOARD__DEFAULT_PASSWORD=public
-      - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-      - EMQX_CLUSTER__STATIC__SEEDS=[emqx1,emqx2]
-      - EMQX_NODE__COOKIE=elink_emqx_cluster_cookie
       - TZ=Asia/Shanghai
     ports:
       - "1883:1883"
@@ -45,20 +33,11 @@ services:
     networks:
       - elink-network
     restart: always
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 768M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
     healthcheck:
       test: ["CMD", "emqx", "ctl", "status"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
 
   emqx2:
     image: emqx/emqx:5.1.0
@@ -70,9 +49,6 @@ services:
       - EMQX_DASHBOARD__DEFAULT_PASSWORD=public
       - EMQX_LISTENERS__TCP__DEFAULT__BIND=2883
       - EMQX_DASHBOARD__HTTP_PORT=28083
-      - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-      - EMQX_CLUSTER__STATIC__SEEDS=[emqx1,emqx2]
-      - EMQX_NODE__COOKIE=elink_emqx_cluster_cookie
       - TZ=Asia/Shanghai
     ports:
       - "2883:2883"
@@ -80,35 +56,17 @@ services:
     networks:
       - elink-network
     restart: always
-    depends_on:
-      emqx1:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 768M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
     healthcheck:
       test: ["CMD", "emqx", "ctl", "status"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
 
   nacos:
     image: nacos/nacos-server:v2.1.0
     container_name: nacos
     environment:
       - MODE=standalone
-      - SPRING_DATASOURCE_PLATFORM=mysql
-      - MYSQL_SERVICE_HOST=${MYSQL_HOST:-192.168.2.158}
-      - MYSQL_SERVICE_PORT=${MYSQL_PORT:-3306}
-      - MYSQL_SERVICE_DB_NAME=nacos_config
-      - MYSQL_SERVICE_USER=${MYSQL_USERNAME:-root}
-      - MYSQL_SERVICE_PASSWORD=${MYSQL_PASSWORD:-sm@123456}
       - JVM_XMS=256m
       - JVM_XMX=512m
       - JVM_XMN=256m
@@ -116,22 +74,9 @@ services:
     ports:
       - "8848:8848"
       - "9848:9848"
-    volumes:
-      - nacos-logs:/home/nacos/logs
     networks:
       - elink-network
     restart: always
-    depends_on:
-      redis:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/"]
       interval: 10s
@@ -146,7 +91,7 @@ services:
     image: elink-base:latest
     container_name: auth-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60001:60001"
     environment:
@@ -164,7 +109,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./auth-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/auth-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/auth-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -173,20 +118,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60001/sauth/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
   sunmax-gateway:
     build:
@@ -195,7 +132,7 @@ services:
     image: elink-base:latest
     container_name: sunmax-gateway
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "5000:5000"
     environment:
@@ -213,27 +150,19 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./sunmax-gateway/target:/app/target:ro
-    command: ["java", "-Xms256m", "-Xmx256m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseSerialGC", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/sunmax-gateway-exec.jar"]
+    command: ["java", "-Xms256m", "-Xmx256m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/sunmax-gateway-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.1'
-          memory: 256M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:5000/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 40s
 
   system-service:
     build:
@@ -242,7 +171,7 @@ services:
     image: elink-base:latest
     container_name: system-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60002:60002"
     environment:
@@ -260,7 +189,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./system-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/system-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/system-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -269,20 +198,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60002/system/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
   device-service:
     build:
@@ -291,7 +212,7 @@ services:
     image: elink-base:latest
     container_name: device-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60003:60003"
     environment:
@@ -309,7 +230,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./device-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/device-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/device-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -318,20 +239,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60003/device/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
   data-service:
     build:
@@ -340,7 +253,7 @@ services:
     image: elink-base:latest
     container_name: data-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60004:60004"
     environment:
@@ -363,7 +276,7 @@ services:
       - /usr/lib/libtaos.so.1:/usr/lib/libtaos.so.1:ro
       - /usr/local/taos/driver/libtaos.so.3.0.7.1:/usr/local/taos/driver/libtaos.so.3.0.7.1:ro
       - /etc/taos/taos.cfg:/etc/taos/taos.cfg:ro
-    command: ["java", "-Xms1g", "-Xmx1g", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/data-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/data-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -372,20 +285,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 2G
-        reservations:
-          cpus: '0.5'
-          memory: 1G
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60004/data/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 75s
+      start_period: 60s
 
   protocol-service:
     build:
@@ -394,7 +299,7 @@ services:
     image: elink-base:latest
     container_name: protocol-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60005:60005"
     environment:
@@ -414,7 +319,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./protocol-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/protocol-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/protocol-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -427,20 +332,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60005/protocol/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 75s
+      start_period: 60s
 
   crontab-service:
     build:
@@ -449,7 +346,7 @@ services:
     image: elink-base:latest
     container_name: crontab-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60006:60006"
     environment:
@@ -460,8 +357,8 @@ services:
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
       - HEALTH_CHECK_PORT=60006
-      - HEALTH_CHECK_CONTEXT=/scrontab
-      - HEALTH_CHECK_START_DELAY=75
+      - HEALTH_CHECK_CONTEXT=/crontab
+      - HEALTH_CHECK_START_DELAY=60
       - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
       - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - WAIT_FOR_SERVICE=together-service
@@ -474,7 +371,7 @@ services:
       - /usr/lib/libtaos.so.1:/usr/lib/libtaos.so.1:ro
       - /usr/local/taos/driver/libtaos.so.3.0.7.1:/usr/local/taos/driver/libtaos.so.3.0.7.1:ro
       - /etc/taos/taos.cfg:/etc/taos/taos.cfg:ro
-    command: ["java", "-Xms1g", "-Xmx1g", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/crontab-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/crontab-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -485,20 +382,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:60006/scrontab/actuator/health || exit 1"]
-      interval: 15s
+      test: ["CMD-SHELL", "curl -sf http://localhost:60006/crontab/actuator/health || exit 1"]
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 75s
+      start_period: 60s
 
   devops-service:
     build:
@@ -507,7 +396,7 @@ services:
     image: elink-base:latest
     container_name: devops-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60007:60007"
     environment:
@@ -525,7 +414,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./devops-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/devops-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/devops-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -534,20 +423,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 768M
-        reservations:
-          cpus: '0.1'
-          memory: 384M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60007/devops/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
   configure-service:
     build:
@@ -556,7 +437,7 @@ services:
     image: elink-base:latest
     container_name: configure-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60008:60008"
     environment:
@@ -574,7 +455,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./configure-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/configure-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/configure-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -585,20 +466,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 768M
-        reservations:
-          cpus: '0.1'
-          memory: 384M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60008/configure/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
   together-service:
     build:
@@ -607,7 +480,7 @@ services:
     image: elink-base:latest
     container_name: together-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60009:60009"
     environment:
@@ -625,7 +498,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./together-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/together-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/together-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -634,20 +507,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60009/together/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
   webapp-service:
     build:
@@ -656,7 +521,7 @@ services:
     image: elink-base:latest
     container_name: webapp-service
     env_file:
-      - ../.env
+      - /work/elink-ai/.env
     ports:
       - "60010:60010"
     environment:
@@ -674,7 +539,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./webapp-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/webapp-service-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/webapp-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -683,20 +548,12 @@ services:
     networks:
       - elink-network
     restart: on-failure:3
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 768M
-        reservations:
-          cpus: '0.1'
-          memory: 384M
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:60010/swebapp/actuator/health || exit 1"]
-      interval: 15s
+      interval: 10s
       timeout: 5s
       retries: 4
-      start_period: 60s
+      start_period: 50s
 
 networks:
   elink-network:
@@ -704,4 +561,3 @@ networks:
 
 volumes:
   redis-data:
-  nacos-logs:
