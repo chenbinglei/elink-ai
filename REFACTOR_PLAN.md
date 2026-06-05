@@ -89,7 +89,7 @@
 | DEBT-02 | `System.out/err.print` 调用，应使用日志框架 | 109处/34文件 |
 | DEBT-03 | `catch(Exception)` 过于宽泛的异常捕获 | 357处/92文件 |
 | DEBT-04 | TODO/FIXME/HACK 注释未处理 | 16处/10文件 |
-| DEBT-05 | Swagger 2.9.2 已过时，不兼容 Spring Boot 2.6+，含1335处注解待迁移 | pom.xml + 100个Java文件 |
+| DEBT-05 | Swagger 2.9.2 已过时，不兼容 Spring Boot 2.6+，含11565处注解待迁移（@Api:121, @ApiOperation:2365, @ApiModel:732, @ApiModelProperty:7361, @ApiImplicitParam:988） | pom.xml + 约255个Java文件 |
 | DEBT-06 | OSS SDK 2.8.3 版本过旧 | pom.xml |
 | DEBT-07 | Redisson 3.11.3 版本过旧 | sunmax-common pom.xml + device/data/crontab-service |
 | DEBT-08 | groupId 为 `org.example` 不符合生产规范 | 全部13个模块pom.xml（26处引用） |
@@ -167,7 +167,7 @@ git tag -a v3.0-phase1 -m "PHASE-1: 安全加固完成"
 ```
 Step 2a: Spring Boot 2.3 → 2.7（过渡升级）
     ├── 修复2.7不兼容变更
-    ├── Swagger → SpringDoc OpenAPI迁移
+    ├── Swagger → SpringDoc OpenAPI迁移（11565处注解/255个Java文件）
     └── 验证全部服务正常启动
 
 Step 2b: Java 8 → Java 17
@@ -176,7 +176,9 @@ Step 2b: Java 8 → Java 17
     └── 修复Java 17不兼容代码（反射、内部API等）
 
 Step 2c: Spring Boot 2.7 → 3.x + Spring Cloud 2023.x
-    ├── javax.* → jakarta.* 命名空间迁移
+    ├── javax.* → jakarta.* 命名空间迁移（451处/255文件）
+    │   ├── javax.persistence(321处) + javax.annotation(44处)
+    │   ├── javax.websocket(21处) + javax.servlet(17处) + javax.validation(3处)
     ├── OAuth2模块迁移（spring-security-oauth2已废弃）
     │   └── auth-service重点改造：AuthorizationServerConfigurer → AuthorizationServer
     │       ResourceServerConfigurer → ResourceServer

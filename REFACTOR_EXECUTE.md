@@ -548,8 +548,8 @@ jdbc:mysql://host:3306/db?useSSL=true&...
 
 | 技术债务 | 当前数量 | 涉及文件数 | 对应任务 |
 |----------|----------|-----------|----------|
-| javax.* import | 172处 | 100文件 | P2-2c |
-| Swagger 2注解 | 1165处 | 100文件 | P2-2a |
+| javax.* import | 451处 | 255文件 | P2-2c |
+| Swagger 2注解 | 11565处 | 255文件 | P2-2a |
 | e.printStackTrace() | 95处 | 20文件 | P3-A |
 | System.out/err | 109处 | 34文件 | P3-A |
 | catch(Exception) | 357处 | 92文件 | P3-C |
@@ -1620,7 +1620,7 @@ echo "[手动操作] Swagger迁移:"
 echo "  删除: springfox-swagger2, springfox-swagger-ui, swagger-bootstrap-ui, swagger-models"
 echo "  新增: springdoc-openapi-starter-webmvc-ui 2.2.0"
 echo "  替换注解: @Api→@Tag, @ApiOperation→@Operation, @ApiParam→@Parameter"
-echo "  注意：当前项目有1335处Swagger注解分布在100个文件中，建议使用IDE批量替换"
+echo "  注意：当前项目有11565处Swagger注解分布在255个文件中，建议使用IDE批量替换或OpenRewrite自动化迁移"
 echo ""
 echo "[手动操作] 修复Spring Boot 2.7不兼容:"
 echo "  - spring.mvc.pathmatch.matching-strategy=ant-path-matcher"
@@ -1760,9 +1760,9 @@ echo "  资源服务器端 → spring-boot-starter-oauth2-resource-server"
 echo "  AuthorizationServerConfigurer → 适配新API"
 echo "  ResourceServerConfigurer → 适配新API"
 echo ""
-echo "[⚠️ 高风险] javax→jakarta迁移影响面极大（约317处/120个文件）"
-echo "  详细分布：javax.persistence(232处/100文件) + javax.annotation(44处/42文件)"
-echo "           + javax.websocket(21处/8文件) + javax.servlet(17处/15文件) + javax.validation(3处/3文件)"
+echo "[⚠️ 高风险] javax→jakarta迁移影响面极大（451处/255个文件）"
+echo "  详细分布：javax.persistence(321处) + javax.annotation(44处)"
+echo "           + javax.websocket(21处) + javax.servlet(17处) + javax.validation(3处)"
 echo "  建议：使用OpenRewrite自动迁移工具辅助"
 echo "  命令: mvn org.openrewrite.maven:rewrite-maven-plugin:run -Drewrite.activeRecipes=org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_3"
 echo ""

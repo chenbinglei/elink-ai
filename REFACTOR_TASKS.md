@@ -1,6 +1,6 @@
 # Elink-AI 重构升级任务拆解清单
 
-> 基于 REFACTOR_PLAN.md v1.2 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-04
+> 基于 REFACTOR_PLAN.md v1.3 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-05
 >
 > 每条任务包含：任务编号、指令语句、精确执行命令、完成标识
 >
@@ -12,7 +12,7 @@
 
 | 阶段 | 任务总数 | 已完成 | 进行中 | 待开始 | 完成率 |
 |------|---------|--------|--------|--------|--------|
-| PHASE-1 | 9+1(验证) | 10 | 0 | 0 | 100% |
+| PHASE-1 | 9+1(验证)+2(补偿) | 10 | 0 | 2 | 83% |
 | PHASE-2 | 6 | 0 | 0 | 6 | 0% |
 | PHASE-3 | 5 | 0 | 0 | 5 | 0% |
 | PHASE-4 | 4 | 0 | 0 | 4 | 0% |
@@ -414,7 +414,123 @@ mvn clean compile -DskipTests -T 4
 - [√] 全量编译 BUILD SUCCESS
 - [√] 全量打包 BUILD SUCCESS
 - [√] 9项残留检查全部返回 0
-- [ ] Git Tag v3.0-phase1 待项目负责人确认后创建
+- [√] Git Tag v3.0-phase1 已创建并推送到远程
+
+---
+
+### P1-T3-COMP | P1-T3补偿任务：ddl-auto validate + 引入Flyway数据库迁移
+
+**前置条件：** PHASE-1验证完成 | **关联任务：** P1-T3（已回退）
+**依赖关系：** 必须在P2-2c（Spring Boot 3.x升级）之前完成
+
+**指令语句：**
+> P1-T3已将ddl-auto从update改为validate，但因Entity与数据库表类型不一致导致启动失败并已手动回退。本补偿任务需：1）引入Flyway替代Hibernate自动DDL管理；2）逐服务比对Entity与表结构差异并修复；3）创建初始迁移脚本锁定当前数据库状态；4）再次切换ddl-auto为validate并验证启动成功。
+
+**执行步骤：**
+
+**Step 1: 引入Flyway依赖（父POM + 各服务POM）**
+```bash
+cd /work/elink-ai/elink-work
+# 在父POM的<dependencyManagement>中新增Flyway BOM
+# 在各使用JPA的服务中添加依赖：spring-boot-starter-flyway
+# 注意：Spring Boot 2.3需使用Flyway 6.x版本（与Boot BOM一致）
+```
+
+**Step 2: 生成基线迁移脚本（锁定当前表结构）**
+```bash
+# 对每个数据库执行表结构导出作为V1基线
+for db in sunos-system sunos-operate sunos-data sunos-model sunos-access sunos-log sunos-configure; do
+  mysqldump -h ${MYSQL_HOST} -u root -p${MYSQL_PASSWORD} --no-data --skip-add-drop-table ${db} > "flyway/V1__${db}_baseline.sql"
+done
+```
+
+**Step 3: 逐服务排查Entity-DB差异并修复**
+```bash
+# 优先级：auth-service > device-service > data-service > 其他
+# 1. 临时将ddl-auto改为update，启动服务观察DDL变更日志
+# 2. 将DDL变更整理为增量迁移脚本（V2__fix_xxx_column_type.sql）
+# 3. 恢复ddl-auto: validate，验证服务正常启动
+# 4. 提交迁移脚本
+```
+
+**Step 4: 全量验证**
+```bash
+# 将所有10个服务ddl-auto改为validate
+# 全量编译：mvn clean compile -DskipTests -T 4
+# 逐服务启动验证（需连接真实数据库）
+```
+
+**完成标识：**
+- [ ] 父POM包含 flyway-core 依赖（版本由Spring Boot BOM管理）
+- [ ] 10个服务均有对应的Flyway迁移脚本目录
+- [ ] `grep -rn 'ddl-auto: update' --include="*.yml" . | grep -v target | wc -l` 返回 0
+- [ ] `mvn clean compile -DskipTests` BUILD SUCCESS
+- [ ] 至少5个核心服务（auth/gateway/system/device/data）启动验证通过
+
+---
+
+### P1-T9-COMP | P1-T9补偿任务：useSSL=true + MySQL SSL证书配置
+
+**前置条件：** PHASE-1验证完成 | **关联任务：** P1-T9（已回退）
+**依赖关系：** 生产环境部署前必须完成
+
+**指令语句：**
+> P1-T9已将useSSL从false改为true，但因MySQL未配置SSL证书导致连接失败并已手动回退。本补偿任务需：1）确认MySQL服务端SSL配置状态；2）生产环境生成/配置SSL证书；3）调整JDBC连接参数启用SSL验证；4）开发环境可选保留useSSL=false（内网安全）。
+
+**执行步骤：**
+
+**Step 1: 确认MySQL SSL状态**
+```bash
+# 在MySQL服务器上执行
+mysql -u root -p -e "SHOW VARIABLES LIKE '%ssl%';"
+mysql -u root -p -e "STATUS;" | grep -i ssl
+# 如果have_ssl=DISABLED，需要生成证书并启用
+```
+
+**Step 2: 生成MySQL SSL证书（如尚未配置）**
+```bash
+# 在MySQL服务器上执行
+# 1. 创建CA证书
+openssl genrsa 2048 > ca-key.pem
+openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out ca-cert.pem
+
+# 2. 创建服务器证书
+openssl req -newkey rsa:2048 -days 3650 -nodes -keyout server-key.pem -out server-req.pem
+openssl rsa -in server-key.pem -out server-key.pem
+openssl x509 -req -in server-req.pem -days 3650 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
+
+# 3. 配置my.cnf
+# [mysqld]
+# require_secure_transport=ON
+# ssl-ca=/path/to/ca-cert.pem
+# ssl-cert=/path/to/server-cert.pem
+# ssl-key=/path/to/server-key.pem
+```
+
+**Step 3: 应用端JDBC参数调整**
+```bash
+cd /work/elink-ai/elink-work
+# 将所有JDBC连接的useSSL=false改为useSSL=true
+# 同时添加证书验证参数：
+# &verifyServerCertificate=true&requireSSL=true
+# 开发环境可用useSSL=true&trustServerCertificate=true（免证书验证）
+```
+
+**Step 4: 环境差异化配置**
+```yaml
+# 生产环境（.env）：
+# MYSQL_SSL_MODE=VERIFY_IDENTITY
+
+# 开发环境（.env.local）：
+# MYSQL_SSL_MODE=DISABLED（内网安全，可保留useSSL=false）
+```
+
+**完成标识：**
+- [ ] MySQL服务端 `have_ssl` 变量为 `YES`
+- [ ] `grep -rn 'useSSL=false' --include="*.yml" . | grep -v target | wc -l` 返回 0
+- [ ] 生产环境JDBC连接包含 `useSSL=true&verifyServerCertificate=true`
+- [ ] 开发环境可保留 `useSSL=false`（需在.env中明确配置）
+- [ ] 全量编译通过
 
 ---
 

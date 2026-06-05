@@ -2,7 +2,7 @@
 
 > 版本：v1.4 | 报告日期：2026-06-04 | 报告人：AI | 状态：PHASE-1完成，复审验证通过
 >
-> 关联方案：[REFACTOR_PLAN.md v1.3](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v1.7](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v1.3](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v1.6](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
