@@ -425,7 +425,7 @@ async function startProject(project) {
   removePid(project.name);
   log('info', project.name, `正在启动... (端口: ${project.port})`);
 
-  // 加载项目的 .env.development
+  // 加载项目的 .env 环境变量
   if (project.envFile) {
     const envPath = path.join(dir, project.envFile);
     loadEnvFile(envPath);

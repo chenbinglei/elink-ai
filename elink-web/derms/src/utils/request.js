@@ -69,25 +69,23 @@ const setupRequestInterceptor = (instance) => {
         delete config.headers['X-Skip-Transform'];
       }
 
-      let userInfo = JSON.parse(localStorage.getItem("USER_INFO"));
+      let userInfo = null;
+      try { userInfo = JSON.parse(localStorage.getItem("USER_INFO")); } catch(e) { userInfo = null; }
 
       // 文件类需更改Content-Type
       if (config.data instanceof FormData) {
         Object.assign(config.headers, { "Content-Type": "multipart/form-data" });
-        if (getToken()) {
+        if (getToken() && userInfo) {
           // userId 始终带
           config.data.append("userId", userInfo.userId);
 
           // 不带 X-No-Token 才带 token
           if (!noToken) {
             config.data.append("access_token", getToken());
-            if (config.baseURL.indexOf("251") === -1) {
-              config.data.append("access_token", getToken());
-            }
           }
         }
       } else {
-        if (getToken()) {
+        if (getToken() && userInfo) {
           // 对于 JSON 数据，确保是对象格式
           if (typeof config.data === 'string') {
             try {
@@ -114,7 +112,7 @@ const setupRequestInterceptor = (instance) => {
       }
 
       // 判断用户登录状态是否改变
-      if (store.getters?.oldUserId && store.getters?.oldUserId !== userInfo?.userId) {
+      if (userInfo && store.getters?.oldUserId && store.getters?.oldUserId !== userInfo.userId) {
         isIdentical = 0;
       }
 

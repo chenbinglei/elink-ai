@@ -51,31 +51,29 @@ service.interceptors.request.use((config) => {
     //     config.baseURL = config.baseURL.replace(portNum,`:${ config.portNum }`);
     // }
 
-    let userInfo = JSON.parse(localStorage.getItem("USER_INFO")); //当前登录用户信息
-    // console.log(userInfo);
+    let userInfo = null;
+    try { userInfo = JSON.parse(localStorage.getItem("USER_INFO")); } catch(e) { userInfo = null; }
 
     //文件类需更改Content-Type
     if (config.data instanceof FormData) {
         Object.assign(config.headers, {"Content-Type": "multipart/form-data"});
         //文件类的添加 用户token 以及 userId
-        if (getToken()) {
+        if (getToken() && userInfo) {
             config.data.append("userId", userInfo.userId);
             config.data.append("access_token", getToken());
             if(!config.data.get("tenantId")) config.data.append("tenantId", userInfo.tenantId);
-            // if(config.baseURL.indexOf("251") === -1) config.data.append("access_token", getToken());
         }
     } else {
         // 让每个请求携带自定义token 请根据实际情况自行修改
-        if (getToken()) {
+        if (getToken() && userInfo) {
             config.data.userId = userInfo.userId;
             config.data.access_token = getToken();
             if(!config.data.tenantId) config.data.tenantId = userInfo.tenantId;
-            // if(config.baseURL.indexOf("251") === -1) config.data.access_token = getToken();
         }
     }
 
     // 判断用户登录状态是否改变
-    if (store.getters.oldUserId && store.getters.oldUserId !== userInfo.userId) isIdentical = 0;
+    if (userInfo && store.getters.oldUserId && store.getters.oldUserId !== userInfo.userId) isIdentical = 0;
 
     removePending(config); //在一个ajax发送前执行一下取消操作
     // console.log(pending)

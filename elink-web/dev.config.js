@@ -1,6 +1,38 @@
 /**
  * 前端开发环境配置文件
  * 修改此文件即可调整项目管理器的行为，无需修改主脚本
+ *
+ * ================================
+ * 环境变量配置规范
+ * ================================
+ *
+ * 每个前端项目有两个环境变量文件：
+ *
+ * 1. .env（本地开发专用，不提交到 Git）
+ *    - 包含所有环境变量（含敏感密钥和 IP 地址）
+ *    - 被 .gitignore 排除，不会泄露到版本控制
+ *    - 开发时由框架自动加载（Vue CLI / Vite 均自动加载 .env）
+ *
+ * 2. .env.example（配置模板，提交到 Git）
+ *    - 包含所有环境变量定义，敏感值使用占位符
+ *    - 不被框架加载，仅作模板参考
+ *    - 新成员克隆项目后运行：npm run setup:env
+ *      （自动从 .env.example 复制为 .env）
+ *
+ * 变量命名规范：
+ * - Vue CLI 项目（linkos/tycvs）：VUE_APP_ 前缀
+ * - Vite 项目（derms）：VITE_ 前缀
+ *
+ * 同步规则：
+ * - 新增变量时，必须同时更新 .env.example 和 .env
+ * - .env.example 中的敏感值使用占位符（如 your_xxx）
+ * - .env 中填写实际开发值
+ *
+ * 代码引用规范：
+ * - Vue CLI 项目：process.env.VUE_APP_XXX
+ * - Vite 项目：import.meta.env.VITE_XXX
+ * - vite.config.js 中可使用 process.env.VITE_XXX（需 import process）
+ * - vue.config.js 中可使用 process.env.VUE_APP_XXX
  */
 
 const path = require('path');
@@ -18,7 +50,12 @@ module.exports = {
       devCommand: 'npm run serve',
       port: 9000,
       type: 'vue-cli',      // vue-cli | vite
-      envFile: '.env.development',
+      envFile: '.env',
+      // 环境变量清单（.env 和 .env.example 须同步）：
+      // VUE_APP_PROXY_TARGET     - 后端代理目标地址 (string, 默认: http://localhost:5000)
+      // VUE_APP_API_HOST         - 后端API主机地址 (string, 默认: localhost:5000)
+      // VUE_APP_WS_URL           - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
+      // VUE_APP_MAPBOX_ACCESS_TOKEN - Mapbox 地图 Access Token (string)
     },
     {
       name: 'derms',
@@ -27,7 +64,11 @@ module.exports = {
       devCommand: 'npm run dev',
       port: 9001,
       type: 'vite',
-      envFile: '.env.development',
+      envFile: '.env',
+      // 环境变量清单（.env 和 .env.example 须同步）：
+      // VITE_PROXY_TARGET        - 后端代理目标地址 (string, 默认: http://localhost:5000)
+      // VITE_WS_URL              - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
+      // VITE_MAPBOX_ACCESS_TOKEN - Mapbox 地图 Access Token (string)
     },
     {
       name: 'tycvs',
@@ -36,7 +77,15 @@ module.exports = {
       devCommand: 'npm run serve',
       port: 9002,
       type: 'vue-cli',
-      envFile: '.env.development',
+      envFile: '.env',
+      // 环境变量清单（.env 和 .env.example 须同步）：
+      // VUE_APP_PROXY_TARGET          - 后端代理目标地址 (string, 默认: http://localhost:5000)
+      // VUE_APP_API_HOST              - 后端API主机地址 (string, 默认: localhost:5000)
+      // VUE_APP_WS_URL                - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
+      // VUE_APP_OSS_BUCKET_NAME       - 阿里云 OSS Bucket 名称 (string)
+      // VUE_APP_OSS_REGION            - 阿里云 OSS Region (string, 默认: oss-cn-hangzhou)
+      // VUE_APP_ALIYUN_ACCESS_KEY_ID  - 阿里云 AccessKey ID (string)
+      // VUE_APP_ALIYUN_ACCESS_KEY_SECRET - 阿里云 AccessKey Secret (string)
     },
   ],
 
