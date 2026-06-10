@@ -2,7 +2,7 @@
 
 COMPOSE="/work/elink-ai/docker-compose"
 PROJECT_DIR="/work/elink-ai/elink-work"
-ENV_FILE="/work/elink-ai/.env"
+ENV_FILE="/work/elink-ai/elink-work/.env"
 
 load_env_file() {
     if [ ! -f "$ENV_FILE" ]; then
@@ -31,7 +31,7 @@ BACKUP_DIR="${PROJECT_DIR}/backups"
 LOG_DIR="${PROJECT_DIR}/logs"
 HISTORY_FILE="${LOG_DIR}/reload-history.log"
 HEALTH_TIMEOUT=180
-MONITOR_DURATION=30
+MONITOR_DURATION=3
 MAX_BACKUPS=5
 
 SERVICES=(

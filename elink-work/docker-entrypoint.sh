@@ -51,7 +51,13 @@ if [ -n "${HEALTH_CHECK_PORT}" ]; then
         sleep ${HEALTH_CHECK_START_DELAY:-50}
         fail_count=0
         while kill -0 "$JAVA_PID" 2>/dev/null; do
-            if curl -sf "http://localhost:${HEALTH_CHECK_PORT}${HEALTH_CHECK_CONTEXT}/actuator/health" > /dev/null 2>&1; then
+            # 拼接健康检查URL：去掉context尾部斜杠，再加 /actuator/health
+            local health_url="http://localhost:${HEALTH_CHECK_PORT}"
+            if [ -n "${HEALTH_CHECK_CONTEXT}" ]; then
+                health_url="${health_url}${HEALTH_CHECK_CONTEXT%/}"
+            fi
+            health_url="${health_url}/actuator/health"
+            if curl -sf "${health_url}" > /dev/null 2>&1; then
                 fail_count=0
             else
                 fail_count=$((fail_count + 1))

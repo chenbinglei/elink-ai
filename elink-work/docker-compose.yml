@@ -11,57 +11,59 @@ services:
       - redis-data:/data
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-123456}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # WARNING: 生产环境必须通过 .env 覆盖 EMQX_ADMIN_USER 和 EMQX_ADMIN_PASSWORD
   emqx1:
     image: emqx/emqx:5.1.0
     container_name: emqx1
     environment:
       - EMQX_NAME=emqx1
-      - EMQX_LOADED_MODULES=emqx_mod_acl_internal,emqx_mod_presence
-      - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
-      - EMQX_DASHBOARD__DEFAULT_PASSWORD=public
+      - EMQX_NODE_NAME=emqx1@127.0.0.1
+      - EMQX_DASHBOARD_DEFAULT_USERNAME=${EMQX_ADMIN_USER:-admin}
+      - EMQX_DASHBOARD_DEFAULT_PASSWORD=${EMQX_ADMIN_PASSWORD:-public}
       - TZ=Asia/Shanghai
     ports:
       - "1883:1883"
       - "18083:18083"
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
       test: ["CMD", "emqx", "ctl", "status"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
   emqx2:
     image: emqx/emqx:5.1.0
     container_name: emqx2
     environment:
       - EMQX_NAME=emqx2
-      - EMQX_LOADED_MODULES=emqx_mod_acl_internal,emqx_mod_presence
-      - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
-      - EMQX_DASHBOARD__DEFAULT_PASSWORD=public
-      - EMQX_LISTENERS__TCP__DEFAULT__BIND=2883
-      - EMQX_DASHBOARD__HTTP_PORT=28083
+      - EMQX_NODE_NAME=emqx2@127.0.0.1
+      - EMQX_DASHBOARD_DEFAULT_USERNAME=${EMQX_ADMIN_USER:-admin}
+      - EMQX_DASHBOARD_DEFAULT_PASSWORD=${EMQX_ADMIN_PASSWORD:-public}
       - TZ=Asia/Shanghai
     ports:
-      - "2883:2883"
-      - "28083:28083"
+      - "2883:1883"
+      - "28083:18083"
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
       test: ["CMD", "emqx", "ctl", "status"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
+  # WARNING: 生产环境必须通过 .env 覆盖 NACOS_USERNAME 和 NACOS_PASSWORD
   nacos:
     image: nacos/nacos-server:v2.1.0
     container_name: nacos
@@ -70,13 +72,15 @@ services:
       - JVM_XMS=256m
       - JVM_XMX=512m
       - JVM_XMN=256m
+      - NACOS_USERNAME=${NACOS_USERNAME:-nacos}
+      - NACOS_PASSWORD=${NACOS_PASSWORD:-nacos}
       - TZ=Asia/Shanghai
     ports:
       - "8848:8848"
       - "9848:9848"
     networks:
       - elink-network
-    restart: always
+    restart: on-failure:3
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/"]
       interval: 10s
@@ -91,11 +95,12 @@ services:
     image: elink-base:latest
     container_name: auth-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60001:60001"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -132,37 +137,37 @@ services:
     image: elink-base:latest
     container_name: sunmax-gateway
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "5000:5000"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
-      - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
       - SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s
       - SPRING_MAIN_LAZY_INITIALIZATION=false
       - HEALTH_CHECK_PORT=5000
-      - HEALTH_CHECK_CONTEXT=/
-      - HEALTH_CHECK_START_DELAY=40
+      - HEALTH_CHECK_CONTEXT=
+      - HEALTH_CHECK_START_DELAY=60
       - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health
       - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=never
       - TZ=Asia/Shanghai
     volumes:
       - ./sunmax-gateway/target:/app/target:ro
-    command: ["java", "-Xms256m", "-Xmx256m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/sunmax-gateway-exec.jar"]
+    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/sunmax-gateway-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
     networks:
       - elink-network
-    restart: on-failure:3
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:5000/actuator/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 4
-      start_period: 40s
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   system-service:
     build:
@@ -171,11 +176,12 @@ services:
     image: elink-base:latest
     container_name: system-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60002:60002"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -212,11 +218,12 @@ services:
     image: elink-base:latest
     container_name: device-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60003:60003"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -253,11 +260,12 @@ services:
     image: elink-base:latest
     container_name: data-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60004:60004"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -299,11 +307,12 @@ services:
     image: elink-base:latest
     container_name: protocol-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60005:60005"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -327,6 +336,8 @@ services:
         condition: service_healthy
       emqx1:
         condition: service_healthy
+      emqx2:
+        condition: service_healthy
       device-service:
         condition: service_started
     networks:
@@ -346,11 +357,12 @@ services:
     image: elink-base:latest
     container_name: crontab-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60006:60006"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -396,11 +408,12 @@ services:
     image: elink-base:latest
     container_name: devops-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60007:60007"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -437,11 +450,12 @@ services:
     image: elink-base:latest
     container_name: configure-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60008:60008"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -480,11 +494,12 @@ services:
     image: elink-base:latest
     container_name: together-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60009:60009"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful
@@ -498,7 +513,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./together-service/target:/app/target:ro
-    command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseParallelGC", "-jar", "target/together-service-exec.jar"]
+    command: ["java", "-Xms1536m", "-Xmx1536m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/together-service-exec.jar"]
     depends_on:
       nacos:
         condition: service_healthy
@@ -521,11 +536,12 @@ services:
     image: elink-base:latest
     container_name: webapp-service
     env_file:
-      - /work/elink-ai/.env
+      - /work/elink-ai/elink-work/.env
     ports:
       - "60010:60010"
     environment:
-      - NACOS_HOST=${NACOS_HOST:-127.0.0.1}
+      - REDIS_HOST=redis
+      - NACOS_HOST=nacos
       - NACOS_PORT=${NACOS_PORT:-8848}
       - SPRING_CLOUD_NACOS_DISCOVERY_IP=${NACOS_HOST:-127.0.0.1}
       - SERVER_SHUTDOWN=graceful

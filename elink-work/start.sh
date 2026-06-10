@@ -3,7 +3,7 @@ set -e
 
 COMPOSE="/work/elink-ai/docker-compose"
 PROJECT_DIR="/work/elink-ai/elink-work"
-ENV_FILE="/work/elink-ai/.env"
+ENV_FILE="/work/elink-ai/elink-work/.env"
 
 load_env_file() {
     if [ ! -f "$ENV_FILE" ]; then
