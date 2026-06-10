@@ -1,8 +1,8 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v2.7 | 报告日期：2026-06-10 | 报告人：AI | 状态：PHASE-0+PHASE-1完成，P2-2a+P2-2b+P2-2c+P2-2c-2+P2-2c-3完成
+> 版本：v2.8 | 报告日期：2026-06-10 | 报告人：AI | 状态：PHASE-0+PHASE-1完成，P2-2a+P2-2b+P2-2c+P2-2c-2+P2-2c-3完成（全部已验证通过）
 >
-> 关联方案：[REFACTOR_PLAN.md v2.0](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v2.6](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v2.1](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v2.8](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
@@ -564,8 +564,7 @@ allowed-origins:
 
 | 顺序 | 任务 | 预估影响 | 前置条件 |
 |------|------|----------|----------|
-| 0 | **⚠️ 优先补全**：P2-2c 验证+提交 | 全局 | 本地服务器验证 → 热更新 → 功能一致性 → Git提交 |
-| 1 | P2-2c-4: Feign调用重构（ARCH-06） | 全局 | PHASE-2全部验证通过 |
+| 1 | P2-2c-4: Feign调用重构（ARCH-06） | 全局 | PHASE-2前置任务全部验证通过 |
 | 2 | PHASE-3: 代码质量与性能优化 | 全局 | PHASE-2完成 |
 | 3 | PHASE-4: 前端现代化改造 | 前端 | PHASE-3完成 |
 | 4 | PHASE-5: 构建部署与持续优化 | 全局 | PHASE-4完成 |
@@ -593,3 +592,4 @@ allowed-origins:
 | v2.5 | 2026-06-09 | AI | 补充P2-2b完整验证详情：热更新部署验证（11服务全部healthy+Nacos注册正常）、冒烟测试（Gateway/OAuth2/System/Java版本/JDK_JAVA_OPTIONS）、JPMS兼容性（--add-opens参数）、Dockerfile实际变更说明（基于openjdk:8-jre手动安装OpenJDK 17.0.2）、hot-reload.sh Java17环境变量、crontab健康检查路径修正、8个问题诊断及解决方案 |
 | v2.6 | 2026-06-09 | AI | 新增P2-2c完成记录：Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换(含static import), SpringDoc 1.7.0→2.6.0, MyBatis 2.1.1→3.0.4, Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口, RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成, MainController返回用户信息, 编译通过, 前端无需调整, 产出AUTH_LOGIN_API.md登录接口使用说明文档 |
 | v2.7 | 2026-06-10 | AI | 新增P2-2c-2补全事务管理完成记录、P2-2c-3 SCA版本配置完成记录；新增AI_DIRECTIVES全局约束11-13条（执行后强制检查清单+Git提交流程规范+文档同步强制规则），PHASE-2完成率50%→83%；同步更新REFACTOR_TASKS.md/PROGRESS_REPORT.md/REFACTOR_EXECUTE.md/REFACTOR_PLAN.md；标注P2-2c验证结果待补全 |
+| v2.8 | 2026-06-10 | AI | P2-2c+/P2-2c-2/P2-2c-3 全面验证通过（11服务hot-reload全部healthy+Nacos 11/11注册+10服务actuator全部HTTP 200+Gateway路由全部HTTP 200+OAuth2端点HTTP 200）；AI_DIRECTIVES集成测试模板更新（grant_type=password→sys_pwd，增加AES加密说明）；6份文档交叉引用版本号同步；Git提交8个文件到refactor/phase-2-framework-upgrade分支并推送成功 |

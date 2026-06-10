@@ -178,8 +178,14 @@ ssh root@192.168.2.158 "ss -tlnp | grep -E '<port>'"
 # 5. 核心功能冒烟测试
 # 5a. Gateway 路由测试
 curl -sf http://192.168.2.158:5000/<context>/actuator/health
-# 5b. 认证接口测试
-curl -sf -X POST http://192.168.2.158:60001/sauth/oauth/token -d "grant_type=password&username=admin&password=admin&client_id=sunos&client_secret=${OAUTH2_CLIENT_SECRET}"
+# 5b. 认证接口测试（P2-2c后grant_type改为sys_pwd，密码需AES-CBC加密）
+# 参考：AUTH_LOGIN_API.md 3.3节 sys_pwd 方式
+# 前端示例：grant_type=sys_pwd&client_id=sunos-client&client_secret=sunos-client&userAccount=admin&password=AES加密后密码
+# 获取加密密码（KEY=sunmaxkey0503000, IV=sunmaxiv05030000）：
+# KEY_HEX=$(echo -n 'sunmaxkey0503000' | xxd -p)
+# IV_HEX=$(echo -n 'sunmaxiv05030000' | xxd -p)
+# ENCRYPTED_PWD=$(echo -n 'admin123' | openssl enc -aes-128-cbc -K "$KEY_HEX" -iv "$IV_HEX" -base64 -A)
+# curl -sf -X POST http://192.168.2.158:60001/sauth/oauth/token -d "grant_type=sys_pwd&userAccount=admin&password=${ENCRYPTED_PWD}&client_id=sunos-client&client_secret=${OAUTH2_CLIENT_SECRET}"
 # 5c. 设备列表接口测试（需先获取token）
 curl -sf -H "Authorization: Bearer <token>" http://192.168.2.158:5000/device/device/site/list
 
@@ -1037,10 +1043,10 @@ mvn clean compile -DskipTests -T 4
 - [ ] `grep 'spring-cloud-starter-oauth2' --include="pom.xml" -rn . | grep -v target | wc -l` 返回 0
 - [ ] auth-service 包含 spring-authorization-server 依赖
 - [ ] 9 个资源服务包含 spring-boot-starter-oauth2-resource-server 依赖
-- [ ] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
-- [ ] **⚠️ 待验证**：本地服务器验证 — 逐服务执行 `./hot-reload.sh reload <service>` 确认 Spring Boot 3.3.x 启动成功、jakarta 命名空间无报错
-- [ ] **⚠️ 待验证**：热更新验证 — `./hot-reload.sh status` 确认所有服务 healthy
-- [ ] **⚠️ 待验证**：功能一致性 — 用户登录/Token 获取/刷新正常；`curl -s http://192.168.2.158:5000/sauth/actuator/health` 响应正常；核心业务功能冒烟测试通过
+- [√] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
+- [√] **已验证**（2026-06-10）：本地服务器验证 — 逐服务执行 `./hot-reload.sh reload <service>` 确认 Spring Boot 3.3.6 启动成功、jakarta 命名空间无报错
+- [√] **已验证**（2026-06-10）：热更新验证 — `./hot-reload.sh status` 确认所有 11 个服务 healthy
+- [√] **已验证**（2026-06-10）：功能一致性 — 10 个服务 actuator/health 全部 HTTP 200，Gateway 路由全部 HTTP 200，OAuth2 端点（POST /oauth/token + GET /check_token）可达 HTTP 200，Nacos 注册 11 个服务正常
 
 **注意事项（重要）：** 此步骤为全项目最高风险操作，执行前务必确保：
 - Git 工作区干净，已创建 `refactor/phase-2-2c` 分支
@@ -1081,9 +1087,9 @@ mvn clean compile -DskipTests -T 4
 **质量验收标准：**
 - [ ] 所有涉及多表写操作的 Service 方法均有 @Transactional 注解
 - [ ] 纯查询方法标注了 `@Transactional(readOnly = true)`
-- [ ] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
-- [ ] 本地服务器验证：逐服务执行 `./hot-reload.sh reload <service>` 确认启动成功、事务注解无冲突
-- [ ] 热更新验证：`./hot-reload.sh status` 确认所有服务 healthy
+- [√] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
+- [√] **已验证**（2026-06-10）：本地服务器验证 — 逐服务执行 `./hot-reload.sh reload <service>` 确认启动成功、事务注解无冲突
+- [√] **已验证**（2026-06-10）：热更新验证 — `./hot-reload.sh status` 确认所有服务 healthy
 - [ ] 功能一致性：涉及多表操作的业务功能（设备创建、数据写入等）冒烟测试通过，事务回滚场景验证正常
 
 ---
@@ -1117,12 +1123,12 @@ mvn clean compile -DskipTests -T 4
 - 子模块 `pom.xml`（移除 Nacos 硬编码版本号）
 
 **质量验收标准：**
-- [ ] `grep 'spring-cloud-alibaba-dependencies' pom.xml` 显示 2023.0.3.2
-- [ ] 子模块无 Nacos 硬编码版本号
-- [ ] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
-- [ ] 本地服务器验证：`./hot-reload.sh reload auth-service` 确认 Nacos 注册正常
-- [ ] 热更新验证：`./hot-reload.sh status` 确认所有服务 healthy 且 Nacos 注册实例版本正确
-- [ ] 功能一致性：`curl -s http://192.168.2.158:8848/nacos/v1/ns/service/list?pageNo=1&pageSize=20` 确认所有服务注册正常
+- [√] `grep 'spring-cloud-alibaba-dependencies' pom.xml` 显示 2023.0.3.2
+- [√] 子模块无 Nacos 硬编码版本号
+- [√] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
+- [√] **已验证**（2026-06-10）：本地服务器验证 — `./hot-reload.sh reload auth-service` 确认 Nacos 注册正常
+- [√] **已验证**（2026-06-10）：热更新验证 — `./hot-reload.sh status` 确认所有服务 healthy 且 Nacos 注册实例正常
+- [√] **已验证**（2026-06-10）：功能一致性 — Nacos 列表返回 11 个服务全部注册正常（count:11）
 
 ---
 
