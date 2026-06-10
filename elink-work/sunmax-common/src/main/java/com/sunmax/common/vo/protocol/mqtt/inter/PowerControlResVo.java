@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,25 +13,25 @@ public class PowerControlResVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识 从1开始
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 充/放电接口运行模式 0-充电模式 1-放电模式
      */
-    @ApiModelProperty(value = "充/放电接口运行模式", required = true)
+    @Schema(description = "充/放电接口运行模式")
     private Integer runMode;
 
     /**
      * 响应结果 0-成功 255-其他原因
      */
-    @ApiModelProperty(value = "响应结果 0-成功 255-其他原因", required = true)
+    @Schema(description = "响应结果 0-成功 255-其他原因")
     private Integer responseResult;
 
 }

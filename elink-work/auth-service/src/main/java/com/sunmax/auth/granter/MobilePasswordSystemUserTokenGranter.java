@@ -2,32 +2,42 @@ package com.sunmax.auth.granter;
 
 import com.sunmax.auth.dto.UserLoginDto;
 import com.sunmax.auth.service.UserLoginService;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Map;
+import java.util.Collections;
 
 /**
- * @author xt
- * @brief 平台系统用户 密码登陆
- * @date 2021/6/7 13:51
+ * 平台系统用户密码登录认证提供者
+ * 替代旧的 MobilePasswordSystemUserTokenGranter
+ * grant_type: sys_pwd
  */
-public class MobilePasswordSystemUserTokenGranter extends AbstractCustomTokenGranter {
+public class MobilePasswordSystemUserTokenGranter implements AuthenticationProvider {
 
-    protected UserLoginService userLoginService;
+    private final UserLoginService userLoginService;
 
-    public MobilePasswordSystemUserTokenGranter(UserLoginService userLoginService, AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory) {
-        super(tokenServices, clientDetailsService, requestFactory, "sys_pwd");
+    public MobilePasswordSystemUserTokenGranter(UserLoginService userLoginService) {
         this.userLoginService = userLoginService;
     }
 
     @Override
-    protected UserLoginDto getCustomUser(Map<String, String> parameters) {
-        String userAccount = parameters.get("userAccount");
-        String password = parameters.get("password");
-        String clientId = parameters.get("client_id");//客户端id 用来标识登录那个平台
-        return userLoginService.loadSysUserByAccountAndPassword(userAccount, password, clientId);
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String userAccount = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        UserLoginDto user = userLoginService.loadSysUserByAccountAndPassword(userAccount, password, "sys_pwd");
+        if (user == null) {
+            throw new BadCredentialsException("用户名或密码错误");
+        }
+        return new UsernamePasswordAuthenticationToken(user, null,
+                user.getAuthorities() != null ? user.getAuthorities() : Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+    }
 }

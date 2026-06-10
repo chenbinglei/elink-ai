@@ -1,41 +1,39 @@
 package com.sunmax.auth.granter;
 
 import com.sunmax.auth.dto.UserLoginDto;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
-import org.springframework.security.oauth2.provider.*;
-import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.Map;
 
 /**
- * @Author: xiuho
- * @CreateDate: 2021.3.18
- * @Description:
+ * 自定义Token授权基类
+ *
+ * @deprecated 旧版TokenGranter体系已废弃，新的认证流程由OauthController直接处理。
+ * 各grant_type的认证逻辑已分别在对应的AuthenticationProvider实现类中完成。
+ * 保留仅用于兼容性参考。
  */
-public abstract class AbstractCustomTokenGranter extends AbstractTokenGranter {
+@Deprecated
+public abstract class AbstractCustomTokenGranter implements AuthenticationProvider {
 
-    private final OAuth2RequestFactory requestFactory;
+    /**
+     * 子类实现此方法获取自定义用户数据
+     *
+     * @param parameters 请求参数
+     * @return 用户登录信息
+     */
+    protected abstract UserLoginDto getCustomUser(Map<String, String> parameters);
 
-    protected AbstractCustomTokenGranter(AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, String grantType) {
-        super(tokenServices, clientDetailsService, requestFactory, grantType);
-        this.requestFactory = requestFactory;
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        // 子类应直接实现authenticate方法，不再通过getCustomUser间接调用
+        return null;
     }
 
     @Override
-    protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
-        Map<String, String> parameters = tokenRequest.getRequestParameters();
-        UserLoginDto customUser = getCustomUser(parameters);
-        if (customUser == null) {
-            throw new InvalidGrantException("无法获取用户信息");
-        }
-        OAuth2Request storedOAuth2Request = this.requestFactory.createOAuth2Request(client, tokenRequest);
-        PreAuthenticatedAuthenticationToken authentication = new PreAuthenticatedAuthenticationToken(customUser, null, customUser.getAuthorities());
-        authentication.setDetails(customUser);
-        return new OAuth2Authentication(storedOAuth2Request, authentication);
+    public boolean supports(Class<?> authentication) {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
-
-    protected abstract UserLoginDto getCustomUser(Map<String, String> parameters);
-
 }

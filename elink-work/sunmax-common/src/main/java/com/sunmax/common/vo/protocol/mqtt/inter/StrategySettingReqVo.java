@@ -2,7 +2,7 @@ package com.sunmax.common.vo.protocol.mqtt.inter;
 
 import com.sunmax.common.dto.protocol.mqtt.web.model.Strategy;
 import com.sunmax.common.dto.protocol.mqtt.web.model.UserAccount;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -15,31 +15,31 @@ public class StrategySettingReqVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识 从1开始
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 运行模式 0-充电模式 1-放电模式
      */
-    @ApiModelProperty(value = "运行模式", required = true)
+    @Schema(description = "运行模式")
     private Integer runMode;
 
     /**
      * 用户账户
      */
-    @ApiModelProperty(value = "用户账户", required = true)
+    @Schema(description = "用户账户")
     private UserAccount userAccount;
 
     /**
      * 策略
      */
-    @ApiModelProperty(value = "策略", required = true)
+    @Schema(description = "策略")
     private Strategy strategy;
 
 }

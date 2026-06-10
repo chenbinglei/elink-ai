@@ -1,23 +1,22 @@
 package com.sunmax.common.vo.protocol;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "PlatformStatusVo", description = "平台状态查询实体类")
+@Schema(description = "平台状态查询实体类")
 public class PlatformStatusVo {
 
     /**
      * 协议驱动
      */
-    @ApiModelProperty(value = "协议驱动", required = true)
+    @Schema(description = "协议驱动")
     private String protocolDriver;
 
     /**
      * 平台标识
      */
-    @ApiModelProperty(value = "平台标识", required = true)
+    @Schema(description = "平台标识")
     private String platformLogo;
 
 }

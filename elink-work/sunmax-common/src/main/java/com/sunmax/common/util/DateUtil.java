@@ -7,7 +7,6 @@ import com.sunmax.common.util.oss.FileUtil;
 import com.sunmax.common.vo.StaticParamVo;
 import lombok.Data;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -1592,7 +1591,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeSecondDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1618,7 +1617,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1644,7 +1643,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getAfterDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1670,7 +1669,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getHourAfterDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1696,7 +1695,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeDayDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
@@ -1722,7 +1721,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getAfterDayDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
@@ -1748,7 +1747,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getAfterTime(String startTime, Integer timeSolt) {
-        if (StringUtils.isEmpty(startTime) || null == timeSolt) {
+        if (StringUtil.isEmpty(startTime) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("HH:mm:ss");
@@ -1774,7 +1773,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeMonthDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");

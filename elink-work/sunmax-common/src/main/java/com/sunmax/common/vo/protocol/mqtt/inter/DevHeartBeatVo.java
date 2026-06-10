@@ -1,23 +1,22 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "HeartBeatVo", description = "设备心跳实体类")
+@Schema(description = "设备心跳实体类")
 public class DevHeartBeatVo {
 
     /**
      * 设备id
      */
-    @ApiModelProperty(value = "设备id", required = true)
+    @Schema(description = "设备id")
     private String deviceId;
 
     /**
      * 时间戳
      */
-    @ApiModelProperty(value = "时间戳", required = true)
+    @Schema(description = "时间戳")
     private Long timeStamp;
 
 }

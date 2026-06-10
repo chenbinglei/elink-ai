@@ -1,7 +1,6 @@
 package com.sunmax.common.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -11,30 +10,30 @@ import lombok.Data;
  * @注释: 区级数据返回实体类
  */
 @Data
-@ApiModel("CityDto")
+@Schema(description = "CityDto")
 public class AreaDto {
 
     /**
      * 唯一id
      */
-    @ApiModelProperty("唯一id")
+    @Schema(description = "唯一id")
     private Long id;
 
     /**
      * 全国区县id
      */
-    @ApiModelProperty("全国区县id")
+    @Schema(description = "全国区县id")
     private String areaId;
 
     /**
      * 全国区县名称
      */
-    @ApiModelProperty("全国区县名称")
+    @Schema(description = "全国区县名称")
     private String areaName;
 
     /**
      * 全国城市id
      */
-    @ApiModelProperty("全国城市id")
+    @Schema(description = "全国城市id")
     private String cityId;
 }

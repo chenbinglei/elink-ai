@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -21,31 +21,31 @@ public class DevUpdateReportVo {
      * 7 V2G_7.0 控制板
      * 8 V2G_8.0 控制板
      */
-    @ApiModelProperty(value = "固件类型", required = true)
+    @Schema(description = "固件类型")
     private Integer deviceType;
 
     /**
      * 固件主版本号
      */
-    @ApiModelProperty(value = "固件主版本号", required = true)
+    @Schema(description = "固件主版本号")
     private Integer majorNo;
 
     /**
      * 固件次版本号
      */
-    @ApiModelProperty(value = "固件次版本号", required = true)
+    @Schema(description = "固件次版本号")
     private Integer childNo;
 
     /**
      * 固件内测版本号
      */
-    @ApiModelProperty(value = "固件内测版本号", required = true)
+    @Schema(description = "固件内测版本号")
     private Integer betaNo;
 
     /**
      * 失败原因 0-成功 1-数据校验失败 2-应答超时 3-flash擦除失败 4-flash写入失败 5-同版本不升级 255-其他原因。
      */
-    @ApiModelProperty(value = "失败原因", required = true)
+    @Schema(description = "失败原因")
     private Integer failReason;
 
 }

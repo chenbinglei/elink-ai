@@ -14,49 +14,37 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class RedisLockUtil {
 
-    @Value("${spring.redis.host}")
+    @Value("${spring.data.redis.host}")
     private String host;
 
-    @Value("${spring.redis.port}")
+    @Value("${spring.data.redis.port}")
     private String port;
 
-    @Value("${spring.redis.password}")
+    @Value("${spring.data.redis.password}")
     private String password;
 
-    @Value("${spring.redis.database}")
+    @Value("${spring.data.redis.database}")
     private int database;
-
-    @Value("${spring.redis.lettuce.pool.min-idle}")
-    private int minIdle;
-
-    @Value("${spring.redis.lettuce.pool.max-idle}")
-    private int maxIdle;
-
-//    @Value("${spring.redis.lettuce.pool.max-active}")
-//    private int maxActive;
-//
-//    @Value("${spring.redis.lettuce.pool.max-wait}")
-//    private int maxWait;
-
 
     private static RedissonClient redissonClient;
 
     @Bean
-    public void init() {
+    public RedissonClient redissonClient() {
         Config config = new Config();
         //单机模式
         SingleServerConfig singleServerConfig = config.useSingleServer();
         singleServerConfig.setAddress("redis://" + host + ":" + port);
         singleServerConfig.setDatabase(database);
         singleServerConfig.setPassword(password);
-        singleServerConfig.setConnectionMinimumIdleSize(minIdle);
-        singleServerConfig.setConnectionPoolSize(maxIdle);
+        singleServerConfig.setConnectionMinimumIdleSize(5);
+        singleServerConfig.setConnectionPoolSize(16);
         singleServerConfig.setRetryAttempts(3);
         singleServerConfig.setRetryInterval(1500);
-        singleServerConfig.setTimeout(60000);
-        singleServerConfig.setConnectTimeout(30000);
-        singleServerConfig.setIdleConnectionTimeout(60000);
+        singleServerConfig.setTimeout(5000);
+        singleServerConfig.setConnectTimeout(5000);
+        singleServerConfig.setIdleConnectionTimeout(30000);
         RedisLockUtil.redissonClient = Redisson.create(config);
+        return RedisLockUtil.redissonClient;
     }
 
     /**

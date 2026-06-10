@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,7 +13,7 @@ public class RateReqVo {
     /**
      * 费率类型 0-充电费率 1-放电费率
      */
-    @ApiModelProperty(value = "费率类型 0-充电费率 1-放电费率", required = true)
+    @Schema(description = "费率类型 0-充电费率 1-放电费率")
     private Integer type;
 
 }
