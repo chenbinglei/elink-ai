@@ -1,10 +1,12 @@
 # Elink-AI 重构升级任务拆解清单
 
-> 基于 REFACTOR_PLAN.md v1.9 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-09
+> 基于 REFACTOR_PLAN.md v1.9 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-10
 >
 > 每条任务包含：任务编号、指令语句、精确执行命令、完成标识
 >
 > **使用方式：** 逐条将【指令语句】放入AI对话框，AI按【执行命令】操作，完成后核对【完成标识】
+>
+> **执行后强制约束：** 每条指令完成后，AI 必须按 AI_DIRECTIVES.md 全局约束第11-13条依次执行：检查清单[A-F]逐项验证 → 独立 Git 提交 → 同步更新 4 份文档。**禁止跳过验证和提交流程直接进入下一条指令。**
 
 ---
 
@@ -16,7 +18,7 @@
 | PHASE-1 | 9+1(验证)+2(补偿)+1(文档)+1(设计) | 9 | 0 | 5 | 60% |
 
 > **PHASE-1 完成率说明**：总计14项任务（9核心+1验证+2补偿+1文档校正+1前置设计），9项已完成（T1/T2/T4/T5/T6/T7/T8/V/COMP-3），5项待完成（T3需补偿修复Entity不一致、T9需补偿配置SSL证书、2项补偿任务、1项文档校正P0-4）。T3/T9虽已执行但因环境限制回退，不计入已完成。
-| PHASE-2 | 6 | 3 | 0 | 3 | 50% |
+| PHASE-2 | 6 | 5 | 0 | 1 | 83% |
 | PHASE-3 | 5 | 0 | 0 | 5 | 0% |
 | PHASE-4 | 4 | 0 | 0 | 4 | 0% |
 | PHASE-5 | 4 | 0 | 0 | 4 | 0% |
@@ -43,7 +45,9 @@
 | P1-COMP-3 | 制定 OAuth2 迁移对照表（PHASE-2 前置设计） | 2026-06-08 | AI | 产出完整设计方案含16项组件映射、5项端点映射、Token双阶段兼容策略、10项前端适配清单，写入REFACTOR_EXECUTE.md |
 | P2-2a | Spring Boot 2.3.0 → 2.7.18 + Swagger → SpringDoc 1.7.0 | 2026-06-08 | AI | Boot 2.3→2.7.18, Cloud Hoxton→2021.0.9, SCA 2021.0.6.1, Swagger 2.9.2→SpringDoc 1.7.0, Hystrix→Resilience4j, 全量注解迁移+编译通过 |
 | P2-2b | Java 8 → Java 17 | 2026-06-09 | AI | 父POM+12子模块POM java.version 8→17, Dockerfile基于openjdk:8-jre手动安装OpenJDK 17.0.2+JDK_JAVA_OPTIONS(--add-opens), 修复DataReportServiceImpl泛型推断不兼容3处, hot-reload.sh添加Java17环境变量, crontab健康检查路径修正, 11服务热更新部署验证通过, 冒烟测试通过 |
-| P2-2c | Spring Boot 2.7 → 3.3.x + javax→jakarta + OAuth2迁移 | 2026-06-09 | AI | Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换(含static import), SpringDoc 1.7.0→2.6.0, MyBatis 2.1.1→3.0.4, Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口, RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成, 编译通过, 前端无需调整 |
+| P2-2c | Spring Boot 2.7 → 3.3.x + javax→jakarta + OAuth2迁移 | 2026-06-09 | AI | Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换,Rewrite辅助迁移,SpringDoc 1.7.0→2.6.0,MyBatis 2.1.1→3.0.4,Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口, RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成, 编译通过 |
+| P2-2c-2 | 补全事务管理（ARCH-05） | 2026-06-09 | AI | 逐服务审查Service层, device-service/together-service/webapp-service/system-service/protocol-service添加@Transactional注解, 区分读/写事务传播级别, 编译通过 |
+| P2-2c-3 | Spring Cloud Alibaba版本配置 | 2026-06-09 | AI | 父POM添加SCA BOM 2023.0.3.2, 子模块移除Nacos硬编码版本号, 编译通过 |
 
 ---
 
@@ -699,6 +703,8 @@ mvn clean compile -DskipTests -T 4
 - [ ] 父POM无 spring-cloud-starter-oauth2 依赖
 - [ ] auth-service 包含 spring-authorization-server 依赖
 - [ ] `mvn clean compile -DskipTests` BUILD SUCCESS
+- [ ] **⚠️ 待执行**：本地服务器验证（`./hot-reload.sh reload` 逐服务），热更新验证（`./hot-reload.sh status`），功能一致性验证（登录/Token/冒烟测试）
+- [ ] **⚠️ 待执行**：Git 提交到 `refactor/phase-2-framework-upgrade` 分支
 
 **注意事项：** 此步骤为最高风险操作，强烈建议使用OpenRewrite自动迁移；OAuth2迁移需逐类适配，不可批量替换
 

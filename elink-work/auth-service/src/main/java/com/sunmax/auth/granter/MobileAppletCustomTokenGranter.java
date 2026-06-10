@@ -28,7 +28,6 @@ public class MobileAppletCustomTokenGranter implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if (authentication.getDetails() instanceof Map) {
-            @SuppressWarnings("unchecked")
             Map<String, String> params = (Map<String, String>) authentication.getDetails();
             String appletCode = params.get("code");
             String appletKey = params.get("appletKey");

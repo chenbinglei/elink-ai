@@ -25,7 +25,11 @@ import java.util.concurrent.TimeUnit;
  *
  * 支持的 grant_type：
  * - sys_pwd: 系统用户密码登录（Web平台）
- * - applet: 微信小程序登录
+ * - applet: 微信小程序登录（微信小程序端）
+ * - refresh_token: 刷新令牌（Web平台）
+ * - client_credentials: 客户端凭证（Web平台）
+ * - password: 密码登录（Web平台）
+ * - implicit: 隐式授权（Web平台）
  */
 @RestController
 @RequestMapping("/oauth")
