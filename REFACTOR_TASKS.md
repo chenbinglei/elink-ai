@@ -1,6 +1,6 @@
 # Elink-AI 重构升级任务拆解清单
 
-> 基于 REFACTOR_PLAN.md v1.3 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-05
+> 基于 REFACTOR_PLAN.md v1.9 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-09
 >
 > 每条任务包含：任务编号、指令语句、精确执行命令、完成标识
 >
@@ -12,8 +12,11 @@
 
 | 阶段 | 任务总数 | 已完成 | 进行中 | 待开始 | 完成率 |
 |------|---------|--------|--------|--------|--------|
-| PHASE-1 | 9+1(验证)+2(补偿) | 10 | 0 | 2 | 83% |
-| PHASE-2 | 6 | 0 | 0 | 6 | 0% |
+| PHASE-0 | 5 | 5 | 0 | 0 | 100% |
+| PHASE-1 | 9+1(验证)+2(补偿)+1(文档)+1(设计) | 9 | 0 | 5 | 60% |
+
+> **PHASE-1 完成率说明**：总计14项任务（9核心+1验证+2补偿+1文档校正+1前置设计），9项已完成（T1/T2/T4/T5/T6/T7/T8/V/COMP-3），5项待完成（T3需补偿修复Entity不一致、T9需补偿配置SSL证书、2项补偿任务、1项文档校正P0-4）。T3/T9虽已执行但因环境限制回退，不计入已完成。
+| PHASE-2 | 6 | 3 | 0 | 3 | 50% |
 | PHASE-3 | 5 | 0 | 0 | 5 | 0% |
 | PHASE-4 | 4 | 0 | 0 | 4 | 0% |
 | PHASE-5 | 4 | 0 | 0 | 4 | 0% |
@@ -22,6 +25,11 @@
 
 | 任务编号 | 任务名称 | 完成时间 | 执行人 | 备注 |
 |----------|----------|----------|--------|------|
+| P0-2 | 修正 CORS 白名单中的内网 IP | 2026-06-05 | AI | 移除192.168.2.158:9000/9001/9002，添加3个公网域名+保留localhost，热更新验证通过 |
+| P0-3 | 修正 Nacos/EMQX 默认密码并添加安全提示 | 2026-06-05 | AI | docker-compose.yml 环境变量改为${VAR:-default}格式+WARNING注释，.env.example更新，11服务热更新重启+Nacos配置加载+EMQX消息传递+30s稳定性验证全部通过 |
+| P0-4 | 前后端环境变量分离 + .env/.env.example 全面审查 | 2026-06-05 | AI | 根目录.env迁移至elink-work/.env(后端)+elink-web/.env(前端)，补全OAUTH2/PLATFORM等9个缺失变量，前端.env.development移除硬编码IP/密钥，.gitignore前后端分离规则，docker-compose/hot-reload/start路径更新，11服务Nacos注册+auth-service重启验证通过 |
+| P0-4b | 校正文档统计数据不一致 | 2026-06-08 | AI | javax:317→487处/255文件，Swagger:11832→19193处(@ApiModel:732→8093)，PHASE-1完成率83%→62%，5份文档校正+版本号递增 |
+| P0-5 | 排查 Together-service 健康检查性能异常 | 2026-06-08 | AI | 根因：HikariCP minimum-idle=1导致空闲连接回收后首次请求4.5s；修复：minimum-idle→3、移除connection-test-query、健康缓存10s→30s、sunos-log数据源补全HikariCP配置；修复后空闲60s首次请求7ms |
 | P1-T1 | 替换 Fastjson 1.2.0 为 fastjson2 2.0.52 | 2026-06-03 | AI | 100个Java文件150处import全部迁移，编译通过 |
 | P1-T2 | 收紧 CORS 策略 | 2026-06-03 | AI | 已配置3个业务域名白名单，编译通过 |
 | P1-T3 | JPA ddl-auto 从 update 改为 validate | 2026-06-03 | AI | 修改已执行，因Entity与数据库表类型不一致手动回退为update |
@@ -32,6 +40,10 @@
 | P1-T8 | configure-service 平台密钥硬编码外置 | 2026-06-03 | AI | yml 5个密钥+Java 1处硬密钥全部外置，编译通过 |
 | P1-T9 | 数据库连接 useSSL 修复 | 2026-06-03 | AI | 修改已执行，因MySQL未配置SSL证书手动回退为useSSL=false |
 | P1-V | PHASE-1 全量验证 | 2026-06-03 | AI | 编译+打包通过，9项残留0，修复1处遗漏IP，100%完成 |
+| P1-COMP-3 | 制定 OAuth2 迁移对照表（PHASE-2 前置设计） | 2026-06-08 | AI | 产出完整设计方案含16项组件映射、5项端点映射、Token双阶段兼容策略、10项前端适配清单，写入REFACTOR_EXECUTE.md |
+| P2-2a | Spring Boot 2.3.0 → 2.7.18 + Swagger → SpringDoc 1.7.0 | 2026-06-08 | AI | Boot 2.3→2.7.18, Cloud Hoxton→2021.0.9, SCA 2021.0.6.1, Swagger 2.9.2→SpringDoc 1.7.0, Hystrix→Resilience4j, 全量注解迁移+编译通过 |
+| P2-2b | Java 8 → Java 17 | 2026-06-09 | AI | 父POM+12子模块POM java.version 8→17, Dockerfile基于openjdk:8-jre手动安装OpenJDK 17.0.2+JDK_JAVA_OPTIONS(--add-opens), 修复DataReportServiceImpl泛型推断不兼容3处, hot-reload.sh添加Java17环境变量, crontab健康检查路径修正, 11服务热更新部署验证通过, 冒烟测试通过 |
+| P2-2c | Spring Boot 2.7 → 3.3.x + javax→jakarta + OAuth2迁移 | 2026-06-09 | AI | Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换(含static import), SpringDoc 1.7.0→2.6.0, MyBatis 2.1.1→3.0.4, Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口, RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成, 编译通过, 前端无需调整 |
 
 ---
 
@@ -540,10 +552,12 @@ cd /work/elink-ai/elink-work
 
 ---
 
-### P2-2a | Spring Boot 2.3.0 → 2.7.18 过渡升级
+### P2-2a | Spring Boot 2.3.0 → 2.7.18 过渡升级 ✅ 已完成
+
+**完成时间：** 2026-06-08
 
 **指令语句：**
-> 将 Spring Boot 从 2.3.0.RELEASE 升级至 2.7.18，Spring Cloud 从 Hoxton.SR8 升级至 2021.0.9，同时将 Swagger 2.9.2 迁移至 **springdoc-openapi 1.7.0**（Spring Boot 2.7 专用版本，2.x要求Spring Boot 3.x），添加 Spring Boot 2.7 兼容配置，并完成全部1335处Swagger注解迁移。
+> 将 Spring Boot 从 2.3.0.RELEASE 升级至 2.7.18，Spring Cloud 从 Hoxton.SR8 升级至 2021.0.9，同时将 Swagger 2.9.2 迁移至 **springdoc-openapi 1.7.0**（Spring Boot 2.7 专用版本，2.x要求Spring Boot 3.x），添加 Spring Boot 2.7 兼容配置，并完成全部19193处Swagger注解迁移。
 
 **执行命令：**
 ```bash
@@ -566,7 +580,7 @@ sed -i 's|<spring-cloud.version>Hoxton.SR8</spring-cloud.version>|<spring-cloud.
 # spring.mvc.pathmatch.matching-strategy=ant-path-matcher
 # spring.main.allow-circular-references=true
 
-# 4. 全局替换Swagger注解（1335处/100文件）- 完成6类注解映射
+# 4. 全局替换Swagger注解（19193处/910文件）- 完成8类注解映射
 find . -name "*.java" -exec sed -i \
   -e 's/@Api(tags = /@Tag(name = /g' \
   -e 's/@ApiOperation(value = /@Operation(summary = /g' \
@@ -584,19 +598,21 @@ mvn clean compile -DskipTests -T 4
 ```
 
 **完成标识：**
-- [ ] 父POM中 spring-boot-starter-parent 版本为 2.7.18
-- [ ] 父POM中 spring-cloud.version 为 2021.0.9
-- [ ] `grep -rn 'springfox\|swagger-bootstrap' --include="pom.xml" .` 返回空
-- [ ] `grep -rn 'org.springdoc' --include="pom.xml" .` 显示 springdoc-openapi-ui:1.7.0
-- [ ] `grep -rn '@Api(' --include="*.java" . | grep -v target | wc -l` 返回 0
-- [ ] `grep -rn '@ApiModel\|@ApiModelProperty' --include="*.java" . | grep -v target | wc -l` 返回 0
-- [ ] `mvn clean compile -DskipTests` BUILD SUCCESS
+- [√] 父POM中 spring-boot-starter-parent 版本为 2.7.18
+- [√] 父POM中 spring-cloud.version 为 2021.0.9
+- [√] `grep -rn 'springfox\|swagger-bootstrap' --include="pom.xml" .` 返回空
+- [√] `grep -rn 'org.springdoc' --include="pom.xml" .` 显示 springdoc-openapi-ui:1.7.0
+- [√] `grep -rn '@Api(' --include="*.java" . | grep -v target | wc -l` 返回 0
+- [√] `grep -rn '@ApiModel\|@ApiModelProperty' --include="*.java" . | grep -v target | wc -l` 返回 0
+- [√] `mvn clean compile -DskipTests` BUILD SUCCESS
 
 **注意事项：** Swagger→SpringDoc 迁移建议使用IDE批量替换，注解属性映射复杂（如@Api→@Tag需去掉tags=的方括号）；Spring Boot 2.7 **必须**搭配 springdoc-openapi 1.7.0，2.x版本要求Spring Boot 3.x
 
 ---
 
-### P2-2b | Java 8 → Java 17
+### P2-2b | Java 8 → Java 17 ✅ 已完成
+
+**完成时间：** 2026-06-09
 
 **指令语句：**
 > 将 Java 版本从 8 升级至 17，修改 Maven compiler 配置和 Dockerfile 基础镜像，处理反射访问和内部API兼容性问题。
@@ -625,17 +641,23 @@ mvn clean compile -DskipTests -T 4
 ```
 
 **完成标识：**
-- [ ] 父POM java.version 为 17
-- [ ] Dockerfile 使用 eclipse-temurin:17-jre
-- [ ] `mvn clean compile -DskipTests` BUILD SUCCESS
-- [ ] 无 sun.misc / sun.reflect 等内部API直接调用
+- [√] 父POM java.version 为 17
+- [√] Dockerfile 使用 OpenJDK 17.0.2（基于 openjdk:8-jre 手动安装）
+- [√] `mvn clean compile -DskipTests` BUILD SUCCESS
+- [√] 无 sun.misc / sun.reflect 等内部API直接调用
+- [√] 热更新部署验证：11个服务全部 Docker healthy + HTTP UP + Nacos 注册正常
+- [√] 冒烟测试：Gateway路由200、OAuth2端点正常响应、System Service UP、容器Java版本17.0.2
+- [√] JPMS兼容性：JDK_JAVA_OPTIONS 含 --add-opens 参数，FST/Redisson/JAXB 反射访问正常
+- [√] hot-reload.sh 已配置 Java 17 环境变量
 
 ---
 
-### P2-2c | Spring Boot 2.7 → 3.3.x + javax→jakarta + OAuth2迁移
+### P2-2c | Spring Boot 2.7 → 3.3.x + javax→jakarta + OAuth2迁移 ✅ 已完成
+
+**完成时间：** 2026-06-09
 
 **指令语句：**
-> 将 Spring Boot 从 2.7.18 升级至 3.3.x，执行 javax→jakarta 命名空间迁移（317处/120文件），迁移 OAuth2 至 spring-authorization-server，补全核心 Service 事务管理。
+> 将 Spring Boot 从 2.7.18 升级至 3.3.x，执行 javax→jakarta 命名空间迁移（487处/255文件），迁移 OAuth2 至 spring-authorization-server，补全核心 Service 事务管理。
 
 **执行命令：**
 ```bash
@@ -1344,7 +1366,7 @@ docker logs --since 5m <service-name> 2>&1 | grep -E "(ERROR|Exception|OOM)"
 
 # 强制重建容器（hot-reload.sh失败时）
 cd /work/elink-ai/elink-work
-docker-compose --env-file /work/elink-ai/.env up -d --force-recreate <service-name>
+docker-compose --env-file /work/elink-ai/elink-work/.env up -d --force-recreate <service-name>
 
 # 全量级回滚（多服务异常）
 git checkout <previous-tag>

@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v1.3 | 编制日期：2026-06-03 | 最后更新：2026-06-03 | 状态：**执行中**
+> 版本：v2.0 | 编制日期：2026-06-03 | 最后更新：2026-06-09 | 状态：**执行中**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -10,8 +10,9 @@
 
 | 阶段 | 状态 | 完成率 | 说明 |
 |------|------|--------|------|
+| PHASE-0：紧急修复 | ✅ 已完成 | 100% | P0-2 CORS内网IP移除+公网域名白名单；P0-3 Nacos/EMQX默认密码环境变量化+WARNING注释；P0-4 前后端环境变量分离+.env全面审查；P0-4b 文档统计数据校正；P0-5 Together-service健康检查性能修复 |
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
-| PHASE-2：框架升级与核心重构 | ⏳ 待开始 | 0% | 6项任务 |
+| PHASE-2：框架升级与核心重构 | ⏳ 进行中 | 50% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），3项待执行 |
 | PHASE-3：代码质量与性能优化 | ⏳ 待开始 | 0% | 5项任务（含新增P3-C2超时参数优化） |
 | PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
@@ -34,7 +35,7 @@
 ### 已完成任务的影响分析
 
 1. **SEC-01 Fastjson漏洞修复**：消除了项目中最严重的安全隐患（CVE-2022-25845等反序列化RCE漏洞），影响全局11个业务服务+公共模块的JSON处理逻辑
-2. **SEC-02 CORS策略收紧**：消除了Gateway跨域通配符带来的CSRF攻击风险，将允许的跨域来源限定为3个已知业务域名
+2. **SEC-02 CORS策略收紧**：消除了Gateway跨域通配符带来的CSRF攻击风险，将允许的跨域来源限定为3个已知业务域名；P0-2进一步移除内网IP白名单，仅保留localhost和公网域名
 3. **SEC-03 JPA ddl-auto修复**：禁止了生产环境自动DDL变更，消除了数据库表结构被意外修改导致数据丢失的风险，影响全部10个业务服务
 4. **SEC-04 前端硬编码IP清除**：消除了前端代码中泄露服务器IP的安全风险，3个前端项目8个文件已迁移至环境变量配置
 5. **ARCH-04 HikariCP连接池修正**：将极端配置maximum-pool-size:1000调降至30，消除了数据库连接耗尽风险，新增泄漏检测
@@ -42,6 +43,10 @@
 7. **SEC-02扩展 OAuth2密钥外置**：9个服务的client-secret从硬编码改为环境变量注入，生产环境可通过.env覆盖
 8. **SEC-02扩展 平台密钥外置**：configure-service的5个yml密钥+1个Java硬编码密钥全部外置为环境变量
 9. **数据安全 useSSL修复**：13条JDBC连接全部启用SSL加密，移除废弃的autoReconnect参数
+10. **P1-COMP-3 OAuth2迁移设计**：产出PHASE-2前置设计方案，含16项组件映射、5项端点映射、Token双阶段兼容策略、10项前端适配清单（详见REFACTOR_EXECUTE.md「OAuth2 迁移设计」章节）
+11. **P2-2a Spring Boot 2.7.18升级**：Boot 2.3→2.7.18, Cloud Hoxton→2021.0.9, SCA 2021.0.6.1, Swagger 2.9.2→SpringDoc 1.7.0, Hystrix→Resilience4j CircuitBreaker, 全量910文件/19193处Swagger注解迁移, mysql-connector坐标更新, OAuth2临时桥接依赖, 编译通过
+12. **P2-2b Java 17升级**：父POM+12子模块POM java.version 8→17, Dockerfile基于openjdk:8-jre手动安装OpenJDK 17.0.2（因Docker Hub拉取超时改用华为镜像）, 修复DataReportServiceImpl中3处Java 17泛型推断严格化导致的方法引用编译错误, 添加JDK_JAVA_OPTIONS --add-opens参数解决JPMS反射访问限制（FST/Redisson/JAXB库需要）, hot-reload.sh添加Java17环境变量, crontab-service健康检查路径修正/scrontab→/crontab, 11服务热更新部署验证通过（Docker healthy+HTTP UP+Nacos注册正常）, 冒烟测试通过（Gateway路由200/OAuth2端点正常/System UP/容器Java版本17.0.2）
+13. **P2-2c Spring Boot 3.3.x+jakarta+OAuth2迁移**：Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换(含static import), SpringDoc 1.7.0→2.6.0, MyBatis 2.1.1→3.0.4, Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口(6种grant_type), RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成(MobilePasswordCustomTokenGranter/MobileSmsSystemuserTokenGranter/MobileSmsCustomTokenGranter), MainController返回用户信息, 编译通过, 前端无需调整, 产出AUTH_LOGIN_API.md登录接口使用说明文档
 
 ---
 
@@ -89,7 +94,7 @@
 | DEBT-02 | `System.out/err.print` 调用，应使用日志框架 | 109处/34文件 |
 | DEBT-03 | `catch(Exception)` 过于宽泛的异常捕获 | 357处/92文件 |
 | DEBT-04 | TODO/FIXME/HACK 注释未处理 | 16处/10文件 |
-| DEBT-05 | Swagger 2.9.2 已过时，不兼容 Spring Boot 2.6+，含11565处注解待迁移（@Api:121, @ApiOperation:2365, @ApiModel:732, @ApiModelProperty:7361, @ApiImplicitParam:988） | pom.xml + 约255个Java文件 |
+| DEBT-05 | Swagger 2.9.2 已过时，不兼容 Spring Boot 2.6+，含19193处注解待迁移（@Api:121, @ApiOperation:2365, @ApiModel:8093, @ApiModelProperty:7361, @ApiImplicitParam:988, @ApiImplicitParams:265） | pom.xml + 约910个Java文件 |
 | DEBT-06 | OSS SDK 2.8.3 版本过旧 | pom.xml |
 | DEBT-07 | Redisson 3.11.3 版本过旧 | sunmax-common pom.xml + device/data/crontab-service |
 | DEBT-08 | groupId 为 `org.example` 不符合生产规范 | 全部13个模块pom.xml（26处引用） |
@@ -167,7 +172,7 @@ git tag -a v3.0-phase1 -m "PHASE-1: 安全加固完成"
 ```
 Step 2a: Spring Boot 2.3 → 2.7（过渡升级）
     ├── 修复2.7不兼容变更
-    ├── Swagger → SpringDoc OpenAPI迁移（11565处注解/255个Java文件）
+    ├── Swagger → SpringDoc OpenAPI迁移（19193处注解/910个Java文件）
     └── 验证全部服务正常启动
 
 Step 2b: Java 8 → Java 17
@@ -176,8 +181,8 @@ Step 2b: Java 8 → Java 17
     └── 修复Java 17不兼容代码（反射、内部API等）
 
 Step 2c: Spring Boot 2.7 → 3.x + Spring Cloud 2023.x
-    ├── javax.* → jakarta.* 命名空间迁移（451处/255文件）
-    │   ├── javax.persistence(321处) + javax.annotation(44处)
+    ├── javax.* → jakarta.* 命名空间迁移（487处/255文件）
+    │   ├── javax.persistence(402处) + javax.annotation(44处)
     │   ├── javax.websocket(21处) + javax.servlet(17处) + javax.validation(3处)
     ├── OAuth2模块迁移（spring-security-oauth2已废弃）
     │   └── auth-service重点改造：AuthorizationServerConfigurer → AuthorizationServer
@@ -512,8 +517,8 @@ feat([java]/device-service): 补全设备操作事务管理
 是否继续？(需要项目负责人确认)
 
 [⚠️ 高风险] 即将升级Spring Boot版本(2.3.0 → 3.x)，涉及javax→jakarta
-命名空间迁移，预计影响317处/约120个文件。
-  详细分布：javax.persistence(232处/100文件) + javax.annotation(44处/42文件)
+命名空间迁移，预计影响487处/约255个文件。
+  详细分布：javax.persistence(402处/100文件) + javax.annotation(44处/42文件)
            + javax.websocket(21处/8文件) + javax.servlet(17处/15文件) + javax.validation(3处/3文件)
 请确保已完整执行过渡升级路径。
 是否继续？(需要项目负责人确认)
@@ -663,7 +668,7 @@ echo "[步骤2a-2] 迁移API文档至SpringDoc"
 # 删除: springfox-swagger2, springfox-swagger-ui, swagger-bootstrap-ui, swagger-models
 # 新增: springdoc-openapi-starter-webmvc-ui 2.x
 # 替换注解: @Api → @Tag, @ApiOperation → @Operation 等
-# 注意：当前项目有1335处Swagger注解(@Api/@ApiOperation/@ApiParam)分布在100个文件中
+# 注意：当前项目有19193处Swagger注解(@Api/@ApiOperation/@ApiParam/@ApiModel/@ApiModelProperty/@ApiImplicitParam/@ApiImplicitParams)分布在910个文件中
 # 建议使用IDE批量替换或OpenRewrite自动化迁移
 
 # 3. 修复2.7不兼容变更

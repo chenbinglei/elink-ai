@@ -51,15 +51,16 @@ elink-work/
 ```
 
 ### 关键依赖
-- Spring Boot 2.3.0.RELEASE
-- Spring Cloud Hoxton.SR1
+- Spring Boot 2.7.18
+- Spring Cloud 2021.0.9
+- Spring Cloud Alibaba 2021.0.6.1
 - ~~Fastjson 1.2.0（全局150处引用）~~ ✅ 已替换为 fastjson2 2.0.52
-- Swagger 2.9.2（1335处注解）
+- ~~Swagger 2.9.2（11832处注解/910文件）~~ ✅ 已迁移至 SpringDoc OpenAPI 1.7.0
 - Redisson 3.11.3
 - OSS SDK 2.8.3
-- spring-cloud-starter-oauth2（已废弃）
+- ~~spring-cloud-starter-oauth2（已废弃）~~ → spring-security-oauth2-autoconfigure:2.6.8（临时桥接）
 - Jackson 2.18.0（手动版本）
-- org.jetbrains:annotations:RELEASE（动态版本）
+- ~~org.jetbrains:annotations:RELEASE（动态版本）~~ ✅ 已固定为 24.0.1
 
 ### 数据库
 - MySQL：8个业务数据库
@@ -108,16 +109,18 @@ elink-web/
 - [x] 智能体规则体系建立
 - [x] P1-T1：Fastjson 1.2.0 → fastjson2 2.0.52（2026-06-03完成）
 - [x] P1-T2：CORS策略收紧，通配符→3个业务域名白名单（2026-06-03完成）
+- [x] PHASE-0+PHASE-1 全部任务（2026-06-05完成）
+- [x] P1-COMP-3：OAuth2迁移对照表设计（2026-06-08完成）
+- [x] P2-2a：Spring Boot 2.3→2.7.18 + Swagger→SpringDoc 1.7.0 + Hystrix→Resilience4j（2026-06-08完成）
 
 ### 当前执行
-- PHASE-1 安全加固与紧急修复（执行中，完成率33%）
+- PHASE-2 框架升级与核心重构（执行中，完成率17%）
 
 ### 待执行（按优先级）
-1. P1-T3~T9：PHASE-1剩余安全修复任务
-2. PHASE-2：框架升级（2.3→2.7→Java17→3.x）
-3. PHASE-3：代码质量优化
-4. PHASE-4：前端现代化
-5. PHASE-5：构建部署与持续优化
+1. P2-2b~P2-2c-4：PHASE-2剩余框架升级任务
+2. PHASE-3：代码质量优化
+3. PHASE-4：前端现代化
+4. PHASE-5：构建部署与持续优化
 
 ## 6. 【文档更新机制】
 

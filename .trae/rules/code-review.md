@@ -35,7 +35,7 @@ changelog:
 
 ### P2 - 架构缺陷（计划修复）
 - javax.* 命名空间需迁移至 jakarta.*（317处/120文件）
-- Swagger 2 注解需迁移至 SpringDoc（1335处/100文件）
+- Swagger 2 注解需迁移至 SpringDoc（11832处/910文件）
 - groupId: org.example 不符合生产规范
 - Jackson 2.18.0 手动版本与 Spring Boot BOM 冲突
 - org.jetbrains:annotations:RELEASE 动态版本号

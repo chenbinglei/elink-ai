@@ -119,10 +119,11 @@ v<主版本>.<次版本>
 
 | 文档 | 当前版本 | 最后更新 |
 |------|---------|----------|
-| REFACTOR_PLAN.md | v1.3 | 2026-06-04 |
-| REFACTOR_EXECUTE.md | v1.6 | 2026-06-04 |
-| REFACTOR_TASKS.md | - | 2026-06-05 |
-| PROGRESS_REPORT.md | v1.4 | 2026-06-04 |
+| REFACTOR_PLAN.md | v2.0 | 2026-06-09 |
+| REFACTOR_EXECUTE.md | v2.6 | 2026-06-09 |
+| REFACTOR_TASKS.md | - | 2026-06-09 |
+| PROGRESS_REPORT.md | v2.6 | 2026-06-09 |
+| AI_DIRECTIVES.md | v2.0 | 2026-06-09 |
 
 ---
 

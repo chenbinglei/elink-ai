@@ -48,16 +48,16 @@ changelog:
 
 ## 3. 【命名空间迁移清单】
 
-javax → jakarta 迁移（317处/120文件），必须全部替换：
+javax → jakarta 迁移（487处/255文件），必须全部替换：
 
 | 原命名空间 | 目标命名空间 | 影响范围 |
 |-----------|-------------|---------|
-| javax.persistence.* | jakarta.persistence.* | 232处/100文件 |
+| javax.persistence.* | jakarta.persistence.* | 402处/100文件 |
 | javax.annotation.* | jakarta.annotation.* | 44处/42文件 |
 | javax.websocket.* | jakarta.websocket.* | 21处/8文件 |
 | javax.servlet.* | jakarta.servlet.* | 17处/15文件 |
 | javax.validation.* | jakarta.validation.* | 3处/3文件 |
-| javax.transaction.* | jakarta.transaction.* | 少量 |
+| javax.transaction.* | jakarta.transaction.* | 0处 |
 
 **推荐工具**：OpenRewrite 自动迁移
 ```bash
@@ -67,16 +67,17 @@ mvn org.openrewrite.maven:rewrite-maven-plugin:run \
 
 ## 4. 【Swagger 注解迁移映射】
 
-1335处注解需替换：
+19193处注解分布在910个文件中，需替换：
 
 | Swagger 2 | SpringDoc OpenAPI | 影响数量 |
 |-----------|-------------------|---------|
-| @Api | @Tag | 约100处 |
-| @ApiOperation | @Operation | 约500处 |
-| @ApiParam | @Parameter | 约700处 |
-| @ApiModel | @Schema | 少量 |
-| @ApiModelProperty | @Schema | 少量 |
-| @ApiImplicitParam | @Parameter | 少量 |
+| @Api | @Tag | 121处 |
+| @ApiOperation | @Operation | 2365处 |
+| @ApiParam | @Parameter | 0处 |
+| @ApiModel | @Schema | 8093处 |
+| @ApiModelProperty | @Schema | 7361处 |
+| @ApiImplicitParam | @Parameter | 988处 |
+| @ApiImplicitParams | @Parameter | 265处 |
 
 ## 5. 【OAuth2 迁移要点】
 
