@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * 全国省实体类

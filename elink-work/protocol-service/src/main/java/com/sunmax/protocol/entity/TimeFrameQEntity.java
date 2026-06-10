@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
-import static javax.persistence.GenerationType.AUTO;
+import static jakarta.persistence.GenerationType.AUTO;
 
 /**
  * 时段电量

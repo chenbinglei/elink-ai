@@ -1,6 +1,5 @@
 package com.sunmax.device;
 
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -16,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients //启启用feign客户端
 @EnableDiscoveryClient//注册服务中心
 @EnableScheduling //开启定时任务功能
-@EnableSwaggerBootstrapUI
 @EnableJpaAuditing
 @ComponentScan(basePackages = {"com.sunmax.device","com.sunmax.common"})
 //@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)

@@ -1,8 +1,7 @@
 package com.sunmax.configure.dto.city;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -14,69 +13,69 @@ import java.util.List;
  * @注释:
  */
 @Data
-@ApiModel(value = "StationInfoDto", description = "充电站信息实体类")
+@Schema(description = "充电站信息实体类")
 public class StationInfoDto {
 
     /**
      * 充电站编码
      */
-    @ApiModelProperty(value = "充电站编码")
+    @Schema(description = "充电站编码")
     @JSONField(name = "StationID")
     private String stationId;
 
     /**
      * 运营商ID
      */
-    @ApiModelProperty(value = "运营商ID")
+    @Schema(description = "运营商ID")
     @JSONField(name = "OperatorID")
     private String operatorId;
 
     /**
      * 设备所属方ID
      */
-    @ApiModelProperty(value = "设备所属方ID")
+    @Schema(description = "设备所属方ID")
     @JSONField(name = "EquipmentOwnerID")
     private String equipmentOwnerId;
 
     /**
      * 充电站名称
      */
-    @ApiModelProperty(value = "充电站名称")
+    @Schema(description = "充电站名称")
     @JSONField(name = "StationName")
     private String stationName;
 
     /**
      * 充电站国家代码
      */
-    @ApiModelProperty(value = "充电站国家代码")
+    @Schema(description = "充电站国家代码")
     @JSONField(name = "CountryCode")
     private String countryCode;
 
     /**
      * 充电站省市辖区编码
      */
-    @ApiModelProperty(value = "充电站省市辖区编码")
+    @Schema(description = "充电站省市辖区编码")
     @JSONField(name = "AreaCode")
     private String areaCode;
 
     /**
      * 详细地址
      */
-    @ApiModelProperty(value = "详细地址")
+    @Schema(description = "详细地址")
     @JSONField(name = "Address")
     private String address;
 
     /**
      * 站点电话
      */
-    @ApiModelProperty(value = "站点电话")
+    @Schema(description = "站点电话")
     @JSONField(name = "StationTel")
     private String stationTel;
 
     /**
      * 服务电话
      */
-    @ApiModelProperty(value = "服务电话")
+    @Schema(description = "服务电话")
     @JSONField(name = "ServiceTel")
     private String serviceTel;
 
@@ -90,7 +89,7 @@ public class StationInfoDto {
      * 103：出租车（专用）
      * 255：其他
      */
-    @ApiModelProperty(value = "站点类型")
+    @Schema(description = "站点类型")
     @JSONField(name = "StationType")
     private Integer stationType;
 
@@ -102,35 +101,35 @@ public class StationInfoDto {
      * 6： 维护中
      * 50：正常使用
      */
-    @ApiModelProperty(value = "站点状态")
+    @Schema(description = "站点状态")
     @JSONField(name = "StationStatus")
     private Integer stationStatus;
 
     /**
      * 车位数量
      */
-    @ApiModelProperty(value = "车位数量")
+    @Schema(description = "车位数量")
     @JSONField(name = "ParkNums")
     private Integer parkNums;
 
     /**
      * 经度
      */
-    @ApiModelProperty(value = "经度")
+    @Schema(description = "经度")
     @JSONField(name = "StationLng")
     private Double stationLng;
 
     /**
      * 纬度
      */
-    @ApiModelProperty(value = "纬度")
+    @Schema(description = "纬度")
     @JSONField(name = "StationLat")
     private Double stationLat;
 
     /**
      * 站点引导
      */
-    @ApiModelProperty(value = "站点引导")
+    @Schema(description = "站点引导")
     @JSONField(name = "SiteGuide")
     private String siteGuide;
 
@@ -149,56 +148,56 @@ public class StationInfoDto {
      * 11：城际高速服务区
      * 255：其他
      */
-    @ApiModelProperty(value = "建设场所")
+    @Schema(description = "建设场所")
     @JSONField(name = "Construction")
     private Integer construction;
 
     /**
      * 站点照片
      */
-    @ApiModelProperty(value = "站点照片")
+    @Schema(description = "站点照片")
     @JSONField(name = "Pictures")
     private String pictures;
 
     /**
      * 使用车型描述
      */
-    @ApiModelProperty(value = "使用车型描述")
+    @Schema(description = "使用车型描述")
     @JSONField(name = "MatchCars")
     private String matchCars;
 
     /**
      * 车位楼层及数量描述
      */
-    @ApiModelProperty(value = "车位楼层及数量描述")
+    @Schema(description = "车位楼层及数量描述")
     @JSONField(name = "ParkInfo")
     private String parkInfo;
 
     /**
      * 营业时间
      */
-    @ApiModelProperty(value = "营业时间")
+    @Schema(description = "营业时间")
     @JSONField(name = "BusineHours")
     private String busineHours;
 
     /**
      * 充电电费率
      */
-    @ApiModelProperty(value = "充电电费率")
+    @Schema(description = "充电电费率")
     @JSONField(name = "ElectricityFee")
     private String electricityFee;
 
     /**
      * 服务费率
      */
-    @ApiModelProperty(value = "服务费率")
+    @Schema(description = "服务费率")
     @JSONField(name = "ServiceFee")
     private String serviceFee;
 
     /**
      * 停车费率描述
      */
-    @ApiModelProperty(value = "停车费率描述")
+    @Schema(description = "停车费率描述")
     @JSONField(name = "ParkFee")
     private String parkFee;
 
@@ -207,7 +206,7 @@ public class StationInfoDto {
      * 其中电子钱包类卡为刷卡，
      * 身份鉴权卡、微信/支付宝、APP 为线上
      */
-    @ApiModelProperty(value = "支付方式")
+    @Schema(description = "支付方式")
     @JSONField(name = "Payment")
     private String payment;
 
@@ -215,21 +214,21 @@ public class StationInfoDto {
      * 是否支持预约
      * 0 为不支持预约 、 1 为支持预约 。不填默认为 0
      */
-    @ApiModelProperty(value = "是否支持预约")
+    @Schema(description = "是否支持预约")
     @JSONField(name = "SupportOrder")
     private Integer supportOrder;
 
     /**
      * 备注
      */
-    @ApiModelProperty(value = "备注")
+    @Schema(description = "备注")
     @JSONField(name = "Remark")
     private String remark;
 
     /**
      * 充电设备信息列表
      */
-    @ApiModelProperty(value = "充电设备信息列表")
+    @Schema(description = "充电设备信息列表")
     @JSONField(name = "EquipmentInfos")
     private List<EquipmentInfoDto> equipmentInfos;
 }

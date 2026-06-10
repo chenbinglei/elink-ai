@@ -1,41 +1,40 @@
 package com.sunmax.protocol.vo.platform;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "PowerCtrlVo", description = "电桩功率控制参数实体类")
+@Schema(description = "电桩功率控制参数实体类")
 public class PlatformPowerCtrlVo {
 
     /**
      * 充电桩编号
      */
-    @ApiModelProperty(value = "充电桩编号", required = true)
+    @Schema(description = "充电桩编号")
     private String pileCode;
 
     /**
      * 充电枪编号
      */
-    @ApiModelProperty(value = "充电枪编号", required = true)
+    @Schema(description = "充电枪编号")
     private Integer gunCode;
 
     /**
      * 运行模式 0-充电模式  1-放电模式
      */
-    @ApiModelProperty(value = "运行模式 0-充电模式  1-放电模式", required = true)
+    @Schema(description = "运行模式 0-充电模式  1-放电模式")
     private Integer runMode;
 
     /**
      * 控制类型 0-绝对控制 1-相对控制
      */
-    @ApiModelProperty(value = "控制类型 0-绝对控制(实际功率) 1-相对控制(百分比)", required = true)
+    @Schema(description = "控制类型 0-绝对控制(实际功率) 1-相对控制(百分比)")
     private Integer ctrlType;
 
     /**
      * 输出功率
      */
-    @ApiModelProperty(value = "输出功率", required = true)
+    @Schema(description = "输出功率")
     private Double outPower;
 
 }

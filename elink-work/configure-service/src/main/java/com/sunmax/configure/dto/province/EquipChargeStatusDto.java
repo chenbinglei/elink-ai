@@ -1,18 +1,17 @@
 package com.sunmax.configure.dto.province;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "SupEquipChargeStatusDto", description = "充电订单状态信息实体类")
+@Schema(description = "充电订单状态信息实体类")
 public class EquipChargeStatusDto {
 
     /**
      * 平台运营商ID
      */
-    @ApiModelProperty(value = "平台运营商ID", required = true)
+    @Schema(description = "平台运营商ID")
     @JSONField(name = "OperatorID")
     private String operatorId;
 
@@ -20,49 +19,49 @@ public class EquipChargeStatusDto {
      * 充电服务运营商 ID，
      * 所属方为个人时填写 999999999
      */
-    @ApiModelProperty(value = "充电服务运营商ID", required = true)
+    @Schema(description = "充电服务运营商ID")
     @JSONField(name = "EquipmentOwnerID")
     private String equipmentOwnerId;
 
     /**
      * 充电站ID
      */
-    @ApiModelProperty(value = "充电站ID", required = true)
+    @Schema(description = "充电站ID")
     @JSONField(name = "StationID")
     private String stationId;
 
     /**
      * 充电设备编码
      */
-    @ApiModelProperty(value = "充电设备编码", required = true)
+    @Schema(description = "充电设备编码")
     @JSONField(name = "EquipmentID")
     private String equipmentId;
 
     /**
      * 充电设备接口编码
      */
-    @ApiModelProperty(value = "充电设备接口编码", required = true)
+    @Schema(description = "充电设备接口编码")
     @JSONField(name = "ConnectorID")
     private String connectorId;
 
     /**
      * 充电订单号
      */
-    @ApiModelProperty(value = "充电订单号", required = true)
+    @Schema(description = "充电订单号")
     @JSONField(name = "OrderNo")
     private String orderNo;
 
     /**
      * 车牌号
      */
-    @ApiModelProperty(value = "车牌号")
+    @Schema(description = "车牌号")
     @JSONField(name = "LicensePlate")
     private String licensePlate;
 
     /**
      * 车牌唯一识别码
      */
-    @ApiModelProperty(value = "车牌唯一识别码")
+    @Schema(description = "车牌唯一识别码")
     @JSONField(name = "VIN")
     private String vin;
 
@@ -76,7 +75,7 @@ public class EquipChargeStatusDto {
      * 6：充电异常结束
      * 7：启动失败
      */
-    @ApiModelProperty(value = "充电订单状态", required = true)
+    @Schema(description = "充电订单状态")
     @JSONField(name = "OrderStatus")
     private Integer orderStatus;
 
@@ -84,7 +83,7 @@ public class EquipChargeStatusDto {
      * 推送时间
      * yyyy-MM-dd HH:mm:ss，充电设备推送给运营商平台的时间
      */
-    @ApiModelProperty(value = "推送时间", required = true)
+    @Schema(description = "推送时间")
     @JSONField(name = "PushTimeStamp")
     private String pushTimeStamp;
 
@@ -96,119 +95,119 @@ public class EquipChargeStatusDto {
      * 4：占用(预约锁定)
      * 255：故障
      */
-    @ApiModelProperty(value = "充电设备状态", required = true)
+    @Schema(description = "充电设备状态")
     @JSONField(name = "ConnectorStatus")
     private Integer connectorStatus;
 
     /**
      * A相电流
      */
-    @ApiModelProperty(value = "A相电流", required = true)
+    @Schema(description = "A相电流")
     @JSONField(name = "CurrentA")
     private Double currentA = 0.0;
 
     /**
      * B相电流
      */
-    @ApiModelProperty(value = "B相电流")
+    @Schema(description = "B相电流")
     @JSONField(name = "CurrentB")
     private Double currentB = 0.0;
 
     /**
      * C相电流
      */
-    @ApiModelProperty(value = "C相电流")
+    @Schema(description = "C相电流")
     @JSONField(name = "CurrentC")
     private Double currentC = 0.0;
 
     /**
      * A相电压
      */
-    @ApiModelProperty(value = "A相电压", required = true)
+    @Schema(description = "A相电压")
     @JSONField(name = "VoltageA")
     private Double voltageA = 0.0;
 
     /**
      * B相电压
      */
-    @ApiModelProperty(value = "B相电压")
+    @Schema(description = "B相电压")
     @JSONField(name = "VoltageB")
     private Double voltageB = 0.0;
 
     /**
      * C相电压
      */
-    @ApiModelProperty(value = "C相电压")
+    @Schema(description = "C相电压")
     @JSONField(name = "VoltageC")
     private Double voltageC = 0.0;
 
     /**
      * 电池剩余电量 0-100
      */
-    @ApiModelProperty(value = "电池剩余电量", required = true)
+    @Schema(description = "电池剩余电量")
     @JSONField(name = "SOC")
     private Double soc = 0.0;
 
     /**
      * 开始充电时间
      */
-    @ApiModelProperty(value = "开始充电时间", required = true)
+    @Schema(description = "开始充电时间")
     @JSONField(name = "StartTime")
     private String startTime;
 
     /**
      * 本次采样时间
      */
-    @ApiModelProperty(value = "本次采样时间", required = true)
+    @Schema(description = "本次采样时间")
     @JSONField(name = "EndTime")
     private String endTime;
 
     /**
      * 累计充电量 单位度
      */
-    @ApiModelProperty(value = "累计充电量", required = true)
+    @Schema(description = "累计充电量")
     @JSONField(name = "TotalPower")
     private Double totalPower;
 
     /**
      * 累计电费 单位：度
      */
-    @ApiModelProperty(value = "累计电费")
+    @Schema(description = "累计电费")
     @JSONField(name = "ElecMoney")
     private Double ElecMoney;
 
     /**
      * 累计服务费 单位：元
      */
-    @ApiModelProperty(value = "累计服务费")
+    @Schema(description = "累计服务费")
     @JSONField(name = "ServiceMoney")
     private Double serviceMoney;
 
     /**
      * 累计总金额 单位：元
      */
-    @ApiModelProperty(value = "累计总金额")
+    @Schema(description = "累计总金额")
     @JSONField(name = "TotalMoney")
     private Double totalMoney;
 
     /**
      * 时段数 N
      */
-    @ApiModelProperty(value = "时段数")
+    @Schema(description = "时段数")
     @JSONField(name = "SumPeriod")
     private Integer sumPeriod;
 
     /**
      * 充电明细信息
      */
-    @ApiModelProperty(value = "充电明细信息")
+    @Schema(description = "充电明细信息")
     @JSONField(name = "ChargeDetails")
     private String chargeDetails;
 
     /**
      * 上报时间
      */
-    @ApiModelProperty(value = "上报时间", required = true)
+    @Schema(description = "上报时间")
     @JSONField(name = "eventTime")
     private String eventTime;
 
@@ -216,7 +215,7 @@ public class EquipChargeStatusDto {
      * 需求电压
      * 数据分辨率：0.1V/位
      */
-    @ApiModelProperty(value = "需求电压")
+    @Schema(description = "需求电压")
     @JSONField(name = "bclNeedVoltage")
     private Integer bclNeedVoltage;
 
@@ -225,7 +224,7 @@ public class EquipChargeStatusDto {
      * 数据分辨率：0.1A/位
      * 偏移量：-400A
      */
-    @ApiModelProperty(value = "需求电流")
+    @Schema(description = "需求电流")
     @JSONField(name = "bclNeedCurrent")
     private Integer bclNeedCurrent;
 
@@ -233,7 +232,7 @@ public class EquipChargeStatusDto {
      * 输出电压
      * 数据分辨率：0.1V/位
      */
-    @ApiModelProperty(value = "输出电压", required = true)
+    @Schema(description = "输出电压")
     @JSONField(name = "chargeVoltage")
     private Integer chargeVoltage = 0;
 
@@ -242,7 +241,7 @@ public class EquipChargeStatusDto {
      * 数据分辨率：0.1A/位
      * 偏移量：-400A
      */
-    @ApiModelProperty(value = "输出电流", required = true)
+    @Schema(description = "输出电流")
     @JSONField(name = "chargeCurrent")
     private Integer chargeCurrent = 0;
 
@@ -250,7 +249,7 @@ public class EquipChargeStatusDto {
      * 最高单体动力蓄电池电压
      * 数据分辨率：0.01V/位
      */
-    @ApiModelProperty(value = "最高单体动力蓄电池电压")
+    @Schema(description = "最高单体动力蓄电池电压")
     @JSONField(name = "bcsCellMaxVoltage")
     private Integer bcsCellMaxVoltage;
 
@@ -258,7 +257,7 @@ public class EquipChargeStatusDto {
      * 最高动力蓄电池温度
      * 偏移量：-50A
      */
-    @ApiModelProperty(value = "最高动力蓄电池温度")
+    @Schema(description = "最高动力蓄电池温度")
     @JSONField(name = "bsmMaxTemperature")
     private Integer bsmMaxTemperature;
 
@@ -266,7 +265,7 @@ public class EquipChargeStatusDto {
      * 最低动力蓄电池温度
      * 偏移量：-50A
      */
-    @ApiModelProperty(value = "最低动力蓄电池温度")
+    @Schema(description = "最低动力蓄电池温度")
     @JSONField(name = "bsmMinTemperature")
     private Integer bsmMinTemperature;
 

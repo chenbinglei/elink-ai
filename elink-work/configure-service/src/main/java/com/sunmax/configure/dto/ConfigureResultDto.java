@@ -1,25 +1,24 @@
 package com.sunmax.configure.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
-@ApiModel(value = "ConfigurationResultDto", description = "组态websocket数据返回实体类")
+@Schema(description = "组态websocket数据返回实体类")
 public class ConfigureResultDto {
 
     /**
      * 接口描述
      */
-    @ApiModelProperty("接口描述")
+    @Schema(description = "接口描述")
     private String desc;
 
     /**
      * 接口数据
      */
-    @ApiModelProperty("接口数据")
+    @Schema(description = "接口数据")
     private Map<String, ConfigureResultDto.FieldData> dataMap;
 
     /**
@@ -31,25 +30,25 @@ public class ConfigureResultDto {
         /**
          * 中文字段名称
          */
-        @ApiModelProperty("中文字段名称")
+        @Schema(description = "中文字段名称")
         private String chName;
 
         /**
          * 英文字段名称
          */
-        @ApiModelProperty("英文字段名称")
+        @Schema(description = "英文字段名称")
         private String enName;
 
         /**
          * 字段类型(String、Integer、Double、BigDecimal、Boolean、ArrayList、Map、Long)
          */
-        @ApiModelProperty("字段类型(String、Integer、Double、BigDecimal、Boolean、ArrayList、ArrayMap、Long、CurveMap、ArrayString)")
+        @Schema(description = "字段类型(String、Integer、Double、BigDecimal、Boolean、ArrayList、ArrayMap、Long、CurveMap、ArrayString)")
         private String fieldType;
 
         /**
          * 字段数据
          */
-        @ApiModelProperty("字段数据")
+        @Schema(description = "字段数据")
         private Object fieldData;
     }
 }

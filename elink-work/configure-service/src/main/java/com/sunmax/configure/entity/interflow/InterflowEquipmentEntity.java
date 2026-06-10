@@ -3,7 +3,7 @@ package com.sunmax.configure.entity.interflow;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * 互联互通充电设备信息表

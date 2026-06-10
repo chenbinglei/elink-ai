@@ -59,7 +59,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -1556,23 +1556,23 @@ public class DataReportServiceImpl implements DataReportService {
                 inverterReportInfoDto.setSeriesCapacity(getToDouble(seriesConfigMap.get(deviceBasicInfoDto.getId()).stream().mapToDouble(SeriesConfigEntity::getSeriesCapacity).sum() / 1000.0));
             }
             //获取发电量
-            Optional.ofNullable(inverterHistoryDataMap)
+            Optional.<Map<String, Map<String, List<NodeDifHistoryDto>>>>ofNullable(inverterHistoryDataMap)
                     .filter(MapUtils::isNotEmpty).map(map -> map.get(deviceBasicInfoDto.getId()))
-                    .filter(MapUtils::isNotEmpty).map(nodeDifHistoryMap -> nodeDifHistoryMap.get(functionLogo))
+                    .filter(m -> MapUtils.isNotEmpty(m)).map(nodeDifHistoryMap -> nodeDifHistoryMap.get(functionLogo))
                     .ifPresent(nodeDifList -> inverterReportInfoDto.setGenerateQt(getToDouble(nodeDifList.stream()
                             .mapToDouble(d -> DoubleUtil.getObjSub(d.getFirstDataValue(), d.getLastDataValue()))
                             .sum())));
             //获取峰值交流功率
-            Optional.ofNullable(deviceMaxPowerMap)
+            Optional.<Map<String, Map<String, List<DeviceHistoryDto>>>>ofNullable(deviceMaxPowerMap)
                     .filter(MapUtils::isNotEmpty).map(map -> map.get(deviceBasicInfoDto.getId()))
-                    .filter(MapUtils::isNotEmpty).map(deviceHistoryMap -> deviceHistoryMap.get(FunctionLogoParamVo.ACTIVE_POWER))
+                    .filter(m -> MapUtils.isNotEmpty(m)).map(deviceHistoryMap -> deviceHistoryMap.get(FunctionLogoParamVo.ACTIVE_POWER))
                     .ifPresent(deviceList -> inverterReportInfoDto.setPeakAcPower(getToDouble(deviceList.stream()
                             .mapToDouble(d -> DoubleUtil.objToDouble(d.getDataValue()))
                             .sum())));
             //获取累计发电量
-            Optional.ofNullable(realDataMap)
+            Optional.<Map<String, Map<String, RealDataModel>>>ofNullable(realDataMap)
                     .filter(MapUtils::isNotEmpty).map(map -> map.get(deviceBasicInfoDto.getId()))
-                    .filter(MapUtils::isNotEmpty).map(deviceHistoryMap -> deviceHistoryMap.get(FunctionLogoParamVo.TOTAL_POWER_GENERATION))
+                    .filter(m -> MapUtils.isNotEmpty(m)).map(deviceHistoryMap -> deviceHistoryMap.get(FunctionLogoParamVo.TOTAL_POWER_GENERATION))
                     .ifPresent(realModel -> inverterReportInfoDto.setSumGenerateQt(getToDouble(DoubleUtil.objToDouble(realModel.getDataValue()))));
             //计算等价发电时(逆变器统计周期内的发电量/组串容量，若组串容量为空，则该值为空)
             if (StringUtil.isNotEmpty(inverterReportInfoDto.getSeriesCapacity()) && inverterReportInfoDto.getSeriesCapacity() > 0.0) {

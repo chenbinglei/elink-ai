@@ -9,7 +9,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Objects;

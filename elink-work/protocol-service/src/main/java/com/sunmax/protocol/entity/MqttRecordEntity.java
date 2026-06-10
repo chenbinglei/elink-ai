@@ -8,10 +8,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.GenerationType.AUTO;
+import static jakarta.persistence.GenerationType.AUTO;
 
 @Data
 @NoArgsConstructor
@@ -40,7 +40,7 @@ public class MqttRecordEntity {
     /**
      * 枪编号
      */
-    @Column(name = "gun_code", columnDefinition = "varchar(64) NOT NULL comment '枪编号'")
+    @Column(name = "gun_code", columnDefinition = "varchar(64) comment '枪编号'")
     private String gunCode;
 
     /**

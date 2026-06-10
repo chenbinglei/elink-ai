@@ -1,6 +1,5 @@
 package com.sunmax.together;
 
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -17,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients //启启用feign客户端
 @EnableScheduling //开启定时任务功能
 @EnableDiscoveryClient//注册服务中心
-@EnableSwaggerBootstrapUI
 @EnableJpaAuditing
 @ComponentScan(basePackages = {"com.sunmax.common", "com.sunmax.log", "com.sunmax.together"})
 //@EnableJpaRepositories(repositoryBaseClass = BaseDaoImpl.class)

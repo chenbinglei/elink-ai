@@ -28,7 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

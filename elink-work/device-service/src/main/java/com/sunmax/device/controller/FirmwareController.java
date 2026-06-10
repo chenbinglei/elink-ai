@@ -7,10 +7,9 @@ import com.sunmax.device.dto.firmware.FirmwareParseDto;
 import com.sunmax.device.service.FirmwareService;
 import com.sunmax.device.vo.firmware.FirmwareChangeVo;
 import com.sunmax.device.vo.firmware.FirmwareQueryVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,44 +25,44 @@ import java.util.Set;
 @RestController
 @CrossOrigin
 @RequestMapping("firmware")
-@Api(tags = "固件包管理控制层")
+@Tag(name = "固件包管理控制层")
 public class FirmwareController {
 
     @Autowired
     private FirmwareService firmwareService;
 
     @PostMapping("uploadOrEditFirmware")
-    @ApiOperation("上传或编辑固件包数据")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "上传或编辑固件包数据")
+    
     public ResponseResult<Void> uploadOrEditFirmware(FirmwareChangeVo firmwareVo, MultipartFile file) {
         return firmwareService.uploadOrEditFirmware(firmwareVo, file);
     }
 
     @PostMapping("getEquipmentModelList")
-    @ApiOperation("获取设备型号列表")
-    @ApiOperationSupport(order = 2)
-    @ApiImplicitParam(name = "typeId", value = "设备类型id", dataType = "String", required = true)
+    @Operation(summary = "获取设备型号列表")
+    
+    @Parameter(name = "typeId", description = "设备类型id")
     public ResponseResult<Set<String>> getEquipmentModelList(String typeId) {
         return firmwareService.getEquipmentModelList(typeId);
     }
 
     @PostMapping("queryFirmwareList")
-    @ApiOperation("查询固件包列表")
-    @ApiOperationSupport(order = 3)
+    @Operation(summary = "查询固件包列表")
+    
     public ResponseResult<PageDto<FirmwareDto>> queryFirmwareList(FirmwareQueryVo firmwareQueryVo) {
         return firmwareService.queryFirmwareList(firmwareQueryVo);
     }
 
     @PostMapping("parseFirmwareData")
-    @ApiOperation("解析固件包数据")
-    @ApiOperationSupport(order = 4)
+    @Operation(summary = "解析固件包数据")
+    
     public ResponseResult<FirmwareParseDto> parseFirmwareData(MultipartFile file) {
         return firmwareService.parseFirmwareData(file);
     }
 
     @PostMapping("deleteFirmwareById")
-    @ApiOperation("删除固件包数据")
-    @ApiOperationSupport(order = 5)
+    @Operation(summary = "删除固件包数据")
+    
     public ResponseResult<Void> deleteFirmwareById(String id) {
         return firmwareService.deleteFirmwareById(id);
     }

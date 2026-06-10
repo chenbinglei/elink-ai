@@ -1,6 +1,5 @@
 package com.sunmax.configure;
 
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import com.sunmax.common.dao.base.impl.BaseDaoImpl;
 import com.sunmax.configure.util.PlatformConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients //启启用feign客户端
 @EnableDiscoveryClient//注册服务中心
 @EnableJpaAuditing
-@EnableSwaggerBootstrapUI
 @ComponentScan(basePackages = {"com.sunmax.common", "com.sunmax.configure"})
 @EnableJpaRepositories(repositoryBaseClass = BaseDaoImpl.class)
 public class ConfigureApplication {

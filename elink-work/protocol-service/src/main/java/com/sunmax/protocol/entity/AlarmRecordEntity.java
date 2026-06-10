@@ -3,9 +3,9 @@ package com.sunmax.protocol.entity;
 import com.sunmax.common.entity.BaseTimeEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 /**
  * 告警原始记录表

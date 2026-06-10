@@ -4,8 +4,8 @@ import com.sunmax.common.config.redis.RedisUtil;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.common.util.VerifyCodeUtil;
 import com.sunmax.webapp.service.SmsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 @RequestMapping("sms")
-@Api(tags = "短信验证模块")
+@Tag(name = "短信验证模块")
 public class SmsController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class SmsController {
      * @return
      */
     @PostMapping("sendSecurityCode")
-    @ApiOperation("发送验证码")
+    @Operation(summary = "发送验证码")
     public ResponseResult sendSecurityCode(@RequestParam String mobile){
         String code= VerifyCodeUtil.generateTextCode(0, 6, null);
         try {
@@ -47,7 +47,7 @@ public class SmsController {
 
 
     @PostMapping("checkSecurityCode")
-    @ApiOperation("校验验证码")
+    @Operation(summary = "校验验证码")
     public ResponseResult checkSecurityCode(@RequestParam String mobile,@RequestParam String smscode){
         if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(smscode)) {
             //throw new InvalidGrantException("手机号或短信验证码为空");

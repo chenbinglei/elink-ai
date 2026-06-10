@@ -18,8 +18,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Example;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

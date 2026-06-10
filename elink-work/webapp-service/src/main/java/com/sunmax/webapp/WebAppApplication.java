@@ -1,6 +1,5 @@
 package com.sunmax.webapp;
 
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import com.sunmax.common.dao.base.impl.BaseDaoImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 //@EnableEurekaClient //注册到注册中心
 @EnableScheduling //开启定时任务功能
 @EnableDiscoveryClient//注册服务中心
-@EnableSwaggerBootstrapUI
 @EnableJpaAuditing
 @ComponentScan(basePackages = {"com.sunmax.common", "com.sunmax.webapp"})
 @EnableJpaRepositories(repositoryBaseClass = BaseDaoImpl.class)

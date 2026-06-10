@@ -1,8 +1,7 @@
 package com.sunmax.webapp.vo.wechat;
 
 import com.google.gson.annotations.SerializedName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,47 +10,47 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@ApiModel(value = "TransferRequestVo", description = "微信商户转账参数实体类")
+@Schema(description = "微信商户转账参数实体类")
 public class TransferRequestVo {
 
     @SerializedName("appid")
-    @ApiModelProperty(value = "商户id", required = true)
+    @Schema(description = "商户id")
     private String appid;
 
     @SerializedName("out_bill_no")
-    @ApiModelProperty(value = "商户订单号", required = true)
+    @Schema(description = "商户订单号")
     private String outBillNo;
 
     @SerializedName("transfer_scene_id")
-    @ApiModelProperty(value = "转账场景id", required = true)
+    @Schema(description = "转账场景id")
     private String transferSceneId;
 
     @SerializedName("openid")
-    @ApiModelProperty(value = "收款用户OpenId", required = true)
+    @Schema(description = "收款用户OpenId")
     private String openid;
 
     @SerializedName("user_name")
-    @ApiModelProperty(value = "收款用户姓名")
+    @Schema(description = "收款用户姓名")
     private String userName;
 
     @SerializedName("transfer_amount")
-    @ApiModelProperty(value = "转账金额", required = true)
+    @Schema(description = "转账金额")
     private Long transferAmount;
 
     @SerializedName("transfer_remark")
-    @ApiModelProperty(value = "转账备注", required = true)
+    @Schema(description = "转账备注")
     private String transferRemark;
 
     @SerializedName("notify_url")
-    @ApiModelProperty(value = "转账结果通知地址")
+    @Schema(description = "转账结果通知地址")
     private String notifyUrl;
 
     @SerializedName("user_recv_perception")
-    @ApiModelProperty(value = "用户收款感知")
+    @Schema(description = "用户收款感知")
     private String userRecvPerception;
 
     @SerializedName("transfer_scene_report_infos")
-    @ApiModelProperty(value = "转账场景报备信息", required = true)
+    @Schema(description = "转账场景报备信息")
     public List<SceneReportInfo> sceneReportInfos;
 
     @Data
@@ -61,11 +60,11 @@ public class TransferRequestVo {
     public static class SceneReportInfo {
 
         @SerializedName("info_type")
-        @ApiModelProperty(value = "信息类型", required = true)
+        @Schema(description = "信息类型")
         public String infoType;
 
         @SerializedName("info_content")
-        @ApiModelProperty(value = "信息内容", required = true)
+        @Schema(description = "信息内容")
         public String infoContent;
     }
 

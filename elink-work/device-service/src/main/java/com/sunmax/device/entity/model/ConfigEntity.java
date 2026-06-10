@@ -8,11 +8,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-import static javax.persistence.GenerationType.AUTO;
+import static jakarta.persistence.GenerationType.AUTO;
 
 /**
  * 模型参数配置实体类

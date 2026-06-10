@@ -1,68 +1,67 @@
 package com.sunmax.device.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 点表编辑参数
  */
 @Data
-@ApiModel("pointTableChangeVo")
+@Schema(description = "pointTableChangeVo")
 public class PointTableChangeVo {
 
     /**
      * 主键id
      */
-    @ApiModelProperty(value = "主键id")
+    @Schema(description = "主键id")
     private String id;
 
     /**
      * 通道id
      */
-    @ApiModelProperty(value = "通道id", required = true)
+    @Schema(description = "通道id")
     private String channelId;
 
     /**
      * 设备id
      */
-    @ApiModelProperty(value = "设备id", required = true)
+    @Schema(description = "设备id")
     private String deviceId;
 
     /**
      * 功能点id
      */
-    @ApiModelProperty(value = "功能点id", required = true)
+    @Schema(description = "功能点id")
     private String functionId;
 
     /**
      * 功能点下标
      */
-    @ApiModelProperty(value = "功能点下标")
+    @Schema(description = "功能点下标")
     private Integer functionIndex;
 
     /**
      * 数据点号
      */
-    @ApiModelProperty(value = "数据点号", required = true)
+    @Schema(description = "数据点号")
     private Long dataId;
 
     /**
      * 系数
      */
-    @ApiModelProperty(value = "系数", required = true)
+    @Schema(description = "系数")
     private Float coefficient;
 
     /**
      * 偏移量
      */
-    @ApiModelProperty(value = "偏移量", required = true)
+    @Schema(description = "偏移量")
     private Integer offset;
 
     /**
      * 编辑类型 1-新增 2-编辑 3-删除
      */
-    @ApiModelProperty(value = "编辑类型 1-新增 2-编辑 3-删除", required = true)
+    @Schema(description = "编辑类型 1-新增 2-编辑 3-删除")
     private Integer updateType;
 
 }

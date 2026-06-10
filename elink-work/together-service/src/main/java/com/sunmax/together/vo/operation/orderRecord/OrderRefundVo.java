@@ -1,7 +1,6 @@
 package com.sunmax.together.vo.operation.orderRecord;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,31 +9,31 @@ import java.math.BigDecimal;
  * 平台订单人工退款 参数实体类
  */
 @Data
-@ApiModel(value = "OrderRefundVo", description = "平台订单人工退款返回实体类")
+@Schema(description = "平台订单人工退款返回实体类")
 public class OrderRefundVo {
 
     /**
      * 订单id
      */
-    @ApiModelProperty(value = "订单id", required = true)
+    @Schema(description = "订单id")
     private String orderId;
 
     /**
      * 交易订单类型 1-充放电订单 2-占用订单
      */
-    @ApiModelProperty(value = "交易订单类型 1-充放电订单 2-占用订单", required = true)
+    @Schema(description = "交易订单类型 1-充放电订单 2-占用订单")
     private Integer tradeOrderType;
 
     /**
      * 本次退款金额
      */
-    @ApiModelProperty(value = "本次退款金额", required = true)
+    @Schema(description = "本次退款金额")
     private BigDecimal refundMoney;
 
     /**
      * 用户id
      */
-    @ApiModelProperty(value = "用户id", required = true)
+    @Schema(description = "用户id")
     private String userId;
 
 }

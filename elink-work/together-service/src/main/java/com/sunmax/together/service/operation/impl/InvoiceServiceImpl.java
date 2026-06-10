@@ -59,8 +59,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
+import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
