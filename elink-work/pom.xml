@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.elink</groupId>
     <artifactId>elink-work</artifactId>
     <packaging>pom</packaging>
     <version>3.0-SNAPSHOT</version>
@@ -85,7 +85,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.18.0</version>
         </dependency>
 
         <dependency>
@@ -129,7 +128,7 @@
         <dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
-            <version>2.8.3</version>
+            <version>3.17.4</version>
         </dependency>
 
         <!--nacos-client-->
