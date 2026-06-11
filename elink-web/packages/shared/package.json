@@ -1,0 +1,14 @@
+{
+  "name": "@elink/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.js",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "js-cookie": "3.0.1",
+    "qs": "^6.11.2"
+  },
+  "peerDependencies": {
+    "element-plus": ">=2.0.0"
+  }
+}

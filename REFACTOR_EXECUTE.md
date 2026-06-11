@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.1 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.1
+> 版本：v3.2 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3225,3 +3225,83 @@ public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity h
 
 - `/work/elink-ai/elink-work/benchmark-r1.sh`（新增：R1性能基准测试脚本）
 - `/work/elink-ai/elink-work/logs/benchmark-r1/`（新增：压测原始数据目录）
+
+---
+
+## P4-A | 创建 @elink/shared 公共包
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+### 执行过程
+
+1. **创建monorepo工作空间**：创建 `pnpm-workspace.yaml`，定义 linkos/derms/tycvs/packages/* 四个工作空间
+2. **创建 @elink/shared 包结构**：
+   - `packages/shared/package.json`：定义包名、版本、依赖（axios, js-cookie, qs）
+   - `packages/shared/src/index.js`：统一导出入口
+   - `packages/shared/src/auth/index.js`：工厂模式 createAuthManager，支持不同cookie前缀（SUN_OS_/IEMS_PF_/TY_CANVAS_）
+   - `packages/shared/src/http/request.js`：统一 axios 配置和拦截器（请求/响应），支持 X-No-Token、noLoginRequired、重复请求取消
+   - `packages/shared/src/http/index.js`：HTTP模块导出
+   - `packages/shared/src/utils/validate.js`：校验工具函数
+   - `packages/shared/src/utils/transformRequest.js`：请求参数转换（FormData/JSON序列化）
+   - `packages/shared/src/utils/env.js`：环境判断工具
+   - `packages/shared/src/utils/index.js`：工具模块统一导出
+3. **迁移3个项目引用**：
+   - linkos/src/utils/request.js → 使用 linkosAuth + createHttpClient
+   - linkos/src/utils/auth.js → 兼容层，代理到 linkosAuth
+   - derms/src/utils/request.js → 使用 dermsAuth + createHttpClient + onAuthExpired
+   - derms/src/utils/requestVue.js → 同上
+   - derms/src/utils/auth.js → 兼容层，代理到 dermsAuth
+   - tycvs/src/utils/request.js → 使用 tycvsAuth + createHttpClient
+   - tycvs/src/utils/auth.js → 兼容层，代理到 tycvsAuth
+4. **配置构建工具**：
+   - linkos/vue.config.js：添加 resolve.alias '@elink/shared'
+   - tycvs/vue.config.js：添加 resolve.alias '@elink/shared'
+   - derms/vite.config.js：添加 resolve.alias + sharedResolvePlugin（解决shared包依赖从项目node_modules解析）
+5. **添加workspace依赖**：3个项目 package.json 添加 `"@elink/shared": "workspace:*"`
+6. **构建验证**：3个项目生产构建全部通过
+
+### 遇到问题
+
+1. **Vite无法解析shared包中的js-cookie依赖**：shared包中的import "js-cookie"无法被Vite解析，因为node_modules在项目目录而非shared目录
+2. **sharedResolvePlugin返回目录路径**：首次实现直接返回modulePath导致EISDIR错误，需通过package.json main字段找到入口文件
+
+### 解决方案
+
+1. 创建 sharedResolvePlugin Vite插件，当importer来自shared目录时，将依赖重定向到项目node_modules
+2. 修复插件逻辑：优先读取package.json的main/module字段获取入口文件路径，而非直接返回目录
+
+### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| derms构建 | ✅ 通过 | vite build 成功，耗时2m37s |
+| linkos构建 | ✅ 通过 | vue-cli-service build 成功，耗时59s |
+| tycvs构建 | ✅ 通过 | vue-cli-service build 成功，耗时49s |
+| shared包完整性 | ✅ 通过 | 9个文件全部存在，模块导出正确 |
+| 3项目引用 | ✅ 通过 | package.json + 构建配置alias均已配置 |
+
+### 变更文件清单
+
+- `elink-web/pnpm-workspace.yaml`（新增）
+- `elink-web/packages/shared/package.json`（新增）
+- `elink-web/packages/shared/src/index.js`（新增）
+- `elink-web/packages/shared/src/auth/index.js`（新增）
+- `elink-web/packages/shared/src/http/index.js`（新增）
+- `elink-web/packages/shared/src/http/request.js`（新增）
+- `elink-web/packages/shared/src/utils/index.js`（新增）
+- `elink-web/packages/shared/src/utils/validate.js`（新增）
+- `elink-web/packages/shared/src/utils/transformRequest.js`（新增）
+- `elink-web/packages/shared/src/utils/env.js`（新增）
+- `elink-web/linkos/package.json`（修改：添加@elink/shared依赖）
+- `elink-web/linkos/vue.config.js`（修改：添加@elink/shared alias）
+- `elink-web/linkos/src/utils/request.js`（修改：迁移至@elink/shared）
+- `elink-web/linkos/src/utils/auth.js`（修改：兼容层代理）
+- `elink-web/derms/package.json`（修改：添加@elink/shared依赖）
+- `elink-web/derms/vite.config.js`（修改：添加alias+sharedResolvePlugin）
+- `elink-web/derms/src/utils/request.js`（修改：迁移至@elink/shared）
+- `elink-web/derms/src/utils/requestVue.js`（修改：迁移至@elink/shared）
+- `elink-web/derms/src/utils/auth.js`（修改：兼容层代理）
+- `elink-web/tycvs/package.json`（修改：添加@elink/shared依赖）
+- `elink-web/tycvs/vue.config.js`（修改：添加@elink/shared alias）
+- `elink-web/tycvs/src/utils/request.js`（修改：迁移至@elink/shared）
+- `elink-web/tycvs/src/utils/auth.js`（修改：兼容层代理）

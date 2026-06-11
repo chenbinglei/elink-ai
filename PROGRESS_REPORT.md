@@ -1,8 +1,8 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v3.1 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2全部完成，PHASE-3全部5项完成（P3-A/P3-B/P3-C/P3-C2/P3-D已验证通过）
+> 版本：v3.2 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-A已完成）
 >
-> 关联方案：[REFACTOR_PLAN.md v2.1](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v2.8](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.2](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
@@ -14,7 +14,7 @@
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线建立：5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数） |
-| PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
+| PHASE-4：前端现代化改造 | ⏳ 进行中 | 25% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过） |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
 ---
@@ -650,7 +650,7 @@ allowed-origins:
 
 | 顺序 | 任务 | 预估影响 | 前置条件 |
 |------|------|----------|----------|
-| 1 | PHASE-4: 前端现代化改造 | 前端 | PHASE-3完成 |
+| 1 | PHASE-4: 前端现代化改造（P4-BC/P4-D待执行） | 前端 | P4-A已完成 |
 | 2 | PHASE-5: 构建部署与持续优化 | 全局 | PHASE-4完成 |
 
 ---
@@ -680,3 +680,4 @@ allowed-origins:
 | v2.9 | 2026-06-10 | AI | P2-2c-4 Feign调用重构完成：sunmax-common/feign包55个FeignClient接口+FeignConstants常量类+GenericFeignFallbackFactory动态代理降级，42个FeignController→FeignEndpoint实现FeignClient接口，52个消费者旧FeignClient→extends公共接口+@Deprecated向后兼容，5个共享接口正确映射（AuthPermissionNoContextFeignClient/AuthSauthFeignClient/TogetherDataFeignClient/TogetherSystemFeignClient/DevopsDataFeignClient），修复3处方法签名不兼容（batchPileUpdate返回类型/findSiteAccountListBySiteIds访问修饰符/findOrderAppShowList访问修饰符），PHASE-2完成率83%→100% |
 | v3.0 | 2026-06-11 | AI | PHASE-3完成4/5项：P3-A(e.printStackTrace()+System.out/err→SLF4J日志+@Slf4j补全)，P3-B(OSS SDK 2.8.3→3.17.4+OSSClientBuilder适配+Redisson 3.27.2→3.36.0+Jackson手动版本移除+groupId org.example→com.elink 26处+CSS extract优化)，P3-C(catch(Exception)收窄为具体异常+修复20+文件unreachable catch和unhandled checked exception+hibernate.generate_statistics→false)，P3-C2(Gateway connect-timeout 600000ms→5000ms+response-timeout 60s→15s+HikariCP idle-timeout 600000ms→60000ms 8服务+Redis timeout 60s→10s 9服务)，PHASE-3完成率0%→80% |
 | v3.1 | 2026-06-11 | AI | P3-D性能基准测试(R1)完成：全量热更新部署11服务+5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数+质量验收验证，PHASE-3完成率80%→100%，新增5.6章节R1正式基线数据 |
+| v3.2 | 2026-06-11 | AI | P4-A @elink/shared公共包创建完成：提取request.js→@elink/shared/http+auth.js→@elink/shared/auth(工厂模式)+utils→@elink/shared/utils+pnpm-workspace.yaml+3项目迁移+构建验证通过，PHASE-4完成率0%→25% |
