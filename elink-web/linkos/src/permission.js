@@ -4,6 +4,15 @@ import NProgress from "nprogress"; // Progress 进度条
 import {getToken} from "@/utils/auth"; // 验权
 import {ElMessage} from "element-plus";
 
+// NProgress 配置：减少闪屏感知，提升加载流畅度
+NProgress.configure({
+    showSpinner: false,
+    trickleSpeed: 200,
+    minimum: 0.15,
+    easing: "ease",
+    speed: 400,
+});
+
 // 不重定向白名单
 const whiteList = ["/login"];
 
@@ -35,4 +44,9 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
     NProgress.done(); // 结束Progress
+});
+
+// 路由切换异常兜底，避免 NProgress 卡住造成顶部进度条残留观感
+router.onError(() => {
+    NProgress.done();
 });

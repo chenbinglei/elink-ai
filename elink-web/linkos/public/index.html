@@ -9,7 +9,41 @@
     <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
     <link href="/l7-mapbox/mapbox-gl.css" rel="stylesheet">
     <link href="<%= BASE_URL %>favicon.ico" rel="icon">
-    <style>html, body, #app {height: 100%;}</style>
+    <style>
+      html, body, #app { height: 100%; margin: 0; }
+      /* 防止 Vue 挂载前浏览器默认深色背景透出造成黑闪 */
+      html, body { background-color: #F8F8F8; }
+      /* 首屏 loading：Vue 挂载完成会替换 #app 内容，自动消失 */
+      #app-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #F8F8F8;
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+      }
+      #app-loading .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #e4e7ed;
+        border-top-color: #409eff;
+        border-radius: 50%;
+        animation: app-loading-spin 0.8s linear infinite;
+      }
+      #app-loading .tip {
+        margin-top: 16px;
+        color: #909399;
+        font-size: 14px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      }
+      @keyframes app-loading-spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
     <title><%= htmlWebpackPlugin.options.title %></title>
     <!--  阿里矢量图标图-&#45;&#45;sun_os-->
 
@@ -20,7 +54,12 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
 </noscript>
-<div id="app"></div>
+<div id="app">
+  <div id="app-loading">
+    <div class="spinner"></div>
+    <div class="tip">系统加载中…</div>
+  </div>
+</div>
 <!-- built files will be auto injected -->
  <script src="/config.js"></script>
 <script src="/l7-mapbox/l7.js"></script>
