@@ -18,7 +18,7 @@
 | PHASE-1 | 9+1(验证)+2(补偿)+1(文档)+1(设计) | 9 | 0 | 5 | 60% |
 
 > **PHASE-1 完成率说明**：总计14项任务（9核心+1验证+2补偿+1文档校正+1前置设计），9项已完成（T1/T2/T4/T5/T6/T7/T8/V/COMP-3），5项待完成（T3需补偿修复Entity不一致、T9需补偿配置SSL证书、2项补偿任务、1项文档校正P0-4）。T3/T9虽已执行但因环境限制回退，不计入已完成。
-| PHASE-2 | 6 | 5 | 0 | 1 | 83% |
+| PHASE-2 | 6 | 6 | 0 | 0 | 100% |
 | PHASE-3 | 5 | 0 | 0 | 5 | 0% |
 | PHASE-4 | 4 | 0 | 0 | 4 | 0% |
 | PHASE-5 | 4 | 0 | 0 | 4 | 0% |
@@ -48,6 +48,7 @@
 | P2-2c | Spring Boot 2.7 → 3.3.x + javax→jakarta + OAuth2迁移 | 2026-06-09 | AI | Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换,Rewrite辅助迁移,SpringDoc 1.7.0→2.6.0,MyBatis 2.1.1→3.0.4,Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口, RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成, 编译通过 |
 | P2-2c-2 | 补全事务管理（ARCH-05） | 2026-06-09 | AI | 逐服务审查Service层, device-service/together-service/webapp-service/system-service/protocol-service添加@Transactional注解, 区分读/写事务传播级别, 编译通过 |
 | P2-2c-3 | Spring Cloud Alibaba版本配置 | 2026-06-09 | AI | 父POM添加SCA BOM 2023.0.3.2, 子模块移除Nacos硬编码版本号, 编译通过 |
+| P2-2c-4 | Feign 调用重构（ARCH-06） | 2026-06-10 | AI | sunmax-common/feign包55个FeignClient接口+GenericFeignFallbackFactory动态代理降级, 42个FeignController→FeignEndpoint实现FeignClient接口, 52个消费者旧FeignClient→extends公共接口+@Deprecated, 编译通过 |
 
 ---
 

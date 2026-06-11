@@ -1,25 +1,13 @@
 package com.sunmax.protocol.service.feign;
-
-import com.sunmax.common.dto.system.PlatformDataForwardDto;
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
-import java.util.List;
-import java.util.Set;
 
 /**
- * 接收数据服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.protocol.ProtocolSystemFeignClient
+ * 请直接使用 com.sunmax.common.feign.protocol.ProtocolSystemFeignClient
  */
-@FeignClient(value = "system-service", path = "/system/feign/protocol")
-public interface SystemService {
-
-    @PostMapping("getPlatformDataForwardList")
-    @Operation(summary = "根据多个协议标识查询平台数据转发")
-    @Parameter(name = "protocolCodes", description = "多个协议标识")
-    
-    ResponseResult<List<PlatformDataForwardDto>> getPlatformDataForwardList(@RequestBody Set<String> protocolCodes);
-
+@FeignClient(value = "system-service", path = "/system/feign/protocol", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface SystemService extends com.sunmax.common.feign.protocol.ProtocolSystemFeignClient {
 }

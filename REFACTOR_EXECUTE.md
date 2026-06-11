@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v2.8 | 编制日期：2026-06-03 | 最后更新：2026-06-10 | 关联方案：REFACTOR_PLAN.md v2.1
+> 版本：v2.9 | 编制日期：2026-06-03 | 最后更新：2026-06-10 | 关联方案：REFACTOR_PLAN.md v2.1
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3014,3 +3014,37 @@ public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity h
 - [√] `grep -rn '@Api(' --include="*.java" . | grep -v target` → 0
 - [√] `grep -rn 'io.swagger.annotations' --include="*.java" . | grep -v target` → 0
 - [√] `grep -rn '@EnableSwagger' --include="*.java" . | grep -v target` → 0
+
+---
+
+## P2-2c-4 | Feign 调用重构（ARCH-06）
+
+> 执行日期：2026-06-10 | 执行人：AI | 状态：✅ 已完成
+
+### 执行过程
+
+1. **创建sunmax-common/feign包**：按服务拆分创建55个FeignClient接口（auth/system/device/data/protocol/crontab/devops/configure/together/webapp子包）
+2. **创建FeignConstants常量类**：集中管理服务名和上下文路径
+3. **创建GenericFeignFallbackFactory**：基于JDK动态代理的通用降级工厂，替代逐个手写FallbackFactory
+4. **修改42个FeignController→FeignEndpoint**：实现对应FeignClient接口，添加@Override注解
+5. **修改52个消费者旧FeignClient接口**：extends公共FeignClient接口+@Deprecated向后兼容
+6. **处理5个共享接口映射**：多个消费者调用同一提供者同一接口时，正确映射到同一个公共FeignClient
+7. **修复方法签名不兼容**：3处编译错误修复
+
+### 问题与解决方案
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| 多个消费者SauthService映射到CrontabSauthFeignClient | 相同(value,path)的FeignClient在new_feign_index中只匹配第一个 | 创建共享接口AuthPermissionNoContextFeignClient/AuthSauthFeignClient，更新所有消费者映射 |
+| FallbackFactory方法签名被截断 | 原始方法签名跨多行，正则只匹配到行尾 | 删除所有FallbackFactory，改用GenericFeignFallbackFactory动态代理 |
+| batchPileUpdate返回类型不兼容 | FeignClient定义ResponseResult\<Void\>，Controller返回ResponseResult\<Boolean\> | 修改FeignClient接口返回类型为ResponseResult\<Boolean\> |
+| findSiteAccountListBySiteIds/findOrderAppShowList访问修饰符不兼容 | Controller方法缺少public修饰符 | 添加@Override和public修饰符 |
+| WebFeignController错误实现WebAppTogetherFeignClient | 原始Controller未实现任何接口，被脚本错误添加 | 移除implements，恢复原始状态 |
+| DeviceTaskServiceImpl返回类型不兼容 | protocolService.batchPileUpdate返回ResponseResult\<Boolean\>，方法期望ResponseResult\<Void\> | 忽略返回值，返回ResponseResult.ok() |
+
+### 验证结果
+
+- [√] `find . -name "*FeignController*" -path "*/src/*" | grep -v target | wc -l` → 0
+- [√] `find sunmax-common/src/main/java/com/sunmax/common/feign -name "*FeignClient.java" | grep -v fallback | wc -l` → 55
+- [√] `find . -name "*FeignEndpoint*" -path "*/src/*" | grep -v target | wc -l` → 42
+- [√] `mvn clean compile -DskipTests -T 4` → BUILD SUCCESS

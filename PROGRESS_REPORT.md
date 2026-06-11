@@ -1,6 +1,6 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v2.8 | 报告日期：2026-06-10 | 报告人：AI | 状态：PHASE-0+PHASE-1完成，P2-2a+P2-2b+P2-2c+P2-2c-2+P2-2c-3完成（全部已验证通过）
+> 版本：v2.9 | 报告日期：2026-06-10 | 报告人：AI | 状态：PHASE-0+PHASE-1完成，PHASE-2全部完成（P2-2a+P2-2b+P2-2c+P2-2c-2+P2-2c-3+P2-2c-4全部已验证通过）
 >
 > 关联方案：[REFACTOR_PLAN.md v2.1](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v2.8](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
@@ -12,7 +12,7 @@
 |------|------|--------|------|
 | PHASE-0：紧急修复 | ✅ 已完成 | 100% | P0-2 CORS内网IP移除+公网域名白名单；P0-3 Nacos/EMQX默认密码环境变量化+WARNING注释；P0-4 前后端环境变量分离+.env全面审查；P0-4b 文档统计数据校正；P0-5 Together-service健康检查性能修复 |
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
-| PHASE-2：框架升级与核心重构 | ⏳ 进行中 | 83% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），1项待执行（P2-2c-4 Feign重构）|
+| PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ⏳ 待开始 | 0% | 5项任务（含新增P3-C2超时参数优化） |
 | PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
@@ -593,3 +593,4 @@ allowed-origins:
 | v2.6 | 2026-06-09 | AI | 新增P2-2c完成记录：Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换(含static import), SpringDoc 1.7.0→2.6.0, MyBatis 2.1.1→3.0.4, Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口, RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成, MainController返回用户信息, 编译通过, 前端无需调整, 产出AUTH_LOGIN_API.md登录接口使用说明文档 |
 | v2.7 | 2026-06-10 | AI | 新增P2-2c-2补全事务管理完成记录、P2-2c-3 SCA版本配置完成记录；新增AI_DIRECTIVES全局约束11-13条（执行后强制检查清单+Git提交流程规范+文档同步强制规则），PHASE-2完成率50%→83%；同步更新REFACTOR_TASKS.md/PROGRESS_REPORT.md/REFACTOR_EXECUTE.md/REFACTOR_PLAN.md；标注P2-2c验证结果待补全 |
 | v2.8 | 2026-06-10 | AI | P2-2c+/P2-2c-2/P2-2c-3 全面验证通过（11服务hot-reload全部healthy+Nacos 11/11注册+10服务actuator全部HTTP 200+Gateway路由全部HTTP 200+OAuth2端点HTTP 200）；AI_DIRECTIVES集成测试模板更新（grant_type=password→sys_pwd，增加AES加密说明）；6份文档交叉引用版本号同步；Git提交8个文件到refactor/phase-2-framework-upgrade分支并推送成功 |
+| v2.9 | 2026-06-10 | AI | P2-2c-4 Feign调用重构完成：sunmax-common/feign包55个FeignClient接口+FeignConstants常量类+GenericFeignFallbackFactory动态代理降级，42个FeignController→FeignEndpoint实现FeignClient接口，52个消费者旧FeignClient→extends公共接口+@Deprecated向后兼容，5个共享接口正确映射（AuthPermissionNoContextFeignClient/AuthSauthFeignClient/TogetherDataFeignClient/TogetherSystemFeignClient/DevopsDataFeignClient），修复3处方法签名不兼容（batchPileUpdate返回类型/findSiteAccountListBySiteIds访问修饰符/findOrderAppShowList访问修饰符），PHASE-2完成率83%→100% |

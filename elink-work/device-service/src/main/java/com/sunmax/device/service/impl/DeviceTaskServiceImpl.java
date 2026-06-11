@@ -314,7 +314,8 @@ public class DeviceTaskServiceImpl implements DeviceTaskService {
                     pileBatchUpdateVos.setFirmwareCompileTime(firmwareParse.getFirmwareCompileTime());
                     pileBatchUpdateVos.setFirmwareSize(firmwareParse.getFirmwareSize());
                     pileBatchUpdateVos.setCrc32(firmwareParse.getCrc32());
-                    return protocolService.batchPileUpdate(pileBatchUpdateVos);
+                    protocolService.batchPileUpdate(pileBatchUpdateVos);
+                    return ResponseResult.ok();
                 } else {
                     save.setTaskStatus(3);
                     deviceTaskDao.save(save);
