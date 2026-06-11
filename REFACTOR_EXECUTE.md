@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.4 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v3.5 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3358,6 +3358,89 @@ P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分
 - `elink-web/packages/shared/src/http/request.js`（架构级修复：5项运行时缺陷）
 - `elink-web/derms/src/utils/request.js`（启用 perRequestIsolation: true）
 - `elink-web/derms/src/utils/requestVue.js`（启用 perRequestIsolation: true）
+
+---
+
+### P4-A-hotfix-v3 | linkos 闪黑屏修复（portNum 行为差异对齐）
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+hotfix-v2 上线后用户反馈 linkos 平台调用后端接口时仍出现短暂闪黑屏。
+
+#### 根因定位
+
+对比新旧 `linkos/src/utils/request.js` 行为差异发现：
+
+**旧 linkos 代码（已被生产验证）：**
+```js
+// request 拦截器中
+// 打包注释                          ← 关键！portNum 处理被完全注释
+// if(config.portNum){
+//     config.baseURL = config.baseURL.replace(portNum,`:${config.portNum}`);
+// }
+```
+
+linkos 的所有 28 个 API 文件（共 212 处 portNum 字段，如 `portNum: "60003"`）在旧代码中**实际从未生效**，所有请求统一走网关 `:5000`，由 Spring Cloud Gateway 路由到对应微服务。
+
+**新 shared 代码（hotfix-v1 引入，hotfix-v2 保留）：**
+```js
+const applyPortNum = (config) => {
+  if (config.portNum) {
+    config.baseURL = (config.baseURL || baseURL).replace(/:\d+/, `:${config.portNum}`);
+    delete config.portNum;
+  }
+};
+```
+
+**总是**替换端口，导致：
+- 生产环境 `baseURL=http://host:5000` → 被替换为 `http://host:60003`
+- 浏览器直接访问宿主机微服务端口 → CORS 失败/连接超时
+- ElMessage 错误弹窗轰炸 + 路由跳转 → 短暂闪黑屏
+
+derms 平台旧代码 portNum 处理是启用的，所以行为正确；linkos/tycvs 平台旧代码 portNum 是注释掉的，需要保持禁用。
+
+#### 修复方案
+
+新增 `enablePortNum` 选项：
+- derms：`enablePortNum: true`（保留旧逻辑）
+- linkos/tycvs：默认 false（与旧逻辑一致）
+- 无论是否启用，始终从 config 中 `delete portNum`，避免污染 axios config
+
+```js
+const applyPortNum = (config) => {
+  if (config.portNum) {
+    if (enablePortNum) {
+      config.baseURL = (config.baseURL || baseURL).replace(/:\d+/, `:${config.portNum}`);
+    }
+    delete config.portNum;
+  }
+};
+```
+
+#### 变更文件
+
+- `packages/shared/src/http/request.js`：新增 `enablePortNum` 选项（默认 false），逻辑分支判断
+- `derms/src/utils/request.js`：显式设置 `enablePortNum: true`
+- `derms/src/utils/requestVue.js`：同上
+
+#### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| ESM 模块加载 | ✅ 通过 | createHttpClient 正常创建 linkos 模式 request 函数 |
+| linkos 行为对齐 | ✅ 通过 | enablePortNum=false 下不再替换 baseURL，与旧代码一致 |
+| derms 行为对齐 | ✅ 通过 | enablePortNum=true 保持 hotfix-v1 portNum 动态路由 |
+| portNum 字段清理 | ✅ 通过 | 无论是否启用，始终从 config 移除，避免 axios 警告 |
+
+#### 根因总结表
+
+| 平台 | 旧 portNum 处理 | hotfix-v1/v2 行为 | hotfix-v3 修复 |
+|------|----------------|---------------------|----------------|
+| derms | 启用 | 启用（一致） | enablePortNum=true |
+| linkos | **注释**（禁用） | **启用**（不一致） | enablePortNum=false（默认）|
+| tycvs | 与 linkos 同 | 启用（不一致） | enablePortNum=false（默认）|
 
 ---
 

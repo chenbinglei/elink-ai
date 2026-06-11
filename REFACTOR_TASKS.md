@@ -57,6 +57,7 @@
 | P4-A | 创建 @elink/shared 公共包 | 2026-06-11 | AI | 提取request.js→@elink/shared/http, auth.js→@elink/shared/auth(工厂模式), utils→@elink/shared/utils, pnpm-workspace.yaml, 3项目构建验证通过 |
 | P4-A-hotfix | @elink/shared 运行时缺陷修复 | 2026-06-11 | AI | 修复portNum动态路由丢失/特殊端点错误弹窗/data空指针，3项目构建验证通过 |
 | P4-A-hotfix-v2 | @elink/shared 架构级重构（依赖注入） | 2026-06-11 | AI | 治本方案：shared包零运行时依赖，axios/qs/js-cookie/element-plus全部由调用方注入，删除sharedResolvePlugin，彻底消除dev模式EISDIR黑屏 |
+| P4-A-hotfix-v3 | linkos 闪黑屏修复（portNum 对齐） | 2026-06-11 | AI | 根因：新代码总是替换 baseURL 端口，但旧 linkos 中 portNum 处理被注释（212处portNum字段实际未生效），生产环境导致直连微服务端口失败。新增 enablePortNum 选项，derms=true、linkos/tycvs=false |
 
 ---
 
