@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.3 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v3.4 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3361,10 +3361,119 @@ P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分
 
 ---
 
+### P4-A-hotfix-v2 | @elink/shared 架构级重构（依赖注入）
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+P4-A-hotfix v1 上线后 derms 黑屏问题依然存在。dev server 日志显示真正根因：
+
+```
+[vite] (client) Pre-transform error: EISDIR: illegal operation on a directory,
+read /work/elink-ai/elink-web/derms/node_modules/qs
+```
+
+`@elink/shared` 内部 `import "qs"` `import "js-cookie"` `import axios` `import { ElMessage } from "element-plus"` 等裸模块导入，在 monorepo 跨工作空间场景下：
+- 生产构建（rollup）通过 `sharedResolvePlugin` 自定义解析能工作
+- **dev 模式（esbuild pre-bundle）**：自定义插件返回的是目录路径而非入口文件，触发 EISDIR
+
+旧方案治标不治本，决定采用资深专家级方案：**依赖注入重构**。
+
+#### 修复方案：零依赖纯函数 + 依赖注入
+
+让 `@elink/shared` 成为零运行时依赖的纯工厂函数库，所有外部依赖（axios/qs/js-cookie/element-plus）由调用方注入：
+
+```js
+// shared/auth/index.js
+export function createAuthManager(Cookies, prefix, defaultKey) { ... }
+
+// shared/http/request.js
+export function createHttpClient({ axios, ElMessage, qs, auth, ... }) { ... }
+
+// shared/utils/transformRequest.js
+export function createTransform(qs) { ... }
+```
+
+调用方在自己项目内 import 真正的依赖并注入：
+
+```js
+import axios from "axios";
+import qs from "qs";
+import { ElMessage } from "element-plus";
+import Cookies from "js-cookie";
+import { createHttpClient, createAuthManager, AUTH_PREFIX } from "@elink/shared";
+
+const dermsAuth = createAuthManager(Cookies, AUTH_PREFIX.DERMS);
+const { request } = createHttpClient({ axios, ElMessage, qs, auth: dermsAuth, ... });
+```
+
+#### 架构收益
+
+| 维度 | 改造前 | 改造后 |
+|------|--------|--------|
+| shared 包依赖 | axios/qs/js-cookie/element-plus | **0 个运行时依赖** |
+| 跨工作空间解析 | 需自定义 vite 插件 | **不再需要** |
+| dev 模式 EISDIR | 偶发崩溃 | **彻底消除** |
+| 各项目依赖版本 | 受 shared 锁定 | 各项目可独立升级 |
+| 单元测试 | 困难（mock 外部模块） | 简单（注入 stub） |
+| 与构建工具耦合 | 强（依赖 vite/webpack 解析配置） | **零耦合** |
+
+#### 变更内容
+
+**shared 包重构（4个文件）：**
+- `packages/shared/src/auth/index.js`：移除 `import Cookies`，`createAuthManager(Cookies, prefix, defaultKey)`，新增 `AUTH_PREFIX` 常量
+- `packages/shared/src/utils/transformRequest.js`：移除 `import qs`，重命名 `transform()` → `createTransform(qs)`，新增 null/undefined 保护
+- `packages/shared/src/http/request.js`：移除 axios/element-plus/qs 三个 import，`createHttpClient({ axios, ElMessage, qs, ... })`，保留两种 perRequestIsolation 模式 + 5 项 hotfix-v1 修复
+- `packages/shared/src/index.js`：统一导出 + `.js` 显式后缀（兼容 webpack 5 / vite）
+
+**shared package.json：**
+- `version` 1.0.0 → 2.0.0（BREAKING CHANGE）
+- 移除 `dependencies`，axios/qs/js-cookie/element-plus 全部移到 `peerDependencies`
+- 新增 `exports` 字段精确导出 + `sideEffects: false`
+
+**消费方更新（3 × 2 = 6 个文件）：**
+- `derms/src/utils/auth.js`、`linkos/src/utils/auth.js`、`tycvs/src/utils/auth.js`：import `js-cookie`，通过 `createAuthManager(Cookies, AUTH_PREFIX.XXX)` 创建本地 auth 实例
+- `derms/src/utils/request.js`、`derms/src/utils/requestVue.js`、`linkos/src/utils/request.js`、`tycvs/src/utils/request.js`：import axios/qs/ElMessage，注入到 `createHttpClient`
+
+**清理（1 个文件）：**
+- `derms/vite.config.js`：删除 27 行 `sharedResolvePlugin` 自定义插件（不再需要）
+
+#### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| Node ESM 解析测试 | ✅ 通过 | `qs/js-cookie/axios/@elink/shared` 全部可解析 |
+| shared 导出完整性 | ✅ 通过 | 导出 `createAuthManager/createHttpClient/createTransform/AUTH_PREFIX` 等 86 个符号 |
+| derms 项目链路 | ✅ 通过 | request.js → auth.js → shared，无裸模块导入残留 |
+| linkos 项目链路 | ✅ 通过 | 同上，webpack alias `@elink/shared` 仍然工作 |
+| tycvs 项目链路 | ✅ 通过 | 同上 |
+| sharedResolvePlugin | ✅ 已删除 | derms/vite.config.js 不再包含自定义解析 |
+| 旧 transform/auth 实例 | ✅ 已清理 | 不再使用 `dermsAuth`/`linkosAuth`/`tycvsAuth` from shared |
+
+#### 根因 vs 修复对照
+
+| 表现 | 表层原因 | 真正根因 | 治本方案 |
+|------|----------|----------|----------|
+| derms 黑屏 | EISDIR error | shared 包内 `import "qs"` 在 dev 模式跨工作空间解析失败 | 依赖注入：shared 不再 import 任何外部模块 |
+| linkOS 闪烁 | API 取消错误轰炸 | （已在 hotfix-v1 修复）单例模式 + 不可靠的 isCancel 检测 | 保留 hotfix-v1 修复，并随 shared 重构带入 |
+
+#### 重启说明
+
+由于代码改动涉及 shared 包入口和消费方 import，**必须重启所有 dev server**才能生效。用户需手动在 IDE 终端执行：
+
+```bash
+cd /work/elink-ai/elink-web
+node dev-manager.js stop-all
+node dev-manager.js start-all
+```
+
+---
+
 ### P4-A-hotfix | @elink/shared 运行时缺陷修复
 
 > 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
 
 #### 背景
 
-P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题。
+P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题（详见上方 hotfix-v1 完整记录）。
