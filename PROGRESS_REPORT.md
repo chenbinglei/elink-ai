@@ -1,8 +1,8 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v3.4 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-A已完成，hotfix-v2 架构级重构已修复）
+> 版本：v3.5 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-A已完成，hotfix-v3 完成 linkos 闪黑屏修复）
 >
-> 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.4](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.5](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
@@ -683,3 +683,4 @@ allowed-origins:
 | v3.2 | 2026-06-11 | AI | P4-A @elink/shared公共包创建完成：提取request.js→@elink/shared/http+auth.js→@elink/shared/auth(工厂模式)+utils→@elink/shared/utils+pnpm-workspace.yaml+3项目迁移+构建验证通过，PHASE-4完成率0%→25% |
 | v3.3 | 2026-06-11 | AI | P4-A-hotfix运行时缺陷修复：portNum动态端口路由丢失(derms黑屏根因)+特殊端点错误弹窗+data空指针，3项目构建验证通过 |
 | v3.4 | 2026-06-11 | AI | P4-A-hotfix-v2 @elink/shared 架构级重构（依赖注入治本方案）：shared 包零运行时依赖，axios/qs/js-cookie/element-plus 由调用方注入，消除 dev 模式 EISDIR 跨工作空间解析错误（derms 黑屏真正根因），删除 sharedResolvePlugin 自定义解析插件，更新3项目 request.js/auth.js 共 6 个文件，shared package.json v1.0.0→v2.0.0 |
+| v3.5 | 2026-06-11 | AI | P4-A-hotfix-v3 linkos 闪黑屏修复：根因为新代码总是替换 baseURL 端口，但旧 linkos request.js 中 portNum 处理实际被注释掉（212 处 portNum 字段从未生效），生产环境导致浏览器直连微服务端口失败 → ElMessage 错误轰炸 → 闪黑屏。新增 createHttpClient.enablePortNum 选项，derms=true（保留旧逻辑）、linkos/tycvs 默认 false（与旧代码一致） |

@@ -21,6 +21,7 @@ import { createTransform } from "../utils/transformRequest.js";
  * @param {Function} [options.getStoreGetters] - 获取store getters的函数
  * @param {Function} [options.onAuthExpired] - 登录失效回调（code=9999时触发）
  * @param {boolean} [options.perRequestIsolation=false] - 每请求隔离模式
+ * @param {boolean} [options.enablePortNum=false] - 是否启用 portNum 动态端口路由（derms 启用，linkos/tycvs 关闭）
  * @returns {{ request, cancelAbleService }}
  */
 export function createHttpClient(options) {
@@ -34,6 +35,7 @@ export function createHttpClient(options) {
     getStoreGetters,
     onAuthExpired,
     perRequestIsolation = false,
+    enablePortNum = false,
   } = options;
 
   if (!axios) throw new Error("[@elink/shared/http] axios 必须注入");
@@ -231,13 +233,18 @@ export function createHttpClient(options) {
     isIdenticalRef: { value: 1 },
   });
 
-  // 动态端口路由：替换 baseURL 中的端口号
+  // 动态端口路由：仅当 enablePortNum=true 时启用
+  // - derms：旧逻辑生效，根据 config.portNum 替换 baseURL 端口
+  // - linkos/tycvs：旧逻辑已被注释（所有请求统一走网关:5000），保持禁用
+  // 始终移除 config.portNum，避免污染 axios config
   const applyPortNum = (config) => {
     if (config.portNum) {
-      config.baseURL = (config.baseURL || baseURL).replace(
-        /:\d+/,
-        `:${config.portNum}`
-      );
+      if (enablePortNum) {
+        config.baseURL = (config.baseURL || baseURL).replace(
+          /:\d+/,
+          `:${config.portNum}`
+        );
+      }
       delete config.portNum;
     }
     return config;
