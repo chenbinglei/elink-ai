@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.6 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v3.7 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3358,6 +3358,66 @@ P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分
 - `elink-web/packages/shared/src/http/request.js`（架构级修复：5项运行时缺陷）
 - `elink-web/derms/src/utils/request.js`（启用 perRequestIsolation: true）
 - `elink-web/derms/src/utils/requestVue.js`（启用 perRequestIsolation: true）
+
+---
+
+### P4-A-hotfix-v5 | linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰)
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 现象与根因
+
+用户点击"查询"按钮时，列表区域出现深灰色"黑屏"覆盖层。从截图可观察到表格区域被深灰色不透明遮罩覆盖，呈现"加载黑屏"观感。
+
+**根因**：[elink-web/linkos/src/styles/element.scss#L3](file:///work/elink-ai/elink-web/linkos/src/styles/element.scss#L3) 全局设置了：
+```scss
+:root {
+  --el-mask-color: rgba(51,51,51,0.8); // 深灰 80% 不透明度
+}
+```
+
+该 CSS 变量同时被 ElLoading 的 `.el-loading-mask` 和 Dialog 的 `.el-overlay` 使用：
+- Dialog：rgba(51,51,51,0.8) 用作弹窗背景压暗合理
+- ElLoading：**用在表格 v-loading 区域时，相当于覆盖一层近黑色不透明层 → "查询黑屏"**
+
+linkos 的 `DeviceListTable.vue` 等 50+ 个列表页都使用 `v-loading="listLoading"`，全部受影响。
+
+#### 修复方案
+
+将 ElLoading 遮罩单独配色，与 Dialog 的 `--el-mask-color` 解耦：
+
+```scss
+:root {
+  --el-mask-color: rgba(0, 0, 0, 0.5); // 改回 Element Plus 默认值（弹窗压暗）
+}
+
+/* ElLoading 单独配色 */
+.el-loading-mask {
+  background-color: rgba(255, 255, 255, 0.75) !important; // 半透明白色磨砂
+  backdrop-filter: blur(2px);
+  transition: opacity 0.2s ease;
+}
+.el-loading-spinner .path { stroke: #409eff !important; }
+.el-loading-spinner .el-loading-text { color: #606266 !important; font-size: 13px; }
+```
+
+#### 效果对比
+
+| 场景 | 修复前 | 修复后 |
+|------|--------|--------|
+| 列表查询 v-loading | 深灰几乎不透明遮罩（"黑屏"） | 半透明白色磨砂，表格内容仍可见 |
+| spinner 颜色 | 深色不易辨识 | 蓝色 #409eff（element 主色） |
+| 转场 | 突然出现/消失 | opacity 0.2s 渐变 |
+| Dialog 弹窗压暗 | rgba(51,51,51,0.8) | rgba(0,0,0,0.5)（标准值，更轻） |
+
+#### 变更文件
+
+- `elink-web/linkos/src/styles/element.scss`：分离 ElLoading 与 Dialog 的遮罩配色
+
+#### 兼容性
+
+- `backdrop-filter`：Chrome 76+/Safari 9+/Edge 17+/Firefox 103+（不支持的浏览器自动降级为纯色半透明白色）
+- `!important` 仅覆盖 ElLoading，不影响业务自定义 mask 样式
 
 ---
 
