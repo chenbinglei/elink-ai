@@ -12,6 +12,7 @@ const { request: service, cancelAbleService } = createHttpClient({
   auth: dermsAuth,
   baseURL: isDev() ? "/proxy" : onlineServerIpAddress,
   getStoreGetters: () => store.getters,
+  perRequestIsolation: true,  // derms 每请求独立实例模式：并发请求不会被互相取消
   onAuthExpired: () => {
     if (window.top !== window) {
       window.top.postMessage({ action: "unAuth" });
