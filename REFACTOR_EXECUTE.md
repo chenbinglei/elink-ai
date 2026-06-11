@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.2 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v3.3 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3305,3 +3305,39 @@ public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity h
 - `elink-web/tycvs/vue.config.js`（修改：添加@elink/shared alias）
 - `elink-web/tycvs/src/utils/request.js`（修改：迁移至@elink/shared）
 - `elink-web/tycvs/src/utils/auth.js`（修改：兼容层代理）
+
+---
+
+### P4-A-hotfix | @elink/shared 运行时缺陷修复
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题。
+
+#### 修复内容
+
+**Fix 1 - portNum 动态端口路由丢失（root cause 1）**
+- 问题：旧代码（derms）使用每请求新 axios 实例的模式，每个请求通过 `portNum` 字段指定后端服务端口。新代码采用单例 axios 实例，`portNum` 被完全忽略，所有 API 路由到默认网关（:5000），导致关键数据接口失败
+- 修复：在 `request()` 和 `cancelAbleService()` 函数中添加 portNum 检测，动态替换 baseURL 中的端口号
+
+**Fix 2 - 特殊端点错误弹窗（root cause 3）**
+- 问题：derms 旧代码中 `/together/electConfig/applyElectConfigToOtherSite` 端点预期返回 code !== 20000，旧逻辑特意不弹错误消息。新代码统一弹 ElMessage 错误提示
+- 修复：在 response 拦截器中对特殊端点跳过错误弹窗
+
+**Fix 3 - config.data 为空对象时的空指针（root cause 5 变体）**
+- 问题：当 `config.data` 为 `null` 或 `undefined` 时，`Object.keys(data)` 或 `config.data.userId` 抛异常
+- 修复：添加 `config.data` 非空判断，同时优化 `removePending` 的循环为倒序遍历避免索引偏移
+
+#### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| derms构建 | ✅ 通过 | vite build 6347 modules transformed, 2m32s |
+| linkos构建 | ✅ 通过 | vue-cli-service build 60s |
+| tycvs构建 | ✅ 通过 | vue-cli-service build 48s |
+
+#### 变更文件
+
+- `elink-web/packages/shared/src/http/request.js`（修复 portNum/特殊端点/null安全）

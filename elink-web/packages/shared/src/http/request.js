@@ -15,20 +15,19 @@ import { transform } from "@elink/shared/utils/transformRequest";
  * @returns {{ request, cancelAbleService }}
  */
 export function createHttpClient(options) {
-  const {
-    auth,
-    baseURL,
-    timeout = 120000,
-    getStoreGetters,
-    onAuthExpired,
-  } = options;
+  const { auth, baseURL, timeout = 120000, getStoreGetters, onAuthExpired } =
+    options;
 
+  // 注意：保持一个基础实例用于共享拦截器，但 per-request 的 portNum
+  // 需要在每个请求中动态调整 baseURL
   const service = axios.create({
     timeout,
     transformRequest: [transform()],
     baseURL,
   });
 
+  // pending/canRequest/isIdentical 保持在闭包中但用于单例实例，
+  // 这是 linkos 旧代码的模式（旧 derms 是每请求新实例，各自独立的状态）
   let pending = [];
   const cancelToken = axios.CancelToken;
   let canRequest = 1;
@@ -36,22 +35,20 @@ export function createHttpClient(options) {
 
   const removePending = (config) => {
     const time = new Date().getTime();
-    for (let p in pending) {
-      if (
-        pending[p].u ===
-        config.url + "&" + config.method + JSON.stringify(config.data)
-      ) {
-        if (time - pending[p].t < 1500) {
+    const key =
+      config.url + "&" + config.method + JSON.stringify(config.data);
+    for (let i = pending.length - 1; i >= 0; i--) {
+      if (pending[i] && pending[i].u === key) {
+        if (time - pending[i].t < 1500) {
           canRequest = 0;
         } else {
-          pending.splice(p, 1);
+          pending.splice(i, 1);
           canRequest = 1;
         }
         return;
-      } else {
-        canRequest = 1;
       }
     }
+    canRequest = 1;
   };
 
   // request拦截器
@@ -91,7 +88,7 @@ export function createHttpClient(options) {
           }
         }
       } else {
-        if (auth.getToken() && userInfo) {
+        if (auth.getToken() && userInfo && config.data) {
           if (typeof config.data === "string") {
             try {
               const dataObj = JSON.parse(config.data);
@@ -166,24 +163,29 @@ export function createHttpClient(options) {
       const res = response.data;
 
       if (res.code && res.code !== 20000 && res.code !== 200) {
-        ElMessage({
-          message: res.message,
-          type: "error",
-          showClose: true,
-          onClose: () => {
-            if (res.code === 9999) {
-              if (onAuthExpired) {
-                onAuthExpired();
-              } else if (window.top !== window) {
-                window.top.postMessage({ action: "unAuth" });
-              } else {
-                auth.removeToken();
-                location.reload();
+        // 【兼容derms旧逻辑】特殊端点不做错误弹窗
+        const isSpecialEndpoint =
+          response.config.url ===
+          "/together/electConfig/applyElectConfigToOtherSite";
+        if (!isSpecialEndpoint) {
+          ElMessage({
+            message: res.message,
+            type: "error",
+            showClose: true,
+            onClose: () => {
+              if (res.code === 9999) {
+                if (onAuthExpired) {
+                  onAuthExpired();
+                } else if (window.top !== window) {
+                  window.top.postMessage({ action: "unAuth" });
+                } else {
+                  auth.removeToken();
+                  location.reload();
+                }
               }
-            }
-          },
-        });
-
+            },
+          });
+        }
         return Promise.reject(response.data);
       } else {
         return response.data;
@@ -207,9 +209,33 @@ export function createHttpClient(options) {
     }
   );
 
-  const request = (config) => service(config);
+  /**
+   * 核心请求函数
+   * 支持 portNum 字段动态路由到指定后端服务端口
+   * （兼容3个项目的旧API调用模式）
+   */
+  const request = (config) => {
+    // 支持 portNum 动态端口路由
+    if (config.portNum) {
+      config.baseURL = (config.baseURL || baseURL).replace(
+        /:\d+/,
+        `:${config.portNum}`
+      );
+      delete config.portNum;
+    }
+    return service(config);
+  };
 
   const cancelAbleService = (config) => {
+    // 支持 portNum 动态端口路由
+    if (config.portNum) {
+      config.baseURL = (config.baseURL || baseURL).replace(
+        /:\d+/,
+        `:${config.portNum}`
+      );
+      delete config.portNum;
+    }
+
     let resolve, reject;
     const promise = new Promise((_resolve, _reject) => {
       resolve = _resolve;
