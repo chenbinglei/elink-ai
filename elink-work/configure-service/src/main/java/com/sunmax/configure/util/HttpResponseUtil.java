@@ -1,4 +1,5 @@
 package com.sunmax.configure.util;
+import lombok.extern.slf4j.Slf4j;
 
 import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.dto.system.PlatformDataForwardDto;
@@ -21,6 +22,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.Objects;
 
 @Component
+@Slf4j
 public class HttpResponseUtil {
 
     public static final String DATA_SECRET = PlatformConfig.DATA_SECRET; //运营商消息密钥
@@ -128,7 +130,7 @@ public class HttpResponseUtil {
     public static void main(String[] args) {
         String data = "{\"PageNo\":1,\"PageSize\":10}";
         String encrypt = AESUtil.encrypt(DATA_SECRET, DATA_SECRET_IV, data);
-        System.out.println(encrypt);
+        log.info(encrypt);
     }
 
 }

@@ -1,4 +1,5 @@
 package com.sunmax.common.config.wechat;
+import lombok.extern.slf4j.Slf4j;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
@@ -9,11 +10,18 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.security.Security;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import java.security.InvalidKeyException;
+import java.security.InvalidAlgorithmParameterException;
 
 /**
  * 微信手机号解密
  */
+@Slf4j
 public class WxPhoneUtil {
 
     private static final String KEY_ALGORITHM = "AES";
@@ -44,8 +52,8 @@ public class WxPhoneUtil {
         try {
             // 初始化cipher
             cipher = Cipher.getInstance(ALGORITHM_STR, "BC");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | java.security.NoSuchProviderException e) {
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -66,8 +74,8 @@ public class WxPhoneUtil {
             if (encryptedText != null && encryptedText.length > 0) {
                 result = new String(encryptedText, StandardCharsets.UTF_8);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+            log.error(e.getMessage(), e);
         }
         return result;
     }

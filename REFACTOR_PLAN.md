@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v2.3 | 编制日期：2026-06-03 | 最后更新：2026-06-10 | 状态：**执行中**
+> 版本：v2.5 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 状态：**执行中**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -13,7 +13,7 @@
 | PHASE-0：紧急修复 | ✅ 已完成 | 100% | P0-2 CORS内网IP移除+公网域名白名单；P0-3 Nacos/EMQX默认密码环境变量化+WARNING注释；P0-4 前后端环境变量分离+.env全面审查；P0-4b 文档统计数据校正；P0-5 Together-service健康检查性能修复 |
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
-| PHASE-3：代码质量与性能优化 | ⏳ 待开始 | 0% | 5项任务（含新增P3-C2超时参数优化） |
+| PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线：5场景3轮压测+8项指标+JVM GC+容器资源+DB连接数+质量验收全部通过） |
 | PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
@@ -42,6 +42,16 @@
 | P2-2c-2 | 补全事务管理（ARCH-05） | ✅ 已完成 | 2026-06-09 | device/together/webapp/system/protocol Service层 |
 | P2-2c-3 | Spring Cloud Alibaba版本配置 | ✅ 已完成 | 2026-06-09 | 父POM SCA BOM + 子模块Nacos版本 |
 | P2-2c-4 | Feign调用重构（ARCH-06） | ✅ 已完成 | 2026-06-10 | 55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移 |
+
+### PHASE-3 任务进度明细
+
+| 任务编号 | 任务名称 | 状态 | 完成时间 | 影响范围 |
+|----------|----------|------|----------|----------|
+| P3-A | 清理 e.printStackTrace() 和 System.out/err.print | ✅ 已完成 | 2026-06-11 | 95处e.printStackTrace()+109处System.out/err→SLF4J日志+@Slf4j补全 |
+| P3-B | 依赖版本升级 + CSS extract 优化 | ✅ 已完成 | 2026-06-11 | OSS SDK 2.8.3→3.17.4+Redisson 3.27.2→3.36.0+Jackson手动版本移除+groupId迁移26处+CSS extract |
+| P3-C | 收窄异常捕获 + 清理TODO/FIXME + 关闭Hibernate统计 | ✅ 已完成 | 2026-06-11 | catch(Exception)收窄+20+文件unreachable catch修复+hibernate.generate_statistics→false |
+| P3-C2 | 修正超时与连接池性能参数 | ✅ 已完成 | 2026-06-11 | Gateway/HikariCP/Redis超时参数优化 |
+| P3-D | 性能基准测试（R1） | ✅ 已完成 | 2026-06-11 | 5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数+质量验收 |
 
 ### 已完成任务的影响分析
 

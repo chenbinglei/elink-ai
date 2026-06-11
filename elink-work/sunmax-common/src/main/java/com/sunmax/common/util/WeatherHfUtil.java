@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
+import java.io.IOException;
 
 @Slf4j
 public class WeatherHfUtil {
@@ -91,7 +92,7 @@ public class WeatherHfUtil {
                 log.error("详细信息: {}", json.get("message").getAsString());
             }
             return resultList;
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("获取天气数据失败", e);
             return resultList;
         } finally {
@@ -110,9 +111,9 @@ public class WeatherHfUtil {
             WeatherDayDto weatherDay = weatherDayList.stream().collect(Collectors.toMap(WeatherDayDto::getFxDate,
                     a -> a)).get(DateUtil.localDateToStr(nowDate));
             if (weatherDay != null) {
-                System.out.println(weatherDay.getTempMin());
-                System.out.println(weatherDay.getTempMax());
-                System.out.println(weatherDay.getIconDay());
+                log.info(weatherDay.getTempMin());
+                log.info(weatherDay.getTempMax());
+                log.info(weatherDay.getIconDay());
             }
         }
     }

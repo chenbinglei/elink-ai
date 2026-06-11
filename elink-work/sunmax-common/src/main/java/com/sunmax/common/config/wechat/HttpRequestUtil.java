@@ -1,4 +1,5 @@
 package com.sunmax.common.config.wechat;
+import lombok.extern.slf4j.Slf4j;
 
 import com.sunmax.common.util.StringUtil;
 
@@ -7,7 +8,9 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 
+@Slf4j
 public class HttpRequestUtil {
     /**
      * 向指定URL发送GET方法的请求
@@ -37,9 +40,9 @@ public class HttpRequestUtil {
             while ((line = in.readLine()) != null) {
                 result.append(line);
             }
-        } catch (Exception e) {
-            System.out.println("发送GET请求出现异常！" + e);
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.info("发送GET请求出现异常！" + e);
+            log.error(e.getMessage(), e);
         }
         // 使用finally块来关闭输入流
         finally {
@@ -48,7 +51,7 @@ public class HttpRequestUtil {
                     in.close();
                 }
             } catch (Exception e2) {
-                e2.printStackTrace();
+                log.error(e2.getMessage(), e2);
             }
         }
         return result.toString();
@@ -89,9 +92,9 @@ public class HttpRequestUtil {
             while ((line = in.readLine()) != null) {
                 result.append(line);
             }
-        } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.info("发送 POST 请求出现异常！"+e);
+            log.error(e.getMessage(), e);
         }
         finally{ //使用finally块来关闭输出流、输入流
             try{
@@ -103,7 +106,7 @@ public class HttpRequestUtil {
                 }
             }
             catch(IOException ex){
-                ex.printStackTrace();
+                log.error(ex.getMessage(), ex);
             }
         }
         return result.toString();
@@ -125,7 +128,7 @@ public class HttpRequestUtil {
                 sb.append(s);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return sb.toString(); //次即为接收到微信端发送过来的xml数据
 

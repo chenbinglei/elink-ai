@@ -1,4 +1,5 @@
 package com.sunmax.common.util.oss;
+import lombok.extern.slf4j.Slf4j;
 
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.common.util.local.LocalFileUtil;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * 文件工具类
  */
+@Slf4j
 public class FileUtil {
 
     public static final String SLASH = "/";
@@ -119,7 +121,7 @@ public class FileUtil {
                 file.deleteOnExit();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return file;
     }
@@ -153,8 +155,8 @@ public class FileUtil {
                 }
             }
             return InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
             return null;
         }
     }

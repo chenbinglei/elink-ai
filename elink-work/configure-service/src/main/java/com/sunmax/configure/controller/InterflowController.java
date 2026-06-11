@@ -71,7 +71,7 @@ public class InterflowController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("推送充电状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -98,7 +98,7 @@ public class InterflowController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("推送充电订单接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -125,7 +125,7 @@ public class InterflowController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("推送设备状态变化接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -210,7 +210,7 @@ public class InterflowController {
 
     public static void main(String[] args) {
         String str = "{\"ChargeDetails\":[{\"DetailElecMoney\":1.80,\"DetailEndTime\":\"2025-11-20 15:28:20\",\"DetailPower\":0.260,\"DetailServiceMoney\":0.50,\"DetailStartTime\":\"2025-11-20 14:54:46\",\"ElecPrice\":0.4680,\"ServicePrice\":0.1300}],\"ConnectorID\":\"1169\",\"EndTime\":\"2025-11-20 15:28:21\",\"ParkingFeeDiscount\":0,\"StartChargeSeq\":\"MA7L4KFB0000000000010605895\",\"StartTime\":\"2025-11-20 14:54:32\",\"StopReason\":99,\"SumPeriod\":1,\"TotalElecMoney\":0.47,\"TotalMoney\":0.60,\"TotalPower\":0.26,\"TotalSeviceMoney\":0.13,\"Vin\":\"\"}";
-        System.out.println(JSON.parseObject( str));
+        log.info("{}", JSON.parseObject(str));
     }
 
 }

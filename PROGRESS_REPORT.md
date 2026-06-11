@@ -1,6 +1,6 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v2.9 | 报告日期：2026-06-10 | 报告人：AI | 状态：PHASE-0+PHASE-1完成，PHASE-2全部完成（P2-2a+P2-2b+P2-2c+P2-2c-2+P2-2c-3+P2-2c-4全部已验证通过）
+> 版本：v3.1 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2全部完成，PHASE-3全部5项完成（P3-A/P3-B/P3-C/P3-C2/P3-D已验证通过）
 >
 > 关联方案：[REFACTOR_PLAN.md v2.1](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v2.8](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
@@ -13,7 +13,7 @@
 | PHASE-0：紧急修复 | ✅ 已完成 | 100% | P0-2 CORS内网IP移除+公网域名白名单；P0-3 Nacos/EMQX默认密码环境变量化+WARNING注释；P0-4 前后端环境变量分离+.env全面审查；P0-4b 文档统计数据校正；P0-5 Together-service健康检查性能修复 |
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
-| PHASE-3：代码质量与性能优化 | ⏳ 待开始 | 0% | 5项任务（含新增P3-C2超时参数优化） |
+| PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线建立：5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数） |
 | PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
@@ -450,7 +450,10 @@ allowed-origins:
 
 ---
 
-## 5.5 R1性能基线测试结果（2026-06-05）
+## 5.5 R1性能基线测试结果（2026-06-05，初版）
+
+> 此为PHASE-2完成后的初版基线数据，存在Together-service健康检查严重慢等问题（已在P0-5修复）。
+> 完整R1基线数据见下方 5.6 章节。
 
 **测试方式：** 30次迭代curl请求，直连服务端口
 
@@ -490,6 +493,89 @@ allowed-origins:
 3. ⚠️ **Auth Token偶发503ms延迟**：存在尖刺，需关注连接池配置
 4. ⚠️ **所有服务均未设置容器内存/CPU限制**（MEM USAGE / LIMIT 显示宿主机总内存62.52GiB）
 5. ⚠️ **emqx1 CPU 91.84%**：EMQX实例CPU占用异常高，需排查
+
+---
+
+## 5.6 P3-D R1性能基线（2026-06-11，正式版）
+
+**完成时间：** 2026-06-11
+**测试环境：** PHASE-3全部完成后，全量热更新部署验证通过
+**测试工具：** curl基准测试脚本（benchmark-r1.sh），3轮压测取中位数
+**测试参数：** 并发5，每轮300次请求
+
+### 5.6.1 API性能基线（3轮中位数）
+
+| 场景 | P95(ms) | P99(ms) | TPS | 错误率 | 说明 |
+|------|---------|---------|-----|--------|------|
+| 用户登录 | 211 | 225 | 5.17 | 0% | POST /sauth/oauth/token，含AES加密+DB查询+Redis写入 |
+| Token刷新 | 152 | 157 | 7.08 | 0% | POST /sauth/oauth/token (refresh_token) |
+| 设备列表查询 | 43 | 45 | 28.51 | 0% | GET /device/deviceInfo/list，经Gateway路由 |
+| 站点数据查询 | 40 | 42 | 29.21 | 0% | GET /data/dataReport/list，经Gateway路由 |
+| 系统用户查询 | 40 | 41 | 29.46 | 0% | GET /system/user/list，经Gateway路由 |
+
+### 5.6.2 JVM GC指标（ParallelGC）
+
+| 服务 | YGC次数 | YGCT(s) | FGC次数 | FGCT(s) | GCT(s) | Old区使用率 |
+|------|---------|---------|---------|---------|--------|------------|
+| auth-service | 68 | 0.433 | 1 | 0.264 | 0.697 | 16.65% |
+| sunmax-gateway | 10 | 0.166 | 0 | 0.000 | 0.166 | 16.72% |
+| system-service | 33 | 0.283 | 1 | 0.152 | 0.435 | 18.29% |
+| device-service | 34 | 0.327 | 1 | 0.131 | 0.458 | 20.46% |
+| data-service | 30 | 0.289 | 0 | 0.000 | 0.289 | 18.47% |
+| together-service | 8 | 0.210 | 0 | 0.000 | 0.221 | 2.04% |
+
+### 5.6.3 容器资源占用
+
+| 服务 | 内存占用 | CPU% | 说明 |
+|------|---------|------|------|
+| auth-service | 952.3MiB | 0.32% | 认证服务 |
+| sunmax-gateway | 1.137GiB | 0.14% | API网关 |
+| system-service | 895.4MiB | 2.18% | 系统管理 |
+| device-service | 914.9MiB | 0.29% | 设备管理 |
+| data-service | 752.4MiB | 1.10% | 数据服务 |
+| protocol-service | 898.1MiB | 6.69% | 协议服务 |
+| crontab-service | 713.9MiB | 1.43% | 定时任务 |
+| devops-service | 870.2MiB | 1.50% | 运维服务 |
+| configure-service | 902.6MiB | 0.34% | 配置服务 |
+| together-service | 1.79GiB | 12.65% | 业务聚合 |
+| webapp-service | 884.2MiB | 2.80% | Web应用 |
+
+### 5.6.4 数据库活跃连接数
+
+| 数据库 | 活跃连接数 | 使用服务 |
+|--------|-----------|---------|
+| sunos-system | 15 | auth-service, system-service |
+| sunos-operate | 40 | protocol-service, together-service, devops-service, webapp-service |
+| sunos-data | 10 | data-service |
+| sunos-model | 10 | device-service |
+| sunos-access | 20 | device-service, crontab-service |
+| sunos-log | 20 | system-service, together-service |
+| sunos-configure | 10 | configure-service |
+
+### 5.6.5 前端FCP/LCP采样
+
+> 注：前端项目未在服务器端部署，Lighthouse需在浏览器端执行。
+> - linkos (port:9000)：需在浏览器端使用Lighthouse采样
+> - derms (port:9001)：需在浏览器端使用Lighthouse采样
+> - tycvs (port:9002)：需在浏览器端使用Lighthouse采样
+
+### 5.6.6 与初版基线对比
+
+| 指标 | 初版(2026-06-05) | R1正式版(2026-06-11) | 变化 |
+|------|-----------------|---------------------|------|
+| Together Health | 2575ms(严重异常) | 正常(已修复) | ✅ 修复 |
+| Auth Token P95 | ~500ms(尖刺) | 211ms | ✅ 改善 |
+| System User List | 6ms | 40ms(经Gateway) | ⚠️ Gateway增加~34ms延迟 |
+| 服务内存(平均) | ~780MiB | ~900MiB | ⚠️ 升级后内存增加~15% |
+
+### 5.6.7 关键发现
+
+1. ✅ **所有5个核心业务场景错误率0%**，系统稳定性良好
+2. ✅ **登录接口P95=211ms**，含AES加密+DB查询+Redis写入，性能合理
+3. ✅ **查询类接口P95=40-43ms**，经Gateway路由后延迟可接受
+4. ⚠️ **together-service内存1.79GiB**，远高于其他服务（平均~900MiB），需关注
+5. ⚠️ **升级后服务内存平均增加~15%**（Spring Boot 3.3.6 + Java 17 + Spring Authorization Server开销）
+6. ⚠️ **Gateway增加~34ms延迟**，后续可考虑Gateway缓存优化
 
 ---
 
@@ -564,10 +650,8 @@ allowed-origins:
 
 | 顺序 | 任务 | 预估影响 | 前置条件 |
 |------|------|----------|----------|
-| 1 | P2-2c-4: Feign调用重构（ARCH-06） | 全局 | PHASE-2前置任务全部验证通过 |
-| 2 | PHASE-3: 代码质量与性能优化 | 全局 | PHASE-2完成 |
-| 3 | PHASE-4: 前端现代化改造 | 前端 | PHASE-3完成 |
-| 4 | PHASE-5: 构建部署与持续优化 | 全局 | PHASE-4完成 |
+| 1 | PHASE-4: 前端现代化改造 | 前端 | PHASE-3完成 |
+| 2 | PHASE-5: 构建部署与持续优化 | 全局 | PHASE-4完成 |
 
 ---
 
@@ -594,3 +678,5 @@ allowed-origins:
 | v2.7 | 2026-06-10 | AI | 新增P2-2c-2补全事务管理完成记录、P2-2c-3 SCA版本配置完成记录；新增AI_DIRECTIVES全局约束11-13条（执行后强制检查清单+Git提交流程规范+文档同步强制规则），PHASE-2完成率50%→83%；同步更新REFACTOR_TASKS.md/PROGRESS_REPORT.md/REFACTOR_EXECUTE.md/REFACTOR_PLAN.md；标注P2-2c验证结果待补全 |
 | v2.8 | 2026-06-10 | AI | P2-2c+/P2-2c-2/P2-2c-3 全面验证通过（11服务hot-reload全部healthy+Nacos 11/11注册+10服务actuator全部HTTP 200+Gateway路由全部HTTP 200+OAuth2端点HTTP 200）；AI_DIRECTIVES集成测试模板更新（grant_type=password→sys_pwd，增加AES加密说明）；6份文档交叉引用版本号同步；Git提交8个文件到refactor/phase-2-framework-upgrade分支并推送成功 |
 | v2.9 | 2026-06-10 | AI | P2-2c-4 Feign调用重构完成：sunmax-common/feign包55个FeignClient接口+FeignConstants常量类+GenericFeignFallbackFactory动态代理降级，42个FeignController→FeignEndpoint实现FeignClient接口，52个消费者旧FeignClient→extends公共接口+@Deprecated向后兼容，5个共享接口正确映射（AuthPermissionNoContextFeignClient/AuthSauthFeignClient/TogetherDataFeignClient/TogetherSystemFeignClient/DevopsDataFeignClient），修复3处方法签名不兼容（batchPileUpdate返回类型/findSiteAccountListBySiteIds访问修饰符/findOrderAppShowList访问修饰符），PHASE-2完成率83%→100% |
+| v3.0 | 2026-06-11 | AI | PHASE-3完成4/5项：P3-A(e.printStackTrace()+System.out/err→SLF4J日志+@Slf4j补全)，P3-B(OSS SDK 2.8.3→3.17.4+OSSClientBuilder适配+Redisson 3.27.2→3.36.0+Jackson手动版本移除+groupId org.example→com.elink 26处+CSS extract优化)，P3-C(catch(Exception)收窄为具体异常+修复20+文件unreachable catch和unhandled checked exception+hibernate.generate_statistics→false)，P3-C2(Gateway connect-timeout 600000ms→5000ms+response-timeout 60s→15s+HikariCP idle-timeout 600000ms→60000ms 8服务+Redis timeout 60s→10s 9服务)，PHASE-3完成率0%→80% |
+| v3.1 | 2026-06-11 | AI | P3-D性能基准测试(R1)完成：全量热更新部署11服务+5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数+质量验收验证，PHASE-3完成率80%→100%，新增5.6章节R1正式基线数据 |

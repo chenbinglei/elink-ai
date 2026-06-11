@@ -233,7 +233,7 @@ public class ElectricCardServiceImpl implements ElectricCardService {
 
 
             return ResponseResult.ok(dto, "查询成功");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
 
             return ResponseResult.error("查询失败: " + e.getMessage());
         }
@@ -282,7 +282,7 @@ public class ElectricCardServiceImpl implements ElectricCardService {
         try {
             List<ElectricCardRecordEntity> records = electricCardRecordDao.findByCarId(carId);
             return ResponseResult.ok(records, "查询成功");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseResult.error("查询失败: " + e.getMessage());
         }
     }
@@ -311,7 +311,7 @@ public class ElectricCardServiceImpl implements ElectricCardService {
             // 删除电卡信息
             electricCardDao.delete(optional.get());
             return ResponseResult.ok();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
     }
@@ -353,7 +353,7 @@ public class ElectricCardServiceImpl implements ElectricCardService {
             electricCardBalanceDao.save(balanceRecord);
 
             return ResponseResult.ok();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
 
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -399,7 +399,7 @@ public class ElectricCardServiceImpl implements ElectricCardService {
             electricCardBalanceDao.save(balanceRecord);
 
             return ResponseResult.ok();
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
 
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -476,7 +476,7 @@ public class ElectricCardServiceImpl implements ElectricCardService {
 
             return ResponseResult.ok(result);
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseResult.error("查询交易记录失败: " + e.getMessage());
         }
 

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
 @Component
 @Slf4j
 public class SMAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -27,7 +29,7 @@ public class SMAuthenticationEntryPoint implements AuthenticationEntryPoint {
             responseResult.setSuccess(false);
             response.getWriter().print(JSON.toJSONString(responseResult));
             response.getWriter().flush();
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("认证失败", e);
         }
     }

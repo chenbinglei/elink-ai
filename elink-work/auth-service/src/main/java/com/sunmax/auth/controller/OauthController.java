@@ -102,7 +102,7 @@ public class OauthController {
                 default:
                     return ResponseResult.paramError("不支持的授权类型: " + grantType);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("登录处理异常: grant_type={}", grantType, e);
             return ResponseResult.error("登录失败: " + e.getMessage());
         }
@@ -258,7 +258,7 @@ public class OauthController {
                 return passwordEncoder.matches(clientSecret, client.getClientSecret());
             }
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.warn("客户端验证异常: clientId={},拒绝登录: {}", clientId, e.getMessage());
             return false;
         }
@@ -281,7 +281,7 @@ public class OauthController {
                     if (StringUtil.isNotEmpty(userId) && StringUtil.isNotEmpty(clientId)) {
                         stringRedisTemplate.delete(USER_TOKEN_INDEX_PREFIX + clientId + ":" + userId);
                     }
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.warn("登出时解析Token数据异常", e);
                 }
             }
@@ -304,7 +304,7 @@ public class OauthController {
         try {
             JSONObject userData = JSONObject.parseObject(userJson);
             return ResponseResult.ok(userData);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseResult.paramError("Token解析失败");
         }
     }

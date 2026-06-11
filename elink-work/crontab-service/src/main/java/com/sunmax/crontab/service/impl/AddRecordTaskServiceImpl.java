@@ -89,7 +89,7 @@ public class AddRecordTaskServiceImpl implements AddRecordTaskService {
 
     public static void main(String[] args) {
         List<String> instanceExpressionParamList = getInstanceExpressionParamList("jd@11-jd@93");
-        System.out.println(instanceExpressionParamList);
+        log.info("{}", instanceExpressionParamList);
     }
 
     /**

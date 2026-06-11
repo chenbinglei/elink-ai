@@ -5,6 +5,7 @@ import org.apache.logging.log4j.core.util.CronExpression;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.ParseException;
 
 @Slf4j
 public class CronUtil {
@@ -121,7 +122,7 @@ public class CronUtil {
             SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return dataFormat.format(date);
             //dateString为转换后的日期格式
-        }catch (Exception e){
+        }catch (ParseException e){
             log.error("cron获取上次执行时间异常", e);
         }
         return null;
@@ -135,7 +136,7 @@ public class CronUtil {
             SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return dataFormat.format(date);
             //dateString为转换后的日期格式
-        }catch (Exception e){
+        }catch (ParseException e){
             log.error("cron获取下次执行时间异常", e);
         }
         return null;

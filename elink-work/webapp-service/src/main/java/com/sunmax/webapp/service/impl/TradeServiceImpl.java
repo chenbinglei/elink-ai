@@ -161,14 +161,14 @@ public class TradeServiceImpl implements TradeService {
                 jsapiService(wechatPayVo.getMchId(), wechatPayVo.getApiV3Key(), wechatPayVo.getSerialNo(), wechatPayVo.getKeyPemPath(),
                         wechatPayVo.getApiType(), wechatPayVo.getRsaSerialNo(), wechatPayVo.getPubKeyPath());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信支付初始化失败", e);
             return ResponseResult.error("微信支付初始化失败");
         }
         try {
             // 调用接口
             return ResponseResult.ok(payServiceMap.get(wechatPayVo.getMchId()).prepayWithRequestPayment(request));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信支付统一下单失败", e);
             return ResponseResult.error("微信支付统一下单失败");
         }
@@ -243,7 +243,7 @@ public class TradeServiceImpl implements TradeService {
                 jsapiService(payOrderVo.getMchId(), payOrderVo.getApiV3Key(), payOrderVo.getSerialNo(), payOrderVo.getKeyPemPath(),
                         payOrderVo.getApiType(), payOrderVo.getRsaSerialNo(), payOrderVo.getPubKeyPath());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信支付初始化失败", e);
             return ResponseResult.error("微信支付初始化失败");
         }
@@ -261,7 +261,7 @@ public class TradeServiceImpl implements TradeService {
                 queryOrderByOutTradeNoRequest.setOutTradeNo(payOrderVo.getOrderNum());
                 return ResponseResult.ok(payServiceMap.get(payOrderVo.getMchId()).queryOrderByOutTradeNo(queryOrderByOutTradeNoRequest));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信支付查询订单失败", e);
             return ResponseResult.error("微信支付查询订单失败");
         }
@@ -287,14 +287,14 @@ public class TradeServiceImpl implements TradeService {
                 jsapiService(wechatRefundVo.getMchId(), wechatRefundVo.getApiV3Key(), wechatRefundVo.getSerialNo(), wechatRefundVo.getKeyPemPath(),
                         wechatRefundVo.getApiType(), wechatRefundVo.getRsaSerialNo(), wechatRefundVo.getPubKeyPath());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信退款初始化失败", e);
             return ResponseResult.error("微信退款初始化失败");
         }
         try {
             // 调用接口
             return ResponseResult.ok(refundServiceMap.get(wechatRefundVo.getMchId()).create(createRequest));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信退款失败", e);
             log.error("订单号:{}, 交易金额:{}, 退款金额：{}", wechatRefundVo.getPayOrderNum(), wechatRefundVo.getPayMoney(), wechatRefundVo.getRefundMoney());
             return ResponseResult.error("微信退款失败");
@@ -360,14 +360,14 @@ public class TradeServiceImpl implements TradeService {
                 jsapiService(refundOrderVo.getMchId(), refundOrderVo.getApiV3Key(), refundOrderVo.getSerialNo(), refundOrderVo.getKeyPemPath(),
                         refundOrderVo.getApiType(), refundOrderVo.getRsaSerialNo(), refundOrderVo.getPubKeyPath());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信退款初始化失败", e);
             return ResponseResult.error("微信退款初始化失败");
         }
         try {
             // 调用接口
             return ResponseResult.ok(refundServiceMap.get(refundOrderVo.getMchId()).queryByOutRefundNo(request));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询微信退款订单失败", e);
             return ResponseResult.error("查询微信退款订单失败");
         }
@@ -411,7 +411,7 @@ public class TradeServiceImpl implements TradeService {
             }
             //响应失败返回的信息
             return ResponseResult.paramError(JSONObject.parseObject(httpResponse.body()).getString("message"));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信商户转账失败", e);
             return ResponseResult.error("微信商户转账失败");
         }
@@ -516,7 +516,7 @@ public class TradeServiceImpl implements TradeService {
             }
             //响应失败返回的信息
             return ResponseResult.paramError(JSONObject.parseObject(httpResponse.body()).getString("message"));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("微信商户转账失败", e);
             return ResponseResult.error("微信商户转账失败");
         }

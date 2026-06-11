@@ -139,7 +139,7 @@ public class ConfigFuncPointServiceImpl implements ConfigFuncPointService {
                 });
             }
             result.setDataMap(dataMap);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电枪系统变量图表数据失败", e);
             result.setDataMap(dataMap);
             return ResponseResult.error("程序出现异常", result);
@@ -465,7 +465,7 @@ public class ConfigFuncPointServiceImpl implements ConfigFuncPointService {
                 }
             }
             result.setDataMap(dataMap);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询站点/设备系统变量图表数据", e);
             result.setDataMap(dataMap);
             return ResponseResult.error("程序出现异常", result);
@@ -545,7 +545,7 @@ public class ConfigFuncPointServiceImpl implements ConfigFuncPointService {
                 }
             }
             result.setDataMap(dataMap);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询设备系统变量图表数据", e);
             result.setDataMap(dataMap);
             return ResponseResult.error("程序出现异常", result);
@@ -994,7 +994,7 @@ public class ConfigFuncPointServiceImpl implements ConfigFuncPointService {
                 dataMap.put(siteListQueryVo.getUserId(), fieldData);
             }
             result.setDataMap(dataMap);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询设备系统变量图表数据", e);
             result.setDataMap(dataMap);
             return ResponseResult.error("程序出现异常", result);

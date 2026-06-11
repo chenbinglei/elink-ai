@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +47,7 @@ public class DeviceCommonUtil {
         LocalDateTime localDateTime;
         try {
             localDateTime = DateUtil.strToLocalDateTime(startTime).minusDays(1);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Invalid date format for startTime: {}", startTime, e);
             return;
         }
@@ -117,7 +119,7 @@ public class DeviceCommonUtil {
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             log.error("Failed to access or modify fields in result object.", e);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Unexpected error during curve data population.", e);
         }
     }
@@ -134,7 +136,7 @@ public class DeviceCommonUtil {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDate.parse(dateStr, formatter);
             return false;
-        } catch (Exception e) {
+        } catch (DateTimeException e) {
             return true;
         }
     }
@@ -341,8 +343,7 @@ public class DeviceCommonUtil {
         } catch (NoSuchMethodException e) {
             // 【关键点】：如果类中没有这个方法 (如 SiteSeCurveDataDto)，直接捕获并忽略，不报错
             // log.debug("类 {} 不包含方法 {}, 跳过处理", clazz.getSimpleName(), getterName);
-        } catch (Exception e) {
-            // 其他反射异常 (如 IllegalAccessException)
+        } catch (IllegalAccessException | InvocationTargetException e) {
             log.warn("反射调用列表添加失败: {}.{}", clazz.getSimpleName(), getterName, e);
         }
     }

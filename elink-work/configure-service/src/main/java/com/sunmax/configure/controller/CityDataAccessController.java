@@ -72,7 +72,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询充电站信息接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -111,7 +111,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询充电站接口状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -146,7 +146,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询充电状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -192,7 +192,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询统计信息接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);

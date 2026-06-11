@@ -17,7 +17,7 @@ public class RedisDeviceUtil {
                 return new DeviceModel();
             }
             return JsonUtil.objectToEntity(RedisUtil.get(deviceKey), DeviceModel.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取redis中设备实时数据失败", e);
             return null;
         }
@@ -35,7 +35,7 @@ public class RedisDeviceUtil {
                 }
             });
             return resultList;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取redis中设备实时数据失败", e);
             return null;
         }
@@ -63,7 +63,7 @@ public class RedisDeviceUtil {
                 deviceModel.setDeviceNumber(deviceNumber);
                 RedisUtil.set(deviceKey, deviceModel);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录存取数据失败的错误日志
             log.error("存取redis中设备实时数据失败", e);
         } finally {
@@ -86,7 +86,7 @@ public class RedisDeviceUtil {
                 String deviceKey = KeyUtil.DEVICE_KEY + deviceNumber;
                 RedisUtil.delete(deviceKey);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("删除设备实时数据报错", e);
         } finally {
             RedisLockUtil.unlock(lockKey);

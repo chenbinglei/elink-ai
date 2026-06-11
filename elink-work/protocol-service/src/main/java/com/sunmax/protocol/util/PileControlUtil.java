@@ -120,7 +120,7 @@ public class PileControlUtil {
                     RedisGeneralUtil.setPileRealModel(pileCode, pileRealModel);
                 }
             });
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录缓存订单信息失败的日志
             log.error("缓存订单信息失败", e);
         }

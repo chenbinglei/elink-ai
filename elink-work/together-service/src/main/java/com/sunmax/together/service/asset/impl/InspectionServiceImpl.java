@@ -51,6 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -217,7 +218,10 @@ public class InspectionServiceImpl implements InspectionService {
                 inspectionItemDao.saveAll(inspectionItemList);
             }
             return ResponseResult.ok(errDescList);
-        } catch (Exception e) {
+        } catch (IOException e) {
+            log.error("导入巡检项配置数据IO异常", e);
+            return ResponseResult.error(ResponseResult.FAIL);
+        } catch (RuntimeException e) {
             log.error("导入巡检项配置数据异常", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }

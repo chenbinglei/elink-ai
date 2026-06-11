@@ -43,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.io.IOException;
 
 @Configuration
 @Slf4j
@@ -88,7 +89,7 @@ public class LargeRealWebSocketHandler extends TextWebSocketHandler {
         if (session != null && session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(message));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 log.error("推送大屏实时数据失败", e);
             }
         }

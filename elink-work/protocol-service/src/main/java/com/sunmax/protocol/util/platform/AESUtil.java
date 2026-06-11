@@ -2,6 +2,7 @@ package com.sunmax.protocol.util.platform;
 
 import cn.hutool.crypto.symmetric.AES;
 import lombok.extern.slf4j.Slf4j;
+import java.security.GeneralSecurityException;
 
 
 
@@ -21,7 +22,7 @@ public class AESUtil {
     public static String encrypt(String key, String iv, String data) {
         try {
             return new AES(MODE, PADDING, key.getBytes(), iv.getBytes()).encryptBase64(data);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
 //            log.error("数据加密失败", e);
             return null;
         }
@@ -36,14 +37,14 @@ public class AESUtil {
     public static String desEncrypt(String key, String iv, String data) {
         try {
             return new AES(MODE, PADDING, key.getBytes(), iv.getBytes()).decryptStr(data);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
 //            log.error("数据解密失败", e);
             return null;
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(AESUtil.encrypt("sunmaxkey0503000","sunmaxiv05030000", "wanneng123456"));
+        log.info(AESUtil.encrypt("sunmaxkey0503000","sunmaxiv05030000", "wanneng123456"));
     }
 
 

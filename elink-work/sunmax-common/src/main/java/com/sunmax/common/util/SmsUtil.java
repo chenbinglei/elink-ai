@@ -1,4 +1,5 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -13,6 +14,7 @@ import com.aliyuncs.profile.IClientProfile;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Slf4j
 public class SmsUtil {
 
     //产品名称:云通信短信API产品,开发者无需替换
@@ -102,35 +104,35 @@ public class SmsUtil {
 
         //发短信
         SendSmsResponse response = sendSms("14763808760","SMS_177553311","晟曼科技","{\"name\":\"Tom\", \"code\":\"123\"}");
-        System.out.println("短信接口返回的数据----------------");
-        System.out.println("Code=" + response.getCode());
-        System.out.println("Message=" + response.getMessage());
-        System.out.println("RequestId=" + response.getRequestId());
-        System.out.println("BizId=" + response.getBizId());
+        log.info("短信接口返回的数据----------------");
+        log.info("Code=" + response.getCode());
+        log.info("Message=" + response.getMessage());
+        log.info("RequestId=" + response.getRequestId());
+        log.info("BizId=" + response.getBizId());
 
         Thread.sleep(3000L);
 
         //查明细
         if(response.getCode() != null && response.getCode().equals("OK")) {
             QuerySendDetailsResponse querySendDetailsResponse = querySendDetails(response.getBizId());
-            System.out.println("短信明细查询接口返回数据----------------");
-            System.out.println("Code=" + querySendDetailsResponse.getCode());
-            System.out.println("Message=" + querySendDetailsResponse.getMessage());
+            log.info("短信明细查询接口返回数据----------------");
+            log.info("Code=" + querySendDetailsResponse.getCode());
+            log.info("Message=" + querySendDetailsResponse.getMessage());
             int i = 0;
             for(QuerySendDetailsResponse.SmsSendDetailDTO smsSendDetailDTO : querySendDetailsResponse.getSmsSendDetailDTOs())
             {
-                System.out.println("SmsSendDetailDTO["+i+"]:");
-                System.out.println("Content=" + smsSendDetailDTO.getContent());
-                System.out.println("ErrCode=" + smsSendDetailDTO.getErrCode());
-                System.out.println("OutId=" + smsSendDetailDTO.getOutId());
-                System.out.println("PhoneNum=" + smsSendDetailDTO.getPhoneNum());
-                System.out.println("ReceiveDate=" + smsSendDetailDTO.getReceiveDate());
-                System.out.println("SendDate=" + smsSendDetailDTO.getSendDate());
-                System.out.println("SendStatus=" + smsSendDetailDTO.getSendStatus());
-                System.out.println("Template=" + smsSendDetailDTO.getTemplateCode());
+                log.info("SmsSendDetailDTO["+i+"]:");
+                log.info("Content=" + smsSendDetailDTO.getContent());
+                log.info("ErrCode=" + smsSendDetailDTO.getErrCode());
+                log.info("OutId=" + smsSendDetailDTO.getOutId());
+                log.info("PhoneNum=" + smsSendDetailDTO.getPhoneNum());
+                log.info("ReceiveDate=" + smsSendDetailDTO.getReceiveDate());
+                log.info("SendDate=" + smsSendDetailDTO.getSendDate());
+                log.info("SendStatus=" + smsSendDetailDTO.getSendStatus());
+                log.info("Template=" + smsSendDetailDTO.getTemplateCode());
             }
-            System.out.println("TotalCount=" + querySendDetailsResponse.getTotalCount());
-            System.out.println("RequestId=" + querySendDetailsResponse.getRequestId());
+            log.info("TotalCount=" + querySendDetailsResponse.getTotalCount());
+            log.info("RequestId=" + querySendDetailsResponse.getRequestId());
         }
 
     }*/

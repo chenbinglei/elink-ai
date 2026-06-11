@@ -106,7 +106,7 @@ public class LocalCacheUtil {
         public void run() {
             try {
                 LocalCacheUtil.removeAll();
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 logger.info("定期删除策略异常", e);
             }
         }

@@ -485,7 +485,7 @@ public class ModelServiceImpl implements ModelService {
                             deleteKeys.forEach(key -> deviceModel.getFunctionMap().remove(key));
                             RedisDeviceUtil.setDevice(device.getDeviceNumber(), deviceModel);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("模型编辑功能点数据存redis报错", e);
                     }
                 });
@@ -1039,7 +1039,7 @@ public class ModelServiceImpl implements ModelService {
                                     RedisDeviceUtil.setDevice(device.getDeviceNumber(), deviceModel);
                                 }
                             }
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             log.error("模型编辑功能点数据存redis报错", e);
                         }
                     });

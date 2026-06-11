@@ -697,7 +697,7 @@ public class PileRecordUtil {
                                     } else {
                                         settlementRecord.setSettlementState(2);
                                     }
-                                } catch (Exception e) {
+                                } catch (RuntimeException e) {
                                     log.error("更新会员钱包失败", e);
                                     settlementRecord.setSettlementState(2);
                                 }
@@ -728,7 +728,7 @@ public class PileRecordUtil {
                                         settlementRecord.setSettlementState(3);
                                     }
                                 }
-                            } catch (Exception e) {
+                            } catch (RuntimeException e) {
                                 log.error("微信退款失败", e);
                             }
                             break;

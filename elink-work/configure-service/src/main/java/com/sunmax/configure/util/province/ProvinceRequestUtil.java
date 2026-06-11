@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
+import java.io.IOException;
 
 /**
  * 省请求工具类
@@ -61,7 +62,7 @@ public class ProvinceRequestUtil {
                 log.info("AccessToken：{}", resultMap.get("AccessToken"));
                 tokenMap.put(commonVo.getOperatorId(), resultMap.get("AccessToken"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取数据失败: ", e);
         }
     }
@@ -125,7 +126,7 @@ public class ProvinceRequestUtil {
                 provinceRecord.setUpdateTime(updateTime);
                 provinceRecordDao.save(provinceRecord);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("省平台请求失败: ", e);
         }
         return result;

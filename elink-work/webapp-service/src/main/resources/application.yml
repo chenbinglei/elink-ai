@@ -35,7 +35,7 @@ spring:
       password: ${MYSQL_PASSWORD}
       hikari:
         minimum-idle: 1
-        idle-timeout: 600000
+        idle-timeout: 60000
         maximum-pool-size: 10
         auto-commit: true
         pool-name: MyHikariCP

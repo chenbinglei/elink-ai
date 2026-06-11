@@ -59,7 +59,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         order_inserts: true
         order_updates: true
-        generate_statistics: true
+        generate_statistics: false
         jdbc.batch_size: 50
 
   data:

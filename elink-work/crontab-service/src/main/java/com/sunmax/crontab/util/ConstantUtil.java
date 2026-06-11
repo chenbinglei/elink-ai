@@ -33,7 +33,7 @@ public class ConstantUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getConstantValues(NodeVarParamVo.class));
+        log.info("{}", getConstantValues(NodeVarParamVo.class));
     }
 
 }

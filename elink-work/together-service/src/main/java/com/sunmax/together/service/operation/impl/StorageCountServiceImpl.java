@@ -404,14 +404,12 @@ public class StorageCountServiceImpl implements StorageCountService {
                     });
         }
 //        long dataStartTime = System.currentTimeMillis();
-//        System.out.println("查询电价消耗多少毫秒: " + (dataStartTime - electStartTime) + " 毫秒");
 
         //根据多个设备id和日期查询储能系统下面的电表功能点历史数据
         DeviceHistoryQueryVo deviceQueryVo = getDeviceHistoryQueryVo(deviceIds, historyStartDate, endDate);
         //获取每天的电量,日期(年月日)->(时分秒 ->(功能点标识 -> 电量))
         Map<String, Map<String, List<NodeDifHistoryDto>>> dataMap = dataService.findNodeDifHistoryListFeign(deviceQueryVo).getData();
 //        long costHistoryTime = System.currentTimeMillis();
-//        System.out.println("查询数据消耗多少毫秒: " + (costHistoryTime - dataStartTime) + " 毫秒");
         Map<String, Map<String, Map<String, Double>>> dayQtMap = dataMap.values()
                 .stream().flatMap(s -> s.values().stream().flatMap(Collection::stream))
                 .filter(c -> StringUtil.isNotEmpty(c.getFirstDateTime()))
@@ -430,19 +428,16 @@ public class StorageCountServiceImpl implements StorageCountService {
                         )
                 ));
 //        long costHistoryTime1 = System.currentTimeMillis();
-//        System.out.println("转换数据消耗多少毫秒: " + (costHistoryTime1 - costHistoryTime) + " 毫秒");
 
         //获取历史累计收益(放电收入-充电成本)
         BigDecimal historyIncome = getStorageHistoryCost(historyStartDate, historyEndDate, dayQtMap, purchaseElectMap, saleElectMap);
 
 //        long costStartTime = System.currentTimeMillis();
-//        System.out.println("统计历史收益消耗多少毫秒: " + (costStartTime - costHistoryTime1) + " 毫秒");
 
         //获取每天的尖峰平谷成本和收入
         Map<String, Map<String, BigDecimal>> dayCostMap = getStorageCostMap(startDate, endDate, dayQtMap, purchaseElectMap, saleElectMap);
 
 //        long handleStartTime = System.currentTimeMillis();
-//        System.out.println("统计当前收益消耗多少毫秒: " + (handleStartTime - costStartTime) + " 毫秒");
 
         //对数据进行组装
         for (String date : dateList) {
@@ -535,7 +530,6 @@ public class StorageCountServiceImpl implements StorageCountService {
             result.getTotalIncomeList().add(DoubleUtil.getToBigDecimal(historyIncome));
         }
 //        long handleEndTime = System.currentTimeMillis();
-//        System.out.println("处理数据解析多少毫秒: " + (handleEndTime - handleStartTime) + " 毫秒");
         return ResponseResult.ok(result);
     }
 

@@ -148,7 +148,7 @@ public class WebMqttDataHandler {
                     .build();
             String topicName = WebTopicConstant.TOPIC_PREFIX + terminalCode + WebTopicConstant.DEVICE_RESPONSE;
             WebMqttConfig.sendToMqtt(terminalCode, topicName, iegTopicVo);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("网关上线应答响应数据失败", e);
         }
     }
@@ -215,7 +215,7 @@ public class WebMqttDataHandler {
                     alarmRecordDao.saveAll(alarmRecordList);
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("网关下线处理异常失败", e);
         }
     }
@@ -309,7 +309,7 @@ public class WebMqttDataHandler {
                     RedisGeneralUtil.setGatewayRealModel(terminalCode, gatewayRealModel);
                 }
             });
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("更新子设备失败", e);
         }
     }
@@ -345,7 +345,7 @@ public class WebMqttDataHandler {
                     }
                 });
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT费率响应处理失败", e);
         }
     }
@@ -446,7 +446,7 @@ public class WebMqttDataHandler {
             //下发启动主题
             String topicName = WebTopicConstant.TOPIC_PREFIX + terminalCode + WebTopicConstant.DEVICE_COMMAND;
             WebMqttConfig.sendToMqtt(terminalCode, topicName, iegTopicVo);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT固件数据块响应处理失败", e);
         }
     }
@@ -515,7 +515,7 @@ public class WebMqttDataHandler {
             if (MapUtils.isNotEmpty(deviceUpdateVo.getDeviceUpdateInfoMap()) && StringUtil.isNotEmpty(deviceUpdateVo.getEndTime())) {
                 deviceService.batchUpdateDeviceTask(deviceUpdateVo);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT网关接收完成上报处理失败", e);
         }
     }
@@ -571,7 +571,7 @@ public class WebMqttDataHandler {
             deviceUpdateVo.setDeviceUpdateInfoMap(deviceUpdateInfoMap);
             deviceUpdateVo.setEndTime(DateUtil.localDateTimeToStr(LocalDateTime.now()));
             deviceService.batchUpdateDeviceTask(deviceUpdateVo);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT电桩接收完成上报数据", e);
         }
     }
@@ -621,7 +621,7 @@ public class WebMqttDataHandler {
             String topicName = WebTopicConstant.TOPIC_PREFIX + terminalCode + WebTopicConstant.DEVICE_RESPONSE;
             //发送数据
             WebMqttConfig.sendToMqtt(terminalCode, topicName, iegTopicVo);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT处理鉴权请求数据报错", e);
         }
     }
@@ -696,7 +696,7 @@ public class WebMqttDataHandler {
                 pileStartVo.setPrepayMoney(new BigDecimal(5000));
                 SpringBeanUtil.getBean(PileCtrlService.class).pileStart(pileStartVo);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT处理策略响应数据报错", e);
         }
     }
@@ -767,7 +767,7 @@ public class WebMqttDataHandler {
                     deviceService.batchUpdateDeviceTask(deviceUpdateVo);
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT处理控制板响应数据报错", e);
         }
     }
@@ -808,7 +808,7 @@ public class WebMqttDataHandler {
             controlRecordEntity.setCreateTime(new Date(1000 * gatewayLogVo.getCmdTime()).toInstant().atOffset(ZoneOffset.of("+8")).toLocalDateTime());
             controlRecordEntity.setUpdateTime(LocalDateTime.now());
             controlRecordDao.save(controlRecordEntity);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT功率控制日志处理", e);
         }
     }
@@ -926,7 +926,7 @@ public class WebMqttDataHandler {
             if (CollectionUtils.isNotEmpty(updateAlarmList)) {
                 PileRecordUtil.updateAlarmStatus(updateAlarmList, alarmRecordDao);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT更新网关状态报错", e);
         }
 
@@ -1213,7 +1213,7 @@ public class WebMqttDataHandler {
                 if (CollectionUtils.isNotEmpty(updateAlarmRecordList)) {
                     PileRecordUtil.updateAlarmStatus(updateAlarmRecordList, alarmRecordDao);
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("外网MQTT解析电桩故障失败", e);
             }
         }
@@ -1358,7 +1358,7 @@ public class WebMqttDataHandler {
                         RedisGeneralUtil.setPileRealModel(pileCode, pileRealModel);
                     }
                 });
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("外网MQTT解析电桩数据失败", e);
             }
         });
@@ -1377,7 +1377,7 @@ public class WebMqttDataHandler {
                     PileRecordUtil.saveMqttRecord(pileCode, String.valueOf(devLogReportVo.getGunCode()), 2, 8, 1, IEGConstant.Param.PILE_LOG, devLogReportVo);
                 }
             });
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("内网MQTT日志数据上报失败", e);
         }
     }
@@ -1472,7 +1472,7 @@ public class WebMqttDataHandler {
                     subDeviceMap.forEach((key, value) -> DeviceEventDataSink.parseSubDeviceEvent(null, key, value, deviceService));
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT解析电桩ieg遥信遥测数据失败", e);
         }
     }
@@ -1524,7 +1524,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecFlag(true);
                 demandModel.setRecCode(0);//执行成功
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT费率下发响应处理报错", e);
         }
     }
@@ -1570,7 +1570,7 @@ public class WebMqttDataHandler {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT启动响应处理报错", e);
         }
     }
@@ -1702,7 +1702,7 @@ public class WebMqttDataHandler {
                     orderRecordDao.save(orderRecord);
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT启动事件处理报错", e);
         }
 
@@ -1728,7 +1728,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecMsg(pileStopResponseVo.getFaileReason());
                 demandModel.setSerialNum(pileStopResponseVo.getRecordId());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT停止响应处理报错", e);
         }
     }
@@ -1753,7 +1753,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecMsg(pileStopEventVo.getFaileReason());
                 demandModel.setSerialNum(pileStopEventVo.getRecordId());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT停止事件处理报错", e);
         }
     }
@@ -1839,7 +1839,7 @@ public class WebMqttDataHandler {
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT上报BMS数据处理报错", e);
         }
     }
@@ -1858,7 +1858,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecFlag(true);
                 demandModel.setRecCode(pileCtrlResponseVo.getResponseResult());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT功率控制响应处理报错", e);
         }
     }
@@ -2127,7 +2127,7 @@ public class WebMqttDataHandler {
 
             //保存订单记录数据
             orderRecordDao.save(orderRecord);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT保存订单记录数据处理报错", e);
         }
     }
@@ -2155,7 +2155,7 @@ public class WebMqttDataHandler {
                 gateWayControlDto.getControlValueList().add(new GateWayControlDto.ControlValue(5, gwLoadParamSetResponseVo.getMonitorPeriod().toString()));
                 demandModel.setRecMsg(gateWayControlDto);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT网关参数下发响应处理失败", e);
         }
     }
@@ -2196,7 +2196,7 @@ public class WebMqttDataHandler {
                 gateWayPolicyDto.setCmdType(gwGeneralParamResponseVo.getCmdType());
                 demandModel.setRecMsg(JSON.toJSON(gateWayPolicyDto));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT网关通用参数下发响应处理失败", e);
         }
     }
@@ -2217,7 +2217,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(StringUtil.isNotEmpty(gwPVControlSetResponseVo.getResult()) ? gwPVControlSetResponseVo.getResult() - 1 : 1);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT调控需求下发响应失败", e);
         }
     }
@@ -2238,7 +2238,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(StringUtil.isNotEmpty(gwPVControlStopResponseVo.getResult()) ? gwPVControlStopResponseVo.getResult() - 1 : 1);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT调控需求终止下发响应失败", e);
         }
     }
@@ -2258,7 +2258,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecFlag(true);
                 demandModel.setRecCode(pileResetResponseSubscribeVo.getResult());//执行结果
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT电桩复位响应失败", e);
         }
     }
@@ -2279,7 +2279,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(gatewayStatusVo));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT网关状态查询响应失败", e);
         }
     }
@@ -2300,7 +2300,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(serviceList));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT服务列表查询响应失败", e);
         }
     }
@@ -2321,7 +2321,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(syncClockVo));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT同步时钟响应失败", e);
         }
     }
@@ -2342,7 +2342,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(rebootVo));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT网关重启响应失败", e);
         }
     }
@@ -2363,7 +2363,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(licenseStatusVo));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT许可状态查询响应失败", e);
         }
     }
@@ -2384,7 +2384,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(licenseKeyVo));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT获取设备key响应失败", e);
         }
     }
@@ -2405,7 +2405,7 @@ public class WebMqttDataHandler {
                 demandModel.setRecCode(0);//执行成功
                 demandModel.setRecMsg(JSON.toJSON(licenseVo));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT下发许可响应失败", e);
         }
     }

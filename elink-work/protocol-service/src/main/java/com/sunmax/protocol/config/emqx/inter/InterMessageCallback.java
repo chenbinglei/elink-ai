@@ -51,7 +51,7 @@ public class InterMessageCallback implements MqttCallback {
                 String content = new String(message.getPayload(), StandardCharsets.UTF_8);
                 CMDTopicVo cmdTopicVo = JSONObject.parseObject(content, CMDTopicVo.class);
                 protocolRecMain(cmdTopicVo);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("内网MQTT处理数据失败", e);
             }
         });

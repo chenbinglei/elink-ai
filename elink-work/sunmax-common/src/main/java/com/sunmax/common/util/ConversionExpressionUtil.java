@@ -1,4 +1,5 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
 import com.sunmax.common.constant.FunctionqConstant;
 import com.sunmax.common.util.oss.FileUtil;
@@ -12,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class ConversionExpressionUtil {
     // 表达式字符合法性校验正则模式，静态常量化可以降低每次使用都要编译地消耗
     private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[A-Za-z0-9\\.+-/*()= ]+");
@@ -66,7 +68,6 @@ public class ConversionExpressionUtil {
                             }else if(i == expression.length()-1){
                                 break;
                             }
-                            // System.out.println(subExpression);
                         }else{
                             varStack.push(temp);
                         }
@@ -441,7 +442,7 @@ public class ConversionExpressionUtil {
         return resultList.stream().distinct().collect(Collectors.toList());
     }*/
     public static void main(String[] args) {
-        System.out.println(getInstanceExpressionParamList("gnd@2c99698b9b076b54019b0807d7840183@active_power+gnd@2c99698b9b076b54019b080879d30184@active_power+gnd@2c99698b9b076b54019b080915d40185@active_power+gnd@2c99698b9b076b54019b080a97510186@active_power+gnd@2c99698b9b076b54019b08056b230181@active_power+gnd@2c99698b9b076b54019b0807400a0182@active_power-gnd@2c99698b9b2025a0019b26631935014c@pcs_activepower-gnd@2c99698b9b2025a0019b26639ebc014d@pcs_activepower-gnd@2c99698b9b2025a0019b266408aa014e@pcs_activepower-gnd@2c99698b9b2025a0019b2664779d014f@pcs_activepower+gnd@2c99698b9b076b54019b080f00cf018f@total_active_power"));
+        log.info("{}", getInstanceExpressionParamList("gnd@2c99698b9b076b54019b0807d7840183@active_power+gnd@2c99698b9b076b54019b080879d30184@active_power+gnd@2c99698b9b076b54019b080915d40185@active_power+gnd@2c99698b9b076b54019b080a97510186@active_power+gnd@2c99698b9b076b54019b08056b230181@active_power+gnd@2c99698b9b076b54019b0807400a0182@active_power-gnd@2c99698b9b2025a0019b26631935014c@pcs_activepower-gnd@2c99698b9b2025a0019b26639ebc014d@pcs_activepower-gnd@2c99698b9b2025a0019b266408aa014e@pcs_activepower-gnd@2c99698b9b2025a0019b2664779d014f@pcs_activepower+gnd@2c99698b9b076b54019b080f00cf018f@total_active_power"));
     }
 
     /**

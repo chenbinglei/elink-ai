@@ -1,4 +1,5 @@
 package com.sunmax.webapp.controller;
+import lombok.extern.slf4j.Slf4j;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.util.ResponseResult;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("trade")
 @Tag(name = "交易管理")
 @Hidden()
+@Slf4j
 public class TradeController {
 
     @Autowired

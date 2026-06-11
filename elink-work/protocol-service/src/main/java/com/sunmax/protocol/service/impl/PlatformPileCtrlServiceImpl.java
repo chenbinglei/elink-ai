@@ -67,7 +67,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (StringUtil.isEmpty(pileCode)) {
                 return ResponseResult.paramError("获取充电桩计费模板入参校验失败");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取充电桩计费模板入参报错:", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -134,7 +134,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (!isValidStart(platformPileStartVo)) {
                 return ResponseResult.paramError("启动充电桩入参数据校验失败");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("启动充电桩入参报错:", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -205,7 +205,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             // 更新控制校验
             PileControlUtil.updatePileControl(pileControlVo, crontabService);
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("启动充电桩失败", e);
             resultData.setResult(500); // 未知错误
             // 更新控制校验
@@ -279,7 +279,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (!isValidStop(platformPileStopVo)) {
                 return ResponseResult.paramError("停止充电桩入参校验失败");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("停止充电桩入参报错:", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -325,7 +325,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
                 resultData.setResult(recCode);
                 resultData.setFailDetailReason(asyncTaskResult.getString("recMsg"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录停止操作失败的异常日志
             log.error("停止充电桩失败", e);
             // 设置未知错误的失败原因
@@ -386,7 +386,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
             if (!isValidCtrl(platformPowerCtrlVo)) {
                 return ResponseResult.paramError("功率控制入参数据校验失败");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("功率控制入参报错:", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -432,7 +432,7 @@ public class PlatformPileCtrlServiceImpl implements PlatformPileCtrlService {
                 Integer recCode = asyncTaskResult.getInteger("recCode");
                 result.setFailReason(recCode);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录停止操作失败的异常日志
             log.error("充电桩功率控制处理异常", e);
             // 设置未知错误的失败原因
