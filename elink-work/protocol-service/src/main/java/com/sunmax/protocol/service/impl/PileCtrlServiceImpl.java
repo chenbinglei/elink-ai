@@ -1,8 +1,8 @@
 package com.sunmax.protocol.service.impl;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.protocol.PileLogResultDto;
 import com.sunmax.common.dto.protocol.PileResultDto;
@@ -125,7 +125,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
             } else {
                 return ResponseResult.error("启动充电桩失败", result);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("启动充电桩失败", e);
             PileDemand.deleteDemand(keyId);
             result.setResult(500); // 未知错误
@@ -187,7 +187,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("停止充电桩失败", result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录停止操作失败的异常日志
             log.error("停止充电桩失败", e);
             PileDemand.deleteDemand(keyId);
@@ -253,7 +253,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("功率控制充电桩失败", result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             PileDemand.deleteDemand(keyId);
             // 记录操作失败的异常日志
             log.error("功率控制充电桩处理异常", e);
@@ -316,7 +316,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("电桩费率下发失败", result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("下发充电桩费率处理异常", e);
             //移除需求
@@ -380,7 +380,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("电桩升级下发失败", result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("电桩升级处理异常", e);
             //移除需求
@@ -458,7 +458,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
             }
             resultList = resultList.stream().peek(result -> result.setFailDetailReason("电桩升级下发失败")).collect(Collectors.toList());
             return ResponseResult.error("电桩升级下发失败", resultList);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("电桩升级处理异常", e);
             //移除需求
@@ -503,7 +503,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("控制板请求失败");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("控制板请求处理异常", e);
             //移除需求
@@ -554,7 +554,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.paramError(ResponseResult.FAIL);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("车辆信息请求处理异常", e);
             //移除需求
@@ -616,7 +616,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("电桩日志查询处理失败");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("电桩日志查询处理异常", e);
             //移除需求
@@ -667,7 +667,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 }
             }
             return ResponseResult.error("电桩复位处理失败");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("电桩复位处理异常", e);
             //移除需求
@@ -716,7 +716,7 @@ public class PileCtrlServiceImpl implements PileCtrlService {
                 return ResponseResult.error("设置二维码处理失败");
             }
             return ResponseResult.error("设置二维码处理失败");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录操作失败的异常日志
             log.error("设置二维码处理异常", e);
             //移除需求

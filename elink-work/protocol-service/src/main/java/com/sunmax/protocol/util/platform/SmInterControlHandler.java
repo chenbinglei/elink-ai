@@ -1,6 +1,6 @@
 package com.sunmax.protocol.util.platform;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.model.general.PileRealModel;
 import com.sunmax.common.util.DoubleUtil;
@@ -148,7 +148,7 @@ public class SmInterControlHandler {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录启动事件发送失败的错误日志
             log.error("内网MQTT平台V2G协议启动事件发送失败", e);
         }
@@ -235,7 +235,7 @@ public class SmInterControlHandler {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 处理异常，记录推送失败的错误日志
             log.error("内网MQTT推送平台V2G协议电桩状态数据失败: ", e);
         }
@@ -289,7 +289,7 @@ public class SmInterControlHandler {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 处理异常，记录推送失败的错误日志
             log.error("内网MQTT推送平台V2G协议电桩停止事件数据失败: ", e);
         }
@@ -392,7 +392,7 @@ public class SmInterControlHandler {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录推送失败的错误日志
             log.error("内网MQTT推送平台V2G协议电桩记录数据失败: ", e);
         }

@@ -2,6 +2,7 @@ package com.sunmax.common.util;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 public class CalculateUtil {
 
@@ -15,7 +16,7 @@ public class CalculateUtil {
     public static Object eval(String formula) {
         try {
             return jse.eval(formula);
-        } catch (Exception e) {
+        } catch (ScriptException e) {
             return null;
         }
     }

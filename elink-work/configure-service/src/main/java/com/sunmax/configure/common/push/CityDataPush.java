@@ -1,6 +1,6 @@
 package com.sunmax.configure.common.push;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.sunmax.configure.dao.CityRecordDao;
 import com.sunmax.configure.dto.city.ConnectorStatusDto;
@@ -12,8 +12,8 @@ import com.sunmax.configure.vo.city.EquipChargeStatusVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
 

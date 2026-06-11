@@ -145,7 +145,7 @@ public class WechatServiceImpl implements WechatService {
             resultMap.put("timestamp", timestamp);
             resultMap.put("signature", signature);
         }
-        System.out.println(resultMap);
+        log.info("{}", resultMap);
     }
 
 }

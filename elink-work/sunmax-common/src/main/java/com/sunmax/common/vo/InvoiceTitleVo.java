@@ -1,75 +1,74 @@
 package com.sunmax.common.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 @Data
-@ApiModel(value = "InvoiceTitleVo", description = "发票抬头入参实体类")
+@Schema(description = "发票抬头入参实体类")
 public class InvoiceTitleVo {
     /**
      * 主键id
      */
-    @ApiModelProperty(value = "主键id")
+    @Schema(description = "主键id")
     private String id;
 
     /**
      * 小程序用户id
      */
-    @ApiModelProperty(value = "小程序用户id", required = true)
+    @Schema(description = "小程序用户id")
     private String appletUserId;
 
     /**
      * 发票类型 1-普通发票 2-专用发票
      */
-    @ApiModelProperty(value = "发票类型 1-普通 2-专用", required = true)
+    @Schema(description = "发票类型 1-普通 2-专用")
     private Integer invoiceType;
 
     /**
      * 抬头类型 1-个人 2-单位
      */
-    @ApiModelProperty(value = "抬头类型 1-个人 2-单位", required = true)
+    @Schema(description = "抬头类型 1-个人 2-单位")
     private Integer titleType;
 
     /**
      * 发票抬头名称
      */
-    @ApiModelProperty(value = "发票抬头名称", required = true)
+    @Schema(description = "发票抬头名称")
     private String invoiceTitle;
 
     /**
      * 纳税人识别号
      */
-    @ApiModelProperty(value = "纳税人识别号", required = true)
+    @Schema(description = "纳税人识别号")
     private String taxNumber;
 
     /**
      * 注册地址
      */
-    @ApiModelProperty(value ="注册地址")
+    @Schema(description ="注册地址")
     private String registeredAddress;
 
     /**
      * 注册电话
      */
-    @ApiModelProperty(value ="注册电话")
+    @Schema(description ="注册电话")
     private String registeredPhone;
 
     /**
      * 开户银行
      */
-    @ApiModelProperty(value ="开户银行")
+    @Schema(description ="开户银行")
     private String bankName;
 
     /**
      * 银行账号
      */
-    @ApiModelProperty(value ="银行账号")
+    @Schema(description ="银行账号")
     private String bankAccount;
 
     /**
      * 是否设为默认 1-是 2-否
      */
-    @ApiModelProperty(value ="是否设为默认 1-是 2-否", required = true)
+    @Schema(description ="是否设为默认 1-是 2-否")
     private Integer isDefault;
 
 }

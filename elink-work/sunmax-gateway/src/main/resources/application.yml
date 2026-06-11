@@ -1,22 +1,33 @@
 server:
   port: 5000
+   
 spring:
   application:
     name: sunmax-gateway
+  # 强制使用 Reactive 模式，防止 Servlet 依赖导致以 Servlet 容器启动
+  main:
+    web-application-type: reactive
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
   security:
     user:
       name: ${GATEWAY_USER:root}
       password: ${GATEWAY_PASSWORD:root}
-  main:
-    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_HOST:192.168.2.158}:8848
+        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        namespace: ${NACOS_NAMESPACE:public}
+        # 心跳配置 - 防止GC暂停或网络抖动导致心跳丢失
+        heartbeat-interval: 10000
+        heartbeat-timeout: 30000
+        ip-delete-timeout: 90000
     gateway:
       httpclient:
-        connect-timeout: 600000
-        response-timeout: 60s
+        connect-timeout: 5000
+        response-timeout: 15s
       discovery:
         locator:
           enabled: true
@@ -24,7 +35,16 @@ spring:
         cors-configurations:
           '[/**]':
             allow-credentials: true
-            allowed-origins: "*"
+            allowed-origins:
+              - http://localhost:9000
+              - http://localhost:9001
+              - http://localhost:9002
+              - http://192.168.2.158:9000
+              - http://192.168.2.158:9001
+              - http://192.168.2.158:9002
+              - https://os.enlinkitech.com
+              - https://derms.enlinkitech.com
+              - https://derms.enlinkitech.com:9536
             allowed-headers: "*"
             allowed-methods:
               - OPTIONS
@@ -38,123 +58,136 @@ spring:
           predicates:
             - Path=/sauth/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: sauth-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: system-service
           uri: lb://system-service
           predicates:
             - Path=/system/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: system-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: device-service
           uri: lb://device-service
           predicates:
             - Path=/device/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: device-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: sunos-data-service
           uri: lb://sunos-data-service
           predicates:
             - Path=/data/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackcmd-back
+                name: data-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: sunos-protocol-service
           uri: lb://sunos-protocol-service
           predicates:
             - Path=/protocol/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: protocol-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: swebapp-service
           uri: lb://swebapp-service
           predicates:
             - Path=/swebapp/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackcmd-back
+                name: swebapp-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: together-service
           uri: lb://together-service
           predicates:
             - Path=/together/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: together-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: configure-service
           uri: lb://configure-service
           predicates:
             - Path=/configure/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: configure-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: energy-service
           uri: lb://energy-service
           predicates:
             - Path=/energy/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: energy-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
         - id: devops-service
           uri: lb://devops-service
           predicates:
             - Path=/devops/**
           filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-            - name: Hystrix
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
               args:
-                name: fallbackCmd
+                name: devops-cb
                 fallbackUri: forward:/defaultFallback
-                retries: 3
+        - id: crontab-service
+          uri: lb://crontab-service
+          predicates:
+            - Path=/crontab/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+            - name: CircuitBreaker
+              args:
+                name: crontab-cb
+                fallbackUri: forward:/defaultFallback
 
-hystrix:
-  command:
-    default:
-      timeout:
-        enabled: false
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 120000
-    fallbackcmd-back:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 120000
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 30s
+  circuitbreaker:
+    configs:
+      default:
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        wait-duration-in-open-state: 30s
+
+management:
+  endpoint:
+    health:
+      show-details: never
+      cache:
+        time-to-live: 10s
+  endpoints:
+    web:
+      exposure:
+        include: health           

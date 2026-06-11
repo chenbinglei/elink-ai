@@ -6,10 +6,10 @@ export function readOSSFile (data) {
     // 配置OSS客户端
     const client = new OSS({
         secure: true,
-        bucket: import.meta.env.VITE_OSS_BUCKET_NAME,
-        region: import.meta.env.VITE_OSS_REGION,
-        accessKeyId: import.meta.env.VITE_ALIYUN_ACCESS_KEY_ID,
-        accessKeySecret: import.meta.env.VITE_ALIYUN_ACCESS_KEY_SECRET,
+        bucket: process.env.VUE_APP_OSS_BUCKET_NAME,
+        region: process.env.VUE_APP_OSS_REGION,
+        accessKeyId: process.env.VUE_APP_ALIYUN_ACCESS_KEY_ID,
+        accessKeySecret: process.env.VUE_APP_ALIYUN_ACCESS_KEY_SECRET,
     });
 
     return new Promise(async (resolve, reject) => {

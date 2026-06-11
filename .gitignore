@@ -28,14 +28,25 @@ Thumbs.db
 *.sln
 .history/
 
-# Secrets
+# Secrets - 环境变量文件（前后端分离）
+# 根目录不再存放 .env 文件
 .env
 .env.*
 !.env.example
+!.env.development
+!.env.production
+!.env.staging
+# 后端环境变量（elink-work/.env 含真实密钥，不提交）
+# elink-work/.env.example 可提交（仅模板）
+# 前端环境变量（elink-web/.env 含真实密钥，不提交）
+# elink-web/.env.example 可提交（仅模板）
 *.pem
 *.key
 *.p12
 *.jks
+
+# Runtime
+**/.dev-pids/
 
 # Docker
 .docker/

@@ -1,6 +1,6 @@
 package com.sunmax.common.dto.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,25 +13,25 @@ public class PileRecordReportReqDto {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 订单序号
      */
-    @ApiModelProperty(value = "订单序号", required = true)
+    @Schema(description = "订单序号")
     private Integer recordSeq;
 
     /**
      * 记录上报类型 0-正常 1-离线 2-当前
      */
-    @ApiModelProperty(value = "记录上报类型", required = true)
+    @Schema(description = "记录上报类型")
     private Integer recordReportType;
 
 }

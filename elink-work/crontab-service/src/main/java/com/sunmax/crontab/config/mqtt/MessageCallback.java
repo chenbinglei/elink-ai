@@ -1,6 +1,6 @@
 package com.sunmax.crontab.config.mqtt;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.enums.ProtocolEnum;
 import com.sunmax.common.util.SpringBeanUtil;
 import com.sunmax.common.vo.system.MqttClientVo;
@@ -17,6 +17,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 @Slf4j
 public class MessageCallback implements MqttCallback {
@@ -43,7 +44,7 @@ public class MessageCallback implements MqttCallback {
                 MqttClientManager.disconnect(mqttClientVo.getClientId());
             }
             MqttClientManager.addClient(mqttClientVo);
-        } catch (Exception e) {
+        } catch (MqttException e) {
             log.error("mqtt连接断开, 释放资源失败, 错误信息: " + e.getMessage());
         }
     }

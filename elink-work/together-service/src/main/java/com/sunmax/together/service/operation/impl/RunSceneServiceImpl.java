@@ -1,6 +1,6 @@
 package com.sunmax.together.service.operation.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.config.redis.RedisDeviceUtil;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;

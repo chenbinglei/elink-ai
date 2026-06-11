@@ -1,11 +1,34 @@
 #!/bin/bash
 set -e
 
-# 使用项目自带的 docker-compose 二进制
 COMPOSE="/work/elink-ai/docker-compose"
 PROJECT_DIR="/work/elink-ai/elink-work"
-NACOS_HOST="192.168.2.158"
-NACOS_PORT="8848"
+ENV_FILE="/work/elink-ai/elink-work/.env"
+
+load_env_file() {
+    if [ ! -f "$ENV_FILE" ]; then
+        echo -e "\033[31m[ERROR] .env 文件不存在: ${ENV_FILE}\033[0m"
+        exit 1
+    fi
+    while IFS='=' read -r key value; do
+        key=$(echo "$key" | xargs)
+        value=$(echo "$value" | xargs)
+        case "$key" in
+            ''|\#*) continue ;;
+        esac
+        export "$key=$value"
+    done < "$ENV_FILE"
+    echo -e "\033[32m[INFO] 已加载 .env 文件: ${ENV_FILE}\033[0m"
+    return 0
+}
+
+load_env_file
+
+NACOS_HOST="${NACOS_HOST:-127.0.0.1}"
+NACOS_PORT="${NACOS_PORT:-8848}"
+export NACOS_IP="$NACOS_HOST"
+export NACOS_PORT="$NACOS_PORT"
+
 WATCH_MODE=false
 
 ALL_SERVICES=(
@@ -29,7 +52,7 @@ NACOS_SERVICE_NAMES=(
     device-service
     sunos-data-service
     sunos-protocol-service
-    scrontab-service
+    crontab-service
     devops-service
     configure-service
     together-service
@@ -90,7 +113,7 @@ cd "$PROJECT_DIR"
 mkdir -p backups logs
 
 log_info "[1/8] 停止并清理旧容器..."
-$COMPOSE down 2>/dev/null || true
+$COMPOSE --env-file "$ENV_FILE" down 2>/dev/null || true
 docker rm -f redis emqx1 emqx2 nacos 2>/dev/null || true
 
 log_info "[2/8] Maven 构建项目..."
@@ -102,7 +125,7 @@ docker build -t elink-base:latest -f Dockerfile .
 log_info "基础镜像构建完成!"
 
 log_info "[4/8] 启动基础设施服务 (Redis + EMQX + Nacos)..."
-$COMPOSE up -d redis emqx1 emqx2 nacos
+$COMPOSE --env-file "$ENV_FILE" up -d redis emqx1 emqx2 nacos
 
 log_info "等待基础设施服务就绪..."
 sleep 15
@@ -136,7 +159,7 @@ fi
 log_info "EMQX2 (2883) 已就绪!"
 
 log_info "[5/8] 启动认证网关服务 (auth-service, sunmax-gateway)..."
-$COMPOSE up -d --no-build auth-service sunmax-gateway
+$COMPOSE --env-file "$ENV_FILE" up -d --no-build auth-service sunmax-gateway
 log_info "等待 auth-service 注册到 Nacos..."
 check_service_registered "sauth-service" 40
 if [ $? -ne 0 ]; then
@@ -145,7 +168,7 @@ fi
 log_info "auth-service 和 gateway 已启动!"
 
 log_info "[6/8] 启动基础业务服务 (system, device, data, devops, configure, together, webapp)..."
-$COMPOSE up -d --no-build system-service device-service data-service devops-service configure-service together-service webapp-service
+$COMPOSE --env-file "$ENV_FILE" up -d --no-build system-service device-service data-service devops-service configure-service together-service webapp-service
 
 log_info "等待 device-service 成功启动并注册到 Nacos..."
 check_service_registered "device-service" 60
@@ -164,7 +187,7 @@ fi
 log_info "together-service 已成功注册到 Nacos!"
 
 log_info "[7/8] 启动 protocol-service 和 crontab-service (带 Nacos 依赖等待)..."
-$COMPOSE up -d --no-build protocol-service crontab-service
+$COMPOSE --env-file "$ENV_FILE" up -d --no-build protocol-service crontab-service
 log_info "protocol-service 和 crontab-service 已启动!"
 
 log_info "[8/8] 等待所有服务完全启动..."

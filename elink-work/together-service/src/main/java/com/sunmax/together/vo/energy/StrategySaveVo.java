@@ -1,50 +1,49 @@
 package com.sunmax.together.vo.energy;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 策略新增参数实体类
  */
 @Data
-@ApiModel(value = "StrategySaveVo", description = "策略新增参数实体类")
+@Schema(description = "策略新增参数实体类")
 public class StrategySaveVo {
 
     /**
      * 站点id
      */
-    @ApiModelProperty(value = "站点id", required = true)
+    @Schema(description = "站点id")
     private String siteId;
 
     /**
      * 设备id
      */
-    @ApiModelProperty(value = "设备id")
+    @Schema(description = "设备id")
     private String deviceId;
 
     /**
      * 策略模板id
      */
-    @ApiModelProperty(value = "策略模板id", required = true)
+    @Schema(description = "策略模板id")
     private String templateId;
 
     /**
      * 策略名称
      */
-    @ApiModelProperty(value = "策略名称", required = true)
+    @Schema(description = "策略名称")
     private String strategyName;
 
     /**
      * 类型 1-边缘网关 2-云网关 3-云平台
      */
-    @ApiModelProperty(value = "类型 1-边缘网关 2-云网关 3-云平台", required = true)
+    @Schema(description = "类型 1-边缘网关 2-云网关 3-云平台")
     private Integer strategyType;
 
     /**
      * 用户id
      */
-    @ApiModelProperty(value = "用户id", required = true)
+    @Schema(description = "用户id")
     private String userId;
 
 }

@@ -1,12 +1,11 @@
 package com.sunmax.common.util.oss;
-
+import lombok.extern.slf4j.Slf4j;
 
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.common.util.local.LocalFileUtil;
 import com.sunmax.common.util.local.LocalImageUtil;
 import com.sunmax.common.vo.LocalParamVo;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -21,6 +20,7 @@ import java.util.List;
 /**
  * 文件工具类
  */
+@Slf4j
 public class FileUtil {
 
     public static final String SLASH = "/";
@@ -77,7 +77,7 @@ public class FileUtil {
      * @param end   第一次出现的字符串中的字符
      */
     public static String subString(String name, String start, String end) {
-        if (StringUtils.isNotEmpty(start) && StringUtils.isNotEmpty(end)) {
+        if (StringUtil.isNotEmpty(start) && StringUtil.isNotEmpty(end)) {
             return name.substring(name.lastIndexOf(start) + 1, name.indexOf(end));
         } else {
             return null;
@@ -121,7 +121,7 @@ public class FileUtil {
                 file.deleteOnExit();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return file;
     }
@@ -155,8 +155,8 @@ public class FileUtil {
                 }
             }
             return InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
             return null;
         }
     }

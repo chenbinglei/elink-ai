@@ -2,8 +2,8 @@ package com.sunmax.configure.util.interflow;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.common.util.oss.FileUtil;
@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Objects;
+import java.io.IOException;
 
 /**
  * 城市充电请求工具类
@@ -65,7 +66,7 @@ public class InterflowRequestUtil {
                 tokenMap.put(commonVo.getPlatformId(), resultMap.get("AccessToken"));
                 return resultMap.get("AccessToken");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("互联互通获取token数据失败: ", e);
         }
         return null;
@@ -120,7 +121,7 @@ public class InterflowRequestUtil {
             } else {
                 TOKEN_COUNT = 0;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("互联互通平台请求失败: ", e);
         }
         return result;
@@ -128,7 +129,7 @@ public class InterflowRequestUtil {
 
 //    public static void main(String[] args) {
 
-    /// /        System.out.println(AESUtil.desEncrypt(DATA_SECRET, DATA_SECRET_IV, "/PUISUKwEm+ApOZ3uqqfxg=="));
+    /// /        log.info(AESUtil.desEncrypt(DATA_SECRET, DATA_SECRET_IV, "/PUISUKwEm+ApOZ3uqqfxg=="));
 //        try {
 //            Map<String, Object> paramMap = Maps.newHashMap();
 //            paramMap.put("OperatorID", "313744932");
@@ -157,16 +158,15 @@ public class InterflowRequestUtil {
 //                });
 //                log.info("resultMap：{}", resultMap);
 //                log.info("AccessToken：{}", resultMap.get("AccessToken"));
-//                System.out.println(resultMap.get("AccessToken"));
 //            }
-//        } catch (Exception e) {
+//        } catch (IOException e) {
 //            log.error("获取数据失败: ", e);
 //        }
 //    }
     public static void main(String[] args) {
         String data = "XqEJ9Jl11YxaNW6PTSMC8jmgcTdKlTxwNaLf7tThvJWmVsxhFDgqBjeqcduLeGXEcIjZP0L9WMfWLIL1s4CPHpbH+mOOrRgoe9Fn6xG6GXZiVSdoAVjeU72DGn8c4QTv4lDLGX6Q7pwLGrdg951nfw4fBXgJl9EyufROAT8akC6j/YDiMVrBSNV5KAovEHpy4nhzHAMnv1C+qqJ0vzX8sJLW/nUc0sovC8+5E76o0MaMS2MIApshh3q9W/i4wSttDDsN2Sz8Rj/56BocUc5X6EacJm1QWKEZBdexiZN7B5WNtHBHGbzzQKu0491TqAP/BALJyCU9jfUjuWrAJUX7Q0umOi5Nw0sY+71MpesPzsi6bjASCKjP4WyoXlJ/TCasBfaZ9TV5KjxXXFkxio9Cz8IPIHhh8IP7EjBAKt7R+qEUWmtX+CdmTvVgXWf7e8QCTXdZje896MhEkpvmDcJRE5M79UGwX38O94e43vIOkA4EfZOAEWDKWeYFDU1GNkm9ksKgPlI/TgvksCLSEXrZVwht5VwP5QR1qRXfUEvKWPIhsKFXJSjIMEhQEA7Dx6u4gv8HThIqH1rXshhVhRa8gAysC/4dPOLeFPjuQwJGEMnPyuWrwcNCJxwyiGkXoa+YlnhJHABRYiaRI3lDODj24QL7krKpp57wJ5lLNQakEegsYpiNoyDmzvxtfBX5YiOAd3Lm93TY9h7IaRnWoR/apd2WGmO7uDVULUzrTJsWbIl6152bgGTEv6P2DxYKIyISzqw/ELwpdC1JytlmdFi9xFKs9WlieJGzl5zoEwkbLiPiQWKNMKhO39AZyIV/e/QiJ0kofAyh5+2eocGxN9NQyZ9H03lyIDdRaOgSMCyiUV2kBEZdJ1pPrhrpNuc2yqyV2W47mi3BK2H1SvrrfNMNuKHrII4DzyWKEZedP5HvJ0QaFQpORCvMXAW8VZoAjtU6cpkpdU4YD+IpZQe4fBtgIJbvnV2UUXHFI49Ub4w2vuXkeZLR8mO5SC/lEhDSKHSaYoMCo2JBNce0KMJ19RLFes66GaF9EpWS+s87jYKnQwyfaAKKvd0OOwrJkOKYH4ZDnzCtdfhMsrWVpmgZ/T693wsZM5qIrMlH7wiE7Nvg3br3k4aBVrRhGEz0/dxhPkbthz0mXpofary1NwK+fFyg5CBWW4pKJn6XaRjHIw0kplC8pmltwQJGNt+ya92zh+7kxWQLHvHNJS6WfT5MqsDq7OodIXj6gnCW0FLuc+07/3lPkZ63q2OQ2GyyNH2l3cmHPGpgTvIM49gZzBVH7xvvkvO0wFYzOEjsVD8BhB8OyQ1+KInjajuOHuhqhyfu80GqHQV4hmw8RzYZD2YJlhLuunvsxvyH+UCcTmrt4nxHr+nYRVzpFqWjO7wgqMY9xtWllCtQDQK0GlZsw5lpi0a7sTXV9MMjoibAsbjuLuN2KKUvonmf1IwVtN5So37H4g+mGrVLcfB/KSJypHTz3/lij+mWxPruq15/2qLbIZrTdkFKfpw8yI2H1qDzuj34LLeY";
         String result = AESUtil.desEncrypt("A7649A3C1BDBBCF8", "3750FB6AB984277F", data);
-        System.out.println(result);
+        log.info(result);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.sunmax.common.dto.crontab;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
@@ -12,36 +11,36 @@ import lombok.Data;
  * @注释: 实例节点返回实体类
  */
 @Data
-@ApiModel(value = "NodeHistoryDataDto", description = "计算节点历史数据返回实体类")
+@Schema(description = "计算节点历史数据返回实体类")
 public class NodeHistoryDataDto {
 
     /**
      * 时间
      */
-    @ApiModelProperty("时间")
+    @Schema(description = "时间")
     private String ts;
 
     /**
      * 更新时间
      */
-    @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
     private String updateTime;
 
     /**
      * 数据值
      */
-    @ApiModelProperty("数据值")
+    @Schema(description = "数据值")
     private Double resultValue;
 
     /**
      * first时间(计算节点内部使用字段)
      */
-    @ApiModelProperty("first时间(计算节点内部使用字段)")
+    @Schema(description = "first时间(计算节点内部使用字段)")
     private String firstTs;
 
     /**
      * first数据值(计算节点内部使用字段)
      */
-    @ApiModelProperty("first数据值(计算节点内部使用字段)")
+    @Schema(description = "first数据值(计算节点内部使用字段)")
     private Double firstResultValue;
 }

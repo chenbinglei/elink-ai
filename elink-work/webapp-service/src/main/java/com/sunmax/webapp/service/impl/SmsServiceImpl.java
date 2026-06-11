@@ -1,4 +1,5 @@
 package com.sunmax.webapp.service.impl;
+import lombok.extern.slf4j.Slf4j;
 
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @description
  */
 @Service
+@Slf4j
 public class SmsServiceImpl implements SmsService {
 
     @Autowired
@@ -41,7 +43,7 @@ public class SmsServiceImpl implements SmsService {
                 return false;
             }
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;

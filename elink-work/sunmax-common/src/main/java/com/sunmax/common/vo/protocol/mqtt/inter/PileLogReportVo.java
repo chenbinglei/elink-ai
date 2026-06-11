@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 /**
  * CMD_Dev_LogReport,//日志数据上报 52
@@ -12,25 +12,25 @@ public class PileLogReportVo {
     /**
      * 枪编号
      */
-    @ApiModelProperty(value = "枪编号", required = true)
+    @Schema(description = "枪编号")
     private Integer gunCode;
 
     /**
      * 日志类型 1-日志 2-告警记录
      */
-    @ApiModelProperty(value = "日志类型 1-日志 2-告警记录", required = true)
+    @Schema(description = "日志类型 1-日志 2-告警记录")
     private Integer logType;
 
     /**
      * 日志内容
      */
-    @ApiModelProperty(value = "日志内容", required = true)
+    @Schema(description = "日志内容")
     private String logContent;
 
     /**
      * 日志时间
      */
-    @ApiModelProperty(value = "日志时间", required = true)
+    @Schema(description = "日志时间")
     private Long logTime;
 
 }

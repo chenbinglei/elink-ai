@@ -1,7 +1,7 @@
 package com.sunmax.common.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.config.cache.LocalCacheUtil;
 import com.sunmax.common.dto.WeatherForecastDto;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +78,7 @@ public class WeatherUtil {
                         //未来8天预测天气数据
                         String daily = resultJson.getString("daily");
                         if (StringUtil.isNotEmpty(daily)) {
-                            forecastDto.setDaily(JSONObject.parseArray(daily, WeatherForecastDto.daily.class).stream().peek( directArr -> {
+                            forecastDto.setDaily(JSON.parseArray(daily, WeatherForecastDto.daily.class).stream().peek( directArr -> {
                                 directArr.setDt(utcTimestampConversion(Long.parseLong(directArr.getDt())));
                                 directArr.setSunrise(utcTimestampConversion(Long.parseLong(directArr.getSunrise())));
                                 directArr.setSunset(utcTimestampConversion(Long.parseLong(directArr.getSunset())));

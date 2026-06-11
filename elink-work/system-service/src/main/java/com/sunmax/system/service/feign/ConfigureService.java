@@ -1,26 +1,13 @@
 package com.sunmax.system.service.feign;
-
-import com.sunmax.common.dto.system.PlatformDataForwardDto;
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
+
 
 /**
- * 接收设备服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.system.SystemConfigureFeignClient
+ * 请直接使用 com.sunmax.common.feign.system.SystemConfigureFeignClient
  */
-@FeignClient(value = "configure-service")
-@RestController
-@RequestMapping("/configure/feign/system")
-public interface ConfigureService {
-
-    @PostMapping("updateHttpSiteForward")
-    @ApiOperation("更新站点转发平台运营商配置")
-    @ApiOperationSupport(order = 1)
-    ResponseResult<Boolean> updateHttpSiteForward(@RequestBody PlatformDataForwardDto platformDataForward);
-
+@FeignClient(value = "configure-service", path = "/configure/feign/system", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface ConfigureService extends com.sunmax.common.feign.system.SystemConfigureFeignClient {
 }

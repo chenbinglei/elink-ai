@@ -1,8 +1,7 @@
 package com.sunmax.configure.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.system.SiteOperateDto;
 import com.sunmax.common.enums.ProtocolEnum;
@@ -14,9 +13,8 @@ import com.sunmax.configure.util.HttpResponseUtil;
 import com.sunmax.configure.util.PlatformConfig;
 import com.sunmax.configure.util.TokenUtil;
 import com.sunmax.configure.vo.RequestVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin
 @RequestMapping("/web/city/v1")
-@Api(tags = "市级数据接入管理")
+@Tag(name = "市级数据接入管理")
 @Slf4j
 public class CityDataAccessController {
 
@@ -43,8 +41,8 @@ public class CityDataAccessController {
     private CityDataAccessService cityDataAccessService;
 
     @PostMapping("query_stations_info")
-    @ApiOperation("查询充电站信息")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "查询充电站信息")
+    
     public String findStationInfoListByTime(@RequestBody RequestVo requestVo) {
         log.info("市级调用查询充电站信息接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.CITY.getCode());
@@ -74,7 +72,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询充电站信息接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -84,8 +82,8 @@ public class CityDataAccessController {
     }
 
     @PostMapping("query_station_status")
-    @ApiOperation("查询充电站接口状态")
-    @ApiOperationSupport(order = 2)
+    @Operation(summary = "查询充电站接口状态")
+    
     public String queryStationStatus(@RequestBody RequestVo requestVo) {
         log.info("市级调用查询充电站接口状态接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.CITY.getCode());
@@ -96,7 +94,7 @@ public class CityDataAccessController {
                 Map<String, Object> requestDataMap = JSON.parseObject(data, new TypeReference<Map<String, Object>>() {});
                 List<String> stationIdList = null;
                 if (StringUtil.isNotEmpty(requestDataMap.get("StationIDs"))) {
-                    List<String> cityStationIdList = JSONObject.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
+                    List<String> cityStationIdList = JSON.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
                     //数据转发配置返回的站点id列表
                     List<SiteOperateDto> siteOperateList = responseDto.getSiteOperateList();
                     if (CollectionUtils.isNotEmpty(siteOperateList)) {
@@ -113,7 +111,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询充电站接口状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -123,8 +121,8 @@ public class CityDataAccessController {
     }
 
     @PostMapping("query_equip_charge_status")
-    @ApiOperation("查询充电状态")
-    @ApiOperationSupport(order = 3)
+    @Operation(summary = "查询充电状态")
+    
     public String queryEquipChargeStatus(@RequestBody RequestVo requestVo) {
         log.info("市级调用查询充电状态接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.CITY.getCode());
@@ -148,7 +146,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询充电状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -158,8 +156,8 @@ public class CityDataAccessController {
     }
 
     @PostMapping("query_station_stats")
-    @ApiOperation("查询统计信息")
-    @ApiOperationSupport(order = 4)
+    @Operation(summary = "查询统计信息")
+    
     public String queryStationStats(@RequestBody RequestVo requestVo) {
         log.info("市级调用查询统计信息接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.CITY.getCode());
@@ -194,7 +192,7 @@ public class CityDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("市级调用查询统计信息接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -204,8 +202,8 @@ public class CityDataAccessController {
     }
 
     @PostMapping(value = "query_token")
-    @ApiOperation("市查询平台token")
-    @ApiOperationSupport(order = 4)
+    @Operation(summary = "市查询平台token")
+    
     public String queryToken(@RequestBody RequestVo request) {
         log.info("市查询token请求参数{}", request);
         String data = request.getData();

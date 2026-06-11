@@ -1,8 +1,8 @@
 package com.sunmax.protocol.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.constant.IEGConstant;
 import com.sunmax.common.constant.WebTopicConstant;
@@ -133,7 +133,7 @@ public class GatewayCtrlServiceImpl implements GatewayCtrlService {
                     .map(policyIssuedVo -> CompletableFuture.supplyAsync(() -> {
                         try {
                             return this.issuedPolicyParam(policyIssuedVo).getData();
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             log.error("处理策略参数下发任务失败: " + policyIssuedVo.toString(), e);
                             return null;
                         }
@@ -151,7 +151,7 @@ public class GatewayCtrlServiceImpl implements GatewayCtrlService {
             Throwable cause = e.getCause();
             log.error("批量下发网关通用策略参数失败", cause);
             return ResponseResult.error("批量下发网关通用策略参数过程中遇到错误: " + cause.getMessage());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("批量下发网关通用策略参数失败, 遇到未知错误", e);
             return ResponseResult.error("批量下发网关通用策略参数过程中遇到未知错误");
         }
@@ -214,7 +214,7 @@ public class GatewayCtrlServiceImpl implements GatewayCtrlService {
                             gatewayStatusVo.setDevId(deviceCode);
                             resultList.add(gatewayStatusVo);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("查询网关" + deviceCode + "状态报错", e);
                     }
                 }));
@@ -223,7 +223,10 @@ public class GatewayCtrlServiceImpl implements GatewayCtrlService {
                 do {
                     Thread.sleep(500);
                 } while (!executor.isTerminated());
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("查询网关状态任务被中断", e);
+            } catch (RuntimeException e) {
                 log.error("查询网关状态任务报错", e);
             }
         }
@@ -530,7 +533,7 @@ public class GatewayCtrlServiceImpl implements GatewayCtrlService {
                             if (result != null) {
                                 resultMap.put(key, result);
                             }
-                        } catch (Exception e) {
+                        } catch (RuntimeException e) {
                             log.error("设置网关" + key + "平台策略报错", e);
                         }
                     });
@@ -544,7 +547,7 @@ public class GatewayCtrlServiceImpl implements GatewayCtrlService {
                         }
                     } while (!executor.isTerminated());
                 });
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("设置网关平台策略任务下发报错", e);
             }
         }

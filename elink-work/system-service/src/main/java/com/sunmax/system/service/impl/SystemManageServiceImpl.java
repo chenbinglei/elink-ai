@@ -1,6 +1,6 @@
 package com.sunmax.system.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -116,7 +116,7 @@ public class SystemManageServiceImpl implements SystemManageService {
             //删除用户组关联权限授权数据
             groupApplyEmpowerDao.deleteAllByGroupIdIn(groupIds);
             return ResponseResult.ok(ResponseResult.SUCCESS);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("删除用户组信息异常: ", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }
@@ -241,7 +241,7 @@ public class SystemManageServiceImpl implements SystemManageService {
             List<String> userIds = Arrays.stream(userId.split(FileUtil.COMMA)).collect(Collectors.toList());
             userDao.deleteAllByIdIn(userIds);
             return ResponseResult.ok(ResponseResult.SUCCESS);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("删除用户信息异常：", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }
@@ -458,7 +458,7 @@ public class SystemManageServiceImpl implements SystemManageService {
     @Transactional(transactionManager = "transactionManager", rollbackFor = Exception.class)
     public ResponseResult<String> saveGroupApplyEmpowerInfo(String groupApplyEmpowerVos) {
         if (StringUtil.isNotEmpty(groupApplyEmpowerVos)) {
-            List<GroupApplyEmpowerEntity> groupApplyEmpowerEntityList = JSONArray.parseArray(groupApplyEmpowerVos, GroupApplyEmpowerEntity.class);
+            List<GroupApplyEmpowerEntity> groupApplyEmpowerEntityList = JSON.parseArray(groupApplyEmpowerVos, GroupApplyEmpowerEntity.class);
             //先查询当前用户组当前模块下所有配置，如果有则全部删掉重新添加
             List<GroupApplyEmpowerEntity> applyEmpowerEntityList = groupApplyEmpowerDao.findAllByGroupIdAndModuleId(groupApplyEmpowerEntityList.get(0).getGroupId(), groupApplyEmpowerEntityList.get(0).getModuleId());
             if (CollectionUtils.isNotEmpty(applyEmpowerEntityList)) {
@@ -482,7 +482,7 @@ public class SystemManageServiceImpl implements SystemManageService {
         }
         //重新添加
         if (StringUtil.isNotEmpty(groupApplyVos)) {
-            List<GroupApplyEmpowerEntity> groupApplyEmpowerList = JSONArray.parseArray(groupApplyVos, GroupApplyEmpowerEntity.class);
+            List<GroupApplyEmpowerEntity> groupApplyEmpowerList = JSON.parseArray(groupApplyVos, GroupApplyEmpowerEntity.class);
             if (CollectionUtils.isNotEmpty(groupApplyEmpowerList)) {
                 groupApplyEmpowerDao.saveAll(groupApplyEmpowerList.stream().peek(groupApplyEmpowerEntity -> {
                     groupApplyEmpowerEntity.setGroupId(groupId);

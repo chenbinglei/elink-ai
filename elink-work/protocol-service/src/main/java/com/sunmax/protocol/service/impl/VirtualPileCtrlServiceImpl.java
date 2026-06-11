@@ -1,7 +1,7 @@
 package com.sunmax.protocol.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -53,11 +53,11 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            pileRealVo = JSONObject.toJavaObject(dataMap, VirtualPileRealVo.class);
+            pileRealVo = dataMap.toJavaObject(VirtualPileRealVo.class);
             if (pileRealVo == null || StringUtil.isEmpty(pileRealVo.getPileCodes())) {
                 return ResponseResult.paramError("获取电桩实时数据入参数据校验失败");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("提供第三方虚拟电厂平台调用接口, 获取电桩实时数据入参报错:", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -86,7 +86,7 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
                 resultList.add(result);
             }
             return ResponseResult.ok(PlatformUtil.encryptData(ProtocolRunner.platformDataMap.get(requestVo.getPlatformId()), JSON.toJSONString(resultList)));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("提供第三方虚拟电厂平台调用接口, 获取电桩实时数据报错:", e);
             return ResponseResult.error("获取电桩实时数据平台处理报错,请联系开发人员！！");
         }
@@ -105,7 +105,7 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
             if (MapUtils.isEmpty(dataMap)) {
                 return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
-            pileQtVo = JSONObject.toJavaObject(dataMap, VirtualPileQtVo.class);
+            pileQtVo = dataMap.toJavaObject(VirtualPileQtVo.class);
             // 数据校验
             if (!isValidPileQt(pileQtVo)) {
                 return ResponseResult.paramError("输入数据校验失败");
@@ -116,7 +116,7 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
             if (CollectionUtils.isEmpty(pileCodes)) {
                 return ResponseResult.paramError("获取电桩电量数据入参数据校验失败");
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("提供第三方虚拟电厂平台调用接口, 获取电桩电量数据入参报错:", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         }
@@ -197,7 +197,7 @@ public class VirtualPileCtrlServiceImpl implements VirtualPileCtrlService {
                 return result;
             }).collect(Collectors.toList());
             return ResponseResult.ok(PlatformUtil.encryptData(ProtocolRunner.platformDataMap.get(requestVo.getPlatformId()), JSON.toJSONString(resultList)));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("提供第三方虚拟电厂平台调用接口, 获取电桩电量数据报错:", e);
             return ResponseResult.error("获取电桩电量数据平台处理报错,请联系开发人员！！");
         }

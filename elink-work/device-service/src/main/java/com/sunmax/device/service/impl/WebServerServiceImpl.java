@@ -1,6 +1,6 @@
 package com.sunmax.device.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.operate.OrderCountDto;
 import com.sunmax.common.dto.system.OrganEmpowerListDto;

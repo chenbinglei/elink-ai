@@ -1,6 +1,7 @@
 package com.sunmax.device.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.sunmax.common.config.redis.RedisDeviceUtil;
@@ -47,7 +48,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -258,7 +259,7 @@ public class DeviceTaskServiceImpl implements DeviceTaskService {
             List<String> pileTypeIds = Arrays.asList("29", "30");
             if (pileTypeIds.contains(taskChangeVo.getTypeId())) {
                 //添加设备升级任务记录
-                List<String> deviceIds = JSONObject.parseArray(taskChangeVo.getDeviceIds(), String.class);
+                List<String> deviceIds = JSON.parseArray(taskChangeVo.getDeviceIds(), String.class);
                 List<DeviceEntity> deviceList = deviceDao.findAllById(deviceIds).stream().filter(d -> StringUtil.isNotEmpty(d.getDeviceNumber()))
                         .collect(Collectors.toList());
                 //根据多个站点id查询站点名称
@@ -313,7 +314,8 @@ public class DeviceTaskServiceImpl implements DeviceTaskService {
                     pileBatchUpdateVos.setFirmwareCompileTime(firmwareParse.getFirmwareCompileTime());
                     pileBatchUpdateVos.setFirmwareSize(firmwareParse.getFirmwareSize());
                     pileBatchUpdateVos.setCrc32(firmwareParse.getCrc32());
-                    return protocolService.batchPileUpdate(pileBatchUpdateVos);
+                    protocolService.batchPileUpdate(pileBatchUpdateVos);
+                    return ResponseResult.ok();
                 } else {
                     save.setTaskStatus(3);
                     deviceTaskDao.save(save);

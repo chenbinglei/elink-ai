@@ -1,7 +1,7 @@
 package com.sunmax.data.task;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.config.redis.KeyUtil;
@@ -176,7 +176,7 @@ public class AccessDataTask {
                                                 deviceDataVo.setDataValue(pointTable.getDataValue());
                                             }
                                         }
-                                    } catch (Exception e) {
+                                    } catch (RuntimeException e) {
                                         log.error("网关数据解析异常", e);
                                     }
                                     deviceDataVos.add(deviceDataVo);
@@ -285,7 +285,7 @@ public class AccessDataTask {
                         return dataValueStr;
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录处理失败的日志信息
             log.warn("Failed to process array data: {}", dataValueStr, e);
         }
@@ -390,7 +390,7 @@ public class AccessDataTask {
         } else {
             try {
                 dataValueList.addAll(JSON.parseArray(dataValueStr, String.class));
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 throw new IllegalArgumentException("Invalid JSON array format: " + dataValueStr, e);
             }
         }

@@ -1,6 +1,6 @@
 package com.sunmax.webapp.config.websocket;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.device.SiteInfoDto;
 import com.sunmax.common.dto.webapp.AppInHandOrderDto;
@@ -12,9 +12,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -60,7 +60,6 @@ public class AppRealWebSocket {
         webSocketClients.add(this);
         webSocketMap.put(userId + "@" + orderType, this);
         addOnlineCount();
-//        System.out.println("有新的连接加入！当前在线人数为：" + getOnlineCount() + " ");
         List<RealWebSocketDto> result = packageData(userId, orderType);
         this.sendMessage(JSON.toJSONString(result));
     }
@@ -92,7 +91,7 @@ public class AppRealWebSocket {
      */
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        log.error(t.getMessage(), t);
     }
 
     public void sendMessage(String message) throws IOException {

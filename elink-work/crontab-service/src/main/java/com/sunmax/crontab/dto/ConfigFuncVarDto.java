@@ -1,13 +1,13 @@
 package com.sunmax.crontab.dto;
 
 import com.google.common.collect.Maps;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
-@ApiModel(value = "ConfigFuncVarDto", description = "配置变量值数据")
+@Schema(description = "配置变量值数据")
 public class ConfigFuncVarDto {
 
     /**

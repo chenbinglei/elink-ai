@@ -36,7 +36,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -159,7 +159,7 @@ public class FunctionServiceImpl implements FunctionService {
                                         RedisUtil.set(deviceKey, deviceModel);
                                     }
                                 }
-                            } catch (Exception e) {
+                            } catch (RuntimeException e) {
                                 log.error("更新redis里设备功能点数据报错", e);
                             } finally {
                                 RedisLockUtil.unlock(lockKey);

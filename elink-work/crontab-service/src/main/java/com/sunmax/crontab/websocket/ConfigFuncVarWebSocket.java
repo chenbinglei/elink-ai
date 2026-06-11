@@ -1,7 +1,7 @@
 package com.sunmax.crontab.websocket;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.configure.DeviceVariableDto;
 import com.sunmax.common.dto.crontab.LocalCacheDto;
@@ -15,9 +15,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,7 +54,7 @@ public class ConfigFuncVarWebSocket {
      */
     @OnOpen
     public void onOpen(Session sessionId, @PathParam("clientId") String clientId, @PathParam("domainId") String domainId) {
-        System.out.println("组态系统变量实时数据新开启了一个webSocket连接" + sessionId.getId());
+        log.info("组态系统变量实时数据新开启了一个webSocket连接" + sessionId.getId());
 
         //加入到set中
         session = sessionId;
@@ -70,7 +70,7 @@ public class ConfigFuncVarWebSocket {
             }
         }
         addOnlineCount();
-        System.out.println("有新的连接加入！当前组态系统变量实时数据在线人数为：" + getOnlineCount() + " ");
+        log.info("有新的连接加入！当前组态系统变量实时数据在线人数为：" + getOnlineCount() + " ");
     }
 
     /**
@@ -82,7 +82,7 @@ public class ConfigFuncVarWebSocket {
         webSocketMap.remove(clientId, this);
         clientParamMap.remove(clientId);
         subOnlineCount();
-        System.out.println("组态系统变量实时数据有一连接关闭" + sessionId.getId());
+        log.info("组态系统变量实时数据有一连接关闭" + sessionId.getId());
     }
 
     /**
@@ -100,7 +100,7 @@ public class ConfigFuncVarWebSocket {
      */
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        log.error(t.getMessage(), t);
     }
 
     public void sendMessage(String message) throws IOException {

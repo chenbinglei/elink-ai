@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class AccessDataServiceImpl implements AccessDataService {
                         if (StringUtil.isNotEmpty(deviceDataVo.getDateTime()) && DateUtil.strToLocalDateTime(deviceDataVo.getDateTime()).isBefore(LocalDateTime.now().minusMinutes(1))) {
                             return;
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("数据存储数据:{}", deviceDataVo);
                         log.error("数据校验时间异常", e);
                     }
@@ -105,7 +106,7 @@ public class AccessDataServiceImpl implements AccessDataService {
             Map<String, Object> fieldNameValueMap = deviceDataVos.stream().collect(HashMap::new, (map, item) -> map.put(item.getFieldName(), item.getDataValue()), HashMap::putAll);
             fieldNameValueMap.put("ts", currentTime);
             dataStoreMapper.batchAddTableData(tableName, fieldNameValueMap);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("数据存储异常报错", e);
         }
     }
@@ -138,7 +139,7 @@ public class AccessDataServiceImpl implements AccessDataService {
                             }
                             this.getTableDataMap(resultMap, key, value, dataList);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         // 记录错误，避免任务中断
                         log.error("查询表 {} 失败: {}", key, e.getMessage(), e);
                     }
@@ -161,7 +162,7 @@ public class AccessDataServiceImpl implements AccessDataService {
         } catch (java.util.concurrent.TimeoutException e) {
             log.error("查询数据超时", e);
             return Collections.emptyMap();
-        } catch (Exception e) {
+        } catch (ExecutionException e) {
             log.error("查询数据异常报错", e);
             return Collections.emptyMap();
         }

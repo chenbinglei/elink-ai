@@ -1,6 +1,6 @@
 package com.sunmax.together.service.operation.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
@@ -59,8 +59,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
+import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -267,7 +267,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                         if (!status) {
                             log.error("发送邮件失败,发票申请单号:{},收票人邮箱:{}", invoice.getId(), invoice.getReceiptEmail());
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("发送邮件报错,发票申请单号:{},收票人邮箱:{}", invoice.getId(), invoice.getReceiptEmail());
                     }
                     invoice.setInvoiceFilePath(FileUtil.getFilePath(invoiceFile, invoice.getInvoiceFilePath()));//发票文件地址

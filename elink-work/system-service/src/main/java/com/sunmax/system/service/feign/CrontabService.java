@@ -1,28 +1,13 @@
 package com.sunmax.system.service.feign;
-
-import com.sunmax.common.util.ResponseResult;
-import com.sunmax.common.vo.system.MqttClientVo;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
+
 
 /**
- * 接收设备服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.system.SystemCrontabFeignClient
+ * 请直接使用 com.sunmax.common.feign.system.SystemCrontabFeignClient
  */
-@FeignClient(value = "scrontab-service")
-@RestController
-@RequestMapping("/scrontab/feign/system")
-public interface CrontabService {
-
-    @PostMapping("createMqttClient")
-    @ApiOperation("创建mqtt客户端数据")
-    @ApiOperationSupport(order = 1)
-    ResponseResult<Void> createMqttClient(@RequestBody MqttClientVo mqttClientVo);
-
-    @PostMapping("deleteMqttClient")
-    @ApiOperation("删除mqtt客户端数据")
-    @ApiOperationSupport(order = 2)
-    ResponseResult<Void> deleteMqttClient(@RequestParam String clientId);
-
+@FeignClient(value = "crontab-service", path = "/crontab/feign/system", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface CrontabService extends com.sunmax.common.feign.system.SystemCrontabFeignClient {
 }

@@ -1,10 +1,10 @@
 package com.sunmax.crontab.vo.mqtt;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "华电指令接收响应返回实体类")
+@Schema(description = "华电指令接收响应返回实体类")
 public class HDSetReplyVo {
 
     /**

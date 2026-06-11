@@ -1,6 +1,6 @@
 package com.sunmax.configure.common;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.model.general.GatewayRealModel;
 import com.sunmax.common.util.DateUtil;
@@ -13,10 +13,10 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.springframework.context.annotation.Bean;
+import jakarta.annotation.Resource;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.Resource;
+import org.springframework.context.event.EventListener;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
@@ -59,7 +59,7 @@ public class MqttConfig {
         }
     }
 
-    @Bean
+    @EventListener(ApplicationReadyEvent.class)
     public void webMqttClient() {
         init();
     }

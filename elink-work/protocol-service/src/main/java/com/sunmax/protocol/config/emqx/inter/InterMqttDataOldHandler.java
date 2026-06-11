@@ -1,6 +1,6 @@
 //package com.sunmax.protocol.config.emqx.inter;
 //
-//import com.alibaba.fastjson.JSON;
+//import com.alibaba.fastjson2.JSON;
 //import com.google.common.collect.Maps;
 //import com.google.common.collect.Sets;
 //import com.sunmax.common.config.redis.KeyUtil;
@@ -58,7 +58,7 @@
 //import org.jetbrains.annotations.NotNull;
 //import org.springframework.context.annotation.Configuration;
 //
-//import javax.annotation.PostConstruct;
+//import jakarta.annotation.PostConstruct;
 //import java.math.BigDecimal;
 //import java.math.RoundingMode;
 //import java.time.LocalDateTime;
@@ -148,7 +148,7 @@
 //            } else {
 //                log.info("未找到该设备的费率数据, 桩编号:{}, 费率类型{}", pilesCode, rateReqVo.getType());
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT费率响应处理失败", e);
 //        }
 //    }
@@ -224,7 +224,7 @@
 //                    }
 //                }
 //            });
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT更新子设备失败", e);
 //        }
 //    }
@@ -286,7 +286,7 @@
 //                    deviceService.batchUpdateDeviceTask(deviceUpdateVo);
 //                }
 //            });
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT硬件控制板软硬件信息通知处理失败", e);
 //        }
 //    }
@@ -355,7 +355,7 @@
 //                    demandModel.setSerialNum(startResVo.getRecordId());
 //                }
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT启动响应处理报错", e);
 //        }
 //    }
@@ -493,7 +493,7 @@
 //                    orderRecordDao.save(orderRecord);
 //                }
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT启动事件处理报错", e);
 //        }
 //    }
@@ -519,7 +519,7 @@
 //                demandModel.setRecMsg(stopResVo.getFailReason());
 //                demandModel.setSerialNum(stopResVo.getRecordId());
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT停止响应处理报错", e);
 //        }
 //    }
@@ -545,7 +545,7 @@
 //                demandModel.setRecMsg(stopEventVo.getFailReason());
 //                demandModel.setSerialNum(stopEventVo.getRecordId());
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT停止事件处理报错", e);
 //        }
 //    }
@@ -565,7 +565,7 @@
 //                demandModel.setRecFlag(true);
 //                demandModel.setRecCode(powerControlResVo.getResponseResult());
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT功率控制响应处理报错", e);
 //        }
 //    }
@@ -702,7 +702,7 @@
 //                    RedisGeneralUtil.setPileRealModel(pilesCode, pileRealModel);
 //                }
 //            });
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT解析电桩数据失败", e);
 //        }
 //    }
@@ -902,7 +902,7 @@
 //            if (CollectionUtils.isNotEmpty(updateAlarmRecordList)) {
 //                PileRecordUtil.updateAlarmStatus(updateAlarmRecordList, alarmRecordDao);
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT解析电桩故障失败", e);
 //        }
 //    }
@@ -963,7 +963,7 @@
 //                }
 //            });
 //
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT更新电桩状态报错", e);
 //        }
 //    }
@@ -1257,7 +1257,7 @@
 //            }
 //            //发送数据
 //            InterMqttConfig.sendToMqtt(pilesCode, CmdConstant.CMD_AuthenticationResponse, authenticationRes);
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT处理鉴权请求数据报错", e);
 //        }
 //    }
@@ -1322,7 +1322,7 @@
 //                pileStartVo.setPrepayMoney(new BigDecimal(5000));
 //                SpringBeanUtil.getBean(PileCtrlService.class).pileStart(pileStartVo);
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("外网MQTT处理策略响应数据报错", e);
 //        }
 //    }
@@ -1398,7 +1398,7 @@
 //                    }
 //                }
 //            });
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT固件块请求响应结果处理报错", e);
 //        }
 //    }
@@ -1447,7 +1447,7 @@
 //            });
 //            //更新设备升级状态
 //            deviceService.batchUpdateDeviceTask(deviceUpdateVo);
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT设备升级-升级结果上报报错", e);
 //        }
 //
@@ -1468,7 +1468,7 @@
 //                demandModel.setRecFlag(true);
 //                demandModel.setRecCode(0);//执行成功
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT费率下发响应处理报错", e);
 //        }
 //    }
@@ -1500,7 +1500,7 @@
 //                demandModel.setRecCode(0);//执行成功
 //                demandModel.setRecMsg(JSON.toJSONString(vehicleInfoResVo));
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT费率下发响应处理报错", e);
 //        }
 //    }
@@ -1578,7 +1578,7 @@
 //                    }
 //                }
 //            });
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT充电bms信息处理报错", e);
 //        }
 //    }
@@ -1853,7 +1853,7 @@
 //                    }
 //                }
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT解析ieg遥信遥测数据失败", e);
 //        }
 //
@@ -1878,7 +1878,7 @@
 //            //保存日志数据上报
 //            String gunCode = StringUtil.isNotEmpty(pileLogReportVo.getGunCode()) ? String.valueOf(pileLogReportVo.getGunCode()) : null;
 //            PileRecordUtil.saveMqttRecord(pilesCode, gunCode, 2, 8, 2, CmdConstant.CMD_PILE_LOGREPORT, pileLogReportVo);
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT日志数据上报失败", e);
 //        }
 //    }
@@ -1898,7 +1898,7 @@
 //                demandModel.setRecFlag(true);
 //                demandModel.setRecCode(pileResetResultVo.getResult());//执行结果
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("内网MQTT电桩复位响应失败", e);
 //        }
 //    }
@@ -1918,7 +1918,7 @@
 //                demandModel.setRecFlag(true);
 //                demandModel.setRecCode(pileSetQrResVo.getResult());//执行结果 0-成功 1-失败
 //            }
-//        } catch (Exception e) {
+//        } catch (RuntimeException e) {
 //            log.error("设置二维码前缀响应失败", e);
 //        }
 //    }

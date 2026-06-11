@@ -1,38 +1,37 @@
 package com.sunmax.device.vo.task;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 设备任务记录查询参数实体类
  */
 @Data
-@ApiModel(value = "DeviceTaskRecordVo", description = "设备任务记录查询参数实体类")
+@Schema(description = "设备任务记录查询参数实体类")
 public class DeviceTaskRecordVo {
 
     /**
      * 任务id
      */
-    @ApiModelProperty(value = "任务id", required = true)
+    @Schema(description = "任务id")
     private String taskId;
 
     /**
      * 站点名称
      */
-    @ApiModelProperty(value = "站点名称")
+    @Schema(description = "站点名称")
     private String siteName;
 
     /**
      * 设备名称
      */
-    @ApiModelProperty(value = "设备名称")
+    @Schema(description = "设备名称")
     private String deviceName;
 
     /**
      * 设备序列号
      */
-    @ApiModelProperty(value = "设备序列号")
+    @Schema(description = "设备序列号")
     private String deviceNumber;
 
 }

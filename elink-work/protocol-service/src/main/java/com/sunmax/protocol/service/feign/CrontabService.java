@@ -1,31 +1,13 @@
 package com.sunmax.protocol.service.feign;
-
-import com.sunmax.common.util.ResponseResult;
-import com.sunmax.common.vo.crontab.PileStartControlVo;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
+
 
 /**
- * 接收数据服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.protocol.ProtocolCrontabFeignClient
+ * 请直接使用 com.sunmax.common.feign.protocol.ProtocolCrontabFeignClient
  */
-@FeignClient(value = "scrontab-service")
-@RestController
-@RequestMapping("/scrontab/feign/protocol")
-public interface CrontabService {
-
-    @PostMapping("checkPileStartControl")
-    @ApiOperation("校验电桩平台控制")
-    @ApiOperationSupport(order = 1)
-    ResponseResult<Boolean> checkPileStartControl(@RequestBody PileStartControlVo pileStartControlVo);
-
-    @PostMapping("updatePileStartControl")
-    @ApiOperation("更新电桩平台控制状态")
-    @ApiOperationSupport(order = 2)
-    ResponseResult<Boolean> updatePileStartControl(@RequestBody PileStartControlVo pileStartControlVo);
-
+@FeignClient(value = "crontab-service", path = "/crontab/feign/protocol", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface CrontabService extends com.sunmax.common.feign.protocol.ProtocolCrontabFeignClient {
 }

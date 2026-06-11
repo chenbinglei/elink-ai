@@ -1,8 +1,7 @@
 package com.sunmax.configure.dto.province;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.alibaba.fastjson2.annotation.JSONField;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -14,20 +13,20 @@ import java.util.List;
  * @注释:
  */
 @Data
-@ApiModel(value = "StationStatusDto", description = "充电站状态实体类")
+@Schema(description = "充电站状态实体类")
 public class StationStatusDto {
 
     /**
      * 充电站编码
      */
-    @ApiModelProperty(value = "充电站编码")
+    @Schema(description = "充电站编码")
     @JSONField(name = "StationID")
     private String stationId;
 
     /**
      * 运营商ID
      */
-    @ApiModelProperty(value = "运营商ID")
+    @Schema(description = "运营商ID")
     @JSONField(name = "OperatorID")
     private String operatorId;
 
@@ -36,7 +35,7 @@ public class StationStatusDto {
      *
      * 充电站的设备所属方ID（原组织机构代码），为个人时填写999999999
      */
-    @ApiModelProperty(value = "充电服务运营商ID")
+    @Schema(description = "充电服务运营商ID")
     @JSONField(name = "EquipmentOwnerID")
     private String equipmentOwnerId;
 
@@ -48,14 +47,14 @@ public class StationStatusDto {
      * 6： 维护中
      * 50：正常使用
      */
-    @ApiModelProperty(value = "站点状态")
+    @Schema(description = "站点状态")
     @JSONField(name = "StationStatus")
     private Integer stationStatus;
 
     /**
      * 接口状态列表
      */
-    @ApiModelProperty(value = "接口状态列表")
+    @Schema(description = "接口状态列表")
     @JSONField(name = "ConnectorStatusInfos")
     private List<ConnectorStatusDto> connectorStatusInfos;
 }

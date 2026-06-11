@@ -1,7 +1,8 @@
 package com.sunmax.webapp.util;
+import lombok.extern.slf4j.Slf4j;
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONException;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.config.wechat.HttpRequestUtil;
 import com.sunmax.webapp.dto.AccessTokenDto;
 import com.sunmax.webapp.dto.JsapiTicketDto;
@@ -20,6 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+@Slf4j
 public class CommonUtil {
 
     public final static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
@@ -61,7 +63,7 @@ public class CommonUtil {
             return hexStr.toString();
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -151,7 +153,7 @@ public class CommonUtil {
             } catch (JSONException e) {
                 jsapiTicket = null;
                 // 获取token失败
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
         return jsapiTicket;

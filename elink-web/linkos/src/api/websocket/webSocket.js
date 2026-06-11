@@ -1,7 +1,7 @@
 // 项目所有WebSocket管理
 
 const myLocationHost = "localhost";
-const serverIpAddress = 'ws://192.168.2.158:5000';
+const serverIpAddress = process.env.VUE_APP_WS_URL || `${locationProtocol === "http:" ? "ws:" : "wss:"}//${locationHost}${locationProtocol === "http:" ? ":5000" : ""}`;
 const locationHost = location.hostname;
 const locationProtocol = location.protocol;
 const formalIpAddress = `${locationProtocol === "http:" ? "ws:" : "wss:"}//${locationHost}${locationProtocol === "http:" ? ":5000" : ""}`;

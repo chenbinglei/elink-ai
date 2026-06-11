@@ -1,7 +1,7 @@
 package com.sunmax.together.service.asset.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.sunmax.common.dto.PageDto;
@@ -49,8 +49,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
+import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -217,7 +218,10 @@ public class InspectionServiceImpl implements InspectionService {
                 inspectionItemDao.saveAll(inspectionItemList);
             }
             return ResponseResult.ok(errDescList);
-        } catch (Exception e) {
+        } catch (IOException e) {
+            log.error("导入巡检项配置数据IO异常", e);
+            return ResponseResult.error(ResponseResult.FAIL);
+        } catch (RuntimeException e) {
             log.error("导入巡检项配置数据异常", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }

@@ -1,53 +1,52 @@
 package com.sunmax.log.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "AccessLogQueryVo", description = "日志查询条件实体类")
+@Schema(description = "日志查询条件实体类")
 public class AccessLogQueryVo {
 
     /**
      * 用户id
      */
-    @ApiModelProperty(value = "用户id")
+    @Schema(description = "用户id")
     private String userId;
 
     /**
      * 用户账号
      */
-    @ApiModelProperty(value = "用户账号")
+    @Schema(description = "用户账号")
     private String userAccount;
 
     /**
      * 开始日期
      */
-    @ApiModelProperty(value = "开始日期")
+    @Schema(description = "开始日期")
     private String startDate;
 
     /**
      * 结束日期
      */
-    @ApiModelProperty(value = "结束日期")
+    @Schema(description = "结束日期")
     private String endDate;
 
     /**
      * 客户端id
      */
-    @ApiModelProperty(value = "客户端id")
+    @Schema(description = "客户端id")
     private String clientId;
 
     /**
      * 当前页
      */
-    @ApiModelProperty(value = "当前页", required = true)
+    @Schema(description = "当前页")
     private Integer page;
 
     /**
      * 当前页条数
      */
-    @ApiModelProperty(value = "当前页条数", required = true)
+    @Schema(description = "当前页条数")
     private Integer size;
 
 }

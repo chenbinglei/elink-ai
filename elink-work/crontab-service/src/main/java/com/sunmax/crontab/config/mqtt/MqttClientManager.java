@@ -1,6 +1,6 @@
 package com.sunmax.crontab.config.mqtt;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.util.SpringBeanUtil;
 import com.sunmax.common.util.oss.FileUtil;
 import com.sunmax.common.vo.system.MqttClientVo;

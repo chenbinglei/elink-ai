@@ -1,7 +1,7 @@
 package com.sunmax.crontab.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.model.general.PileRealModel;

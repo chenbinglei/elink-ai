@@ -59,7 +59,7 @@ public class LocalCache {
             cache.put(key, entityClone);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -82,7 +82,7 @@ public class LocalCache {
             cloneObject = (T) ois.readObject();
             ois.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return cloneObject;
     }
@@ -126,8 +126,11 @@ public class LocalCache {
                 try {
                     TimeUnit.SECONDS.sleep(MONITOR_DURATION);
                     checkTime();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    log.error(e.getMessage(), e);
+                } catch (RuntimeException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -145,7 +148,7 @@ public class LocalCache {
                 if (tce.getExpire() > timoutTime) {
                     continue;
                 }
-                System.out.println(" 清除过期缓存 ： " + key);
+                log.info(" 清除过期缓存 ： " + key);
                 //清除过期缓存和删除对应的缓存队列
                 cache.remove(key);
             }

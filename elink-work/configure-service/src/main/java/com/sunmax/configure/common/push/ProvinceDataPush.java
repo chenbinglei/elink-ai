@@ -1,7 +1,7 @@
 package com.sunmax.configure.common.push;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.common.util.oss.FileUtil;
@@ -18,8 +18,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Example;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

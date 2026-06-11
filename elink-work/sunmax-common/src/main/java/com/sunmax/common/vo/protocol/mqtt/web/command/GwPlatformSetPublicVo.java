@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.web.command;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@ApiModel(value = "GwPlatformSetPublicVo", description = "平台设置公共参数")
+@Schema(description = "平台设置公共参数")
 public class GwPlatformSetPublicVo {
 
     /**
@@ -43,7 +43,7 @@ public class GwPlatformSetPublicVo {
     private PolicyPeriod policyPeriod;
 
     @Data
-    @ApiModel(value = "PolicyCfg", description = "策略参数值")
+    @Schema(description = "策略参数值")
     public static class PolicyCfg {
 
         /**
@@ -61,7 +61,7 @@ public class GwPlatformSetPublicVo {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel(value = "PlatformDriver", description = "设置平台驱动参数")
+    @Schema(description = "设置平台驱动参数")
     public static class PlatformDriver {
 
         /**

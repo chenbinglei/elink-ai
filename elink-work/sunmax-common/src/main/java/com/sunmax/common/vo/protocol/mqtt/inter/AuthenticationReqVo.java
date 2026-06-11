@@ -1,7 +1,7 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
 import com.sunmax.common.dto.protocol.mqtt.web.model.UserAccount;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -14,25 +14,25 @@ public class AuthenticationReqVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识 从1开始
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 用户账号
      */
-    @ApiModelProperty(value = "用户账号", required = true)
+    @Schema(description = "用户账号")
     private UserAccount userAccount;
 
     /**
      * 鉴权密码
      */
-    @ApiModelProperty(value = "鉴权密码", required = true)
+    @Schema(description = "鉴权密码")
     private Integer authPwd;
 
 

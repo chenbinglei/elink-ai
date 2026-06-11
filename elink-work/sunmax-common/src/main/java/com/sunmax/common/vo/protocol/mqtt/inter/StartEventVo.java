@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,49 +13,49 @@ public class StartEventVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 事件结果 0-成功 1-启动失败 2-预约成功 3-预约失败 255-其他原因
      */
-    @ApiModelProperty(value = "事件结果", required = true)
+    @Schema(description = "事件结果")
     private Integer eventResult;
 
     /**
      * 失败详细原因
      */
-    @ApiModelProperty(value = "失败详细原因", required = true)
+    @Schema(description = "失败详细原因")
     private Integer failReason;
 
     /**
      * 结束详细描述
      */
-    @ApiModelProperty(value = "结束详细描述", required = true)
+    @Schema(description = "结束详细描述")
     private String stopDetail;
 
     /**
      * 开始充放电时间
      */
-    @ApiModelProperty(value = "开始充放电时间", required = true)
+    @Schema(description = "开始充放电时间")
     private Long startTime;
 
     /**
      * 交易号
      */
-    @ApiModelProperty(value = "交易号", required = true)
+    @Schema(description = "交易号")
     private String recordId;
 
     /**
      * bms信息
      */
-    @ApiModelProperty(value = "bms信息", required = true)
+    @Schema(description = "bms信息")
     private PileBmsInfoReportVo bmsInfo;
 
 }

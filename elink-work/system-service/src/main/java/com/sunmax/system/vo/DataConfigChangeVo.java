@@ -1,23 +1,22 @@
 package com.sunmax.system.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "DataConfigChangeVo", description = "数据配置编辑参数")
+@Schema(description = "数据配置编辑参数")
 public class DataConfigChangeVo {
 
     /**
      * 站点id
      */
-    @ApiModelProperty(value = "站点id", required = true)
+    @Schema(description = "站点id")
     private String siteId;
 
     /**
      * 动态配置
      */
-    @ApiModelProperty(value = "动态配置", required = true)
+    @Schema(description = "动态配置")
     private String dynamicConfigs;
 
 }

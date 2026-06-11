@@ -1,8 +1,8 @@
 package com.sunmax.configure.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.system.SiteOperateDto;
@@ -15,9 +15,8 @@ import com.sunmax.configure.util.HttpResponseUtil;
 import com.sunmax.configure.util.PlatformConfig;
 import com.sunmax.configure.util.TokenUtil;
 import com.sunmax.configure.vo.RequestVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin
 @RequestMapping("/web/province/v1")
-@Api(tags = "省级数据接入管理")
+@Tag(name = "省级数据接入管理")
 @Slf4j
 public class ProvinceDataAccessController {
 
@@ -46,8 +45,8 @@ public class ProvinceDataAccessController {
     private ProvinceDataAccessService provinceDataAccessService;
 
     @PostMapping(value = "supervise_query_operator_info")
-    @ApiOperation("查询运营商信息")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "查询运营商信息")
+    
     public String queryOperatorInfo(@RequestBody RequestVo request) {
         log.info("省级平台查询运营商信息原始入参：{}", request);
         ResponseDto responseDto = HttpResponseUtil.checkData(request, ProtocolEnum.PROVINCE.getCode());
@@ -68,7 +67,7 @@ public class ProvinceDataAccessController {
                 responseDto.setData(JSON.toJSONString(resultMap));
             }
             return HttpResponseUtil.responseData(responseDto);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -78,8 +77,8 @@ public class ProvinceDataAccessController {
     }
 
 /*    @PostMapping(value = "supervise_query_stations_info")
-    @ApiOperation("查询充电站信息")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "查询充电站信息")
+    
     public Map<String, Object> findStationInfoListByTime(String LastQueryTime, Integer PageNo, Integer PageSize, String stationIDs) {
         Map<String, Object> objectMap = provinceDataAccessService.findStationInfoListByTime(LastQueryTime, PageNo, PageSize, stationIDs);
         return objectMap;
@@ -87,8 +86,8 @@ public class ProvinceDataAccessController {
 
 
     @PostMapping(value = "supervise_query_stations_info")
-    @ApiOperation("查询充电站信息")
-    @ApiOperationSupport(order = 2)
+    @Operation(summary = "查询充电站信息")
+    
     public String findStationInfoListByTime(@RequestBody RequestVo request) {
         log.info("省级调用查询充电站信息接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(request));
         ResponseDto responseDto = HttpResponseUtil.checkData(request, ProtocolEnum.PROVINCE.getCode());
@@ -123,7 +122,7 @@ public class ProvinceDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("省级调用查询充电站信息接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -133,15 +132,15 @@ public class ProvinceDataAccessController {
     }
 
     /*    @PostMapping(value = "supervise_query_station_status")
-        @ApiOperation("查询充电站接口状态")
-        @ApiOperationSupport(order = 2)
+        @Operation(summary = "查询充电站接口状态")
+        
         public Map<String, Object> queryStationStatus(String StationIDs) {
             Map<String, Object> objectMap = provinceDataAccessService.queryStationStatus(StationIDs);
             return objectMap;
         }*/
     @PostMapping(value = "supervise_query_station_status")
-    @ApiOperation("查询充电站接口状态")
-    @ApiOperationSupport(order = 3)
+    @Operation(summary = "查询充电站接口状态")
+    
     public String queryStationStatus(@RequestBody RequestVo request) {
         log.info("省级调用查询充电站接口状态接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(request));
         ResponseDto responseDto = HttpResponseUtil.checkData(request, ProtocolEnum.PROVINCE.getCode());
@@ -153,7 +152,7 @@ public class ProvinceDataAccessController {
                 });
                 List<SiteOperateDto> siteOperateList = Lists.newArrayList();
                 if (StringUtil.isNotEmpty(requestDataMap.get("StationIDs"))) {
-                    List<String> cityStationIdList = JSONObject.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
+                    List<String> cityStationIdList = JSON.parseArray(String.valueOf(requestDataMap.get("StationIDs")), String.class);
                     //数据转发配置返回的站点id列表
                     siteOperateList = responseDto.getSiteOperateList();
                     if (CollectionUtils.isNotEmpty(siteOperateList)) {
@@ -170,7 +169,7 @@ public class ProvinceDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("省级调用查询充电站接口状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -180,8 +179,8 @@ public class ProvinceDataAccessController {
     }
 
     @PostMapping(value = "query_token")
-    @ApiOperation("省查询平台token")
-    @ApiOperationSupport(order = 4)
+    @Operation(summary = "省查询平台token")
+    
     public String queryToken(@RequestBody RequestVo request) {
         log.info("省查询token请求参数{}", request);
         String data = request.getData();

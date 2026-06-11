@@ -2,7 +2,7 @@ package com.sunmax.common.dto.protocol.mqtt.inter;
 
 import com.sunmax.common.dto.protocol.mqtt.web.model.Strategy;
 import com.sunmax.common.dto.protocol.mqtt.web.model.UserAccount;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -15,31 +15,31 @@ public class StartCmdDto {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识 从1开始
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 发起者 1-App 2-第三方平台 3-电卡 4-VIN码 5-电桩
      */
-    @ApiModelProperty(value = "发起者 1-App 2-第三方平台 3-电卡 4-VIN码 5-电桩", required = true)
+    @Schema(description = "发起者 1-App 2-第三方平台 3-电卡 4-VIN码 5-电桩")
     private Integer starter;
 
     /**
      * 运行模式 0-充电模式 1-放电模式
      */
-    @ApiModelProperty(value = "运行模式 0-充电模式 1-放电模式", required = true)
+    @Schema(description = "运行模式 0-充电模式 1-放电模式")
     private Integer runMode;
 
     /**
      * 充值类型 1-金额 2-电量
      */
-    @ApiModelProperty(value = "充值类型 1-金额 2-电量", required = true)
+    @Schema(description = "充值类型 1-金额 2-电量")
     private Integer reChargeType;
 
     /**
@@ -47,31 +47,31 @@ public class StartCmdDto {
      * 1-金额 精度0.001元
      * 2-电量 精度0.001kW·h
      */
-    @ApiModelProperty(value = "充值余额", required = true)
+    @Schema(description = "充值余额")
     private Integer payValue;
 
     /**
      * 用户账户
      */
-    @ApiModelProperty(value = "用户账户", required = true)
+    @Schema(description = "用户账户")
     private UserAccount userAccount;
 
     /**
      * 策略
      */
-    @ApiModelProperty(value = "策略", required = true)
+    @Schema(description = "策略")
     private Strategy strategy;
 
     /**
      * 停止充放电密码
      */
-    @ApiModelProperty(value = "停止充放电密码", required = true)
+    @Schema(description = "停止充放电密码")
     private String stopPwd;
 
     /**
      * 交易号
      */
-    @ApiModelProperty(value = "交易号", required = true)
+    @Schema(description = "交易号")
     private String recordId;
 
 }

@@ -1,24 +1,13 @@
 package com.sunmax.device.service.feign;
-
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
-import java.util.Set;
 
 /**
- * 接收配置服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.device.DeviceConfigureFeignClient
+ * 请直接使用 com.sunmax.common.feign.device.DeviceConfigureFeignClient
  */
-@FeignClient(value = "configure-service")
-@RestController
-@RequestMapping("/configure/feign/device")
-public interface ConfigureService {
-
-    @PostMapping("notificationStationInfo")
-    @ApiOperation("充电站信息变化推送")
-    @ApiOperationSupport(order = 1)
-    ResponseResult<Void> notificationStationInfo(@RequestBody Set<String> siteIds);
-
+@FeignClient(value = "configure-service", path = "/configure/feign/device", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface ConfigureService extends com.sunmax.common.feign.device.DeviceConfigureFeignClient {
 }

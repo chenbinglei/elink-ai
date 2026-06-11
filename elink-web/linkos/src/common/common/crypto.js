@@ -33,6 +33,8 @@ export default {
             mode: CryptoJS.mode.CBC,
             padding: CryptoJS.pad.Pkcs7
         });
+        // URL-safe Base64: + → -, / → _, 去除 = 填充
+        // return encrypted.toString().replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
         return encrypted.toString();
     },
     // 解密

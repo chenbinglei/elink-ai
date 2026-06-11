@@ -1,7 +1,7 @@
 package com.sunmax.devops.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
@@ -378,7 +378,7 @@ public class MonitorServiceImpl implements MonitorService {
                                             String timeAgoStr = calculateTimeAgo(createTime, nowTime);
                                             alarm.setAlarmTime(timeAgoStr);
                                         }
-                                    } catch (Exception e) {
+                                    } catch (RuntimeException e) {
                                         // 如果日期解析失败，保持alarmTime为默认值或设置错误提示
                                         alarm.setAlarmTime(null);
                                     }

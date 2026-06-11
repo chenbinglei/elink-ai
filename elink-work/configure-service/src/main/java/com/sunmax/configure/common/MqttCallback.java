@@ -1,7 +1,7 @@
 package com.sunmax.configure.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.constant.IEGConstant;
 import com.sunmax.common.constant.WebTopicConstant;
@@ -27,6 +27,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 @Slf4j
 public class MqttCallback implements org.eclipse.paho.client.mqttv3.MqttCallback {
@@ -58,7 +59,7 @@ public class MqttCallback implements org.eclipse.paho.client.mqttv3.MqttCallback
                     //解析旧主题
                     protocolRecOldMain(iegTopicVo);
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("外网协议服务解析MQTT数据报错", e);
             }
         });
@@ -116,7 +117,7 @@ public class MqttCallback implements org.eclipse.paho.client.mqttv3.MqttCallback
                 }
             }
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("通信MQTT老主题数据处理报错", e);
         }
     }

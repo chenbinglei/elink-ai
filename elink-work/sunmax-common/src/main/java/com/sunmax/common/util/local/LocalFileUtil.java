@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 
 @Slf4j
 public class LocalFileUtil {
@@ -113,7 +114,7 @@ public class LocalFileUtil {
     public static void deleteAllFile(List<String> filePaths) {
         try {
             filePaths.forEach(LocalFileUtil::deleteFile);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("根据多个文件名称删除多个文件失败", e);
         }
     }

@@ -1,110 +1,115 @@
 package com.sunmax.crontab.config;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.sunmax.common.config.RedisTokenAuthenticationFilter;
 import com.sunmax.common.config.SMAccessDeniedHandler;
 import com.sunmax.common.config.SMAuthenticationEntryPoint;
 import com.sunmax.common.dto.auth.PermissionInfoListDto;
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.crontab.service.feign.SauthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
-@EnableResourceServer
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-public class UserResourceConfiguration extends ResourceServerConfigurerAdapter {
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+public class UserResourceConfiguration {
 
     @Autowired
-    private SMAccessDeniedHandler accessDeniedHandler; //无权访问处理器
+    private SMAccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private SMAuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    private RedisTokenAuthenticationFilter redisTokenAuthenticationFilter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                //测试开放所有接口
-                .authorizeRequests()
-                .antMatchers("/doc.html").authenticated()
-                .antMatchers("/swagger-ui.html").authenticated() // 任意访问
-                .antMatchers("/feign/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
-                .antMatchers("/configFuncPoint/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
-                .antMatchers("/*WebSocket/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
-                .antMatchers("/*Websocket/**").permitAll()//服务间内部调用  不需要认证和权限//后面设置权限机制
-                .antMatchers("/**").access("isAuthenticated() && @userResourceConfiguration.canAccess(request, authentication)")//需要认证和权限.antMatchers("/**").permitAll()
-//                .antMatchers("/**").permitAll()
-                .anyRequest()//其他所有需要认证
-                .authenticated();
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
-
-    }
-
-    // 之后引入的bean是为了解决no bean resolver registered的问题
-    @Autowired
-    private OAuth2WebSecurityExpressionHandler expressionHandler;
-
     @Bean
-    public OAuth2WebSecurityExpressionHandler oAuth2WebSecurityExpressionHandler(ApplicationContext applicationContext) {
-        OAuth2WebSecurityExpressionHandler expressionHandler = new OAuth2WebSecurityExpressionHandler();
-        expressionHandler.setApplicationContext(applicationContext);
-        return expressionHandler;
-    }
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .addFilterBefore(redisTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/doc.html").permitAll()
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/v3/api-docs").permitAll()
+                .requestMatchers("/feign/**").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/configFuncPoint/**").permitAll()
+                .requestMatchers("/*WebSocket/**").permitAll()
+                .requestMatchers("/*Websocket/**").permitAll()
+                .requestMatchers("/**").access((authSupplier, context) -> {
+                    HttpServletRequest request = context.getRequest();
+                    Authentication authObj = authSupplier.get();
+                    if (authObj == null || !authObj.isAuthenticated()) {
+                        return new org.springframework.security.authorization.AuthorizationDecision(false);
+                    }
+                    return new org.springframework.security.authorization.AuthorizationDecision(canAccess(request, authObj));
+                })
+                .anyRequest().authenticated()
+            )
+            .exceptionHandling(exceptions -> exceptions
+                .accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
+            );
 
-    @Override
-    public void configure(ResourceServerSecurityConfigurer resources) {
-        // 配置资源 ID --对应sso的资源id
-        resources.resourceId("backend-resources");
-        resources.authenticationEntryPoint(new SMAuthenticationEntryPoint());
-        resources.expressionHandler(expressionHandler);
+        return http.build();
     }
 
     @Autowired
     private SauthService sauthService;
 
     public boolean canAccess(HttpServletRequest request, Authentication authentication) {
-        //根据用户账号获取权限数据
         String clientId = getClientId(authentication);
         String userAccount = authentication.getPrincipal().toString();
-        if (StringUtil.isNotEmpty(userAccount) && StringUtil.isNotEmpty(clientId)) {
+        if (StringUtil.isEmpty(userAccount)) {
+            return false;
+        }
+        if (StringUtil.isEmpty(clientId)) {
+            log.warn("认证信息缺少clientId，拒绝访问: userAccount={}, uri={}", userAccount, request.getRequestURI());
+            return false;
+        }
+        try {
             List<PermissionInfoListDto> permissionList = sauthService.findPermissionByUserAccount(userAccount, clientId).getData();
             List<String> urls = permissionList.stream().filter(p -> Objects.equals(p.getType(), 2)).map(PermissionInfoListDto::getUrl)
                     .collect(Collectors.toList());
             String uri = request.getRequestURI();
             return !urls.isEmpty() && urls.contains(uri);
+        } catch (Exception e) {
+            log.warn("权限查询异常，拒绝访问: userAccount={}, uri={}, error={}", userAccount, request.getRequestURI(), e.getMessage());
+            return false;
         }
-        return false;
     }
 
-    /**
-     * 获取当前登录客户端id
-     *
-     * @param authentication
-     * @return
-     */
     public static String getClientId(Authentication authentication) {
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication oauthAuthentication = (OAuth2Authentication) authentication;
-            return oauthAuthentication.getOAuth2Request().getClientId();
+        if (authentication.getDetails() instanceof JSONObject) {
+            JSONObject details = (JSONObject) authentication.getDetails();
+            return details.getString("clientId");
         }
         return null;
     }

@@ -1,41 +1,40 @@
 package com.sunmax.common.vo.protocol;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "PileLogQueryVo", description = "充电桩日志查询参数实体类")
+@Schema(description = "充电桩日志查询参数实体类")
 public class PileLogQueryVo {
 
     /**
      * 电桩编号
      */
-    @ApiModelProperty(value = "充电桩编号", required = true)
+    @Schema(description = "充电桩编号")
     private String pileCode;
 
     /**
      * 枪编号
      */
-    @ApiModelProperty(value = "充电桩枪编号", required = true)
+    @Schema(description = "充电桩枪编号")
     private String gunCode;
 
     /**
      * 日志类型 1-日志 2-告警记录
      */
-    @ApiModelProperty(value = "日志类型 1-日志 2-告警记录", required = true)
+    @Schema(description = "日志类型 1-日志 2-告警记录")
     private Integer logType;
 
     /**
      * 开始时间
      */
-    @ApiModelProperty(value = "开始时间", required = true)
+    @Schema(description = "开始时间")
     private String startTime;
 
     /**
      * 结束时间
      */
-    @ApiModelProperty(value = "结束时间", required = true)
+    @Schema(description = "结束时间")
     private String endTime;
 
 }

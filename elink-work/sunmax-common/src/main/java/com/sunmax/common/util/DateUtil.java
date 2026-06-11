@@ -1,4 +1,5 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -7,7 +8,6 @@ import com.sunmax.common.util.oss.FileUtil;
 import com.sunmax.common.vo.StaticParamVo;
 import lombok.Data;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,8 +20,10 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.DateTimeException;
 
 @Data
+@Slf4j
 public class DateUtil {
 
     /**
@@ -158,7 +160,7 @@ public class DateUtil {
         try {
             return dateFormat.parse(dateTime);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -211,7 +213,7 @@ public class DateUtil {
         try {
             LocalDateTime dateTime = OffsetDateTime.parse(iso8601).toLocalDateTime();
             return dateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
-        } catch (Exception e) {
+        } catch (DateTimeException e) {
             throw new IllegalArgumentException("无效的 ISO8601 日期格式", e);
         }
     }
@@ -714,7 +716,7 @@ public class DateUtil {
         try {
             date = sf.parse(dateStr);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return isThisTimes(date.getTime(), "yyyy-MM");
     }
@@ -795,8 +797,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf1.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -819,8 +821,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf1.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -867,8 +869,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf1.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
@@ -890,8 +892,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf1.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
@@ -916,7 +918,7 @@ public class DateUtil {
         try {
             calendar.setTime(format.parse(date));
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         calendar.add(Calendar.MONTH, -1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -955,8 +957,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         String gtime2 = sdf.format(myDate);
         return gtime2;
@@ -991,8 +993,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         cal.setTime(myDate);
         //设置月和日都为1，即为开始时间（注：月份是从0开始;日中0表示上个月最后一天，1表示本月开始第一天）
@@ -1023,8 +1025,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         cal.setTime(myDate);
         //设置月为12，月份从0开始
@@ -1055,8 +1057,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = sdf.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         beforeTime.setTime(myDate);
         beforeTime.add(Calendar.MINUTE, -15);// 5分钟之前的时间
@@ -1082,8 +1084,8 @@ public class DateUtil {
         dateStr = dateStr + " 00:00:00";
         try {
             myDate = df.parse(dateStr);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
         List<String> dates = Lists.newArrayList();
@@ -1122,8 +1124,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = df.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         calendar.setTime(myDate);
         calendar.set(Calendar.HOUR_OF_DAY, -8760);
@@ -1147,8 +1149,8 @@ public class DateUtil {
         Date myDate = null;
         try {
             myDate = df.parse(date);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         calendar.setTime(myDate);
         //-11是因为也要算上本月
@@ -1290,7 +1292,7 @@ public class DateUtil {
                 startTime1 = tempStart.getTime();
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return hourList;
     }
@@ -1317,7 +1319,7 @@ public class DateUtil {
                 startTime1 = tempStart.getTime();
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return hourList;
     }
@@ -1339,7 +1341,7 @@ public class DateUtil {
             startTime = new SimpleDateFormat("HH:mm").parse(startTimeStr);
             endTime = new SimpleDateFormat("HH:mm").parse(endTimeStr);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         Calendar date = Calendar.getInstance();
@@ -1371,7 +1373,7 @@ public class DateUtil {
             startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTimeStr);
             endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTimeStr);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         Calendar date = Calendar.getInstance();
@@ -1592,7 +1594,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeSecondDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1604,7 +1606,7 @@ public class DateUtil {
             calendar.add(Calendar.SECOND, -timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1618,7 +1620,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1630,7 +1632,7 @@ public class DateUtil {
             calendar.add(Calendar.MINUTE, -timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1644,7 +1646,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getAfterDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1656,7 +1658,7 @@ public class DateUtil {
             calendar.add(Calendar.MINUTE, +timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1670,7 +1672,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getHourAfterDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1682,7 +1684,7 @@ public class DateUtil {
             calendar.add(Calendar.HOUR_OF_DAY, +timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1696,7 +1698,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeDayDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
@@ -1708,7 +1710,7 @@ public class DateUtil {
             calendar.add(Calendar.DAY_OF_MONTH, -timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1722,7 +1724,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getAfterDayDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
@@ -1734,7 +1736,7 @@ public class DateUtil {
             calendar.add(Calendar.DAY_OF_MONTH, +timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1748,7 +1750,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getAfterTime(String startTime, Integer timeSolt) {
-        if (StringUtils.isEmpty(startTime) || null == timeSolt) {
+        if (StringUtil.isEmpty(startTime) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("HH:mm:ss");
@@ -1760,7 +1762,7 @@ public class DateUtil {
             calendar.add(Calendar.MINUTE, +timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1774,7 +1776,7 @@ public class DateUtil {
      * @throws ParseException
      */
     public static String getBeforeMonthDate(String startDate, Integer timeSolt) {
-        if (StringUtils.isEmpty(startDate) || null == timeSolt) {
+        if (StringUtil.isEmpty(startDate) || null == timeSolt) {
             return null;
         }
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
@@ -1786,7 +1788,7 @@ public class DateUtil {
             calendar.add(Calendar.MONTH, -timeSolt);
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -1856,8 +1858,8 @@ public class DateUtil {
             for (; tt.compareTo(t2) < 0; tt.add(Calendar.MINUTE, 1)) {
                 dateList.add(simple.format(tt.getTime()));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         return dateList;
     }
@@ -1966,8 +1968,8 @@ public class DateUtil {
         try {
             cal1.setTime(df.parse(dateStr1));
             cal2.setTime(df.parse(dateStr2));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         int day1 = cal1.get(Calendar.DAY_OF_YEAR);
         int day2 = cal2.get(Calendar.DAY_OF_YEAR);
@@ -2015,8 +2017,8 @@ public class DateUtil {
             for (; tt.compareTo(t2) < 0; tt.add(Calendar.MINUTE, 30)) {
                 dateList.add(simple.format(tt.getTime()));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         return dateList;
     }
@@ -2033,8 +2035,8 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         try {
             calendar.setTime(sdf.parse(dateStr));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         // 如果是周日
         if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
@@ -2064,8 +2066,8 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         try {
             calendar.setTime(dft.parse(dateStr));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         calendar.add(Calendar.MONTH, 1);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
@@ -2258,7 +2260,7 @@ public class DateUtil {
             }
             beforeDate = calendar.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return simple.format(beforeDate);
     }
@@ -2501,8 +2503,8 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         try {
             calendar.setTime(sdf.parse(dateStr));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ParseException e) {
+            log.error(e.getMessage(), e);
         }
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         boolean isWorkingDay = (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY);

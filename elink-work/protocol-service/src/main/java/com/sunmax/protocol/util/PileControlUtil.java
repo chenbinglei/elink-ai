@@ -10,7 +10,7 @@ import com.sunmax.protocol.task.ControlTask;
 import com.sunmax.common.vo.protocol.PileStartVo;
 import com.sunmax.common.vo.protocol.PileStopVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -120,7 +120,7 @@ public class PileControlUtil {
                     RedisGeneralUtil.setPileRealModel(pileCode, pileRealModel);
                 }
             });
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录缓存订单信息失败的日志
             log.error("缓存订单信息失败", e);
         }

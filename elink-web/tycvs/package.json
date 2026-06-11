@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "setup:env": "test -f .env || (cp .env.example .env && echo 'Created .env from .env.example - please fill in actual values')"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",

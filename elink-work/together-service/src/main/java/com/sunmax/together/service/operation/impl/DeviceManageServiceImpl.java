@@ -1,7 +1,7 @@
 package com.sunmax.together.service.operation.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
@@ -255,7 +255,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
                 return ResponseResult.ok(resultList);
             }
             return ResponseResult.ok(new PageDto<>(resultList, alarmListQueryVo.getPage(), alarmListQueryVo.getSize()));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询告警列表失败", e);
             return ResponseResult.error("查询告警列表异常");
         }

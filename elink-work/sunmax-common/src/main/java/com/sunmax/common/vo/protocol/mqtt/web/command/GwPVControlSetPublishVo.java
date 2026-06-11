@@ -1,62 +1,61 @@
 package com.sunmax.common.vo.protocol.mqtt.web.command;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 调控需求下发
  */
 @Data
-@ApiModel("GwPVControlSetPublishVo")
+@Schema(description = "GwPVControlSetPublishVo")
 public class GwPVControlSetPublishVo {
 
     /**
      * 需求响应事件编号
      */
-    @ApiModelProperty(value = "需求响应事件编号", required = true)
+    @Schema(description = "需求响应事件编号")
     private String sjbh;
 
     /**
      * 需求响应事件名称
      */
-    @ApiModelProperty(value = "需求响应事件名称")
+    @Schema(description = "需求响应事件名称")
     private String sjmc;
 
     /**
      * 需求响应类型 1-削峰 2-填谷
      */
-    @ApiModelProperty(value = "需求响应类型 1-削峰 2-填谷", required = true)
+    @Schema(description = "需求响应类型 1-削峰 2-填谷")
     private Integer xylx;
 
     /**
      * 响应容量kW
      */
-    @ApiModelProperty(value = "响应容量kW", required = true)
+    @Schema(description = "响应容量kW")
     private Float xyrl;
 
     /**
      * 事件类型 1-日前 2-分钟
      */
-    @ApiModelProperty(value = "事件类型 1-日前 2-分钟", required = true)
+    @Schema(description = "事件类型 1-日前 2-分钟")
     private Integer sjlx;
 
     /**
      * 开始时间 格式yyyy-MM-dd HH:mm:ss
      */
-    @ApiModelProperty(value = "开始时间", required = true)
+    @Schema(description = "开始时间")
     private String kssj;
 
     /**
      * 结束时间 格式yyyy-MM-dd HH:mm:ss
      */
-    @ApiModelProperty(value = "结束时间", required = true)
+    @Schema(description = "结束时间")
     private String jssj;
 
     /**
      * 邀约响应截止时间 格式yyyy-MM-dd HH:mm:ss
      */
-    @ApiModelProperty(value = "邀约响应截止时间", required = true)
+    @Schema(description = "邀约响应截止时间")
     private String yyjzsj;
 
 }

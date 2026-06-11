@@ -1,7 +1,7 @@
 package com.sunmax.webapp.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.config.redis.RedisDeviceUtil;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
@@ -282,7 +282,7 @@ public class ChargeServiceImpl implements ChargeService {
                 tradeRefund.setType(appletRefundVo.getType());
                 rechargeTradeDao.save(tradeRefund);
                 return ResponseResult.ok();
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("微信退款异常:{}", e.getMessage());
                 log.info("订单号:{}, 交易金额:{}, 退款金额：{}", appletRefundVo.getOrderNum(), wechatRefundVo.getPayMoney(), wechatRefundVo.getRefundMoney());
                 return ResponseResult.paramError(ResponseResult.FAIL);
@@ -332,7 +332,7 @@ public class ChargeServiceImpl implements ChargeService {
                         if (isRefund) {
                             this.refundOrderProcess(orderNum, appletStartVo.getPileCode(), appletStartVo.getGunCode(), isRebate);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         appletUserStartMap.remove(appletStartVo.getAppletUserId());
                         //启动超时 判断是否退款
                         this.refundOrderProcess(orderNum, appletStartVo.getPileCode(), appletStartVo.getGunCode(), false);
@@ -343,7 +343,7 @@ public class ChargeServiceImpl implements ChargeService {
             }
             log.error("创建订单失败: {}", pileOrder);
             appletUserStartMap.remove(appletStartVo.getAppletUserId());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             appletUserStartMap.remove(appletStartVo.getAppletUserId());
             log.error("启动充电接口报错: ", e);
             return false;

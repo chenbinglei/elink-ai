@@ -25,14 +25,14 @@ import com.sunmax.webapp.vo.AppletTradeQueryVo;
 import com.sunmax.webapp.vo.wechat.WechatMchTransferVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -194,7 +194,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 }
             }
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("用户提现放电收益失败", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }

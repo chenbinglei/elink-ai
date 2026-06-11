@@ -1,6 +1,6 @@
 package com.sunmax.crontab.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.constant.FunctionqConstant;
@@ -313,10 +313,12 @@ public class NodeTaskServiceImpl implements NodeTaskService {
                     //把数据存入缓存
                     boolean putValue = localCache.putValue(taskVo.getId(), localCacheDto, -1);
                     if (!putValue) {
-                        System.out.println("添加缓存失败，key为：" + taskVo.getStorageId());
+                        log.info("添加缓存失败，key为：" + taskVo.getStorageId());
                     }
                 }
-            } catch (Exception e) {
+            } catch (ParseException e) {
+                log.error("节点定时任务时间解析异常", e);
+            } catch (RuntimeException e) {
                 log.error("节点定时任务执行异常", e);
             }
         };

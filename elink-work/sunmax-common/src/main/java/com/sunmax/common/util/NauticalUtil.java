@@ -1,9 +1,9 @@
 package com.sunmax.common.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.util.oss.FileUtil;
@@ -20,8 +20,11 @@ import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.*;
+import java.io.IOException;
 
 /**
  * 经纬度工具类
@@ -142,7 +145,7 @@ public class NauticalUtil {
                     cityName = jsonObject.getJSONObject("regeocode").getJSONObject("addressComponent").getString("city");
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取地址信息异常: ", e);
             return null;
         }
@@ -170,7 +173,7 @@ public class NauticalUtil {
                             .replace(resultMap.get(StaticParamVo.AREA_NAME), FileUtil.separator));
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取地址信息异常{}", e.getMessage());
         }
         return resultMap;
@@ -180,11 +183,11 @@ public class NauticalUtil {
     public static void main(String[] args) {
         Map<String, String> addressMap = NauticalUtil.getAddressByLatAndLongitude("121.84279217184178,29.91191751380522");
         if (!addressMap.isEmpty()) {
-            System.out.println("省:"+addressMap.get(StaticParamVo.PROVINCE_NAME));
-            System.out.println("市:"+addressMap.get(StaticParamVo.CITY_NAME));
-            System.out.println("区:"+addressMap.get(StaticParamVo.AREA_NAME));
-            System.out.println("镇:"+addressMap.get(StaticParamVo.TOWNS_NAME));
-            System.out.println("地址:"+addressMap.get(StaticParamVo.ADDRESS_NAME));
+            log.info("省:"+addressMap.get(StaticParamVo.PROVINCE_NAME));
+            log.info("市:"+addressMap.get(StaticParamVo.CITY_NAME));
+            log.info("区:"+addressMap.get(StaticParamVo.AREA_NAME));
+            log.info("镇:"+addressMap.get(StaticParamVo.TOWNS_NAME));
+            log.info("地址:"+addressMap.get(StaticParamVo.ADDRESS_NAME));
         }
     }
 
@@ -208,7 +211,7 @@ public class NauticalUtil {
                     latAndLongitude = latitude + FileUtil.COMMA + longitude;
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("根据市名称查询经纬度失败", e);
         }
         return latAndLongitude;
@@ -302,7 +305,7 @@ public class NauticalUtil {
             if (StringUtil.isNotEmpty(result)) {
                 return result.toString();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("发送请求失败", e);
         }
         return null;
@@ -336,7 +339,7 @@ public class NauticalUtil {
                 }
             }}, new java.security.SecureRandom());
             TRUST_ALL_SSL_SOCKET_FACTORY = sslContext.getSocketFactory();
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException("初始化SSL上下文失败", e);
         }
     }

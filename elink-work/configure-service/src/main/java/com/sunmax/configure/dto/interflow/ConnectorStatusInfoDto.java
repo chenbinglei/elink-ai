@@ -1,8 +1,7 @@
 package com.sunmax.configure.dto.interflow;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.alibaba.fastjson2.annotation.JSONField;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -12,13 +11,13 @@ import lombok.Data;
  * @注释:
  */
 @Data
-@ApiModel(value = "ConnectorStatusInfoDto", description = "充电设备接口信息实体类")
+@Schema(description = "充电设备接口信息实体类")
 public class ConnectorStatusInfoDto {
 
     /**
      * 接口编码
      */
-    @ApiModelProperty(value = "接口编码")
+    @Schema(description = "接口编码")
     @JSONField(name = "ConnectorID")
     private String connectorId;
 
@@ -32,7 +31,7 @@ public class ConnectorStatusInfoDto {
      * 4:占用（预约锁定）；
      * 255:故障；
      */
-    @ApiModelProperty(value = "接口状态")
+    @Schema(description = "接口状态")
     @JSONField(name = "Status")
     private Integer status;
 
@@ -43,7 +42,7 @@ public class ConnectorStatusInfoDto {
      * 10:空闲；
      * 50:占用
      */
-    @ApiModelProperty(value = "车位状态")
+    @Schema(description = "车位状态")
     @JSONField(name = "ParkStatus")
     private Integer parkStatus;
 
@@ -54,7 +53,7 @@ public class ConnectorStatusInfoDto {
      * 10:已解锁；
      * 50:已上锁
      */
-    @ApiModelProperty(value = "地锁状态")
+    @Schema(description = "地锁状态")
     @JSONField(name = "LockStatus")
     private Integer lockStatus;
 }

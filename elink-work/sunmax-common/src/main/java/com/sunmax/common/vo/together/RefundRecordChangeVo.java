@@ -1,7 +1,6 @@
 package com.sunmax.common.vo.together;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,24 +12,24 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel(value = "RefundRecordChangeVo", description = "退款记录编辑参数")
+@Schema(description = "退款记录编辑参数")
 public class RefundRecordChangeVo {
 
     /**
      * 订单号
      */
-    @ApiModelProperty(value = "订单号", required = true)
+    @Schema(description = "订单号")
     private String orderNum;
 
     /**
      * 退款金额
      */
-    @ApiModelProperty(value = "退款金额", required = true)
+    @Schema(description = "退款金额")
     private BigDecimal refundAmount;
 
     /**
      * 退款操作人
      */
-    @ApiModelProperty(value = "退款操作人")
+    @Schema(description = "退款操作人")
     private String refundOperator;
 }

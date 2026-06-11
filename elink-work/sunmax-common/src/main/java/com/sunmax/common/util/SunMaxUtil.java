@@ -4,12 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -468,7 +470,7 @@ public class SunMaxUtil {
         try {
             currentTime = dateFormat.parse(dateFormat.format(new Date()));
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return currentTime;
     }
@@ -803,7 +805,7 @@ public class SunMaxUtil {
             String getter = "get" + firstLetter + fieldName.substring(1);
             Method method = o.getClass().getMethod(getter);
             return method.invoke(o);
-        } catch (Exception e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             log.error("根据属性名获取属性值报错", e);
             return null;
         }
@@ -849,7 +851,7 @@ public class SunMaxUtil {
             }
             //默认小写，在tostring后加toUpperCase()即为大写加密
             encryptStr = hexValue.toString();
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
         return (stringToByteArray(encryptStr,32)) ;

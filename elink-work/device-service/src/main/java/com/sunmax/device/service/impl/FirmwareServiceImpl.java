@@ -1,6 +1,6 @@
 package com.sunmax.device.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.sunmax.common.dto.PageDto;
@@ -35,7 +35,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -214,7 +215,7 @@ public class FirmwareServiceImpl implements FirmwareService {
                 result = parseFirmwareData(SunMaxUtil.toHexString(file.getBytes()));
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("解析文件失败", e);
             return ResponseResult.paramError(ResponseResult.PARAM_PARSE_ERROR);
         }

@@ -1,22 +1,13 @@
 package com.sunmax.auth.service.feign;
-
-import com.sunmax.common.dto.system.AppletDto;
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
+
 
 /**
- * 接收系统服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.system.AuthSystemFeignClient
+ * 请直接使用 com.sunmax.common.feign.system.AuthSystemFeignClient
  */
-@FeignClient(value = "system-service")
-@RestController
-@RequestMapping("/system/feign/sauth")
-public interface SystemService {
-
-    @PostMapping("findByAppletCodeAndAppletType")
-    @ApiOperation("根据小程序编码和类型查询小程序信息")
-    @ApiOperationSupport(order = 1)
-    ResponseResult<AppletDto> findByAppletCodeAndAppletType(@RequestParam String appletCode, @RequestParam Integer appletType);
+@FeignClient(value = "system-service", path = "/system/feign/sauth", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface SystemService extends com.sunmax.common.feign.system.AuthSystemFeignClient {
 }

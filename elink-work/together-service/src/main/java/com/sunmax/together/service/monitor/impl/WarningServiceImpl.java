@@ -1,6 +1,6 @@
 package com.sunmax.together.service.monitor.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.dto.device.DeviceAlarmEventListDto;
@@ -307,7 +307,7 @@ public class WarningServiceImpl implements WarningService {
                         }, Collectors.counting()));
                 result.setDurationMap(new TreeMap<>(durationList.stream().collect(Collectors.toMap(d -> d, d -> durationMap.getOrDefault(d, 0L)))));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取站点告警分析数据异常", e);
             return ResponseResult.paramError("获取站点告警分析数据异常");
         }
@@ -399,7 +399,7 @@ public class WarningServiceImpl implements WarningService {
                         }).collect(Collectors.toList()));
 
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取设备告警分析数据异常", e);
             return ResponseResult.paramError("获取设备告警分析数据异常");
         }

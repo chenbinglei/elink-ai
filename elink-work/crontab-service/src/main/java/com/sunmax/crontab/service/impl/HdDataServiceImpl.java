@@ -1,6 +1,6 @@
 package com.sunmax.crontab.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.configure.PowerControlResDto;
 import com.sunmax.common.dto.crontab.LocalCacheDto;
@@ -34,9 +34,10 @@ import com.sunmax.crontab.vo.mqtt.StationPayLoadVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import java.lang.reflect.InvocationTargetException;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -109,7 +110,7 @@ public class HdDataServiceImpl implements HdDataService {
                                 } else {
                                     log.error("找不到对应的客户端id: " + clientId);
                                 }
-                            } catch (Exception e) {
+                            } catch (RuntimeException e) {
                                 log.error("推送充电站信息失败", e);
                             }
                         }
@@ -280,7 +281,7 @@ public class HdDataServiceImpl implements HdDataService {
         }
         try {
             BeanUtils.populate(result, resultMap);
-        } catch (Exception e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("数据转换错误", e);
         }
     }

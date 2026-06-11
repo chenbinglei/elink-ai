@@ -1,6 +1,6 @@
 package com.sunmax.protocol.util.platform;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.util.DateUtil;
 import com.sunmax.common.util.StringUtil;
@@ -94,7 +94,18 @@ public class PlatformControlDemand {
             result.put("recMsg", 0);
             log.error("任务执行超时", ex);
             return result;
-        }  catch (Exception e) {
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            result.put("recCode", 1);
+            result.put("recMsg", 0);
+            log.error("任务执行被中断", ex);
+            return result;
+        } catch (ExecutionException ex) {
+            result.put("recCode", 1);
+            result.put("recMsg", 0);
+            log.error("任务执行失败", ex);
+            return result;
+        } catch (RuntimeException e) {
             result.put("recCode", 1);
             result.put("recMsg", 0);
             log.error("任务执行失败", e);

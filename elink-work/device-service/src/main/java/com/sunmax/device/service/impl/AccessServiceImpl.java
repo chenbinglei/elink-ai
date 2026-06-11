@@ -180,7 +180,7 @@ public class AccessServiceImpl implements AccessService {
                 }
                 RedisUtil.set(deviceKey, deviceModel);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("通道数据存redis报错", e);
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
         } finally {
@@ -213,7 +213,7 @@ public class AccessServiceImpl implements AccessService {
                             RedisUtil.set(deviceKey, device);
                         }
                     }
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.error("删除设备redis里面的通道数据报错", e);
                 } finally {
                     RedisLockUtil.unlock(lockKey);
@@ -458,7 +458,7 @@ public class AccessServiceImpl implements AccessService {
                     } else {
                         return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
                     }
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.error("通道数据存redis报错", e);
                     return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
                 }

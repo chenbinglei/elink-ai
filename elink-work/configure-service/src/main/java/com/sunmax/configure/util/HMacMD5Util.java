@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.security.GeneralSecurityException;
 
 @Slf4j
 public class HMacMD5Util {
@@ -147,7 +148,7 @@ public class HMacMD5Util {
              * H(K XOR opad, H(K XOR ipad, text)) 对上面的数据进行哈希运算。
              */
             return bytesToHexString(md5(secondAppendResult));
-        } catch (Exception e) {
+        } catch (GeneralSecurityException e) {
             log.error("生成HMacMD5签名失败", e);
             return null;
         }

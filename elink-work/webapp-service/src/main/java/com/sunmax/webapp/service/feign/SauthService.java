@@ -1,27 +1,13 @@
 package com.sunmax.webapp.service.feign;
-
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
-import java.util.Map;
 
 /**
- * 获取接入服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.auth.AuthSauthFeignClient
+ * 请直接使用 com.sunmax.common.feign.auth.AuthSauthFeignClient
  */
-@FeignClient(value = "sauth-service")
-@RestController
-@RequestMapping("/sauth")
-public interface SauthService {
-
-    @PostMapping("/oauth/token")
-    @ApiOperation("用户登录Post请求方式")
-    @ApiOperationSupport(order = 1)
-    ResponseResult<Map<String,Object>> postAccessToken(@RequestParam Map<String, String> parameters);
-
+@FeignClient(value = "sauth-service", path = "/sauth", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface SauthService extends com.sunmax.common.feign.auth.AuthSauthFeignClient {
 }

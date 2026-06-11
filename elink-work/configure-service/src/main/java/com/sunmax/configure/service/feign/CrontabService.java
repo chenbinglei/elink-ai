@@ -1,29 +1,13 @@
 package com.sunmax.configure.service.feign;
-
-import com.sunmax.common.dto.crontab.ComputeNodeListDto;
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
-import java.util.List;
 
 /**
- * 接收定时服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.configure.ConfigureCrontabFeignClient
+ * 请直接使用 com.sunmax.common.feign.configure.ConfigureCrontabFeignClient
  */
-@FeignClient(value = "scrontab-service")
-@RestController
-@RequestMapping("/scrontab/feign/configure")
-public interface CrontabService {
-
-    @PostMapping("findComputeNodeListByDeviceId")
-    @ApiOperation("根据站点/设备id查询计算节点列表")
-    @ApiOperationSupport(order = 1)
-    @ApiImplicitParam(name = "deviceId", value = "站点/设备唯一id", dataType = "String", required = true)
-    ResponseResult<List<ComputeNodeListDto>> findComputeNodeListByDeviceId(@RequestParam String deviceId);
+@FeignClient(value = "crontab-service", path = "/crontab/feign/configure", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface CrontabService extends com.sunmax.common.feign.configure.ConfigureCrontabFeignClient {
 }

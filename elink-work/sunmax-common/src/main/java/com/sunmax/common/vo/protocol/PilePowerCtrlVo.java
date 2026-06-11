@@ -1,7 +1,6 @@
 package com.sunmax.common.vo.protocol;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,37 +13,37 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel("PilePowerCtrlVo")
+@Schema(description = "PilePowerCtrlVo")
 public class PilePowerCtrlVo {
 
     /**
      * 充电桩编号
      */
-    @ApiModelProperty(value = "充电桩编号", required = true)
+    @Schema(description = "充电桩编号")
     private String pileCode;
 
     /**
      * 充电枪编号
      */
-    @ApiModelProperty(value = "充电枪编号", required = true)
+    @Schema(description = "充电枪编号")
     private String gunCode;
 
     /**
      * 运行模式 0-充电模式  1-放电模式
      */
-    @ApiModelProperty(value = "运行模式 0-充电模式  1-放电模式", required = true)
+    @Schema(description = "运行模式 0-充电模式  1-放电模式")
     private Integer runMode;
 
     /**
      * 控制类型 0-绝对控制 1-相对控制
      */
-    @ApiModelProperty(value = "控制类型 0-绝对控制 1-相对控制", required = true)
+    @Schema(description = "控制类型 0-绝对控制 1-相对控制")
     private Integer ctrlType;
 
     /**
      * 输出功率
      */
-    @ApiModelProperty(value = "输出功率", required = true)
+    @Schema(description = "输出功率")
     private Double outPower;
 
 }

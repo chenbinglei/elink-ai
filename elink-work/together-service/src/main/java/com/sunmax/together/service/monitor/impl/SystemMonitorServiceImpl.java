@@ -1,9 +1,9 @@
 package com.sunmax.together.service.monitor.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
@@ -82,7 +82,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
     public ResponseResult<List<SystemTreeDto>> getSystemTreeList(String siteId, Integer type) {
         try {
             return ResponseResult.ok(this.getSystemMonitorData(siteId, siteId, type, null));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取系统树形结构报错", e);
             return ResponseResult.paramError("获取系统树形结构报错");
         }
@@ -265,7 +265,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询光伏系统数据报错", e);
             return ResponseResult.paramError("查询光伏系统数据报错,请稍后重试!!");
         }
@@ -352,7 +352,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询光伏逆变器静态数据报错", e);
             return ResponseResult.paramError("查询光伏逆变器静态数据报错,请稍后重试!!");
         }
@@ -425,7 +425,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询光伏气象站静态数据报错", e);
             return ResponseResult.paramError("查询光伏气象站静态数据报错,请稍后重试!!");
         }
@@ -611,7 +611,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询储能系统静态数据报错", e);
             return ResponseResult.paramError("查询储能系统静态数据报错,请稍后重试!!");
         }
@@ -698,7 +698,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询储能PCS静态数据报错", e);
             return ResponseResult.paramError("查询储能PCS静态数据报错,请稍后重试!!");
         }
@@ -817,7 +817,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询储能电池簇静态数据报错", e);
             return ResponseResult.paramError("查询储能电池簇静态数据报错,请稍后重试!!");
         }
@@ -899,7 +899,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询储能辅助设备静态数据报错", e);
             return ResponseResult.paramError("查询储能辅助设备静态数据报错,请稍后重试!!");
         }
@@ -1080,7 +1080,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电桩系统静态数据报错", e);
             return ResponseResult.paramError("查询电桩系统静态数据报错,请稍后重试!!");
         }
@@ -1141,7 +1141,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电桩静态数据报错", e);
             return ResponseResult.error("查询电桩静态数据报错,请稍后重试!!");
         }
@@ -1220,7 +1220,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询超充桩静态数据报错", e);
             return ResponseResult.error("查询超充桩静态数据报错,请稍后重试!!");
         }
@@ -1319,7 +1319,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(resultList);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电枪数据报错", e);
             return ResponseResult.error("查询电枪数据报错,请稍后重试!!");
         }
@@ -1435,7 +1435,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                     return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询系统曲线数据报错", e);
             return ResponseResult.error("查询系统曲线数据报错,请稍后重试!!");
         }
@@ -1487,7 +1487,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }).collect(Collectors.toList()));
             }
             return ResponseResult.ok(resultPage);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询系统告警数据报错", e);
             return ResponseResult.paramError("查询系统告警数据报错,请稍后重试!!");
         }
@@ -1604,7 +1604,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
 
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取站点及站点下面的设备数据字段报错", e);
             return ResponseResult.paramError("获取站点及站点下面的设备数据字段报错,请稍后重试!!");
         }
@@ -1865,7 +1865,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询站点历史数据报错", e);
             return ResponseResult.paramError("查询站点历史数据报错,请稍后重试!!");
         }
@@ -1897,7 +1897,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询站点详情数据报错: ", e);
             return ResponseResult.paramError("查询站点详情数据报错,请稍后重试!!");
         }
@@ -1926,7 +1926,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(new PageDto<>(resultList, page, size));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电池簇电芯列表数据报错: ", e);
             return ResponseResult.paramError("查询电池簇电芯列表数据报错,请稍后重试!!");
         }
@@ -1972,7 +1972,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询换电系统数据报错", e);
             return ResponseResult.paramError("查询换电系统数据报错,请稍后重试!!");
         }
@@ -2122,7 +2122,7 @@ public class SystemMonitorServiceImpl implements SystemMonitorService {
                 }
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电表静态数据报错", e);
             return ResponseResult.paramError("查询电表静态数据报错,请稍后重试!!");
         }

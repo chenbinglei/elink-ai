@@ -1,6 +1,7 @@
 package com.sunmax.common.util.oss;
 
-import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
@@ -42,7 +43,7 @@ public class OssFileUtil {
             InputStream inputStream = file.getInputStream();
             uploadFile2(inputStream, name);
             return name;//RestResultGenerator.createSuccessResult(name);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return "上传失败";//RestResultGenerator.createErrorResult(ResponseEnum.PHOTO_UPLOAD);
         }
     }
@@ -65,10 +66,10 @@ public class OssFileUtil {
             objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             //上传文件
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             PutObjectResult putResult = ossClient.putObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.FILE_DIR + fileName, inStream, objectMetadata);
             ret = putResult.getETag();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             try {
@@ -76,7 +77,7 @@ public class OssFileUtil {
                     inStream.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
         return ret;
@@ -145,7 +146,7 @@ public class OssFileUtil {
         // 设置URL过期时间为10年  3600l* 1000*24*365*10
         Date expiration = new Date(new Date().getTime() + 3600L * 1000 * 24 * 365 * 10);
         // 生成URL
-        OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
         URL url = ossClient.generatePresignedUrl(AliYunParamVo.BUCKET_NAME, key, expiration);
         if (url != null) {
             return url.toString();
@@ -202,7 +203,7 @@ public class OssFileUtil {
      * 解析文件内容
      */
     public static String parseFile(String fileName) {
-        OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
         try {
             OSSObject ossObj = ossClient.getObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.FILE_DIR + fileName);
             InputStream inputStream = ossObj.getObjectContent();
@@ -224,7 +225,7 @@ public class OssFileUtil {
      */
     public static Map<String, String> parseFiles(List<String> fileNames) {
         Map<String, String> resultMap = Maps.newHashMap();
-        OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
         try {
             fileNames.forEach(fileName -> {
                 try {
@@ -257,7 +258,7 @@ public class OssFileUtil {
      */
     public static void deleteFile(String fileName) {
         try {
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             ossClient.deleteObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.FILE_DIR + fileName);
             ossClient.shutdown();
         } catch (Exception e) {
@@ -270,7 +271,7 @@ public class OssFileUtil {
      */
     public static void deleteAllFile(List<String> fileNames) {
         try {
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             fileNames.forEach(f->ossClient.deleteObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.FILE_DIR + f));
             ossClient.shutdown();
         } catch (Exception e) {
@@ -286,7 +287,7 @@ public class OssFileUtil {
     public static byte[] readFile(String ossFileName) {
         byte[] content = null;
         try {
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             content = ossRead(ossClient, ossFileName);
             ossClient.shutdown();
             return content;
@@ -296,7 +297,7 @@ public class OssFileUtil {
         }
     }
 
-    public static byte[] ossRead(OSSClient ossClient, String ossFileName) throws Exception {
+    public static byte[] ossRead(OSS ossClient, String ossFileName) throws Exception {
         OSSObject ossObject = ossClient.getObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.FILE_DIR + ossFileName);
         InputStream in = ossObject.getObjectContent();
         byte[] byteArray = IOUtils.toByteArray(in);
@@ -306,7 +307,7 @@ public class OssFileUtil {
 
     public static InputStream getFileInputStream(String ossFileName) {
         try {
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             OSSObject ossObject = ossClient.getObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.FILE_DIR + ossFileName);
             InputStream in = ossObject.getObjectContent();
             ossClient.shutdown();
@@ -347,7 +348,7 @@ public class OssFileUtil {
     public static String generatePrivateFileUrl(String fileName) {
 
         // 使用专用 RAM 用户的 AK（权限最小化！）
-        OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
 
         Date expiration = new Date(System.currentTimeMillis() + 5 * 60 * 1000); // 5分钟
         URL url = ossClient.generatePresignedUrl(

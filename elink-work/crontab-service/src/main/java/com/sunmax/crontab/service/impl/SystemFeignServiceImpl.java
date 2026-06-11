@@ -17,7 +17,10 @@ public class SystemFeignServiceImpl implements SystemFeignService {
             //创建mqtt客户端连接
             MqttClientManager.addClient(mqttClientVo);
             return ResponseResult.ok();
-        } catch (Exception e) {
+        } catch (org.eclipse.paho.client.mqttv3.MqttException e) {
+            log.error("创建客户端连接失败", e);
+            return ResponseResult.paramError("创建客户端连接失败");
+        } catch (RuntimeException e) {
             log.error("创建客户端连接失败", e);
             return ResponseResult.paramError("创建客户端连接失败");
         }
@@ -30,7 +33,10 @@ public class SystemFeignServiceImpl implements SystemFeignService {
                 MqttClientManager.disconnect(clientId);
             }
             return ResponseResult.ok();
-        } catch (Exception e) {
+        } catch (org.eclipse.paho.client.mqttv3.MqttException e) {
+            log.error("删除客户端连接失败", e);
+            return ResponseResult.paramError("删除客户端连接失败");
+        } catch (RuntimeException e) {
             log.error("删除客户端连接失败");
             return ResponseResult.paramError("删除客户端连接失败");
         }

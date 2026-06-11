@@ -1,6 +1,6 @@
 package com.sunmax.together.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.dto.device.SiteInfoDto;
@@ -41,8 +41,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
+import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;

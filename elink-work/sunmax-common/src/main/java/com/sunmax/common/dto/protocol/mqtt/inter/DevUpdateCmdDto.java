@@ -1,6 +1,6 @@
 package com.sunmax.common.dto.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,25 +13,25 @@ public class DevUpdateCmdDto {
     /**
      * 固件获取发起者 0-电桩获取 1-平台下发
      */
-    @ApiModelProperty(value = "固件获取发起者 0-电桩获取 1-平台下发", required = true)
+    @Schema(description = "固件获取发起者 0-电桩获取 1-平台下发")
     private Integer sponsor;
 
     /**
      * 强制升级 0-不强制 1-强制
      */
-    @ApiModelProperty(value = "强制升级 0-不强制 1-强制", required = true)
+    @Schema(description = "强制升级 0-不强制 1-强制")
     private Integer forced_update;
 
     /**
      * 要求硬件主版本号
      */
-    @ApiModelProperty(value = "要求硬件主版本号", required = true)
+    @Schema(description = "要求硬件主版本号")
     private Integer request_majorNo;
 
     /**
      * 要求硬件子版本号
      */
-    @ApiModelProperty(value = "要求硬件子版本号", required = true)
+    @Schema(description = "要求硬件子版本号")
     private Integer request_childNo;
 
     /**
@@ -45,43 +45,43 @@ public class DevUpdateCmdDto {
      * 7 V2G_7.0 控制板
      * 8 V2G_8.0 控制板
      */
-    @ApiModelProperty(value = "固件类型", required = true)
+    @Schema(description = "固件类型")
     private Integer deviceType;
 
     /**
      * 新固件主版本号
      */
-    @ApiModelProperty(value = "新固件主版本号", required = true)
+    @Schema(description = "新固件主版本号")
     private Integer majorNo;
 
     /**
      * 新固件次版本号
      */
-    @ApiModelProperty(value = "新固件次版本号", required = true)
+    @Schema(description = "新固件次版本号")
     private Integer childNo;
 
     /**
      * 新固件内测版本号
      */
-    @ApiModelProperty(value = "新固件内测版本号", required = true)
+    @Schema(description = "新固件内测版本号")
     private Integer betaNo;
 
     /**
      * 新固件编译时间
      */
-    @ApiModelProperty(value = "新固件编译时间", required = true)
+    @Schema(description = "新固件编译时间")
     private Integer compiletime;
 
     /**
      * 新固件数据大小
      */
-    @ApiModelProperty(value = "新固件数据大小", required = true)
+    @Schema(description = "新固件数据大小")
     private Integer dataLen;
 
     /**
      * 新固件数据校验码
      */
-    @ApiModelProperty(value = "新固件数据校验码", required = true)
+    @Schema(description = "新固件数据校验码")
     private Long deviceCRC;
 
 }

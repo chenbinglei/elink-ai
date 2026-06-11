@@ -31,7 +31,7 @@ public class RedisGeneralUtil {
 
             // 如果存在，从Redis中获取数据，并转换为网关实时数据模型
             return JsonUtil.objectToEntity(RedisUtil.get(deviceKey), GatewayRealModel.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录获取Redis中通用网关实时数据失败的错误日志
             log.error("获取redis中通用网关实时数据失败", e);
             return null;
@@ -55,7 +55,7 @@ public class RedisGeneralUtil {
             // 将网关的实时模型存储到Redis
             gatewayRealModel.setTerminalCode(terminalCode);
             RedisUtil.set(deviceKey, gatewayRealModel);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录存取数据失败的错误日志
             log.error("存取redis中通用网关实时数据失败", e);
         }
@@ -82,7 +82,7 @@ public class RedisGeneralUtil {
                 // 从Redis中删除设备的实时数据
                 RedisUtil.delete(deviceKey);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录删除操作失败的日志
             log.error("删除redis中通用网关实时数据失败", e);
         } finally {
@@ -109,7 +109,7 @@ public class RedisGeneralUtil {
             }
             // 从Redis获取电桩实时数据，并转换为电桩实时数据模型
             return JsonUtil.objectToEntity(RedisUtil.get(deviceKey), PileRealModel.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录获取电桩实时数据失败的错误日志
             log.error("获取redis中通用电桩实时数据失败", e);
             // 出现异常时返回null
@@ -134,7 +134,7 @@ public class RedisGeneralUtil {
             // 将设备的实时模型存储到Redis
             pileRealModel.setPileCode(deviceCode);
             RedisUtil.set(deviceKey, pileRealModel);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录存取数据失败的错误日志
             log.error("存取redis中通用电桩实时数据失败", e);
         }
@@ -163,7 +163,7 @@ public class RedisGeneralUtil {
             } else {
                 log.warn("尝试获取锁失败，无法删除电桩实时数据: {}", deviceCode);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录删除操作失败的日志，增加更详细的错误信息
             log.error("删除redis中通用电桩实时数据失败: {}", deviceCode, e);
         } finally {
@@ -172,7 +172,7 @@ public class RedisGeneralUtil {
                     // 无论成功或失败，最后都释放锁
                     RedisLockUtil.unlock(lockKey);
                     log.info("成功释放锁: {}", lockKey);
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.error("释放锁失败: {}", lockKey, e);
                 }
             }
@@ -202,7 +202,7 @@ public class RedisGeneralUtil {
                 }
             });
             return pileRealModelList;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录获取电桩实时数据失败的错误日志
             log.error("获取redis中通用电桩实时数据失败", e);
             // 出现异常时返回null
@@ -229,7 +229,7 @@ public class RedisGeneralUtil {
             } else {
                 log.error("获取redis中通用网关实时数据锁失败：{}", lockKey);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录存取数据失败的错误日志
             log.error("redis中通用网关实时数据加锁异常", e);
         } finally {
@@ -258,7 +258,7 @@ public class RedisGeneralUtil {
             } else {
                 log.error("redis中通用电桩实时数据获取锁失败：{}", lockKey);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 日志记录加锁失败的情况
             log.error("redis中通用电桩实时数据加锁异常", e);
         } finally {
