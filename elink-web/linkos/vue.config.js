@@ -22,7 +22,12 @@ module.exports = defineConfig({
       new webpack.ProvidePlugin({
         localStorage: resolve("./src/utils/localStorageUtil.js")
       })
-    ]
+    ],
+    resolve: {
+      alias: {
+        '@elink/shared': path.resolve(__dirname, '../packages/shared/src')
+      }
+    }
   },
   css: {
     extract: false,

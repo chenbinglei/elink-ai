@@ -27,6 +27,7 @@
     "three": "^0.161.0",
     "viewerjs": "^1.11.6",
     "vue": "^3.2.13",
+    "@elink/shared": "workspace:*",
     "vue-echarts": "^6.2.3",
     "vue-horizontal-scroll": "^0.2.4",
     "vue-router": "^4.0.3",
