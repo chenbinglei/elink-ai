@@ -83,7 +83,7 @@ export default {
   setup(props) {
 
     const isAddButtonClick = computed(()=>{
-      return operateButtonIsClick('/scrontab/nodeAddRecord/saveNodeAddRecord')
+      return operateButtonIsClick('/crontab/nodeAddRecord/saveNodeAddRecord')
     })
 
     const that = reactive({

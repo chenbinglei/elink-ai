@@ -113,7 +113,7 @@ export default defineComponent({
   setup(props) {
 
     const isAddButtonClick = computed(()=>{
-      return operateButtonIsClick('/scrontab/computeNode/saveOrUpdateComputeNodeInfo')
+      return operateButtonIsClick('/crontab/computeNode/saveOrUpdateComputeNodeInfo')
     })
 
     const that = reactive({

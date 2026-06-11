@@ -60,6 +60,7 @@
 | P4-A-hotfix-v3 | linkos 闪黑屏修复（portNum 对齐） | 2026-06-11 | AI | 根因：新代码总是替换 baseURL 端口，但旧 linkos 中 portNum 处理被注释（212处portNum字段实际未生效），生产环境导致直连微服务端口失败。新增 enablePortNum 选项，derms=true、linkos/tycvs=false |
 | P4-A-hotfix-v4 | linkos 首屏/路由切换闪黑屏体验优化 | 2026-06-11 | AI | 注入 HTML 首屏 CSS-only loading 占位符+防黑闪背景色#F8F8F8，AppMain 增加 fade-route transition 0.2s opacity 过渡，NProgress 优化（起始15%/异常兜底），全面消除刷新/路由切换/接口调用的黑屏感知 |
 | P4-A-hotfix-v5 | linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰）| 2026-06-11 | AI | 根因：element.scss 全局 --el-mask-color: rgba(51,51,51,0.8) 导致 v-loading 表格区域显示深灰几乎不透明遮罩。修复：分离 ElLoading 与 Dialog 遮罩配色，ElLoading 改用半透明白色磨砂(0.75 + backdrop-filter blur) + 蓝色 spinner |
+| P4-A-hotfix-v6 | 前端 API 路径 /scrontab → /crontab 对齐 | 2026-06-11 | AI | 后端 crontab-service context-path=/crontab、网关 Path=/crontab/**，但前端 linkos/tycvs 有 8 文件 28 处仍使用 /scrontab 旧路径，全部替换以对齐后端真实路由 |
 
 ---
 
