@@ -3314,30 +3314,57 @@ public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity h
 
 #### 背景
 
-P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题。
+P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现**5个运行时一致性问题**。
 
 #### 修复内容
 
-**Fix 1 - portNum 动态端口路由丢失（root cause 1）**
+**Fix 1 - portNum 动态端口路由丢失（Critical）**
 - 问题：旧代码（derms）使用每请求新 axios 实例的模式，每个请求通过 `portNum` 字段指定后端服务端口。新代码采用单例 axios 实例，`portNum` 被完全忽略，所有 API 路由到默认网关（:5000），导致关键数据接口失败
 - 修复：在 `request()` 和 `cancelAbleService()` 函数中添加 portNum 检测，动态替换 baseURL 中的端口号
 
-**Fix 2 - 特殊端点错误弹窗（root cause 3）**
+**Fix 2 - 特殊端点错误弹窗（Medium）**
 - 问题：derms 旧代码中 `/together/electConfig/applyElectConfigToOtherSite` 端点预期返回 code !== 20000，旧逻辑特意不弹错误消息。新代码统一弹 ElMessage 错误提示
 - 修复：在 response 拦截器中对特殊端点跳过错误弹窗
 
-**Fix 3 - config.data 为空对象时的空指针（root cause 5 变体）**
-- 问题：当 `config.data` 为 `null` 或 `undefined` 时，`Object.keys(data)` 或 `config.data.userId` 抛异常
-- 修复：添加 `config.data` 非空判断，同时优化 `removePending` 的循环为倒序遍历避免索引偏移
+**Fix 3 - per-request 隔离模式缺失（黑屏 root cause）**
+- 问题：**derms 黑屏的真正原因**。旧代码是每请求独立实例/独立 pending 队列模式，并发请求不会被互相取消。新代码改为单例共享 pending，页面加载时同时调用的 5-10 个 API 被错误识别为重复请求并取消，导致大量 CanceledError + ElMessage 轰炸 → Vue 错误边界崩溃黑屏
+- 修复：增加 `perRequestIsolation` 选项，derms 设为 true，保持原有每请求独立实例模式
+
+**Fix 4 - CanceledError 检测方式不可靠（Medium）**
+- 问题：旧代码用 `JSON.stringify(error).indexOf("CanceledError")` 字符串匹配，新版 axios 中不兼容，导致被取消的请求仍弹错误提示
+- 修复：使用 `axios.isCancel(error)` 官方 API + 多种 fallback（error.name/code/message 包含 Cancel）
+
+**Fix 5 - userInfo 空指针保护（Low）**
+- 问题：localStorage 为空或被清空时，`userInfo = JSON.parse(null)` 抛出异常，请求中断可能导致白屏
+- 修复：try-catch + userInfo 非空判断保护
+
+#### 两种隔离模式对照表
+
+| 模式 | perRequestIsolation | pending队列 | 适用项目 | 并发请求处理 |
+|------|---------------------|-------------|----------|--------------|
+| 单例模式 | false（默认） | 全局共享 | linkos | 相同请求1.5秒内只允许一个 |
+| 每请求隔离 | true | 每个请求独立 | derms | 并发请求不受限制 |
 
 #### 验证结果
 
 | 验证项 | 结果 | 说明 |
 |--------|------|------|
-| derms构建 | ✅ 通过 | vite build 6347 modules transformed, 2m32s |
-| linkos构建 | ✅ 通过 | vue-cli-service build 60s |
-| tycvs构建 | ✅ 通过 | vue-cli-service build 48s |
+| derms构建 | ✅ 通过 | vite build 6347 modules transformed |
+| linkos构建 | ✅ 通过 | vue-cli-service build |
+| tycvs构建 | ✅ 通过 | vue-cli-service build |
 
 #### 变更文件
 
-- `elink-web/packages/shared/src/http/request.js`（修复 portNum/特殊端点/null安全）
+- `elink-web/packages/shared/src/http/request.js`（架构级修复：5项运行时缺陷）
+- `elink-web/derms/src/utils/request.js`（启用 perRequestIsolation: true）
+- `elink-web/derms/src/utils/requestVue.js`（启用 perRequestIsolation: true）
+
+---
+
+### P4-A-hotfix | @elink/shared 运行时缺陷修复
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题。
