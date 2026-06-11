@@ -1,10 +1,10 @@
-// Auth模块
-export { createAuthManager, linkosAuth, dermsAuth, tycvsAuth } from "./auth";
+// Auth 模块（工厂函数）
+export { createAuthManager, AUTH_PREFIX } from "./auth/index.js";
 
-// HTTP模块
-export { createHttpClient } from "./http";
+// HTTP 模块（工厂函数）
+export { createHttpClient } from "./http/request.js";
 
-// Utils模块
-export { transform } from "./utils/transformRequest";
-export { isDev, isProd } from "./utils/env";
-export * from "./utils/validate";
+// Utils 模块
+export { createTransform } from "./utils/transformRequest.js";
+export { isDev, isProd } from "./utils/env.js";
+export * from "./utils/validate.js";

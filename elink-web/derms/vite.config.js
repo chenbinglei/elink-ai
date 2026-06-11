@@ -12,34 +12,6 @@ function resolve (dir) {
   return path.join(process.cwd(), dir);
 }
 
-// 自定义Vite插件：解析@elink/shared中的依赖到项目node_modules
-function sharedResolvePlugin() {
-  const sharedDir = path.resolve(__dirname, '../packages/shared/src');
-  return {
-    name: 'shared-resolve',
-    resolveId(source, importer) {
-      if (importer && importer.startsWith(sharedDir) && !source.startsWith('.') && !source.startsWith('@')) {
-        const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-        const modulePath = path.join(nodeModulesDir, source);
-        // 优先通过package.json main字段找到入口文件
-        const pkgJsonPath = path.join(modulePath, 'package.json');
-        if (fs.existsSync(pkgJsonPath)) {
-          try {
-            const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf-8'));
-            const mainFile = pkg.main || pkg.module || 'index.js';
-            const mainPath = path.join(modulePath, mainFile);
-            if (fs.existsSync(mainPath)) return mainPath;
-          } catch (e) { /* ignore */ }
-        }
-        // 尝试index.js
-        const indexPath = path.join(modulePath, 'index.js');
-        if (fs.existsSync(indexPath)) return indexPath;
-      }
-      return null;
-    }
-  };
-}
-
 function bypass (req, res) {
   const mockUrl = path.join(
     process.cwd(),
@@ -86,7 +58,6 @@ export default defineConfig(({ mode }) => {
     plugins: [
       mode === "analyze" ? analyzer() : undefined,
       vue(),
-      sharedResolvePlugin(),
       // 添加 UnoCSS 插件
       UnoCSS({
         configFile: resolve("unocss.config.ts"), // 指定 UnoCSS 配置文件

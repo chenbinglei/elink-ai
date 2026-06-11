@@ -1,6 +1,9 @@
-import { linkosAuth } from "@elink/shared/auth";
+import axios from "axios";
+import qs from "qs";
+import { ElMessage } from "element-plus";
 import { createHttpClient } from "@elink/shared/http";
 import { isDev } from "@elink/shared/utils";
+import { linkosAuth } from "./auth.js";
 import store from "@/store/index.js";
 
 const portNum = ":5000";
@@ -9,6 +12,9 @@ const locationProtocol = location.protocol;
 const onlineServerIpAddress = `${locationProtocol}//${locationHost}${locationProtocol === "http:" ? portNum : ""}`;
 
 const { request: service, cancelAbleService } = createHttpClient({
+  axios,
+  ElMessage,
+  qs,
   auth: linkosAuth,
   baseURL: isDev() ? "/proxy" : onlineServerIpAddress,
   getStoreGetters: () => store.getters,

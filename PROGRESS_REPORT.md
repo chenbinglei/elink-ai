@@ -1,8 +1,8 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v3.3 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-A已完成，hotfix已修复）
+> 版本：v3.4 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-A已完成，hotfix-v2 架构级重构已修复）
 >
-> 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.3](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.4](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
@@ -682,3 +682,4 @@ allowed-origins:
 | v3.1 | 2026-06-11 | AI | P3-D性能基准测试(R1)完成：全量热更新部署11服务+5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数+质量验收验证，PHASE-3完成率80%→100%，新增5.6章节R1正式基线数据 |
 | v3.2 | 2026-06-11 | AI | P4-A @elink/shared公共包创建完成：提取request.js→@elink/shared/http+auth.js→@elink/shared/auth(工厂模式)+utils→@elink/shared/utils+pnpm-workspace.yaml+3项目迁移+构建验证通过，PHASE-4完成率0%→25% |
 | v3.3 | 2026-06-11 | AI | P4-A-hotfix运行时缺陷修复：portNum动态端口路由丢失(derms黑屏根因)+特殊端点错误弹窗+data空指针，3项目构建验证通过 |
+| v3.4 | 2026-06-11 | AI | P4-A-hotfix-v2 @elink/shared 架构级重构（依赖注入治本方案）：shared 包零运行时依赖，axios/qs/js-cookie/element-plus 由调用方注入，消除 dev 模式 EISDIR 跨工作空间解析错误（derms 黑屏真正根因），删除 sharedResolvePlugin 自定义解析插件，更新3项目 request.js/auth.js 共 6 个文件，shared package.json v1.0.0→v2.0.0 |
