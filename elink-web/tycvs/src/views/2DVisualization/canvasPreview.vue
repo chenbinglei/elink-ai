@@ -78,7 +78,7 @@ export default {
               type: 2, //  1: websocket  2: http
               variableType: "systemVarAndFunction", // 代表是系统变量 跟功能点的数据
               dynamicField: JSON.stringify(publishFileData.requestParamsList[i].dynamicField),
-              url: `${that.isLocalTest ? requestPathHttp : requestPath}/scrontab/configFuncPoint/findSiteDeviceDataList`,
+              url: `${that.isLocalTest ? requestPathHttp : requestPath}/crontab/configFuncPoint/findSiteDeviceDataList`,
               requestValue: JSON.stringify({
                 ...publishFileData.requestParamsList[i].requestValue,
                 variableDataMap: publishFileData.requestParamsList[i].variableDataMap,
@@ -95,7 +95,7 @@ export default {
           let requestData = {
             type: 1, //  1: websocket  2: http
             variableType: "systemVarAndFunction", // 代表是系统变量 跟功能点的数据
-            url: `${websocketUrl}/scrontab/configFuncVarWebSocket/{clientId}/{domainId}`,
+            url: `${websocketUrl}/crontab/configFuncVarWebSocket/{clientId}/{domainId}`,
             requestValue: JSON.stringify({clientId: that.clientId, domainId: that.domainId})
           }
           that.dataSourceList.push(requestData);

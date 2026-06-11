@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.7 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v3.8 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3358,6 +3358,60 @@ P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分
 - `elink-web/packages/shared/src/http/request.js`（架构级修复：5项运行时缺陷）
 - `elink-web/derms/src/utils/request.js`（启用 perRequestIsolation: true）
 - `elink-web/derms/src/utils/requestVue.js`（启用 perRequestIsolation: true）
+
+---
+
+### P4-A-hotfix-v6 | 前端 API 路径 /scrontab → /crontab 对齐后端
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+后端 [crontab-service/application.yml#L4](file:///work/elink-ai/elink-work/crontab-service/src/main/resources/application.yml#L4) 配置：
+```yaml
+server:
+  servlet:
+    context-path: /crontab
+```
+
+网关 [sunmax-gateway/application.yml#L156-L159](file:///work/elink-ai/elink-work/sunmax-gateway/src/main/resources/application.yml#L156-L159)：
+```yaml
+- id: crontab-service
+  uri: lb://crontab-service
+  predicates:
+    - Path=/crontab/**
+```
+
+但前端 linkos/tycvs 仍使用历史路径 `/scrontab/*`，与后端实际路由不一致。
+
+#### 修复范围
+
+8 个文件 28 处替换 `/scrontab/` → `/crontab/`：
+
+**linkos - API 定义（4 文件 23 处）**
+- [src/api/dataManagement/systemVariables.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/systemVariables.js)：7 处
+- [src/api/dataManagement/nodeManagement.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/nodeManagement.js)：10 处
+- [src/api/dataManagement/nodeAddRecording.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/nodeAddRecording.js)：4 处
+- [src/api/dataManagement/dataQuery.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/dataQuery.js)：1 处
+
+**linkos - 视图按钮权限校验（3 文件 3 处）**
+- [src/views/dataManagement/systemVariables.vue](file:///work/elink-ai/elink-web/linkos/src/views/dataManagement/systemVariables.vue)：1 处 operateButtonIsClick
+- [src/views/dataManagement/nodeManagement.vue](file:///work/elink-ai/elink-web/linkos/src/views/dataManagement/nodeManagement.vue)：1 处
+- [src/views/dataManagement/nodeAddRecording.vue](file:///work/elink-ai/elink-web/linkos/src/views/dataManagement/nodeAddRecording.vue)：1 处
+
+**tycvs - 可视化组件（1 文件 2 处）**
+- [src/views/2DVisualization/canvasPreview.vue](file:///work/elink-ai/elink-web/tycvs/src/views/2DVisualization/canvasPreview.vue)：HTTP + WebSocket URL 各 1 处
+
+#### 验证结果
+
+- `Grep "scrontab" elink-web/` 全工作区无残留 ✅
+- `Grep "/crontab/" elink-web/` 共 28 处全部成功替换 ✅
+- 涉及业务模块：系统变量管理、计算节点管理、节点采集记录、数据查询、tycvs 可视化预览
+
+#### 风险与回滚
+
+- 需后端按钮权限表中将 `/scrontab/*` 同步更新为 `/crontab/*`，否则按钮可能被误判无权限隐藏
+- 回滚命令：`git revert <commit>`
 
 ---
 

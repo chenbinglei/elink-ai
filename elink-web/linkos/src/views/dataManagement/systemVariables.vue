@@ -104,7 +104,7 @@ export default {
   setup(props) {
 
     const isAddButtonClick = computed(()=>{
-      return operateButtonIsClick('/scrontab/systemVariable/saveOrUpdateSystemVariable')
+      return operateButtonIsClick('/crontab/systemVariable/saveOrUpdateSystemVariable')
     })
 
     const that = reactive({
