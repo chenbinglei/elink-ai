@@ -1,6 +1,6 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v3.8 | 报告日期：2026-06-11 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（hotfix-v6 完成前端 /scrontab → /crontab 路径对齐）
+> 版本：v3.9 | 报告日期：2026-06-12 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-BC Vite+Pinia迁移完成）
 >
 > 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.8](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
@@ -14,7 +14,7 @@
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线建立：5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数） |
-| PHASE-4：前端现代化改造 | ⏳ 进行中 | 25% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过） |
+| PHASE-4：前端现代化改造 | ⏳ 进行中 | 50% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia），derms element.scss深色背景修复+postcss配置修复 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
 ---
@@ -685,5 +685,5 @@ allowed-origins:
 | v3.4 | 2026-06-11 | AI | P4-A-hotfix-v2 @elink/shared 架构级重构（依赖注入治本方案）：shared 包零运行时依赖，axios/qs/js-cookie/element-plus 由调用方注入，消除 dev 模式 EISDIR 跨工作空间解析错误（derms 黑屏真正根因），删除 sharedResolvePlugin 自定义解析插件，更新3项目 request.js/auth.js 共 6 个文件，shared package.json v1.0.0→v2.0.0 |
 | v3.5 | 2026-06-11 | AI | P4-A-hotfix-v3 linkos 闪黑屏修复：根因为新代码总是替换 baseURL 端口，但旧 linkos request.js 中 portNum 处理实际被注释掉（212 处 portNum 字段从未生效），生产环境导致浏览器直连微服务端口失败 → ElMessage 错误轰炸 → 闪黑屏。新增 createHttpClient.enablePortNum 选项，derms=true（保留旧逻辑）、linkos/tycvs 默认 false（与旧代码一致） |
 | v3.6 | 2026-06-11 | AI | P4-A-hotfix-v4 linkos 首屏/路由切换闪黑屏体验优化：诊断4类触发场景（刷新200-800ms黑屏/路由切换50-300ms白闪/接口跳转100-500ms白块/异步组件失败NProgress卡顿）；P1注入HTML首屏CSS-only loading+#F8F8F8背景色防黑闪、P2 AppMain增加fade-route transition 0.2s opacity过渡、P3 NProgress起始15%+minimum/router.onError兜底；3文件改动，全浏览器兼容 |
-| v3.7 | 2026-06-11 | AI | P4-A-hotfix-v5 linkos "查询黑屏"真正根因修复：定位为 element.scss 全局 --el-mask-color: rgba(51,51,51,0.8) 被 ElLoading 共用，导致 v-loading 区域显示近黑色不透明遮罩（50+ 列表页全部受影响）。修复方案：分离 ElLoading 与 Dialog 遮罩配色，ElLoading 单独使用半透明白色磨砂(rgba(255,255,255,0.75) + backdrop-filter blur(2px))，spinner 改为蓝色 #409eff |
-| v3.8 | 2026-06-11 | AI | P4-A-hotfix-v6 前端 API 路径 /scrontab → /crontab 对齐：后端 crontab-service context-path=/crontab、网关 Path=/crontab/**，但前端 linkos(7文件)+tycvs(1文件)共 28 处仍使用 /scrontab 旧路径，全部批量替换以对齐后端真实路由。涉及系统变量/计算节点/节点采集/数据查询/tycvs可视化预览 |
+| v3.7 | 2026-06-11 | AI | P4-A-hotfix-v5 linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰）；P4-A-hotfix-v6 前端 API 路径 /scrontab → /crontab 对齐（28处/8文件），全量构建验证全部通过 |
+| v3.8 | 2026-06-12 | AI | P4-BC 3 项目 Vite 迁移+Vuex→Pinia 全部完成：linkos/tycvs 创建 vite.config.js+index.html，删除 vue.config.js+旧 store/ 目录；3项目 stores/ 目录创建并迁移完成；所有组件 import 从 @/store/ 改为 @/stores/；derms element.scss 新增 --el-bg-color: #07172b 深色变量修复表格白底；derms vite.config.js postcss exclude→include 避免 Element Plus 样式被转换。3 项目 npm run build 全部成功。|

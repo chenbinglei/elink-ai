@@ -1,6 +1,6 @@
 # Elink-AI 重构升级任务拆解清单
 
-> 基于 REFACTOR_PLAN.md v2.1 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-11
+> 基于 REFACTOR_PLAN.md v2.1 生成 | 创建日期：2026-06-03 | 最后更新：2026-06-12
 >
 > 每条任务包含：任务编号、指令语句、精确执行命令、完成标识
 >
@@ -20,7 +20,7 @@
 > **PHASE-1 完成率说明**：总计14项任务（9核心+1验证+2补偿+1文档校正+1前置设计），9项已完成（T1/T2/T4/T5/T6/T7/T8/V/COMP-3），5项待完成（T3需补偿修复Entity不一致、T9需补偿配置SSL证书、2项补偿任务、1项文档校正P0-4）。T3/T9虽已执行但因环境限制回退，不计入已完成。
 | PHASE-2 | 6 | 6 | 0 | 0 | 100% |
 | PHASE-3 | 5 | 5 | 0 | 0 | 100% |
-| PHASE-4 | 4 | 1 | 0 | 3 | 25% |
+| PHASE-4 | 4 | 2 | 0 | 2 | 50% |
 | PHASE-5 | 4 | 0 | 0 | 4 | 0% |
 
 ### 已完成任务记录
@@ -61,6 +61,7 @@
 | P4-A-hotfix-v4 | linkos 首屏/路由切换闪黑屏体验优化 | 2026-06-11 | AI | 注入 HTML 首屏 CSS-only loading 占位符+防黑闪背景色#F8F8F8，AppMain 增加 fade-route transition 0.2s opacity 过渡，NProgress 优化（起始15%/异常兜底），全面消除刷新/路由切换/接口调用的黑屏感知 |
 | P4-A-hotfix-v5 | linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰）| 2026-06-11 | AI | 根因：element.scss 全局 --el-mask-color: rgba(51,51,51,0.8) 导致 v-loading 表格区域显示深灰几乎不透明遮罩。修复：分离 ElLoading 与 Dialog 遮罩配色，ElLoading 改用半透明白色磨砂(0.75 + backdrop-filter blur) + 蓝色 spinner |
 | P4-A-hotfix-v6 | 前端 API 路径 /scrontab → /crontab 对齐 | 2026-06-11 | AI | 后端 crontab-service context-path=/crontab、网关 Path=/crontab/**，但前端 linkos/tycvs 有 8 文件 28 处仍使用 /scrontab 旧路径，全部替换以对齐后端真实路由 |
+| P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia | 2026-06-12 | AI | linkos/tycvs 从 Vue CLI 5 迁移至 Vite 6（vite.config.js+index.html），3项目 Vuex 4 迁移至 Pinia（stores/ 目录），删除旧 store/ 目录和 vue.config.js；修复 derms element.scss 深色背景变量(--el-bg-color/#07172b)；修复 derms postcss-px-to-viewport exclude→include 避免 Element Plus 样式被转换 |
 
 ---
 
@@ -1162,10 +1163,10 @@ done
 ```
 
 **完成标识：**
-- [ ] linkos/tycvs 无 vue.config.js（已替换为 vite.config.js）
-- [ ] linkos/tycvs 的 package.json 无 @vue/cli-service 依赖
-- [ ] 3个项目 package.json 无 vuex 依赖，有 pinia 依赖
-- [ ] 3个项目 npm run build 全部成功
+- [x] linkos/tycvs 无 vue.config.js（已替换为 vite.config.js）
+- [x] linkos/tycvs 的 package.json 无 @vue/cli-service 依赖
+- [x] 3个项目 package.json 无 vuex 依赖，有 pinia 依赖
+- [x] 3个项目 npm run build 全部成功
 
 ---
 

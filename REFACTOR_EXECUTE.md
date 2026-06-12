@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.8 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v3.9 | 编制日期：2026-06-03 | 最后更新：2026-06-12 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3737,3 +3737,69 @@ node dev-manager.js start-all
 #### 背景
 
 P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题（详见上方 hotfix-v1 完整记录）。
+
+---
+
+### P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia
+
+> 执行日期：2026-06-12 | 执行人：AI | 状态：✅ 已完成
+
+#### 执行过程
+
+**Vite 迁移（linkos/tycvs）：**
+1. 创建 `vite.config.js`（参考 derms 配置），迁移 proxy/alias/插件配置
+2. 创建 `index.html`（Vite 必需入口）
+3. 替换 `require.context` → `import.meta.glob`
+4. 替换 `process.env.VUE_APP_*` → `import.meta.env.VITE_*`
+5. 更新 `package.json` scripts
+6. 移除 `@vue/cli-service` 依赖
+7. 删除 `vue.config.js`
+
+**Pinia 迁移（3项目）：**
+1. 安装 `pinia` 依赖，移除 `vuex` 依赖
+2. 创建 `src/stores/` 目录，使用 `defineStore` 替代 Vuex modules
+3. 更新 `main.js`：`app.use(createPinia())`
+4. 所有组件中 `this.$store` → `useXxxStore()`
+5. 所有 import 从 `@/store/` 改为 `@/stores/`
+
+**样式修复（C5）：**
+1. derms `element.scss` 根级别添加 `--el-bg-color: #07172b` 和 `--el-fill-color-blank: #081a30`
+2. derms `vite.config.js` postcss 配置 `exclude: [/node_modules/]` → `include: [/src/]`
+
+**清理遗留文件（C1/C2）：**
+1. 删除 3 项目旧 `src/store/` 目录
+2. 删除 linkos/tycvs 旧 `vue.config.js`
+3. 更新 `.gitignore`（sunos/l7-mapbox/.dev-pids/.vscode）
+
+#### 问题及解决方案
+
+| # | 问题 | 说明 |
+|---|------|------|
+| 1 | postcss-px-to-viewport 配置使用 `exclude: [/node_modules/]` 导致 src 目录和 Element Plus 样式都被转换 | 改为 `include: [/src/]` 仅转换项目源码 |
+| 2 | `-el-bg-color` 在根级别未设置，Element Plus 默认白色导致表格单元格白底 | 根级别添加 `--el-bg-color: #07172b` |
+| 3 | 旧 Vuex store 文件和 vite.config.js 未删除 | 批量删除清理 |
+
+#### 变更文件
+
+- `elink-web/derms/src/styles/element.scss`（深色CSS变量）
+- `elink-web/derms/vite.config.js`（postcss配置）
+- `elink-web/derms/src/stores/`（Pinia stores，7个文件）
+- `elink-web/linkos/src/stores/`（Pinia stores，4个文件）
+- `elink-web/tycvs/src/stores/`（Pinia stores，6个文件）
+- `elink-web/linkos/vite.config.js`（新建）
+- `elink-web/tycvs/vite.config.js`（新建）
+- `elink-web/linkos/index.html`（新建）
+- `elink-web/tycvs/index.html`（新建）
+- `elink-web/.gitignore`（更新）
+
+#### 验证结果
+
+| 检查项 | 状态 | 备注 |
+|--------|------|------|
+| linkos build | ✅ 通过 | `vite build` 42.58s |
+| derms build | ✅ 通过 | `vite build` 2m5s |
+| tycvs build | ✅ 通过 | `vite build` 42.99s |
+| 无 vuex 依赖 | ✅ 通过 | 3项目 package.json 无 vuex |
+| 有 pinia 依赖 | ✅ 通过 | 3项目有 pinia ^2.1.7 |
+| 无 vue.config.js | ✅ 通过 | linkos/tycvs 已删除 |
+| 无旧 store/ 目录 | ✅ 通过 | 3项目 src/store/ 已删除 |
