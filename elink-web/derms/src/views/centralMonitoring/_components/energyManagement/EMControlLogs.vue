@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {pickerOptionsGthanAcTime} from "@/utils/dateTime";
 import {RefreshRight, Search} from '@element-plus/icons-vue';
@@ -72,9 +73,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

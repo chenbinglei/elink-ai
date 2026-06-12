@@ -73,7 +73,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useTagsViewStore } from '@/stores/index';
+
 import {useRouter,useRoute} from "vue-router";
 import {ElMessage, ElMessageBox} from "element-plus";
 import CreateModelDialog from "./CreateModelDialog.vue";
@@ -98,7 +99,7 @@ export default defineComponent({
   },
   setup(props){
 
-    const store = useStore();
+    const tagsViewStore = useTagsViewStore();
     const route = useRoute();
     const vueRouter = useRouter();
 
@@ -158,7 +159,7 @@ export default defineComponent({
         }
 
         vueRouter.push({ path: routeName, query: { id: row.id,subTitle: row.modelName } });
-        store.dispatch("addBackButViews",{ id: row.id,backRouteName: route.path,showButRoute: routeName });
+        tagsViewStore.addBackButViews({ id: row.id,backRouteName: route.path,showButRoute: routeName });
       }
 
       if(operate === 2){

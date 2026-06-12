@@ -72,7 +72,8 @@ import { RefreshRight, Search, Plus } from '@element-plus/icons-vue';
 import { ElMessage } from "element-plus";
 import { saveInspectionTask, getSiteSaveTaskList } from "@/api/assetManagement/inspection";
 import { ref, onMounted , computed} from 'vue'
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 const props = defineProps({
   isVisible: {
     type: Boolean,
@@ -88,9 +89,9 @@ const listLoading = ref(false)
 const dialog_visible = ref(props.isVisible)
 const selectValue = ref([])
 const emit = defineEmits(['saveDialog'])
-const store = useStore();
+const appStore = useAppStore();
 const userInfo = computed(() => {
-  return store.state.app.userInfo;
+  return appStore.userInfo;
 });
 const saveDialog = () => {
   emit('saveDialog')

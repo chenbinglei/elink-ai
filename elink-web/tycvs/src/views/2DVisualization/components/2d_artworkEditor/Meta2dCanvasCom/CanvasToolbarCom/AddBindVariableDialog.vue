@@ -71,7 +71,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import {useRoute} from "vue-router";
 import {getNowDateMin} from "@/utils/dateTime";
 import {ElMessage,ElMessageBox} from "element-plus";
@@ -94,10 +95,10 @@ export default defineComponent({
   },
   setup(props) {
     const route = useRoute();
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
 
     const that = reactive({

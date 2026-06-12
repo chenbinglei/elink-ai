@@ -1,8 +1,8 @@
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import { createPinia } from 'pinia'
 import router from './router'
-import store from './store'
 
 //引入资源文档
 import "@/permission"; // permissionU control
@@ -42,6 +42,7 @@ import 'vxe-pc-ui/es/style.css'
 import VxeUITable from 'vxe-table'
 import 'vxe-table/es/style.css'
 
+const pinia = createPinia();
 const app = createApp(App);
 
 resizeDocument(app); //注册全局指令
@@ -63,4 +64,4 @@ app.config.warnHandler = () => null;
 app.config.globalProperties.echarts = echarts;
 app.config.globalProperties.$filters = filters;
 
-app.use(store).use(router).use(ElementPlus, { locale: zhCn }).use(vue3TreeOrg).use(VxeUIBase).use(VxeUITable).mount("#app");
+app.use(pinia).use(router).use(ElementPlus, { locale: zhCn }).use(vue3TreeOrg).use(VxeUIBase).use(VxeUITable).mount("#app");

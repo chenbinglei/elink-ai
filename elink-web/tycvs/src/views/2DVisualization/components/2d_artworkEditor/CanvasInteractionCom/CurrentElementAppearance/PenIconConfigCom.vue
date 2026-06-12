@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import PenIconFamilyDialog from "./PenIconFamilyDialog.vue";
 import {reactive, toRefs, defineComponent, computed, watch, getCurrentInstance} from "vue";
 
@@ -31,11 +32,11 @@ export default defineComponent({
   emits: ["update:activePelDate"],
   setup(props) {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({

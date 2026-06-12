@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus";
 import { createHttpClient } from "@elink/shared/http";
 import { isDev } from "@elink/shared/utils";
 import { linkosAuth } from "./auth.js";
-import store from "@/store/index.js";
+import { useAppStore } from "@/stores/index";
 
 const portNum = ":5000";
 const locationHost = location.hostname;
@@ -17,7 +17,10 @@ const { request: service, cancelAbleService } = createHttpClient({
   qs,
   auth: linkosAuth,
   baseURL: isDev() ? "/proxy" : onlineServerIpAddress,
-  getStoreGetters: () => store.getters,
+  getStoreGetters: () => {
+    const appStore = useAppStore();
+    return { oldUserId: appStore.oldUserId, userInfo: appStore.userInfo, permissionList: appStore.permissionList };
+  },
 });
 
 export { cancelAbleService };

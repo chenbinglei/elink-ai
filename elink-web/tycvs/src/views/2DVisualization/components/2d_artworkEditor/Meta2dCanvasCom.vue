@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import { Meta2d } from '@meta2d/core';
 import { clearLineCross } from "@meta2d/utils";
 import RightClickMenuCom from "./RightClickMenuCom.vue";
@@ -21,14 +22,14 @@ export default defineComponent({
   components: { CanvasToolbarCom, RightClickMenuCom },
   setup () {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const { emit } = getCurrentInstance();
     const canvasMeta2dConfig = computed(() => {
       return store.state.meta2d;
     });
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({
@@ -69,7 +70,7 @@ export default defineComponent({
       meta2d.on('*', bindMeta2dCanvasFun); // 绑定事件
       canvasMeta2dRegisterFun();
 
-      store.dispatch("initCanvasMeta2d", meta2d); //全局注册meta2d实例
+      meta2dStore.initCanvasMeta2d(meta2d); //全局注册meta2d实例
       emit("canvasMeta2dFun",{ type: 'initMeta2d',code: 20000 });
     }
     
@@ -84,12 +85,12 @@ export default defineComponent({
         data && data.forEach(item => {
           if (item.id) current_active_pel_list.push(item.id);
         })
-        store.dispatch("updateCurActivePelList", current_active_pel_list);
+        meta2dStore.updateCurActivePelList(current_active_pel_list);
       }
 
       if (event === "click") {
         // 单击画布的时候，查看是否有选中的图元
-        if (!data.pen) store.dispatch("updateCurActivePelList", []);
+        if (!data.pen) meta2dStore.updateCurActivePelList([]);
       }
 
       if (event === "update") {
@@ -103,12 +104,12 @@ export default defineComponent({
 
         // 画布上缩放、旋转图元计数器（同步更新单个图元操作栏数据）
         const timestamp = new Date().getTime(); // 利用时间戳
-        store.dispatch('updateCurActivePelNum', timestamp);
+        meta2dStore.updateCurActivePelNum(timestamp);
       }
 
       // 当前画布进行缩放
       if (event === "scale") {
-        store.dispatch('updateCanvasScale', data); // 更新画布缩放参数值
+        meta2dStore.updateCanvasScale(data); // 更新画布缩放参数值
       }
 
       // 画布上点击右键
@@ -132,9 +133,9 @@ export default defineComponent({
         canvasMeta2d.value.destroy();
         console.log("画布销毁完成！！！！！");
       }
-      store.dispatch("initCanvasMeta2d", null);  // 全局注册meta2d实例
-      store.dispatch("updateCurActivePelList", []); // 画布当前选中的图元id数组
-      store.dispatch("updateCanvasMeta2dAllLoad", false);
+      meta2dStore.initCanvasMeta2d(null);  // 全局注册meta2d实例
+      meta2dStore.updateCurActivePelList([]); // 画布当前选中的图元id数组
+      meta2dStore.updateCanvasMeta2dAllLoad(false);
       console.log("画布资源销毁完成！！！！！");
     }
 

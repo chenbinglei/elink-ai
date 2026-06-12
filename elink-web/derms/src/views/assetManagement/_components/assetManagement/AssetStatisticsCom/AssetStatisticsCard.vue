@@ -51,7 +51,8 @@
   </div>
 </template>
 <script>
-import {useStore} from 'vuex';
+import { useAssetManagementStore } from '@/stores/index';
+
 import {reactive, defineComponent, toRefs, onMounted, computed, watch} from "vue";
 
 export default defineComponent({
@@ -66,9 +67,9 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const scenarioType = computed(() => {
-      return store.state.assetManagement.scenarioType;
+      return assetManagementStore.scenarioType;
     });
 
     const that = reactive({

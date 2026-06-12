@@ -104,7 +104,7 @@ function getComponent(comp_str) {
         case "root":
             return () => import("@/views/layout");
         default:
-            return () => require.ensure([], (require) => require(`@/views/${comp_str}`))
+            return () => import(`@/views/${comp_str}.vue`)
     }
 }
 
@@ -129,7 +129,7 @@ localStorage.setItem("ALL_SIDEBAR", JSON.stringify(sidebar_list)); // 所有的�
 
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes
 });
 

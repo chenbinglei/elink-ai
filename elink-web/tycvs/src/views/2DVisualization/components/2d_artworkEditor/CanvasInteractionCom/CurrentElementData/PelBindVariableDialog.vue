@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import { setTreeData } from "@/utils";
 import { ElMessage } from "element-plus";
 import PelBindVariableListCom from "./PelBindVariableListCom.vue";
@@ -53,12 +54,12 @@ export default defineComponent({
   },
   emits: ["update:isVisible", "changeEvent"],
   setup (props) {
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const { emit } = getCurrentInstance();
 
     // 当前图纸数据
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
 
     const that = reactive({

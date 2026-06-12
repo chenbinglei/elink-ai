@@ -81,7 +81,8 @@
 
 <script>
 import moment from 'moment';
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import { ElMessage } from "element-plus";
 import { oc_order_status_array } from "@/utils/setVariate";
 import { pickerOptionsGthanAcTime } from "@/utils/dateTime";
@@ -95,11 +96,11 @@ export default defineComponent({
   components: { OcOrderListCard },
   setup() {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const tableRef = ref(null);
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
     const format = 'YYYY-MM-DD';
     const defAbnormalType = 0;

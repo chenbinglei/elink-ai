@@ -12,7 +12,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAssetManagementStore } from '@/stores/index';
+
 import cloneDeep from "lodash/cloneDeep";
 import {getNowDate, getNowDateAll} from "@/utils/dateTime";
 import {computed, defineComponent, reactive, ref, toRefs, watch} from "vue";
@@ -21,13 +22,13 @@ import {findStorageOverviewPowerCurve} from "@/api/assetManagement/assetManageme
 export default defineComponent({
   name: "ESPowerCurveCom",
   setup() {
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const siteAllIds = computed(() => {
-      return store.state.assetManagement.siteAllIds;
+      return assetManagementStore.siteAllIds;
     });
 
     const updateTimeNum = computed(() => {
-      return store.state.assetManagement.updateTimeNum;
+      return assetManagementStore.updateTimeNum;
     });
     
     const that = reactive({

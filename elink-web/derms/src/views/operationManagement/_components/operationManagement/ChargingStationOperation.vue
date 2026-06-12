@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useOperationManagementStore } from '@/stores/index';
+
 import {getLeftTreeDataFun} from "@/utils";
 import {RouteHandleMenus} from "./PublicComponents/index";
 import SecondaryDetailsCom from "./SecondaryDetailsCom.vue";
@@ -33,9 +34,9 @@ export default defineComponent({
     CsPileOccupationRecord, CsSettlementManagement, CsUserGrouping, CsMiniProgramUsers, CsTransactionDetails, CsInvoiceManage, CsElectricPileLog, CsElectricPileAlarm,
     CsPileGunManagement, CsBusinessAnalysis, CsDataReportManage},
   setup() {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const secondaryDetailsVisible = computed(() => {
-      return store.state.operationManagement.secondaryDetailsVisible;
+      return operationManagementStore.secondaryDetailsVisible;
     });
 
     const that = reactive({

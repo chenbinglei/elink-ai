@@ -3,7 +3,7 @@ import qs from "qs";
 import { ElMessage } from "element-plus";
 import { createHttpClient } from "@elink/shared/http";
 import { tycvsAuth } from "./auth.js";
-import store from "@/store/index.js";
+import { useAppStore } from "@/stores/index";
 import { requestPath } from "@/utils/requestPath";
 
 const { request: service, cancelAbleService } = createHttpClient({
@@ -12,7 +12,10 @@ const { request: service, cancelAbleService } = createHttpClient({
   qs,
   auth: tycvsAuth,
   baseURL: requestPath,
-  getStoreGetters: () => store.getters,
+  getStoreGetters: () => {
+    const appStore = useAppStore();
+    return { oldUserId: appStore.oldUserId, userInfo: appStore.userInfo };
+  },
 });
 
 export { cancelAbleService };

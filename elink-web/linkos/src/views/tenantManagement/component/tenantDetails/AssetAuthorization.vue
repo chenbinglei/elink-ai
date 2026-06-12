@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {setTreeData, treeToArray} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";
 import AssociatedSitesDialog from "./AssetAuthorization/AssociatedSitesDialog.vue";
@@ -66,10 +67,10 @@ export default defineComponent({
   },
   setup(props){
 
-    const store = useStore();
+    const appStore = useAppStore();
     const {emit} = getCurrentInstance();
     const contentMainMaxHeight = computed(() => {
-      return store.state.app.contentMainMaxHeight;
+      return appStore.contentMainMaxHeight;
     });
 
     const that = reactive({

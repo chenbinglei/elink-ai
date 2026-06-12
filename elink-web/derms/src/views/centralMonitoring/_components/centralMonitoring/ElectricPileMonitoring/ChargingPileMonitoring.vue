@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {pileRealWebSocket} from "@/api/websocket/webSocket";
 import {findPileDeviceList} from "@/api/centralMonitoring/centralMonitoring";
@@ -45,9 +46,9 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

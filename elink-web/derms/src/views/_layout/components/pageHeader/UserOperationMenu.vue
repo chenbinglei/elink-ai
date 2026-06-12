@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import { useRouter } from "vue-router";
 import { removeToken } from "@/utils/auth";
 import { computed, defineComponent, reactive, toRefs } from "vue";
@@ -37,11 +38,11 @@ import { computed, defineComponent, reactive, toRefs } from "vue";
 export default defineComponent({
   name: "UserOperationMenu",
   setup() {
-    const store = useStore();
+    const appStore = useAppStore();
     const vueRouter = useRouter();
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

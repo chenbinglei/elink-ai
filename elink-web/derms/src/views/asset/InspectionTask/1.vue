@@ -172,7 +172,8 @@ import { ref, watch, onMounted, nextTick, computed } from "vue";
 import detailsDialog from "./components/detailsDialog.vue";
 
 import AMapLoader from '@amap/amap-jsapi-loader';
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 // 
 // 分页
 const currentPage = ref(1)
@@ -185,9 +186,9 @@ const inspectionArray = ref({})
 const inspectionType = ref(null)
 // 经纬度定位
 const latitudelongitude = ref([])
-const store = useStore();
+const appStore = useAppStore();
 const userInfo = computed(() => {
-  return store.state.app.userInfo;
+  return appStore.userInfo;
 });
 const tableMaxHeights = ref(300);
 

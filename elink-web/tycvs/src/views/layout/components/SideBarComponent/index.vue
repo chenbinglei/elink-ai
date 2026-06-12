@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useSidebarStore } from '@/stores/index';
+
 import SidebarItem from "./SidebarItem";
 import {computed, onMounted, reactive, toRefs, defineComponent} from "vue";
 
@@ -16,13 +17,13 @@ export default defineComponent({
   components: {SidebarItem},
   setup() {
 
-    const store = useStore();
+    const sidebarStore = useSidebarStore();
     const routes = computed(() => {
       return JSON.parse(localStorage.getItem("SIDEBAR"));
     });
 
     const isCollapse = computed(() => {
-      return store.state.sidebar.isCollapse
+      return sidebarStore.isCollapse
     });
 
     const that = reactive({

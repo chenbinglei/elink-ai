@@ -113,7 +113,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useOperationManagementStore } from '@/stores/index';
+
 import pinyin from "tiny-pinyin";
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -127,7 +128,7 @@ export default defineComponent({
   emits: ["changEvent"],
   setup() {
 
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const {emit} = getCurrentInstance();
 
     const that = reactive({
@@ -183,8 +184,8 @@ export default defineComponent({
           return;
         }
 
-        store.dispatch("updateSecondaryInfo",{ subTitle: row.siteName, id: row.id, componentName: "CsStationDetails", backComponentName: "CsStationManagement"});
-        store.dispatch("updateSecondaryVisible",true);
+        operationManagementStore.updateSecondaryInfo({ subTitle: row.siteName, id: row.id, componentName: "CsStationDetails", backComponentName: "CsStationManagement"});
+        operationManagementStore.updateSecondaryVisible(true);
       }
 
       if (operateType === 2) {

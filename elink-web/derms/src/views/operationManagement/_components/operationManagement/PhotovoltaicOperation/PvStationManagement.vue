@@ -209,8 +209,8 @@ export default defineComponent({
         //   return
         // }
         //
-        // store.dispatch("updateSecondaryInfo",{ subTitle: row.siteName, id: row.id, componentName: "CsStationDetails", backComponentName: "CsStationManagement"});
-        // store.dispatch("updateSecondaryVisible",true);
+        // operationManagementStore.updateSecondaryInfo({ subTitle: row.siteName, id: row.id, componentName: "CsStationDetails", backComponentName: "CsStationManagement"});
+        // operationManagementStore.updateSecondaryVisible(true);
       }
 
       if (operateType === 2) that.tableFieldControlVisible = true;

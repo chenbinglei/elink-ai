@@ -1,11 +1,11 @@
 import { ref, onMounted, onActivated, onDeactivated, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+
 import SystemsetController from "@/api/system/index";
 import { ElMessage } from "element-plus";
 export default function useTable(formData) {
   const route = useRoute();
-  const store = useStore();
+  
   const tableRef = ref(null);
   const columns = ref([
     {

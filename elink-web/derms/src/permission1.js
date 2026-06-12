@@ -3,7 +3,7 @@ import "nprogress/nprogress.css"; // Progress 进度条样式
 import NProgress from "nprogress"; // Progress 进度条
 import { getToken } from "@/utils/auth"; // 验权
 import { ElMessage } from "element-plus";
-import store from "@/store/index";
+import { useAppStore } from "@/stores/index";
 import { removeToken } from "@/utils/auth";
 
 // 不重定向白名单
@@ -28,7 +28,8 @@ function findFirstVisibleWithChildren (data) {
 router.beforeEach((to, from, next) => {
 
   NProgress.start();
-  store.commit("UPDATE_SWITCHING", true);
+  const appStore = useAppStore();
+  appStore.isSwitching = true;
   if (getToken()) {
     if (to.path === "/login") {
       console.log(findFirstVisibleWithChildren(sidebar));
@@ -80,12 +81,12 @@ router.beforeEach((to, from, next) => {
         return;
       }
       NProgress.done();
-      store.commit("UPDATE_SWITCHING", false);
+      appStore.isSwitching = false;
     }
   }
 });
 
 router.afterEach(() => {
   NProgress.done(); // 结束Progress
-  store.commit("UPDATE_SWITCHING", false);
+  appStore.isSwitching = false);
 });

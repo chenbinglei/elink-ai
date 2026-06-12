@@ -12,16 +12,18 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useAppStore, useMonitorStore } from '@/stores/index';
+
 import { useRoute } from "vue-router";
 import { MonitorHeader, MonitorTab, MonitorSideTab } from "./_slice/base";
 import SystemMonitorController from "@/api/together/systemMonitor";
 import { computed } from 'vue';
 
-const store = useStore();
+const appStore = useAppStore();
+    const monitorStore = useMonitorStore();
 const route = useRoute();
 const loading = ref(false);
-const isSwitching = computed(() => store.state.app.isSwitching);
+const isSwitching = computed(() => appStore.isSwitching);
 
 const getSiteInfo = async () => {
     loading.value = true;
@@ -32,7 +34,7 @@ const getSiteInfo = async () => {
 
             localStorage.setItem("StationRoulist", data.readwriteObject);
             console.log(JSON.stringify(data.readwriteObject));
-            store.dispatch("updateSiteInfo", {
+            monitorStore.updateSiteInfo({
                 ...data,
             });
         }
@@ -43,7 +45,7 @@ const getSiteInfo = async () => {
 
 onMounted(() => {
     getSiteInfo();
-    store.dispatch('getAssetTypeList');
+    monitorStore.getAssetTypeList();
 });
 </script>
 

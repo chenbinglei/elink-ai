@@ -48,7 +48,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useEnergyManagementStore } from '@/stores/index';
+
 import {Plus, Picture} from '@element-plus/icons-vue';
 import strategy_icon_1 from "@/assets/image/strategy_icon_1.png";
 import strategy_icon_2 from "@/assets/image/strategy_icon_2.png";
@@ -87,7 +88,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const energyManagementStore = useEnergyManagementStore();
     const {emit} = getCurrentInstance();
 
     const that = reactive({
@@ -132,7 +133,7 @@ export default defineComponent({
       let findItem = that.strategyList.find(item => item.id === props.activeStrategyId); // 查询当前策略是否还存在
       if(!data) data = findItem ? findItem : that.strategyList[0]; // 获取第一条数据
       emit("update:activeStrategyId",data?.id);
-      store.dispatch("updateStrategyName",data?.strategyName);
+      energyManagementStore.updateStrategyName(data?.strategyName);
     };
 
     const clickAddStrategyBut = ()=>{

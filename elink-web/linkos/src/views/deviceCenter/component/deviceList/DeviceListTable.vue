@@ -109,7 +109,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useTagsViewStore } from '@/stores/index';
+
 import {useRouter,useRoute} from "vue-router";
 import AddDeviceDialog from "./AddDeviceDialog";
 import BatchAddDeviceDialog from "./BatchAddDeviceDialog";
@@ -140,7 +141,7 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const tagsViewStore = useTagsViewStore();
     const route = useRoute();
     const vueRouter = useRouter();
     const deleteLogoRef = ref(false);
@@ -224,7 +225,7 @@ export default defineComponent({
         }
 
         vueRouter.push({ path: routeName, query: { id: row.id,typeId: row.typeId,subTitle: row.deviceName } });
-        store.dispatch("addBackButViews",{ id: row.id, backRouteName: route.path, showButRoute: routeName });
+        tagsViewStore.addBackButViews({ id: row.id, backRouteName: route.path, showButRoute: routeName });
       }
 
       if(operate === 2){

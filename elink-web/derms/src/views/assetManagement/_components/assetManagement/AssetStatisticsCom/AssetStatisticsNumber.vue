@@ -71,7 +71,8 @@
   </div>
 </template>
 <script>
-import { useStore } from 'vuex';
+import { useAssetManagementStore } from '@/stores/index';
+
 import { computed, defineComponent, onMounted, reactive, toRefs, watch, ref } from "vue";
 //
 import photovoltaicIcon from "@/assets/image/photovoltaic.png";
@@ -90,13 +91,13 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const scenarioType = computed(() => {
-      return store.state.assetManagement.scenarioType;
+      return assetManagementStore.scenarioType;
     });
 
     const activeSiteId = computed(() => {
-      return store.state.assetManagement.activeSiteId;
+      return assetManagementStore.activeSiteId;
     });
 
     const that = reactive({
@@ -114,8 +115,8 @@ export default defineComponent({
       // console.log(newIndex);
       // console.log(oldIndex);
       let findItem = that.scenarioTypeList[newIndex];
-      store.dispatch("updateActiveSiteId", ""); // 清除当前选中的站点
-      store.dispatch("updateScenarioType", findItem.id);
+      assetManagementStore.updateActiveSiteId(""); // 清除当前选中的站点
+      assetManagementStore.updateScenarioType(findItem.id);
     };
 
     // 监听数据

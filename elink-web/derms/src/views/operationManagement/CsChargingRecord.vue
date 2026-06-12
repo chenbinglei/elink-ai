@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { useStore } from 'vuex';
+import { useOperationManagementStore } from '@/stores/index';
+
 import { getLeftTreeDataFun } from "@/utils";
 import { RouteHandleMenus } from "./_components/operationManagement/PublicComponents/index";
 import { computed, defineComponent, onMounted, reactive, toRefs, ref } from "vue";
@@ -37,7 +38,7 @@ export default defineComponent({
     RouteHandleMenus
   },
   setup () {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const that = reactive({
       routeInfo: {},
       routeMenuList: [],
@@ -45,7 +46,7 @@ export default defineComponent({
     });
 
     const secondaryDetailsVisible = computed(() => {
-      return store.state.operationManagement.secondaryDetailsVisible;
+      return operationManagementStore.secondaryDetailsVisible;
     });
 
     // 获取左侧树结构的数据
@@ -67,8 +68,8 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      store.dispatch("updateSecondaryVisible", false);
-      store.dispatch("updateSecondaryInfo", {});
+      operationManagementStore.updateSecondaryVisible(false);
+      operationManagementStore.updateSecondaryInfo({});
       findRouteMenuListFun();
     });
 

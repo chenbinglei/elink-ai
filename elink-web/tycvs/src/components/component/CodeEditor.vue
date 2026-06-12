@@ -9,7 +9,8 @@ import {Codemirror} from "vue-codemirror";
 import {oneDark} from "@codemirror/theme-one-dark";
 import {javascript} from "@codemirror/lang-javascript";
 import {reactive, toRefs, defineComponent, getCurrentInstance, computed, onUnmounted} from "vue";
-import {useStore} from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 
 export default defineComponent({
   name: "CodeEditor",
@@ -26,11 +27,11 @@ export default defineComponent({
   },
   emits: ["update:value"],
   setup(props) {
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({

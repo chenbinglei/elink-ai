@@ -1,4 +1,5 @@
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import moment from "moment";
 import { ref, reactive, computed } from "vue";
 import { EventLevelList, AlarmStatusList } from "@/common/enum";
@@ -9,8 +10,8 @@ const format = "YYYY-MM-DD";
 export default function useSearchBar() {
   const startTime = moment().subtract(29, "days").format(format);
   const endTime = moment().format(format);
-  const store = useStore();
-  const assetTypeList = computed(() => store.state.monitor.assetTypeList);
+  const monitorStore = useMonitorStore();
+  const assetTypeList = computed(() => monitorStore.assetTypeList);
   const searchConfig = ref([
     {
       key: "typeId",

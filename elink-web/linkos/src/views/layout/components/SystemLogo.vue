@@ -6,16 +6,17 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useSidebarStore } from '@/stores/index';
+
 import {computed, onMounted, reactive, toRefs, defineComponent} from "vue";
 
 export default defineComponent({
   name: "SystemLogo",
   setup() {
 
-    const store = useStore();
+    const sidebarStore = useSidebarStore();
     const isCollapse = computed(() => {
-      return store.state.sidebar.isCollapse
+      return sidebarStore.isCollapse
     });
 
     const that = reactive({

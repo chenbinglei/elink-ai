@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import { getCurrentInstance, onMounted, reactive, ref, toRefs, watch, defineComponent, computed } from "vue";
 import {
   findFunctionListByDeviceId,
@@ -67,12 +68,12 @@ export default defineComponent({
   },
   emits: ["update:variableId", "update:variableName"],
   setup (props) {
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const { emit } = getCurrentInstance();
 
     // 当前图纸数据
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
     console.log(props.variableId);
     const that = reactive({

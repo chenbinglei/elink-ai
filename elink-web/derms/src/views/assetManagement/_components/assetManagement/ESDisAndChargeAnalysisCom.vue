@@ -12,7 +12,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAssetManagementStore } from '@/stores/index';
+
 import cloneDeep from "lodash/cloneDeep";
 import {findStorageSiteQtCurve} from "@/api/assetManagement/assetManagement";
 import {computed, defineComponent, reactive, ref, toRefs, watch} from "vue";
@@ -21,13 +22,13 @@ import {getCurrentMonthFirstDay, getDaysFromCurrentTime, getNowDateAll} from "@/
 export default defineComponent({
   name: "ESDisAndChargeAnalysisCom",
   setup() {
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const siteAllIds = computed(() => {
-      return store.state.assetManagement.siteAllIds;
+      return assetManagementStore.siteAllIds;
     });
 
     const updateTimeNum = computed(() => {
-      return store.state.assetManagement.updateTimeNum;
+      return assetManagementStore.updateTimeNum;
     });
 
     const that = reactive({

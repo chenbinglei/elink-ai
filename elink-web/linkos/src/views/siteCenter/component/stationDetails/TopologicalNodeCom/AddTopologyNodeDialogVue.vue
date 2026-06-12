@@ -112,7 +112,8 @@ import { commonCharName, validateURL } from "@/utils/validate";
 import { getCurrentInstance, onMounted, reactive, ref, defineExpose, toRefs, watch, defineComponent } from "vue";
 import { findDeviceListBySiteId, saveOrUpdateTopoNodeInfo, saveSiteTopNode, findTopNodeInfoById } from "@/api/siteCenter/stationDetails";
 import DataItemDialog from "./DataItemDialog.vue";
-import { useStore } from 'vuex';
+import { useAppStore } from '@/stores/index';
+
 
 export default defineComponent({
   name: "AddTopologyNodeDialog",
@@ -148,7 +149,7 @@ export default defineComponent({
   },
   setup (props) {
     const { emit } = getCurrentInstance();
-    const store = useStore();
+    const appStore = useAppStore();
     onMounted(() => {
     });
     const validateNodeName = (rule, value, callback) => {
@@ -267,8 +268,8 @@ export default defineComponent({
             saveDialogDialog(formDialog)
 
 
-            if (store.state.app.TopoNodeLocationValue) {
-              store.state.app.TopoNodeLocationValue.forEach(node => saveDialogDialog(node, 'Updata'));
+            if (appStore.TopoNodeLocationValue) {
+              appStore.TopoNodeLocationValue.forEach(node => saveDialogDialog(node, 'Updata'));
             }
           }
         }
@@ -276,14 +277,14 @@ export default defineComponent({
     }
     const cancelDialog = (val) => {
       emit("changeEvent");
-      store.dispatch('updateNewTopoNode', null);
+      appStore.updateNewTopoNode(null);
       that.dialog_visible = false;
     }
     const saveDialogDialog = (val, val1) => {
       saveSiteTopNode(val).then(res => {
         emit("changeEvent");
         that.dialog_visible = false;
-        store.dispatch('updateNewTopoNode', null);
+        appStore.updateNewTopoNode(null);
         if (!val1) return ElMessage({ type: "success", showClose: true, message: "操作成功！" });
       })
     }

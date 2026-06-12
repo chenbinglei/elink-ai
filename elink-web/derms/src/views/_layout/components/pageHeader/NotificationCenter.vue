@@ -43,7 +43,7 @@
 <script>
 import { defineComponent, reactive, toRefs, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
+
 
 
 export default defineComponent({
@@ -58,7 +58,7 @@ export default defineComponent({
       routeIshow: false,
     });
     const isFullscreen = computed(() => store.state.fullscreen.isFullscreen);
-    const store = useStore();
+    
 
     const vueRouter = useRouter();
 

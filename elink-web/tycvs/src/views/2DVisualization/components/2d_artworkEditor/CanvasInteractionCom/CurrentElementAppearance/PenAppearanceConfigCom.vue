@@ -165,7 +165,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import {LxInputColorPicker} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance, computed} from "vue";
 import {dashArray, fromArrowArray, lineCapArray, lineJoinArray, lineNameArray, toArrowArray} from "@/utils/publicParam";
@@ -184,11 +185,11 @@ export default defineComponent({
   emits: ["update:activePelDate","changeEvent"],
   setup(props) {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({

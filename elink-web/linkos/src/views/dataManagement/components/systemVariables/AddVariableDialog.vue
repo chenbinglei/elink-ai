@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {notCharmap, someCharmap} from "@/utils/validate";
 import {saveOrUpdateSystemVariable} from "@/api/dataManagement/systemVariables";
@@ -60,12 +61,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const appStore = useAppStore();
     const formDialogRef = ref(null);
     const { emit } = getCurrentInstance();
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo
+      return appStore.userInfo
     });
 
     const validateVarName = (rule, value, callback) => {

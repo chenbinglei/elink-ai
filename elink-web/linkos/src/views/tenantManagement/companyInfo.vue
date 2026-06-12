@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {computed, reactive, toRefs} from "vue";
 import {CompanyPublicComponent} from "@/views/tenantManagement/component"
 
@@ -14,9 +15,9 @@ export default {
   components: {CompanyPublicComponent},
   setup() {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

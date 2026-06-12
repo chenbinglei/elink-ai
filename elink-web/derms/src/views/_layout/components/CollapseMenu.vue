@@ -10,21 +10,22 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useSidebarStore } from '@/stores/index';
+
 import {computed, onMounted, reactive, toRefs} from "vue";
 
 export default {
   name: "CollapseMenu",
   setup() {
 
-    const store = useStore();
+    const sidebarStore = useSidebarStore();
     const isCollapse = computed(() => {
-      return store.state.sidebar.isCollapse;
+      return sidebarStore.isCollapse;
     });
 
     const that = reactive({});
     const toggleSideBar = () => {
-      store.dispatch('toggleSideBar');
+      sidebarStore.toggleSideBar();
     };
 
     onMounted(() => {

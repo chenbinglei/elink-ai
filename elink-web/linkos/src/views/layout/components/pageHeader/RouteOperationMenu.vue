@@ -4,7 +4,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {useRoute, useRouter} from "vue-router";
 import {toRefs, reactive, defineComponent} from "vue";
 
@@ -12,7 +13,7 @@ export default defineComponent({
   name: "RouteOperationMenu",
   setup() {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const route = useRoute();
     const vueRouter = useRouter();
 

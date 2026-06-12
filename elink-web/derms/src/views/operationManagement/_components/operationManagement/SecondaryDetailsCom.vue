@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useOperationManagementStore } from '@/stores/index';
+
 import {findSiteInfoByUserId} from "@/api/operationManagement/CsStationManagement";
 import {computed, defineComponent, getCurrentInstance, onMounted, reactive, toRefs} from "vue";
 import {CsChargingPileDetails, CsStationDetails, CsOrderRecordDetails, CsFeedbackDetails, CsMiniProgramUserDetails} from "./SecondaryDetailsCom/index";
@@ -29,13 +30,13 @@ export default defineComponent({
   name: "SecondaryDetailsCom",
   components: {CsChargingPileDetails, CsStationDetails, CsOrderRecordDetails, CsFeedbackDetails, CsMiniProgramUserDetails},
   setup() {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const {emit} = getCurrentInstance();
 
     const secondaryDetailsInfo = computed(() => {
-      console.log(store.state.operationManagement.secondaryDetailsInfo,'***');
+      console.log(operationManagementStore.secondaryDetailsInfo,'***');
       
-      return store.state.operationManagement.secondaryDetailsInfo;
+      return operationManagementStore.secondaryDetailsInfo;
     });
 
     const that = reactive({
@@ -47,7 +48,7 @@ export default defineComponent({
     });
 
     const clickBackButtonFun = () => {
-      store.dispatch("updateSecondaryVisible", false);
+      operationManagementStore.updateSecondaryVisible(false);
     };
 
     // 查询站点下拉列表

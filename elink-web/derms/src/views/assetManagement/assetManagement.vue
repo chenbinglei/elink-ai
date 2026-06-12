@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useAssetManagementStore } from '@/stores/index';
+
 import { findPSCAssetCountData } from "@/api/assetManagement/assetManagement";
 import {
   reactive,
@@ -71,17 +72,17 @@ export default defineComponent({
     EpDisAndChargeAnalysisCom,
   },
   setup() {
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const scenarioType = computed(() => {
-      return store.state.assetManagement.scenarioType;
+      return assetManagementStore.scenarioType;
     });
 
     const siteAllIds = computed(() => {
-      return store.state.assetManagement.siteAllIds;
+      return assetManagementStore.siteAllIds;
     });
 
     const updateTimeNum = computed(() => {
-      return store.state.assetManagement.updateTimeNum;
+      return assetManagementStore.updateTimeNum;
     });
 
     const that = reactive({

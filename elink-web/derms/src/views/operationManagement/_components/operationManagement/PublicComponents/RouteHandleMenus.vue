@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useOperationManagementStore } from '@/stores/index';
+
 import {defineComponent, getCurrentInstance, reactive, toRefs, watch} from "vue";
 
 export default defineComponent({
@@ -42,7 +43,7 @@ export default defineComponent({
   emits: ["update:componentName"],
   setup(props) {
 
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const {emit} = getCurrentInstance();
 
     const that = reactive({
@@ -52,7 +53,7 @@ export default defineComponent({
 
     const clickRouteItemFun = (childItem) => {
       that.routeName = childItem.name;
-      store.dispatch("updateSecondaryVisible",false);
+      operationManagementStore.updateSecondaryVisible(false);
       emit("update:componentName", that.routeName);
     };
 

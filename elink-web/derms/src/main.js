@@ -1,8 +1,8 @@
 /* eslint-disable vue/multi-word-component-names */
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
 
 //引入资源文档
 import "@/permission"; // permissionU control
@@ -70,6 +70,7 @@ console = {
   timeEnd: () => {},
   assert: () => {},
 };
+const pinia = createPinia();
 const app = createApp(App);
 // 全局注册图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -86,4 +87,4 @@ app.config.warnHandler = () => null;
 app.config.globalProperties.echarts = echarts;
 app.config.globalProperties.$filters = filters;
 
-app.use(store).use(router).use(ElementPlus, { locale: zhCn }).use(VueInfiniteScroll).mount("#app");
+app.use(pinia).use(router).use(ElementPlus, { locale: zhCn }).use(VueInfiniteScroll).mount("#app");

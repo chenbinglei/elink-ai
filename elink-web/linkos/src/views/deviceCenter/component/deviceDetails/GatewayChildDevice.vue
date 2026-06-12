@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {AssociatedDevicesDialog} from "./component";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {CirclePlus, Delete, Refresh, Search} from "@element-plus/icons-vue";
@@ -62,9 +63,9 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const contentMainMaxHeight = computed(() => {
-      return store.state.app.contentMainMaxHeight;
+      return appStore.contentMainMaxHeight;
     });
 
     const that = reactive({

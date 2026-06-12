@@ -58,7 +58,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useEnergyManagementStore } from '@/stores/index';
+
 import {ElMessage, ElMessageBox} from "element-plus";
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import StrategyParameterCom from "./StrategyParameterCom.vue";
@@ -78,14 +79,14 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const energyManagementStore = useEnergyManagementStore();
     const {emit} = getCurrentInstance();
 
     const issueStrategyTime = computed(() => {
-      return store.state.energyManagement.issueStrategyTime;
+      return energyManagementStore.issueStrategyTime;
     });
     const strategyName = computed(() => {
-      return store.state.energyManagement.strategyName;
+      return energyManagementStore.strategyName;
     });
 
     const that = reactive({

@@ -2,24 +2,26 @@
   <router-view/>
 </template>
 <script setup>
-import {useStore} from 'vuex';
+import { useAppStore, useTagsViewStore } from '@/stores/index';
+
 import {onMounted, reactive} from "vue";
 
-const store = useStore();
+const appStore = useAppStore();
+    const tagsViewStore = useTagsViewStore();
 const that = reactive({
   userInfo: JSON.parse(localStorage.getItem('USER_INFO'))
 });
 
 const updateUserInfo = () => {
   let userId = that.userInfo && that.userInfo?.userId;
-  store.dispatch('updateUserInfo', that.userInfo);
-  store.dispatch('updateOldUserId', userId);
+  appStore.updateUserInfo(that.userInfo);
+  appStore.updateOldUserId(userId);
 };
 
 // 重置带有返回按钮的页面
 const updateTagsViewBackArray = () => {
   let backButArray = localStorage.getItem("TAGS_VIEW_BACK_ARRAY");
-  if (backButArray) store.dispatch('updateBackButViews', JSON.parse(backButArray));
+  if (backButArray) tagsViewStore.updateBackButViews(JSON.parse(backButArray));
 };
 
 const debounce = (fn, delay) => {

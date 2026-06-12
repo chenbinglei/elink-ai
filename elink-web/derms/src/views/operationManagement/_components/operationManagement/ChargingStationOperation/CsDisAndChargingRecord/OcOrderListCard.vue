@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useOperationManagementStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import {reactive, defineComponent, toRefs} from "vue";
@@ -64,7 +65,7 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const that = reactive({
       activities: [{timestamp: 'startTime', color: '#41CB4A'}, {timestamp: 'endTime', type: 'primary', hollow: true}]
     });
@@ -77,14 +78,14 @@ export default defineComponent({
         return;
       }
 
-      store.dispatch("updateSecondaryInfo",{
+      operationManagementStore.updateSecondaryInfo({
         type: 3,
         subTitle: "占用订单详情",
         id: props.orderInfo.id,
         componentName: "CsOrderRecordDetails",
         backComponentName: "CsPileOccupationRecord"
       });
-      store.dispatch("updateSecondaryVisible",true);
+      operationManagementStore.updateSecondaryVisible(true);
     };
 
     return {...toRefs(that),clickOperateBut};

@@ -29,16 +29,18 @@
 <script setup>
 import { onMounted, onUnmounted, computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { useMonitorStore, useAppStore } from '@/stores/index';
+
 import { removeToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
 
 const route = useRoute();
 const router = useRouter();
-const store = useStore();
+const monitorStore = useMonitorStore();
+    const appStore = useAppStore();
 const isShowLoading=ref(false)
-const isFullscreen = computed(() => store.state.monitor.isFullscreen);
+const isFullscreen = computed(() => monitorStore.isFullscreen);
 const frameSrc = computed(() => {
   const { siteId } = route.query;
   return siteId ? `/monitor/${siteId}` : "";
@@ -71,7 +73,7 @@ const handleIframeLoad = () => {
 };
 
 const switchFullscreen = () => {
-  store.dispatch("updateIsFullscreen", false);
+  monitorStore.updateIsFullscreen(false);
 };
 
 const onMessage = ({ data }) => {
@@ -87,10 +89,10 @@ const onMessage = ({ data }) => {
       router.replace(`/login?id=${route.query.siteId}`);
       break;
     case "fullScreenChange":
-      store.dispatch("updateIsFullscreen", payload);
+      monitorStore.updateIsFullscreen(payload);
       break;
     case "exitSystem":
-      store.dispatch("exitSystem", { noReload: true });
+      appStore.exitSystem({ noReload: true });
       router.replace(`/login?id=${route.query.siteId}`);
       break;
     default:

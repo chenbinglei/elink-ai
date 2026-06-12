@@ -80,7 +80,8 @@ import { saveSiteTopNode } from "@/api/siteCenter/stationDetails";
 import { ElMessage, ElMessageBox } from 'element-plus';
 import AddTopologyNodeDialog from './AddTopologyNodeDialogVue.vue'
 import { deleteTopNodeInfoById } from "@/api/siteCenter/stationDetails";
-import { useStore } from 'vuex';
+import { useAppStore } from '@/stores/index';
+
 const props = defineProps({
   nodes: {
     type: Array,
@@ -91,7 +92,7 @@ const props = defineProps({
     default: ""
   },
 });
-const store = useStore();
+const appStore = useAppStore();
 
 const canvas = ref(null);
 const scale = ref(1); // 初始缩放比例为 1
@@ -281,7 +282,7 @@ const addNode = (parentNode, direction, x, y) => {
   //         pageExtend: JSON.stringify(itemData)
   //       };
   //     });
-  //     store.dispatch('updateNewTopoNode', modifiedXNodes);
+  //     appStore.updateNewTopoNode(modifiedXNodes);
   //     // modifiedXNodes.forEach(node => saveDialog(node));
   //   }
   //   // 查找与父节点中间垂直位置相交的连接线
@@ -314,7 +315,7 @@ const addNode = (parentNode, direction, x, y) => {
   //         pageExtend: JSON.stringify(itemData)
   //       };
   //     });
-  //     store.dispatch('updateNewTopoNode', modifiedXNodes);
+  //     appStore.updateNewTopoNode(modifiedXNodes);
   //     // modifiedXNodes.forEach(node => saveDialog(node));
   //   }
   // }
@@ -352,7 +353,7 @@ const addNode = (parentNode, direction, x, y) => {
   //         pageExtend: JSON.stringify(itemData)
   //       };
   //     });
-  //     store.dispatch('updateNewTopoNode', modifiedXNodes);
+  //     appStore.updateNewTopoNode(modifiedXNodes);
   //     // modifiedXNodes.forEach(node => saveDialog(node));
   //   }
   //   // 查找与父节点中间垂直位置相交的连接线（向左）
@@ -387,7 +388,7 @@ const addNode = (parentNode, direction, x, y) => {
   //         pageExtend: JSON.stringify(itemData)
   //       };
   //     });
-  //     store.dispatch('updateNewTopoNode', modifiedXNodes);
+  //     appStore.updateNewTopoNode(modifiedXNodes);
   //     // modifiedXNodes.forEach(node => saveDialog(node));
   //   }
   // }
@@ -424,7 +425,7 @@ const addNode = (parentNode, direction, x, y) => {
   //     })
   //     console.log('updateNewTopoNode', modifiedYNodes);
 
-  //     store.dispatch('updateNewTopoNode', modifiedYNodes);
+  //     appStore.updateNewTopoNode(modifiedYNodes);
   //     // modifiedXNodes.forEach(node => saveDialog(node));
   //   }
   //   // 查找 x 和 y 匹配的节点
@@ -455,7 +456,7 @@ const addNode = (parentNode, direction, x, y) => {
   //         pageExtend: JSON.stringify(itemData)
   //       };
   //     });
-  //     store.dispatch('updateNewTopoNode', modifiedYNodes);
+  //     appStore.updateNewTopoNode(modifiedYNodes);
   //     // modifiedXNodes.forEach(node => saveDialog(node));
   //   }
   // }
@@ -534,7 +535,7 @@ const addNode = (parentNode, direction, x, y) => {
     //   };
     //   // 将新对象推入 modifiedYNodes
     //   modifiedYNodes.push(itemDirections);
-    //   store.dispatch('updateNewTopoNode', modifiedYNodes);
+    //   appStore.updateNewTopoNode(modifiedYNodes);
     //   // ----------------
     // }
 

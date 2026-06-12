@@ -1,7 +1,7 @@
 import {createApp} from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import store from './store'
 
 //引入资源文档
 import "@/permission"; // permissionU control
@@ -30,6 +30,7 @@ import ElementPagination from '@/components/Pagination/ElementPagination'; //自
 import {resizeDocument} from '@/common/directive/directive.js';// 自定义全局指令
 import filters from "@/common/filters"; // 过滤器
 
+const pinia = createPinia();
 const app = createApp(App);
 resizeDocument(app); //注册全局指令
 
@@ -50,4 +51,4 @@ app.config.warnHandler = () => null;  //屏蔽警告信息
 app.config.globalProperties.echarts = echarts;
 app.config.globalProperties.$filters = filters;
 
-app.use(store).use(router).use(ElementPlus, {locale: zhCn}).mount("#app");
+app.use(pinia).use(router).use(ElementPlus, {locale: zhCn}).mount("#app");

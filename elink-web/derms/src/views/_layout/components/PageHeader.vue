@@ -13,13 +13,14 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useMonitorStore } from '@/stores/index';
+
 import SystemLogo from "./pageHeader/SystemLogo.vue";
 import RouteMenuListCom from "./pageHeader/RouteMenuListCom.vue";
 import UserOperationMenu from "./pageHeader/UserOperationMenu.vue";
-const store = useStore();
+const monitorStore = useMonitorStore();
 import NotificationCenter from "./pageHeader/NotificationCenter.vue";
-const isFullscreen = computed(() => store.state.monitor.isFullscreen);
+const isFullscreen = computed(() => monitorStore.isFullscreen);
 
 </script>
 

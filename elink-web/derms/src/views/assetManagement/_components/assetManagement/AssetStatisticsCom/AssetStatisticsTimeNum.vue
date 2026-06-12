@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useAssetManagementStore } from '@/stores/index';
+
 import AssetStatisticsChart from "./AssetStatisticsChart.vue";
 import {computed, defineComponent, reactive, toRefs, watch} from "vue";
 import EquivalentPowerGenerationHours from "./EquivalentPowerGenerationHours.vue";
@@ -52,9 +53,9 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const scenarioType = computed(() => {
-      return store.state.assetManagement.scenarioType;
+      return assetManagementStore.scenarioType;
     });
 
     const that = reactive({

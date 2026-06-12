@@ -60,7 +60,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useTagsViewStore } from '@/stores/index';
+
 import {useRoute,useRouter} from "vue-router";
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import {onMounted, reactive, ref, toRefs} from "vue";
@@ -74,7 +75,7 @@ export default {
   components:{ModelClassCard,AddModelClassDialog},
   setup(props){
 
-    const store = useStore();
+    const tagsViewStore = useTagsViewStore();
     const route = useRoute();
     const vueRouter = useRouter();
 
@@ -143,7 +144,7 @@ export default {
         }
 
         vueRouter.push({ path: routeName, query: { id: row.id,subTitle: row.sortName} });
-        store.dispatch("addBackButViews",{ id: row.id,backRouteName: route.path,showButRoute: routeName });
+        tagsViewStore.addBackButViews({ id: row.id,backRouteName: route.path,showButRoute: routeName });
       }
 
       if(operate === 2){

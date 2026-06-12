@@ -15,7 +15,8 @@
   </div>
 </template>
 <script>
-import { useStore } from 'vuex';
+import { useOperationManagementStore } from '@/stores/index';
+
 import { computed, defineComponent, onMounted, reactive, toRefs, ref, watch } from "vue";
 import SecondaryDetailsCom from "./_components/operationManagement/SecondaryDetailsCom.vue";
 import {
@@ -27,9 +28,9 @@ export default defineComponent({
     CsInvoiceManage,SecondaryDetailsCom
   },
   setup () {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const secondaryDetailsVisible = computed(() => {
-      return store.state.operationManagement.secondaryDetailsVisible
+      return operationManagementStore.secondaryDetailsVisible
     });
 
     const that = reactive({
@@ -54,8 +55,8 @@ export default defineComponent({
     watch(() => secondaryDetailsVisible.value, (newVal) => {
     });
     onMounted(() => {
-      store.dispatch("updateSecondaryVisible", false);
-      store.dispatch("updateSecondaryInfo", {});
+      operationManagementStore.updateSecondaryVisible(false);
+      operationManagementStore.updateSecondaryInfo({});
       // findRouteMenuListFun()
     })
 

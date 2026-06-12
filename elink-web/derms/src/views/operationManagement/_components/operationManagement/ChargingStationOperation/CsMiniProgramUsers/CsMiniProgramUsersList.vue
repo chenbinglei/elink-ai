@@ -98,7 +98,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useOperationManagementStore } from '@/stores/index';
+
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";
 import AddUserInfoDialog from "./AddUserInfoDialog.vue";
@@ -111,7 +112,7 @@ export default defineComponent({
   components: {AddUserInfoDialog},
   setup() {
 
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const {emit} = getCurrentInstance();
 
     const that = reactive({
@@ -176,13 +177,13 @@ export default defineComponent({
           return;
         }
 
-        store.dispatch("updateSecondaryInfo", {
+        operationManagementStore.updateSecondaryInfo({
           subTitle: `用户详情-${row.nickName}`,
           id: row.id,
           componentName: "CsMiniProgramUserDetails"
         });
         console.log(operateType, row);
-        store.dispatch("updateSecondaryVisible", true);
+        operationManagementStore.updateSecondaryVisible(true);
         //  router.push(routeName);
       }
 

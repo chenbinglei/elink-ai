@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus";
 import { createHttpClient } from "@elink/shared/http";
 import { isDev } from "@elink/shared/utils";
 import { dermsAuth } from "./auth.js";
-import store from "@/store/index.js";
+import { useAppStore } from "@/stores/index";
 
 const portNum = ":5000";
 const locationHost = location.hostname;
@@ -17,9 +17,12 @@ const { request, cancelAbleService } = createHttpClient({
   qs,
   auth: dermsAuth,
   baseURL: isDev() ? "/proxy" : onlineServerIpAddress,
-  getStoreGetters: () => store.getters,
-  perRequestIsolation: true, // derms 每请求独立实例：并发请求不会互相取消
-  enablePortNum: true, // derms 旧逻辑启用 portNum 动态端口路由
+  getStoreGetters: () => {
+    const appStore = useAppStore();
+    return { oldUserId: appStore.oldUserId, userInfo: appStore.userInfo };
+  },
+  perRequestIsolation: true,
+  enablePortNum: true,
   onAuthExpired: () => {
     if (window.top !== window) {
       window.top.postMessage({ action: "unAuth" });

@@ -95,7 +95,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import { operateButtonIsClick } from "@/utils";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { pickerOptionsGthanAcTime } from "@/utils/dateTime";
@@ -116,9 +117,9 @@ export default defineComponent({
   },
   setup (props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo
+      return appStore.userInfo
     });
 
     const isAddButtonClick = computed(() => {

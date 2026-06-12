@@ -1,4 +1,4 @@
-import store from "@/store/index.js";
+import { useMeta2dStore } from '@/stores/index';
 
 /*
 * 保存、发布图模的时候 进行数据处理
@@ -6,9 +6,10 @@ import store from "@/store/index.js";
 export function handleCanvasMeta2dDataFun() {
     let canvasMeta2dFileData = {};
     let canvasDrawingOptions = {};
-    const canvasMeta2d = store.getters.canvasMeta2d;
-    const canvasMeta2dData = store.getters.canvasMeta2dData;
-    const customCanvasOptionsList = store.getters.customCanvasOptionsList;
+    const meta2dStore = useMeta2dStore();
+    const canvasMeta2d = meta2dStore.canvasMeta2d;
+    const canvasMeta2dData = meta2dStore.canvasMeta2dData;
+    const customCanvasOptionsList = meta2dStore.customCanvasOptionsList;
 
     let {siteId, siteName} = canvasMeta2dData;
     let canvasDrawingData = canvasMeta2d.data(); // 画布所有数据

@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useMeta2dStore } from '@/stores/index';
+
 import {deepClone} from "@meta2d/core";
 import {LxCollapse} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, onMounted, computed, watch} from "vue";
@@ -65,17 +66,17 @@ export default defineComponent({
   components: {LxCollapse, AddEventButtonListCom, EventConditionsCom, EventActionsCom},
   setup() {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const current_active_pel_list = computed(() => {
-      return store.state.meta2d.current_active_pel_list;
+      return meta2dStore.current_active_pel_list;
     });
 
     const delete_field_list = computed(() => {
-      return store.state.meta2d.setValueDeleteFieldList;
+      return meta2dStore.setValueDeleteFieldList;
     });
 
     const that = reactive({

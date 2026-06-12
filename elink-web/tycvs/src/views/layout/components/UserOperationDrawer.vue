@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import {useRouter} from "vue-router";
 import {removeToken} from "@/utils/auth";
 import {onMounted, reactive, toRefs, defineComponent, computed, getCurrentInstance, watch} from "vue";
@@ -40,12 +41,12 @@ export default defineComponent({
   emits: ["update:isVisible"],
   setup(props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const vueRouter = useRouter();
     const {emit} = getCurrentInstance();
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

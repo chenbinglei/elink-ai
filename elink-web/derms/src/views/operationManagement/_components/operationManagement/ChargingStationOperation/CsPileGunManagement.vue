@@ -167,7 +167,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+import { useOperationManagementStore } from '@/stores/index';
+
 import pinyin from "tiny-pinyin";
 import { queryUserAuthorityIsHaveFun } from "@/utils";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -184,7 +185,7 @@ export default defineComponent({
   components: { GunStatusInfoCard, ChargingPileQrCodeDialog },
   setup () {
 
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const that = reactive({
       Search,
       RefreshRight,
@@ -261,11 +262,11 @@ export default defineComponent({
           return;
         }
 
-        store.dispatch("updateSecondaryInfo", {
+        operationManagementStore.updateSecondaryInfo({
           subTitle: `设备详情 - ${row.deviceName}`, id: row.id, pileCode: row.deviceNumber,
           componentName: "CsChargingPileDetails", backComponentName: "CsPileGunManagement"
         });
-        store.dispatch("updateSecondaryVisible", true);
+        operationManagementStore.updateSecondaryVisible(true);
       }
 
       if (operateType === 2) {

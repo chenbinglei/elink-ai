@@ -2,10 +2,10 @@
   <router-view/>
 </template>
 <script setup>
-import {useStore} from 'vuex';
+import { useAppStore } from '@/stores/index';
 import {onMounted, reactive} from "vue";
 
-const store = useStore();
+const appStore = useAppStore();
 
 const that = reactive({
   userInfo: JSON.parse(localStorage.getItem('USER_INFO'))
@@ -13,8 +13,8 @@ const that = reactive({
 
 const updateUserInfo = () => {
   let userId = that.userInfo && that.userInfo.userId;
-  store.dispatch('updateUserInfo', that.userInfo);
-  store.dispatch('updateOldUserId', userId);
+  appStore.updateUserInfo(that.userInfo);
+  appStore.updateOldUserId(userId);
 }
 
 const debounce = (fn, delay) => {

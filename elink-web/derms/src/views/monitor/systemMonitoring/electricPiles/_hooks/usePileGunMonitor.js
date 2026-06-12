@@ -1,14 +1,15 @@
 import { ref, computed, onUnmounted, watch } from "vue";
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import { pileRealWebSocket } from "@/api/websocket/webSocket";
 import { ElMessage } from "element-plus";
 
 import WSMonitor from "@/utils/monitor";
 
 export default function usePileGunMonitor({ pileCode }) {
-  const store = useStore();
+  const appStore = useAppStore();
   const userInfo = computed(() => {
-    return store.state.app.userInfo;
+    return appStore.userInfo;
   });
 
   let wsInstance;

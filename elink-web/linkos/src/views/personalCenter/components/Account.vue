@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useAppStore } from '@/stores/index';
+
 import {nullToDelete} from "@/utils";
 import {ElMessage} from 'element-plus'
 import {mobile, notCharmap} from "@/utils/validate"
@@ -62,9 +63,9 @@ export default {
       }
     };
 
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo
+      return appStore.userInfo
     });
 
     const that = reactive({
@@ -92,7 +93,7 @@ export default {
         userInfo.phone = result.data.phone;
         userInfo.userName = result.data.fullName;
         userInfo.userProfile = result.data.userProfile;
-        store.dispatch('updateUserInfo', userInfo);
+        appStore.updateUserInfo(userInfo);
         localStorage.setItem("USER_INFO", JSON.stringify(userInfo));
       });
     };

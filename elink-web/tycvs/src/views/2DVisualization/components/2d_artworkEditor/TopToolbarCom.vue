@@ -21,7 +21,8 @@
   </div>
 </template>
 <script>
-import {useStore} from "vuex";
+import { useAppStore, useMeta2dStore } from '@/stores/index';
+
 import {useRouter, useRoute} from "vue-router";
 import {reactive, toRefs, defineComponent, computed,watch} from "vue";
 import {CanvasEditShortcutCom, CanvasToolShortcutCom} from "./Meta2dCanvasCom/index";
@@ -31,19 +32,20 @@ export default defineComponent({
   components: {CanvasEditShortcutCom, CanvasToolShortcutCom},
   setup() {
 
-    const store = useStore();
+    const appStore = useAppStore();
+    const meta2dStore = useMeta2dStore();
     const route = useRoute();
     const vueRouter = useRouter();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
 
     const that = reactive({
@@ -55,7 +57,7 @@ export default defineComponent({
       let canvasData = JSON.parse(JSON.stringify(canvasMeta2dData.value));
       if(that.fileName){
         canvasData.name = that.fileName;
-        store.dispatch('updateCanvasMeta2dData', canvasData);
+        meta2dStore.updateCanvasMeta2dData(canvasData);
       } else {
         that.fileName = canvasData.name;
       }
