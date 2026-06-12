@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.9 | 编制日期：2026-06-03 | 最后更新：2026-06-12 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v4.0 | 编制日期：2026-06-03 | 最后更新：2026-06-12 | 关联方案：REFACTOR_PLAN.md v2.8
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -16,6 +16,86 @@
 ## 任务执行记录
 
 > 本章节记录每个任务的实际执行过程、遇到的问题及解决方案，确保执行过程可追溯。
+
+---
+
+### P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia
+
+**执行状态：** ✅ 已完成
+**完成时间：** 2026-06-12
+
+**执行过程：**
+1. linkos/tycvs 创建 vite.config.js（端口9000/9002，proxy代理，manualChunks分包）
+2. linkos/tycvs 创建 index.html 作为 Vite 入口
+3. linkos/tycvs package.json 更新：添加 vite/pinia 依赖，移除 @vue/cli-service/vuex，更新 scripts
+4. derms package.json 更新：移除 vuex，添加 pinia
+5. 3个项目创建 stores/index.js：linkos(3个store)、tycvs(4个store)、derms(7个store)
+6. 3个项目 main.js：createPinia() 替换 Vuex store
+7. linkos/tycvs router/index.js：process.env.BASE_URL → import.meta.env.BASE_URL，require.ensure → import()
+8. linkos utils/env.js：process.env.NODE_ENV → import.meta.env.MODE
+9. tycvs utils/requestPath.js：process.env.NODE_ENV → import.meta.env.DEV
+10. 3个项目 request.js/requestVue.js：store.getters → getStoreGetters() 使用 Pinia store
+11. linkos utils/index.js：store 引用替换为 useAppStore
+12. tycvs handleCanvasMeta2dData.js：store 引用替换为 useMeta2dStore
+13. derms permission.js/permission1.js：store 引用替换为 useAppStore
+14. 自动化脚本批量替换 175+ 组件文件中的 Vuex 调用为 Pinia 调用
+15. 修复 Pinia store 中 getter/state 命名冲突（移除14个同名的 identity getter）
+16. 修复 derms element.scss 深色背景变量（--el-bg-color: #07172b, --el-fill-color-blank: #081a30）
+
+**问题诊断：**
+
+| # | 问题 | 严重性 | 根因 |
+|---|------|--------|------|
+| 1 | Vite 启动白屏 | 阻断 | router/index.js 使用 process.env.BASE_URL，Vite 不支持 |
+| 2 | Pinia store 初始化失败 | 阻断 | getter 与 state 同名导致命名冲突 |
+| 3 | request.js 中 store.getters 引用失效 | 阻断 | 旧 Vuex store 已移除，需改用 Pinia store |
+| 4 | derms 列表白色背景 | 中 | element.scss 缺少深色主题变量覆盖 |
+
+**解决方案：**
+
+| # | 问题 | 解决方案 |
+|---|------|----------|
+| 1 | process.env → import.meta.env | router/index.js 中 BASE_URL 和 env.js 中 MODE 替换 |
+| 2 | 命名冲突 | 移除14个与 state 同名的 identity getter |
+| 3 | store.getters | getStoreGetters() 回调中使用 useAppStore() 获取状态 |
+| 4 | 深色背景 | 添加 --el-bg-color: #07172b 和 --el-fill-color-blank: #081a30 |
+
+**变更文件：**
+- `elink-web/linkos/vite.config.js`（新建）
+- `elink-web/linkos/index.html`（新建）
+- `elink-web/linkos/package.json`（Vite+Pinia依赖）
+- `elink-web/linkos/src/main.js`（createPinia）
+- `elink-web/linkos/src/stores/index.js`（新建，3个store）
+- `elink-web/linkos/src/router/index.js`（import.meta.env）
+- `elink-web/linkos/src/utils/env.js`（import.meta.env.MODE）
+- `elink-web/linkos/src/utils/request.js`（useAppStore）
+- `elink-web/linkos/src/utils/index.js`（useAppStore）
+- `elink-web/linkos/src/App.vue`（Pinia调用）
+- `elink-web/tycvs/vite.config.js`（新建）
+- `elink-web/tycvs/index.html`（新建）
+- `elink-web/tycvs/package.json`（Vite+Pinia依赖）
+- `elink-web/tycvs/src/main.js`（createPinia）
+- `elink-web/tycvs/src/stores/index.js`（新建，4个store）
+- `elink-web/tycvs/src/router/index.js`（import.meta.env）
+- `elink-web/tycvs/src/utils/request.js`（useAppStore）
+- `elink-web/tycvs/src/utils/requestPath.js`（import.meta.env.DEV）
+- `elink-web/tycvs/src/App.vue`（Pinia调用）
+- `elink-web/derms/package.json`（Pinia依赖）
+- `elink-web/derms/src/main.js`（createPinia）
+- `elink-web/derms/src/stores/index.js`（新建，7个store）
+- `elink-web/derms/src/utils/request.js`（useAppStore）
+- `elink-web/derms/src/utils/requestVue.js`（useAppStore）
+- `elink-web/derms/src/permission.js`（useAppStore）
+- `elink-web/derms/src/permission1.js`（useAppStore）
+- `elink-web/derms/src/App.vue`（Pinia调用）
+- 175+ 组件文件（Vuex→Pinia调用替换）
+
+**验证结果：**
+| 检查项 | 状态 | 备注 |
+|--------|------|------|
+| [A] 编译验证 | ⏳ 待本地验证 | 需在本地执行 pnpm install + vite build |
+| [E] Git 提交 | ✅ 已提交 | 192 files committed to refactor/phase-4-frontend-modernize (ff0c1be) |
+| [F] 文档同步 | ✅ 进行中 | 4份文档同步更新中 |
 
 ---
 

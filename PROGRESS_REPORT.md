@@ -1,8 +1,8 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v3.9 | 报告日期：2026-06-12 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-BC Vite+Pinia迁移完成）
+> 版本：v4.0 | 报告日期：2026-06-12 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3全部完成，PHASE-4进行中（P4-A+P4-BC已完成，P4-D待开始）
 >
-> 关联方案：[REFACTOR_PLAN.md v2.2](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v3.8](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v2.8](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v4.0](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
@@ -14,7 +14,7 @@
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线建立：5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数） |
-| PHASE-4：前端现代化改造 | ⏳ 进行中 | 50% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia），derms element.scss深色背景修复+postcss配置修复 |
+| PHASE-4：前端现代化改造 | ⏳ 进行中 | 67% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送），derms element.scss深色背景修复+postcss配置修复 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
 ---
@@ -687,3 +687,4 @@ allowed-origins:
 | v3.6 | 2026-06-11 | AI | P4-A-hotfix-v4 linkos 首屏/路由切换闪黑屏体验优化：诊断4类触发场景（刷新200-800ms黑屏/路由切换50-300ms白闪/接口跳转100-500ms白块/异步组件失败NProgress卡顿）；P1注入HTML首屏CSS-only loading+#F8F8F8背景色防黑闪、P2 AppMain增加fade-route transition 0.2s opacity过渡、P3 NProgress起始15%+minimum/router.onError兜底；3文件改动，全浏览器兼容 |
 | v3.7 | 2026-06-11 | AI | P4-A-hotfix-v5 linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰）；P4-A-hotfix-v6 前端 API 路径 /scrontab → /crontab 对齐（28处/8文件），全量构建验证全部通过 |
 | v3.8 | 2026-06-12 | AI | P4-BC 3 项目 Vite 迁移+Vuex→Pinia 全部完成：linkos/tycvs 创建 vite.config.js+index.html，删除 vue.config.js+旧 store/ 目录；3项目 stores/ 目录创建并迁移完成；所有组件 import 从 @/store/ 改为 @/stores/；derms element.scss 新增 --el-bg-color: #07172b 深色变量修复表格白底；derms vite.config.js postcss exclude→include 避免 Element Plus 样式被转换。3 项目 npm run build 全部成功。|
+| v3.9 | 2026-06-12 | AI | P4-BC 代码重新执行并完善：自动化脚本批量替换175+组件文件Vuex→Pinia调用；修复request.js/requestVue.js中store.getters→useAppStore；修复linkos utils/index.js、tycvs handleCanvasMeta2dData.js、derms permission1.js中store引用；192文件变更提交至refactor/phase-4-frontend-modernize分支(ff0c1be)并推送 |

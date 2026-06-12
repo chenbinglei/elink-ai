@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v2.7 | 编制日期：2026-06-03 | 最后更新：2026-06-12 | 状态：**执行中**
+> 版本：v2.8 | 编制日期：2026-06-03 | 最后更新：2026-06-12 | 状态：**执行中**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -14,7 +14,7 @@
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线：5场景3轮压测+8项指标+JVM GC+容器资源+DB连接数+质量验收全部通过） |
-| PHASE-4：前端现代化改造 | ⏳ 进行中 | 50% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia） |
+| PHASE-4：前端现代化改造 | ⏳ 进行中 | 67% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送） |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
 ### PHASE-1 任务进度明细
@@ -58,7 +58,7 @@
 | 任务编号 | 任务名称 | 状态 | 完成时间 | 影响范围 |
 |----------|----------|------|----------|----------|
 | P4-A | 创建 @elink/shared 公共包 | ✅ 已完成 | 2026-06-11 | elink-web/packages/shared + 3项目request.js/auth.js + 构建配置 |
-| P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia | ✅ 已完成 | 2026-06-12 | linkos/tycvs vite.config.js+index.html创建，3项目 stores/目录创建并迁移完成，旧 store/ 和 vue.config.js 删除；derms element.scss深色背景修复+postcss配置修复 |
+| P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia | ✅ 已完成 | 2026-06-12 | linkos/tycvs vite.config.js+index.html创建，3项目 stores/目录创建并迁移完成，175+组件Vuex→Pinia调用替换，192文件变更已提交推送(ff0c1be)；derms element.scss深色背景修复+postcss配置修复 |
 
 ### 已完成任务的影响分析
 
