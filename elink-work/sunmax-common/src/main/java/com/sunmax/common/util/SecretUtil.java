@@ -60,7 +60,9 @@ public class SecretUtil {
             // 补齐 = 填充（Base64长度必须是4的倍数）
             int padding = (4 - standardBase64.length() % 4) % 4;
             if (padding > 0) {
-                standardBase64 += "=".repeat(padding);
+                for (int i = 0; i < padding; i++) {
+                    standardBase64 += "=";
+                }
             }
 
             byte[] encrypted1 = Base64.getDecoder().decode(standardBase64);

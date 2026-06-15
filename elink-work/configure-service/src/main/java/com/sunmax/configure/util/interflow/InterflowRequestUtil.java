@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Objects;
-import java.io.IOException;
 
 /**
  * 城市充电请求工具类

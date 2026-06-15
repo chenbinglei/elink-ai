@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
 /**

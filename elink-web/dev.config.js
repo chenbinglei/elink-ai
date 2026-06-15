@@ -20,8 +20,7 @@
  *      （自动从 .env.example 复制为 .env）
  *
  * 变量命名规范：
- * - Vue CLI 项目（linkos/tycvs）：VUE_APP_ 前缀
- * - Vite 项目（derms）：VITE_ 前缀
+ * - 所有项目统一使用 VITE_ 前缀（已全部迁移至 Vite）
  *
  * 同步规则：
  * - 新增变量时，必须同时更新 .env.example 和 .env
@@ -29,10 +28,8 @@
  * - .env 中填写实际开发值
  *
  * 代码引用规范：
- * - Vue CLI 项目：process.env.VUE_APP_XXX
  * - Vite 项目：import.meta.env.VITE_XXX
  * - vite.config.js 中可使用 process.env.VITE_XXX（需 import process）
- * - vue.config.js 中可使用 process.env.VUE_APP_XXX
  */
 
 const path = require('path');
@@ -47,15 +44,15 @@ module.exports = {
       name: 'linkos',
       description: '设备管理平台',
       dir: 'linkos',
-      devCommand: 'npm run serve',
+      devCommand: 'npm run dev',
       port: 9000,
-      type: 'vue-cli',      // vue-cli | vite
+      type: 'vite',
       envFile: '.env',
       // 环境变量清单（.env 和 .env.example 须同步）：
-      // VUE_APP_PROXY_TARGET     - 后端代理目标地址 (string, 默认: http://localhost:5000)
-      // VUE_APP_API_HOST         - 后端API主机地址 (string, 默认: localhost:5000)
-      // VUE_APP_WS_URL           - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
-      // VUE_APP_MAPBOX_ACCESS_TOKEN - Mapbox 地图 Access Token (string)
+      // VITE_PROXY_TARGET          - 后端代理目标地址 (string, 默认: http://localhost:5000)
+      // VITE_API_HOST              - 后端API主机地址 (string, 默认: localhost:5000)
+      // VITE_WS_URL                - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
+      // VITE_MAPBOX_ACCESS_TOKEN   - Mapbox 地图 Access Token (string)
     },
     {
       name: 'derms',
@@ -74,18 +71,18 @@ module.exports = {
       name: 'tycvs',
       description: '可视化组态平台',
       dir: 'tycvs',
-      devCommand: 'npm run serve',
+      devCommand: 'npm run dev',
       port: 9002,
-      type: 'vue-cli',
+      type: 'vite',
       envFile: '.env',
       // 环境变量清单（.env 和 .env.example 须同步）：
-      // VUE_APP_PROXY_TARGET          - 后端代理目标地址 (string, 默认: http://localhost:5000)
-      // VUE_APP_API_HOST              - 后端API主机地址 (string, 默认: localhost:5000)
-      // VUE_APP_WS_URL                - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
-      // VUE_APP_OSS_BUCKET_NAME       - 阿里云 OSS Bucket 名称 (string)
-      // VUE_APP_OSS_REGION            - 阿里云 OSS Region (string, 默认: oss-cn-hangzhou)
-      // VUE_APP_ALIYUN_ACCESS_KEY_ID  - 阿里云 AccessKey ID (string)
-      // VUE_APP_ALIYUN_ACCESS_KEY_SECRET - 阿里云 AccessKey Secret (string)
+      // VITE_PROXY_TARGET              - 后端代理目标地址 (string, 默认: http://localhost:5000)
+      // VITE_API_HOST                  - 后端API主机地址 (string, 默认: localhost:5000)
+      // VITE_WS_URL                    - WebSocket 连接地址 (string, 默认: ws://localhost:5000)
+      // VITE_OSS_BUCKET_NAME           - 阿里云 OSS Bucket 名称 (string)
+      // VITE_OSS_REGION                - 阿里云 OSS Region (string, 默认: oss-cn-hangzhou)
+      // VITE_ALIYUN_ACCESS_KEY_ID      - 阿里云 AccessKey ID (string)
+      // VITE_ALIYUN_ACCESS_KEY_SECRET  - 阿里云 AccessKey Secret (string)
     },
   ],
 

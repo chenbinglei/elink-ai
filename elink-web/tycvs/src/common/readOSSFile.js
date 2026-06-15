@@ -6,17 +6,17 @@ export function readOSSFile (data) {
     // 配置OSS客户端
     const client = new OSS({
         secure: true,
-        bucket: process.env.VUE_APP_OSS_BUCKET_NAME,
-        region: process.env.VUE_APP_OSS_REGION,
-        accessKeyId: process.env.VUE_APP_ALIYUN_ACCESS_KEY_ID,
-        accessKeySecret: process.env.VUE_APP_ALIYUN_ACCESS_KEY_SECRET,
+        bucket: import.meta.env.VITE_OSS_BUCKET_NAME,
+        region: import.meta.env.VITE_OSS_REGION,
+        accessKeyId: import.meta.env.VITE_ALIYUN_ACCESS_KEY_ID,
+        accessKeySecret: import.meta.env.VITE_ALIYUN_ACCESS_KEY_SECRET,
     });
 
     return new Promise(async (resolve, reject) => {
         try {
             // 读取OSS上的文件
             const result = await client.get(FILE_DIR + data.fileName);
-        
+
             resolve({ message: '文件内容获取成功！', code: 20000, data: result.content.toString() });
         } catch (e) {
             console.error(e);

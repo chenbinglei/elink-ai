@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v2.12 | 编制日期：2026-06-03 | 最后更新：2026-06-12（P4-D） | 状态：**执行中**
+> 版本：v2.13 | 编制日期：2026-06-03 | 最后更新：2026-06-15（P5方案调整） | 状态：**执行中**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -15,7 +15,7 @@
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线：5场景3轮压测+8项指标+JVM GC+容器资源+DB连接数+质量验收全部通过） |
 | PHASE-4：前端现代化改造 | ✅ 已完成 | 100% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送）；P4-BC-hotfix完成（router/index.js 工作树损坏还原 + getComponent 适配 Vite 多级动态 import + gallery.js require→ESM，3 dev server 入口 200）；P4-BC-hotfix2完成（derms `directive.js` v-resize 守卫修复 TypeError；`element.scss` 列表表格补深色 CSS 变量与行/单元格背景覆盖，根治白底）；P4-BC-hotfix3完成（derms `permission.js` `afterEach` 跨闭包 `appStore` 引用修复；`permission1.js` 同步修复闭包+删除多余右括号语法错误）；P4-D完成（3项目+shared包tsconfig.json创建allowJs:true，shared包8文件+derms 13文件+linkos/tycvs utils/api层.js→.ts迁移，645个SFC组件添加lang="ts"，修复6处ChargingStationOperation循环导入，3项目vite build全部通过） |
-| PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
+| PHASE-5：构建部署与持续优化 | ⏳ 执行中 | 0% | 15项子任务（4个Sprint），覆盖率目标30%，性能建立R4基线 |
 
 ### PHASE-1 任务进度明细
 
@@ -279,22 +279,54 @@ grep -r "e\.printStackTrace" --include="*.java" . | wc -l
 
 #### 第五阶段：构建部署与持续优化（阶段代号 PHASE-5）
 
-> 目标：完善CI/CD流水线，建立长效监控与优化机制
+> 目标：完善CI/CD流水线，建立可观测性监控体系，补全核心测试覆盖，建立性能基线
 
 **范围：**
+- Actuator端点扩展 + Micrometer指标暴露（前置）
 - CI/CD流水线搭建
-- 核心单元测试补全（目标覆盖率 ≥60%）
-- 监控告警体系部署
-- 性能回归测试与调优
+- Prometheus + Grafana 监控告警体系部署
+- 核心单元测试补全（目标覆盖率 ≥30%，聚焦4个核心服务）
+- Docker配置优化（G1GC + HeapDump + env_file相对路径 + 健康检查调优）
+- 性能基线建立与达标验证
+
+**关键调整（基于代码现状评估）：**
+
+| 维度 | 原方案 | 调整后 | 调整原因 |
+|------|--------|--------|----------|
+| 覆盖率目标 | ≥60%（全部服务） | ≥30%（4个核心服务） | 当前零测试用例，60%不现实 |
+| 性能验证 | 对比R1基线，P95≤200ms | 建立R4基线，P95≤500ms | R1基线数据为空，单机环境指标放宽 |
+| 任务粒度 | 4项粗粒度任务 | 15项子任务（4个Sprint） | 需要细化依赖关系和执行步骤 |
+| 依赖关系 | P5-A/B/C可并行 | Sprint串行+内部前置 | Actuator→监控→CI→测试→性能有实际依赖 |
+| 容器资源限制 | 包含 | 排除 | 用户明确排除此项 |
 
 **具体措施：**
 
-| 序号 | 任务 | 执行内容 | 影响范围 |
-|------|------|----------|----------|
-| 1 | CI/CD流水线 | 配置代码提交→Lint→测试→构建→部署自动化 | .github/workflows 或 .gitlab-ci.yml |
-| 2 | 补全单元测试 | 核心Service层测试覆盖率 ≥60% | 全部业务服务 |
-| 3 | 监控告警体系 | Prometheus + Grafana + 告警规则 | docker-compose.monitoring.yml |
-| 4 | 性能回归测试 | 对比R1基线验证优化目标达成 | 全栈 |
+| 序号 | 任务编号 | 任务 | 执行内容 | 优先级 | Sprint |
+|------|----------|------|----------|--------|--------|
+| 1 | P5-1 | Actuator端点扩展 | 11服务exposure从health扩展为health,prometheus,metrics,info | P0 | S1 |
+| 2 | P5-2 | Micrometer依赖添加 | 父POM添加micrometer-registry-prometheus | P0 | S1 |
+| 3 | P5-3 | skipTests移除+surefire升级 | 11子模块移除skipTests，父POM统一surefire 3.2.5+JaCoCo 0.8.12 | P0 | S1 |
+| 4 | P5-4 | Docker配置优化 | env_file相对路径+9服务G1GC+HeapDump+健康检查调优 | P1 | S1 |
+| 5 | P5-5 | Prometheus+Grafana部署 | docker-compose.monitoring.yml + prometheus.yml + grafana provisioning | P0 | S2 |
+| 6 | P5-6 | 5条核心告警规则 | 服务不可用/API P99>1s/JVM堆>85%/慢查询>3s/容器重启频繁 | P0 | S2 |
+| 7 | P5-7 | Grafana Dashboard配置 | JVM概览/Spring Boot概览/Docker容器/业务概览4个Dashboard | P1 | S2 |
+| 8 | P5-8 | 告警通知渠道 | Alertmanager配置（邮件/Webhook） | P2 | S2 |
+| 9 | P5-9 | CI/CD流水线基础 | lint→compile→test→package→docker build→deploy | P0 | S3 |
+| 10 | P5-10 | 核心服务单元测试 | auth/device/together/data 4服务Service层测试 | P0 | S3 |
+| 11 | P5-11 | JaCoCo覆盖率验证 | 验证4服务覆盖率≥30% | P1 | S3 |
+| 12 | P5-12 | CI/CD流水线集成完善 | JaCoCo报告上传+覆盖率徽章+灰度部署 | P2 | S3 |
+| 13 | P5-13 | 性能基线测试 | wrk压测5核心API+JVM GC+容器资源数据采集 | P0 | S4 |
+| 14 | P5-14 | 达标验证 | P95≤500ms/P99≤1000ms/错误率≤0.5%/GC停顿≤100ms | P0 | S4 |
+| 15 | P5-15 | 验收评审 | 4份文档更新+Tag v3.0创建+验收报告 | P0 | S4 |
+
+**Sprint执行顺序与依赖关系：**
+```
+Sprint-1（基础准备）→ Sprint-2（监控体系）→ Sprint-3（CI/CD+测试）→ Sprint-4（性能验证）
+  P5-1 Actuator ──────→ P5-5 Prom+Grafana ──→ P5-9 CI/CD ──────→ P5-13 性能基线
+  P5-2 Micrometer ────→ P5-6 告警规则 ─────→ P5-10 单元测试 ──→ P5-14 达标验证
+  P5-3 skipTests ─────→ P5-7 Dashboard ─────→ P5-11 JaCoCo ────→ P5-15 验收评审
+  P5-4 Docker优化 ────→ P5-8 告警通知 ─────→ P5-12 流水线集成
+```
 
 ---
 
@@ -897,42 +929,168 @@ echo "" && echo "========== PHASE-4 执行完毕 =========="
 
 **执行前提：** PHASE-4 已合并至main
 
+**Sprint结构：** 4个Sprint，每Sprint 2天，共10个工作日
+
+**关键调整说明：** 基于代码现状评估，覆盖率目标从60%调整为30%（当前零测试用例），性能验证从"对比R1基线"调整为"建立R4基线"（R1数据为空），任务从4项细化为15项子任务按Sprint执行。
+
 ```bash
 # ========== PHASE-5 执行命令序列 ==========
 
 git checkout -b refactor/phase-5-devops main
 
-# 1. 完善CI/CD流水线
-echo "[步骤1] 配置CI/CD"
-# GitHub Actions / GitLab CI 流水线:
-#   - 代码提交 → Lint + 单元测试
-#   - PR合并 → 构建 + 集成测试
-#   - Tag推送 → 构建Docker镜像 + 部署
+# ──────────────────────────────────────────────
+# Sprint-1：基础准备（P5-1 ~ P5-4）
+# ──────────────────────────────────────────────
 
-# 2. 补全单元测试
-echo "[步骤2] 补全核心测试用例"
-# 目标：核心Service层测试覆盖率 ≥ 60%
-# 工具：JUnit 5 + Mockito + Spring Boot Test
+# P5-1: Actuator端点扩展
+echo "[Sprint-1/P5-1] 扩展Actuator端点"
+# 11个服务 application.yml:
+#   management.endpoints.web.exposure.include: health,prometheus,metrics,info
+#   management.endpoint.health.show-details: when-authorized
+# docker-compose.yml 环境变量同步:
+#   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,prometheus,metrics,info
+#   MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=when-authorized
+# 验证: curl -sf http://localhost:{port}/{ctx}/actuator/prometheus | head -5
 
-# 3. 配置监控告警
-echo "[步骤3] 部署监控体系"
-# Prometheus + Grafana 监控面板
-# 关键告警规则：
-#   - 服务不可用 → 立即告警
-#   - API响应时间 > 1s → 告警
+# P5-2: Micrometer依赖添加
+echo "[Sprint-1/P5-2] 添加Micrometer Prometheus依赖"
+# 父POM dependencyManagement 添加:
+#   io.micrometer:micrometer-registry-prometheus（版本由Spring Boot BOM管理）
+# 验证: mvn dependency:tree -pl sunmax-gateway | grep micrometer
+
+# P5-3: skipTests移除 + surefire升级 + JaCoCo配置
+echo "[Sprint-1/P5-3] 移除skipTests + 升级surefire + 配置JaCoCo"
+# 父POM:
+#   maven-surefire-plugin 3.2.5（替代子模块独立声明的2.22.2）
+#   jacoco-maven-plugin 0.8.12（prepare-agent + report）
+# 11个子模块POM:
+#   移除 <skipTests>true</skipTests>
+#   移除独立 surefire-plugin 声明（由父POM统一管理）
+# 验证: mvn help:effective-pom -pl auth-service | grep -A2 surefire
+
+# P5-4: Docker配置优化
+echo "[Sprint-1/P5-4] Docker配置优化"
+# docker-compose.yml:
+#   env_file: /work/elink-ai/elink-work/.env → .env（相对路径）
+#   9服务 UseParallelGC → UseG1GC + MaxGCPauseMillis=200
+#   全部服务添加 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs/
+#   健康检查 interval: 10s→15s, start_period: 50s→60s
+# 验证: docker-compose config | grep -c HeapDump
+
+# Sprint-1 检查点验证
+echo "[CP-1] Sprint-1 验证"
+# 11服务 /actuator/prometheus 返回200+指标数据
+# mvn test 不再 skipTests
+# docker-compose config 语法无误
+
+# ──────────────────────────────────────────────
+# Sprint-2：监控体系（P5-5 ~ P5-8）
+# ──────────────────────────────────────────────
+
+# P5-5: Prometheus + Grafana 部署
+echo "[Sprint-2/P5-5] 部署Prometheus+Grafana"
+# 创建 docker-compose.monitoring.yml（prometheus:9090 + grafana:3000 + cadvisor:8080 + node-exporter:9100）
+# 创建 prometheus/prometheus.yml（11服务scrape targets + 基础设施）
+# 创建 grafana/provisioning/（数据源+Dashboard自动配置）
+# 启动: docker-compose -f docker-compose.monitoring.yml up -d
+# 验证: curl http://localhost:9090/api/v1/targets
+
+# P5-6: 5条核心告警规则
+echo "[Sprint-2/P5-6] 配置告警规则"
+# 创建 prometheus/alert_rules.yml:
+#   - 服务健康检查失败 → 立即告警
+#   - API P99 > 1s → 告警
 #   - JVM堆内存 > 85% → 告警
-#   - 数据库慢查询 > 3s → 告警
+#   - MySQL慢查询 > 3s → 告警
+#   - 容器重启 > 3次/5分钟 → 告警
+# 验证: curl http://localhost:9090/api/v1/rules
 
-# 4. 生产环境部署检查
-echo "[步骤4] 最终验证"
-# 全链路回归测试
-# 安全扫描
-# 性能回归测试
+# P5-7: Grafana Dashboard配置
+echo "[Sprint-2/P5-7] 配置Dashboard"
+# 创建 grafana/dashboards/:
+#   - JVM概览（堆内存/GC/线程）
+#   - Spring Boot概览（HTTP请求/响应时间/错误率）
+#   - Docker容器（CPU/内存/网络/重启次数）
+#   - 业务概览（设备在线数/数据采集量）
+# 验证: 浏览器访问 Grafana Dashboard
+
+# P5-8: 告警通知渠道
+echo "[Sprint-2/P5-8] 配置Alertmanager"
+# 创建 alertmanager/ 配置（邮件/Webhook通知）
+# 验证: 发送测试告警
+
+# Sprint-2 检查点验证
+echo "[CP-2] Sprint-2 验证"
+# Prometheus targets 全部UP
+# Grafana Dashboard 可查看数据
+# 5条告警规则已加载
+
+# ──────────────────────────────────────────────
+# Sprint-3：CI/CD + 测试（P5-9 ~ P5-12）
+# ──────────────────────────────────────────────
+
+# P5-9: CI/CD流水线基础
+echo "[Sprint-3/P5-9] 配置CI/CD流水线"
+# 创建 .github/workflows/ci.yml 或 .gitlab-ci.yml:
+#   后端: lint(checkstyle) → compile → test → package
+#   前端: lint(ESLint) → build(vite build)
+#   Docker: build image → push（可选）
+#   部署: ssh到158执行hot-reload.sh
+# 验证: 手动触发流水线，lint→test→build全阶段绿色
+
+# P5-10: 核心服务单元测试
+echo "[Sprint-3/P5-10] 编写核心单元测试"
+# auth-service: OauthController认证/授权逻辑（3-5个测试类）
+# device-service: DeviceService设备管理核心逻辑（5-8个测试类）
+# together-service: TogetherService业务聚合逻辑（5-8个测试类）
+# data-service: DataService数据采集逻辑（3-5个测试类）
+# 验证: mvn test -pl auth-service,device-service,together-service,data-service
+
+# P5-11: JaCoCo覆盖率验证
+echo "[Sprint-3/P5-11] 验证覆盖率"
+# mvn jacoco:prepare-agent test jacoco:report
+# 验证4服务核心Service层覆盖率 ≥30%
+# 验证: cat target/site/jacoco/index.html | grep "Total"
+
+# P5-12: CI/CD流水线集成完善
+echo "[Sprint-3/P5-12] 完善流水线集成"
+# 集成JaCoCo报告上传 + 覆盖率徽章 + 灰度部署策略
+# 验证: PR触发流水线验证
+
+# Sprint-3 检查点验证
+echo "[CP-3] Sprint-3 验证"
+# CI流水线绿色
+# JaCoCo覆盖率 ≥30%
+
+# ──────────────────────────────────────────────
+# Sprint-4：性能验证与验收（P5-13 ~ P5-15）
+# ──────────────────────────────────────────────
+
+# P5-13: 性能基线测试
+echo "[Sprint-4/P5-13] 执行性能基线测试"
+# wrk压测5核心API端点（3轮取均值）
+# 采集JVM GC数据 + 容器资源使用数据
+# 生成R4基线报告: logs/perf_baseline_R4_YYYYMMDD.html
+# 达标指标（基于158单机环境）:
+#   API P95 ≤ 500ms
+#   API P99 ≤ 1000ms
+#   错误率 ≤ 0.5%
+#   JVM GC停顿 ≤ 100ms
+
+# P5-14: 达标验证
+echo "[Sprint-4/P5-14] 达标验证"
+# 对比基线报告，确认全部指标达标
+# 验证: 报告中所有指标 ≤ 阈值
+
+# P5-15: 验收评审
+echo "[Sprint-4/P5-15] 验收评审"
+# 更新 REFACTOR_TASKS.md / REFACTOR_EXECUTE.md / PROGRESS_REPORT.md / REFACTOR_PLAN.md
+# 创建 Git Tag v3.0
 
 git add -A
 git commit -m "chore([config]/devops): PHASE-5 CI/CD管道与监控体系搭建"
 git tag -a v3.0-phase5 -m "PHASE-5: 构建部署与持续优化完成"
-git tag -a v3.0 -m "Elink-AI v3.0 重构升级完成"
+git tag -a v3.0 -m "Elink-AI v3.0 重构升级全部完成"
 
 echo "" && echo "========== PHASE-5 执行完毕 =========="
 echo "========== 全部5个阶段升级完成 =========="
@@ -949,7 +1107,7 @@ echo "[提示] 最终版本标签：v3.0"
 | 2 | PHASE-2 | 框架升级 | Spring Boot 3.x + Java 17 全链路通过 |
 | 3 | PHASE-3 | 代码质量 | 静态分析0阻断、性能指标达标 |
 | 4 | PHASE-4 | 前端现代化 | Vite + Pinia + TS 80%覆盖率 |
-| 5 | PHASE-5 | 部署运维 | CI/CD全链路、监控告警就绪 |
+| 5 | PHASE-5 | 部署运维 | CI/CD全链路、监控告警就绪、核心测试覆盖率≥30%、R4性能基线达标 |
 
 ---
 

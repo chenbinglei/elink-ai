@@ -17,7 +17,6 @@ import com.sunmax.crontab.vo.mqtt.HDReplyVo;
 import com.sunmax.crontab.vo.mqtt.HDSetReplyVo;
 import com.sunmax.crontab.vo.mqtt.HDSetVo;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttException;
 
 @Slf4j
 public class MqttClientDataHandler {

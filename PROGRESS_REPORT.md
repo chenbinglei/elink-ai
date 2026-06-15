@@ -1,8 +1,8 @@
 # Elink-AI 重构升级项目进度报告
 
-> 版本：v4.4 | 报告日期：2026-06-12 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3+PHASE-4全部完成，PHASE-5待开始
+> 版本：v4.5 | 报告日期：2026-06-15 | 报告人：AI | 状态：PHASE-0+PHASE-1+PHASE-2+PHASE-3+PHASE-4全部完成，PHASE-5方案已调整（15项子任务/4个Sprint）
 >
-> 关联方案：[REFACTOR_PLAN.md v2.11](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v4.3](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
+> 关联方案：[REFACTOR_PLAN.md v2.13](file:///work/elink-ai/REFACTOR_PLAN.md) | 关联手册：[REFACTOR_EXECUTE.md v4.3](file:///work/elink-ai/REFACTOR_EXECUTE.md) | 任务清单：[REFACTOR_TASKS.md](file:///work/elink-ai/REFACTOR_TASKS.md)
 
 ---
 
@@ -15,7 +15,7 @@
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc 1.7.0+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线建立：5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数） |
 | PHASE-4：前端现代化改造 | ✅ 已完成 | 100% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送），derms element.scss深色背景修复+postcss配置修复；P4-BC-hotfix完成（3 项目 router/index.js 工作树损坏还原 + linkos/tycvs `getComponent` 改为 `import.meta.glob` 查表 + tycvs gallery.js 4 处 `require()` 替换为 ESM `import`，三平台开发服务器入口 200，linkos/tycvs 浏览器预览无错误）；P4-BC-hotfix2完成（derms `directive.js` v-resize 指令对 `binding.value=undefined` 加守卫修复 TypeError；`element.scss` 列表表格补 `--el-table-tr-bg-color/--el-fill-color/--el-fill-color-blank` 等深色变量并强制覆盖行/单元格背景，根治白底问题）；P4-BC-hotfix3完成（derms `permission.js` `afterEach` 内重新 `useAppStore()` 修复跨闭包 `appStore is not defined` ReferenceError；`permission1.js` 同步修复并删除多余右括号语法错误）；P4-D完成（3项目+shared包tsconfig.json创建allowJs:true，shared包8文件+derms 13文件+linkos/tycvs utils/api层.js→.ts迁移，645个SFC组件添加lang="ts"，修复6处ChargingStationOperation循环导入，3项目vite build全部通过） |
-| PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
+| PHASE-5：构建部署与持续优化 | ⏳ 方案已调整 | 0% | 15项子任务（4个Sprint），覆盖率目标30%，性能建立R4基线 |
 
 ---
 
@@ -650,7 +650,10 @@ allowed-origins:
 
 | 顺序 | 任务 | 预估影响 | 前置条件 |
 |------|------|----------|----------|
-| 1 | PHASE-5: 构建部署与持续优化 | 全局 | PHASE-4已完成 |
+| 1 | PHASE-5 Sprint-1: P5-1~P5-4 基础准备 | Actuator/Micrometer/skipTests/Docker | PHASE-4已完成 |
+| 2 | PHASE-5 Sprint-2: P5-5~P5-8 监控体系 | Prometheus/Grafana/告警 | Sprint-1完成 |
+| 3 | PHASE-5 Sprint-3: P5-9~P5-12 CI/CD+测试 | 流水线/单元测试/覆盖率 | Sprint-2完成 |
+| 4 | PHASE-5 Sprint-4: P5-13~P5-15 性能验证 | 性能基线/达标验证/验收 | Sprint-3完成 |
 
 ---
 
@@ -691,3 +694,5 @@ allowed-origins:
 | v4.1 | 2026-06-12 | AI | P4-BC-hotfix2 derms 浏览器顶部 `[JS Error] directive.js:19:28 TypeError: Cannot read properties of undefined (reading 'apply')` + 列表表格白底修复：`directive.js` `v-resize` 指令在 `mounted` 入口加 `typeof binding.value !== 'function'` 早返回、`debounce` 内 `fn.apply` 加守卫、`unmounted` 检测 `_resizer` 存在性；`element.scss` `.el-table` 作用域补齐 `--el-table-tr-bg-color: #081a30`、`--el-fill-color`、`--el-fill-color-blank`、`--el-table-text-color`、`--el-table-border-color`，并显式覆盖 `tr/.el-table__row/.el-table__cell` 背景色 + hover/斑马纹，浏览器红色 [JS Error] 横条消失，列表深色主题与 P4-BC 前一致 |
 | v4.2 | 2026-06-12 | AI | P4-BC-hotfix3 derms 浏览器顶部橙色 `[Promise Error] appStore is not defined` 修复：`permission.js` 中 `appStore` 在 `beforeEach` 闭包内通过 `useAppStore()` 声明，`afterEach` 闭包不可见 → 在 `afterEach` 内重新 `const appStore = useAppStore();`；同步修复 `permission1.js` 同样的闭包问题并删除 `appStore.isSwitching = false);` 多余右括号 SyntaxError；全局排查 28 个引用 `appStore` 的文件均已正确 import `useAppStore`；`node --check` 通过、HTTP 200、HMR 已应用，橙色 [Promise Error] 消失 |
 | v4.3 | 2026-06-12 | AI | P4-D TypeScript 渐进式引入完成：3项目+shared包创建tsconfig.json(allowJs:true+strict:false)，shared包8文件(.js→.ts含http/request.ts+auth/index.ts+utils/validate.ts等)，derms 13个utils文件(.js→.ts含request.ts+auth.ts+env.ts+validate.ts+monitor.ts+websocket.ts+transform.ts+setVariate.ts+localStorageUtil.ts+transformRequest.ts+dateTime.ts+index.ts+requestVue.ts)，linkos/tycvs utils+api层全部.js→.ts，645个SFC组件`<script>`→`<script lang="ts">`，修复6处ChargingStationOperation循环导入(CsChargingRecord/CsDisChargingRecord等从.vue→/index.js)，3项目vite build全部通过，PHASE-4完成率67%→100% |
+| v4.4 | 2026-06-12 | AI | PHASE-4分支合并至main完成，4个阶段分支按顺序合并，解决文档/配置冲突，Maven+前端构建验证通过 |
+| v4.5 | 2026-06-15 | AI | PHASE-5方案对比分析与调整：执行计划vs现有文档识别15项不一致性，覆盖率目标60%→30%（零测试现状），性能验证R1对比→R4基线建立（R1数据为空），任务4项→15项子任务/4个Sprint，新增P5-1~P5-4前置任务（Actuator/Micrometer/skipTests/Docker优化），同步更新REFACTOR_PLAN.md v2.13/REFACTOR_TASKS.md/AI_DIRECTIVES.md v2.2/PROGRESS_REPORT.md v4.5 |

@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 — AI 分阶段执行指令集
 
-> 版本：v2.1 | 编制日期：2026-06-05 | 最后更新：2026-06-10 | 状态：**待执行**
+> 版本：v2.2 | 编制日期：2026-06-05 | 最后更新：2026-06-15（P5方案调整） | 状态：**待执行**
 >
 > 本文档基于 REFACTOR_PLAN.md v1.3、REFACTOR_TASKS.md、REFACTOR_EXECUTE.md v1.6、PROGRESS_REPORT.md v1.4 以及全面审查结论编制。
 > 每条指令可直接放入 AI 对话框执行，AI 按指令完成操作后自行核对验收标准。
@@ -213,7 +213,7 @@ PHASE-4（前端现代化改造）
   │   P4-A → P4-BC → P4-D
   ▼
 PHASE-5（构建部署与持续优化）
-      P5-A / P5-B / P5-C 可并行，P5-D 在最后
+      Sprint-1(P5-1~P5-4) → Sprint-2(P5-5~P5-8) → Sprint-3(P5-9~P5-12) → Sprint-4(P5-13~P5-15)
 ```
 
 ---
@@ -1585,171 +1585,430 @@ mvn clean compile -DskipTests -T 4
 # PHASE-5：构建部署与持续优化
 # ═══════════════════════════════════════════════════════════
 
-> **阶段目标**：完善 CI/CD 流水线，建立监控告警体系，补全单元测试，执行最终性能回归。
+> **阶段目标**：完善 CI/CD 流水线，建立可观测性监控体系，补全核心测试覆盖（≥30%），建立性能基线（R4）并达标验证。
 >
 > **前置条件**：PHASE-4 完成
 >
-> **衔接关系**：P5-A/B/C 可并行，P5-D 必须在最后。
+> **衔接关系**：4个Sprint串行执行，Sprint内部任务有前置依赖。
+>
+> **关键调整（2026-06-15）**：覆盖率目标从60%调整为30%（当前零测试用例），性能验证从"对比R1基线"调整为"建立R4基线"（R1数据为空），任务从4项细化为15项子任务按Sprint执行，新增Actuator端点扩展/Micrometer依赖/skipTests移除/Docker配置优化等前置任务。
 
 ---
 
-## P5-A | 配置 CI/CD 流水线
+## Sprint-1：基础准备（P5-1 ~ P5-4）
+
+### P5-1 | Actuator 端点扩展
 
 **阶段目标与核心任务：**
-创建 CI/CD 流水线覆盖后端 lint+测试+构建、前端 lint+构建、Docker 镜像构建、灰度部署。
+将11个服务的Actuator端点暴露从health扩展为health,prometheus,metrics,info，为Prometheus监控提供指标数据源。
 
 **具体执行步骤与操作要求：**
 
-1. 根据项目代码托管平台（GitHub/GitLab）创建对应流水线文件：
-   - GitHub: `.github/workflows/ci.yml`
-   - GitLab: `.gitlab-ci.yml`
-2. 流水线阶段设计：
+1. 修改11个服务的 `application.yml`：
+   ```yaml
+   management:
+     endpoints:
+       web:
+         exposure:
+           include: health,prometheus,metrics,info
+     endpoint:
+       health:
+         show-details: when-authorized
    ```
-   lint → test → build → docker-build → deploy-canary → verify → deploy-full
+2. 修改 `docker-compose.yml` 中11个服务的环境变量：
+   ```yaml
+   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,prometheus,metrics,info
+   MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS: when-authorized
    ```
-3. 后端阶段：`mvn lint:lint` → `mvn test` → `mvn package -DskipTests`
-4. 前端阶段：`npm run lint` → `npm run build`
-5. Docker 阶段：`docker build`
-6. 灰度部署阶段：10% 流量金丝雀 → 观察 1 小时 → 全量
+3. 编译验证：`mvn clean compile -DskipTests -T 4`
+4. 热更新验证：`./hot-reload.sh reload <service>`（逐服务）
+5. 端点验证：`curl -sf http://localhost:{port}/{ctx}/actuator/prometheus | head -5`
 
 **输入输出规范：**
-- 输入：项目仓库
-- 输出：CI/CD 配置文件
+- 输入：11个服务 application.yml + docker-compose.yml
+- 输出：11个服务 /actuator/prometheus 可访问
 
 **变更文件清单：**
-- `.github/workflows/ci.yml` 或 `.gitlab-ci.yml`（新建 CI/CD 流水线配置）
+- 11个服务 `src/main/resources/application.yml`
+- `docker-compose.yml`
 
 **质量验收标准：**
-- [ ] CI/CD 配置文件存在且语法合法
-- [ ] 流水线可成功触发并完成 lint→test→build 阶段
-- [ ] 本地服务器验证：CI/CD 配置语法验证通过（如 `gitlab-ci-lint` 或 `actionlint`）
-- [ ] 热更新验证：无需热更新（CI/CD 配置变更）
-- [ ] 功能一致性：流水线构建产物与本地 `mvn package` + `npm run build` 产物一致
+- [ ] 11个服务 `/actuator/prometheus` 返回 200 + 指标数据
+- [ ] 11个服务 `/actuator/metrics` 返回 200
+- [ ] docker-compose.yml 环境变量已同步更新
+- [ ] 编译验证通过
+- [ ] 热更新验证通过
 
 ---
 
-## P5-B | 部署 Prometheus + Grafana 监控体系
+### P5-2 | 添加 Micrometer Prometheus 依赖
 
 **阶段目标与核心任务：**
-新增 docker-compose.monitoring.yml，部署监控栈，配置 5 条核心告警规则。
+在父POM中添加 micrometer-registry-prometheus 依赖，使Spring Boot Actuator提供/actuator/prometheus端点。
 
 **具体执行步骤与操作要求：**
 
-1. 创建 `docker-compose.monitoring.yml`，包含：
-   - Prometheus（9090）
-   - Grafana（3000）
-   - cAdvisor
-   - Node Exporter
-2. 创建 `prometheus/prometheus.yml` 配置 Spring Boot Actuator 抓取
-3. 创建 `prometheus/alert_rules.yml`，5 条核心规则：
-   - 服务健康检查失败 → 立即告警
-   - API P99 > 1s → 告警
-   - JVM 堆内存 > 85% → 告警
-   - MySQL 慢查询 > 3s → 告警
-   - 容器重启 > 3次/5分钟 → 告警
-4. 配置 Grafana Dashboard（JVM + API + 容器 + MySQL）
-5. 启动监控栈并验证数据采集
-
-**输入输出规范：**
-- 输入：Docker 环境
-- 输出：docker-compose.monitoring.yml + Prometheus 配置 + Grafana Dashboard
-
-**变更文件清单：**
-- `/work/elink-ai/elink-work/docker-compose.monitoring.yml`（新建监控栈配置）
-- `/work/elink-ai/elink-work/prometheus/prometheus.yml`（新建 Prometheus 抓取配置）
-- `/work/elink-ai/elink-work/prometheus/alert_rules.yml`（新建告警规则）
-- Grafana Dashboard JSON 配置文件
-
-**质量验收标准：**
-- [ ] `docker-compose.monitoring.yml` 存在
-- [ ] Prometheus 可通过 9090 端口访问
-- [ ] Grafana 可通过 3000 端口访问
-- [ ] 5 条核心告警规则已配置
-- [ ] 本地服务器验证：`docker-compose -f docker-compose.monitoring.yml up -d` 后 `curl -s http://192.168.2.158:9090/-/healthy` 返回 Prometheus 健康；`curl -s http://192.168.2.158:3000/api/health` 返回 Grafana 健康
-- [ ] 热更新验证：`docker ps` 确认 prometheus/grafana/cadvisor/node-exporter 容器运行正常
-- [ ] 功能一致性：Prometheus 成功抓取各 Spring Boot Actuator 指标；Grafana Dashboard 展示 JVM/API/容器/MySQL 数据
-
----
-
-## P5-C | 补全核心单元测试（覆盖率 ≥ 60%）
-
-**阶段目标与核心任务：**
-为核心 Service 层补全 JUnit 单元测试，重点覆盖设备管理、订单支付、用户认证、数据采集等关键业务逻辑。
-
-**具体执行步骤与操作要求：**
-
-1. 添加 JaCoCo 插件到父 POM：
+1. 父POM `dependencyManagement` 添加：
    ```xml
+   <dependency>
+       <groupId>io.micrometer</groupId>
+       <artifactId>micrometer-registry-prometheus</artifactId>
+       <!-- 版本由Spring Boot 3.3.6 BOM管理，无需指定 -->
+   </dependency>
+   ```
+2. 编译验证：`mvn clean compile -DskipTests -T 4`
+3. 验证依赖树：`mvn dependency:tree -pl sunmax-gateway | grep micrometer`
+
+**变更文件清单：**
+- `pom.xml`（父POM）
+
+**质量验收标准：**
+- [ ] 父POM包含 micrometer-registry-prometheus 依赖
+- [ ] `mvn dependency:tree` 显示 micrometer-registry-prometheus
+- [ ] 编译验证通过
+
+---
+
+### P5-3 | 移除 skipTests + 升级 surefire + 配置 JaCoCo
+
+**阶段目标与核心任务：**
+移除11个子模块POM中的skipTests配置，升级surefire-plugin至3.2.5，在父POM中添加jacoco-maven-plugin 0.8.12。
+
+**具体执行步骤与操作要求：**
+
+1. 父POM添加：
+   ```xml
+   <!-- pluginManagement -->
+   <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-surefire-plugin</artifactId>
+       <version>3.2.5</version>
+   </plugin>
    <plugin>
        <groupId>org.jacoco</groupId>
        <artifactId>jacoco-maven-plugin</artifactId>
+       <version>0.8.12</version>
        <executions>
            <execution><goals><goal>prepare-agent</goal></goals></execution>
            <execution><id>report</id><phase>test</phase><goals><goal>report</goal></goals></execution>
        </executions>
    </plugin>
    ```
-2. 取消 `skipTests=true`（仅在 CI 环境中留作可选参数）
-3. 逐服务补全测试用例，优先级：device-service > together-service > auth-service > data-service
-4. 运行 `mvn test jacoco:report` 验证覆盖率 ≥ 60%
-
-**输入输出规范：**
-- 输入：各服务 Service 层源码
-- 输出：测试用例代码 + JaCoCo 覆盖率报告
+2. 11个子模块POM：
+   - 移除 `<skipTests>true</skipTests>`
+   - 移除独立 `maven-surefire-plugin` 声明（由父POM统一管理）
+3. 编译验证：`mvn clean compile -DskipTests -T 4`
+4. 验证surefire版本：`mvn help:effective-pom -pl auth-service | grep -A2 surefire`
+5. 验证JaCoCo：`mvn jacoco:prepare-agent test jacoco:report -pl auth-service`
 
 **变更文件清单：**
-- `/work/elink-ai/elink-work/pom.xml`（添加 JaCoCo 插件）
-- 各服务 `src/test/java/`（新增单元测试用例，优先 device-service/together-service/auth-service/data-service）
+- `pom.xml`（父POM）
+- 11个子模块 `pom.xml`
 
 **质量验收标准：**
-- [ ] `mvn test` 全部通过
-- [ ] JaCoCo 报告显示核心 Service 层覆盖率 ≥ 60%
-- [ ] 本地服务器验证：`mvn test` 执行期间 `./hot-reload.sh status` 确认运行服务不受影响
-- [ ] 热更新验证：无需热更新（测试代码变更不影响运行服务）
-- [ ] 功能一致性：测试用例通过后，核心业务功能冒烟测试无退化
+- [ ] 11个子模块POM不再包含 `<skipTests>true</skipTests>`
+- [ ] 父POM surefire-plugin 版本为 3.2.5
+- [ ] 父POM包含 jacoco-maven-plugin 0.8.12
+- [ ] `mvn test` 不再跳过测试
+- [ ] 编译验证通过
 
 ---
 
-## P5-D | 性能回归测试（R4 vs R1）
+### P5-4 | Docker 配置优化
 
 **阶段目标与核心任务：**
-执行最终性能回归测试，对比 R1 基线数据，验证优化目标达成。
+优化docker-compose.yml配置：env_file改为相对路径、9个服务JVM GC从ParallelGC改为G1GC、全部服务添加HeapDump配置、调整健康检查参数。
 
 **具体执行步骤与操作要求：**
 
-1. 使用与 R1 相同的压测脚本和参数
-2. 采样全部 8 项关键指标
-3. 对比 R4 vs R1 是否达成目标：
+1. env_file 绝对路径 → 相对路径：`/work/elink-ai/elink-work/.env` → `.env`
+2. 9个服务 UseParallelGC → UseG1GC + MaxGCPauseMillis=200
+3. 全部11个服务添加：`-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs/`
+4. 健康检查参数调整：interval: 10s→15s, start_period: 50s→60s
+5. 验证配置语法：`docker-compose config > /dev/null`
+6. 热更新验证：`./hot-reload.sh status`
+
+**变更文件清单：**
+- `docker-compose.yml`
+
+**质量验收标准：**
+- [ ] env_file 全部使用相对路径 `.env`
+- [ ] 9个服务使用 G1GC（gateway/together已是G1）
+- [ ] 11个服务均有 HeapDump 配置
+- [ ] 健康检查 interval=15s, start_period=60s
+- [ ] docker-compose config 语法无误
+- [ ] 热更新验证通过
+
+---
+
+## Sprint-2：监控体系（P5-5 ~ P5-8）
+
+### P5-5 | 部署 Prometheus + Grafana
+
+**阶段目标与核心任务：**
+新增 docker-compose.monitoring.yml，部署 Prometheus + Grafana + cAdvisor + Node Exporter，配置11个服务的scrape targets。
+
+**具体执行步骤与操作要求：**
+
+1. 创建 `docker-compose.monitoring.yml`，包含：
+   - Prometheus（9090）
+   - Grafana（3000）
+   - cAdvisor（8080）
+   - Node Exporter（9100）
+2. 创建 `prometheus/prometheus.yml`（11服务scrape targets + 基础设施）
+3. 创建 `grafana/provisioning/`（数据源+Dashboard自动配置）
+4. 启动监控栈：`docker-compose -f docker-compose.monitoring.yml up -d`
+5. 验证：`curl http://localhost:9090/api/v1/targets`
+
+**变更文件清单：**
+- `docker-compose.monitoring.yml`（新建）
+- `prometheus/prometheus.yml`（新建）
+- `grafana/provisioning/`（新建目录+文件）
+
+**质量验收标准：**
+- [ ] Prometheus 可通过 9090 端口访问
+- [ ] Grafana 可通过 3000 端口访问
+- [ ] 11个服务 scrape targets 状态为 UP
+
+---
+
+### P5-6 | 配置 5 条核心告警规则
+
+**阶段目标与核心任务：**
+创建 Prometheus 告警规则文件，配置5条核心告警。
+
+**具体执行步骤与操作要求：**
+
+1. 创建 `prometheus/alert_rules.yml`：
+   - ServiceHealthCheck: `up == 0` → 立即告警
+   - APIP99Latency: `histogram_quantile(0.99, http_server_requests_seconds) > 1` → 告警
+   - JVMHeapHigh: `jvm_memory_used_bytes / jvm_memory_max_bytes > 0.85` → 告警
+   - MySQLSlowQuery: `mysql_slow_queries > 3` → 告警
+   - ContainerRestart: `rate(container_restart_count[5m]) > 3` → 告警
+2. 更新 `prometheus.yml` 加载告警规则
+3. 重载 Prometheus：`curl -X POST http://localhost:9090/-/reload`
+4. 验证：`curl http://localhost:9090/api/v1/rules`
+
+**变更文件清单：**
+- `prometheus/alert_rules.yml`（新建）
+- `prometheus/prometheus.yml`（更新）
+
+**质量验收标准：**
+- [ ] 5条告警规则已加载
+- [ ] 手动模拟可触发告警
+
+---
+
+### P5-7 | Grafana Dashboard 配置
+
+**阶段目标与核心任务：**
+创建4个Grafana Dashboard：JVM概览、Spring Boot概览、Docker容器、业务概览。
+
+**具体执行步骤与操作要求：**
+
+1. 创建 `grafana/dashboards/`：
+   - `jvm-overview.json`（堆内存/GC/线程）
+   - `spring-boot-overview.json`（HTTP请求/响应时间/错误率）
+   - `docker-container.json`（CPU/内存/网络/重启次数）
+   - `business-overview.json`（设备在线数/数据采集量）
+2. 更新 `grafana/provisioning/dashboards/` 自动加载配置
+3. 验证：浏览器访问 Grafana Dashboard
+
+**变更文件清单：**
+- `grafana/dashboards/`（新建4个JSON文件）
+- `grafana/provisioning/dashboards/`（更新）
+
+**质量验收标准：**
+- [ ] 4个Dashboard JSON文件存在
+- [ ] Grafana中可查看4个Dashboard
+- [ ] Dashboard数据正常显示
+
+---
+
+### P5-8 | 告警通知渠道
+
+**阶段目标与核心任务：**
+配置Alertmanager，支持邮件或Webhook告警通知。
+
+**具体执行步骤与操作要求：**
+
+1. 创建 `alertmanager/alertmanager.yml`
+2. `docker-compose.monitoring.yml` 添加 alertmanager 服务（9093）
+3. 更新 `prometheus.yml` 指向 alertmanager
+4. 启动 alertmanager
+5. 验证：发送测试告警
+
+**变更文件清单：**
+- `alertmanager/alertmanager.yml`（新建）
+- `docker-compose.monitoring.yml`（更新）
+- `prometheus/prometheus.yml`（更新）
+
+**质量验收标准：**
+- [ ] Alertmanager 可通过 9093 端口访问
+- [ ] 测试告警可送达通知渠道
+
+---
+
+## Sprint-3：CI/CD + 测试（P5-9 ~ P5-12）
+
+### P5-9 | CI/CD 流水线基础
+
+**阶段目标与核心任务：**
+创建CI/CD流水线配置文件，涵盖后端lint+compile+test+package、前端lint+build、Docker镜像构建、灰度部署。
+
+**具体执行步骤与操作要求：**
+
+1. 根据项目代码托管平台创建对应流水线文件：
+   - GitHub: `.github/workflows/ci.yml`
+   - GitLab: `.gitlab-ci.yml`
+2. 流水线阶段设计：
+   ```
+   后端: lint(checkstyle) → compile → test → package
+   前端: lint(ESLint) → build(vite build)
+   Docker: build image → push（可选）
+   部署: ssh到158执行hot-reload.sh
+   ```
+3. 验证流水线配置语法
+
+**变更文件清单：**
+- `.github/workflows/ci.yml` 或 `.gitlab-ci.yml`（新建）
+
+**质量验收标准：**
+- [ ] CI/CD 配置文件存在且语法合法
+- [ ] 流水线可成功触发并完成 lint→test→build 阶段
+
+---
+
+### P5-10 | 核心服务单元测试
+
+**阶段目标与核心任务：**
+为4个核心服务的Service层补全JUnit单元测试，目标覆盖率≥30%。
+
+**具体执行步骤与操作要求：**
+
+1. 逐服务编写测试用例：
+   - auth-service: OauthController认证/授权逻辑（3-5个测试类）
+   - device-service: DeviceService设备管理核心逻辑（5-8个测试类）
+   - together-service: TogetherService业务聚合逻辑（5-8个测试类）
+   - data-service: DataService数据采集逻辑（3-5个测试类）
+2. 运行测试：`mvn test -pl auth-service,device-service,together-service,data-service`
+3. 生成覆盖率报告：`mvn jacoco:prepare-agent test jacoco:report -pl auth-service,device-service,together-service,data-service`
+
+**变更文件清单：**
+- auth-service/device-service/together-service/data-service `src/test/java/`（新建测试类）
+
+**质量验收标准：**
+- [ ] `mvn test` 全部通过
+- [ ] 4个服务均有测试类
+- [ ] JaCoCo 报告显示核心 Service 层覆盖率 ≥ 30%
+
+---
+
+### P5-11 | JaCoCo 覆盖率验证
+
+**阶段目标与核心任务：**
+执行JaCoCo覆盖率报告，验证4个核心服务覆盖率≥30%。
+
+**具体执行步骤与操作要求：**
+
+1. 生成覆盖率报告：`mvn jacoco:prepare-agent test jacoco:report`
+2. 查看覆盖率：`cat target/site/jacoco/index.html | grep "Total"`
+3. 验证4服务覆盖率 ≥30%
+
+**质量验收标准：**
+- [ ] JaCoCo 报告已生成
+- [ ] 4个核心服务覆盖率 ≥ 30%
+
+---
+
+### P5-12 | CI/CD 流水线集成完善
+
+**阶段目标与核心任务：**
+完善CI/CD流水线：集成JaCoCo报告上传、覆盖率徽章、灰度部署策略。
+
+**具体执行步骤与操作要求：**
+
+1. CI配置中添加：
+   - JaCoCo报告上传步骤
+   - 覆盖率徽章生成
+   - 灰度部署策略（单服务→全量）
+2. 验证：PR触发流水线
+
+**质量验收标准：**
+- [ ] CI中JaCoCo报告可查看
+- [ ] 覆盖率徽章显示在README
+- [ ] 灰度部署策略已配置
+
+---
+
+## Sprint-4：性能验证与验收（P5-13 ~ P5-15）
+
+### P5-13 | 性能基线测试
+
+**阶段目标与核心任务：**
+执行性能基线测试，建立R4当前基线，采集5个核心API端点的P95/P99/错误率/JVM GC数据。
+
+**具体执行步骤与操作要求：**
+
+1. wrk压测5核心API端点（3轮取均值）
+2. 采集JVM GC数据
+3. 采集容器资源使用数据
+4. 生成R4基线报告：`logs/perf_baseline_R4_YYYYMMDD.html`
+
+**达标指标（基于158单机环境）：**
 
 | 指标 | 目标 |
 |------|------|
-| API P95 响应时间 | ≤ 200ms |
-| API P99 响应时间 | ≤ 500ms |
-| 吞吐量 TPS | ≥ 500 |
-| 错误率 | ≤ 0.1% |
-| JVM GC 停顿 | ≤ 50ms |
-| 数据库连接池利用率 | 60-80% |
-| 前端 FCP | ≤ 2s |
-| 前端 LCP | ≤ 2.5s |
-
-4. 生成最终回归报告写入 PROGRESS_REPORT.md
-5. 创建 Git Tag：`git tag -a v3.0 -m "Elink-AI v3.0 重构升级全部完成"`
-
-**输入输出规范：**
-- 输入：运行中的生产/测试环境、R1 基线数据
-- 输出：R4 vs R1 对比报告，写入 PROGRESS_REPORT.md
+| API P95 响应时间 | ≤ 500ms |
+| API P99 响应时间 | ≤ 1000ms |
+| 错误率 | ≤ 0.5% |
+| JVM GC 停顿 | ≤ 100ms |
 
 **变更文件清单：**
-- `/work/elink-ai/PROGRESS_REPORT.md`（新增 R4 vs R1 对比报告）
-- Git Tag v3.0
+- `scripts/benchmark/`（新建压测脚本）
+- `logs/perf_baseline_R4_*.html`（生成报告）
 
 **质量验收标准：**
-- [ ] 回归测试报告已生成
-- [ ] 全部优化目标指标达标
+- [ ] R4基线报告已生成
+- [ ] 5个API端点压测数据已采集
+
+---
+
+### P5-14 | 达标验证
+
+**阶段目标与核心任务：**
+对比R4基线报告，确认全部性能指标达标。
+
+**具体执行步骤与操作要求：**
+
+1. 验证指标：
+   - API P95 ≤ 500ms
+   - API P99 ≤ 1000ms
+   - 错误率 ≤ 0.5%
+   - JVM GC停顿 ≤ 100ms
+2. 生成达标验证报告
+
+**质量验收标准：**
+- [ ] 全部指标在阈值内
+- [ ] 达标验证报告已生成
+
+---
+
+### P5-15 | 验收评审
+
+**阶段目标与核心任务：**
+更新4份文档，创建Git Tag v3.0，生成最终验收报告。
+
+**具体执行步骤与操作要求：**
+
+1. 更新文档：REFACTOR_TASKS.md / REFACTOR_EXECUTE.md / PROGRESS_REPORT.md / REFACTOR_PLAN.md
+2. 创建Tag：`git tag -a v3.0 -m "Elink-AI v3.0 重构升级全部完成"`
+3. 生成验收报告
+
+**质量验收标准：**
+- [ ] 4份文档全部更新
 - [ ] Git Tag v3.0 已创建
-- [ ] 本地服务器验证：压测期间 `./hot-reload.sh status` 确认所有服务运行稳定，无 OOM/异常重启
-- [ ] 热更新验证：无需热更新（测试/文档变更）
-- [ ] 功能一致性：压测结束后核心业务功能正常，性能指标满足目标（API P95 ≤ 200ms, P99 ≤ 500ms, 错误率 ≤ 0.1%）
+- [ ] 验收报告已生成
 
 ---
 

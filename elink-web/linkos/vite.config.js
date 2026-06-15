@@ -41,7 +41,7 @@ export default defineConfig({
     open: false,
     proxy: {
       '/proxy': {
-        target: process.env.VITE_PROXY_TARGET || 'http://192.168.2.158:5000',
+        target: process.env.VITE_PROXY_TARGET || 'http://localhost:5000',
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/proxy/, ''),
         ws: true,

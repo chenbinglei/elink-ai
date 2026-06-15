@@ -3,6 +3,7 @@ node_modules/
 sunos/
 public/l7-mapbox/
 
-# 环境变量 - .env.local 包含敏感信息，不提交
+# 环境变量 - .env 包含敏感信息，不提交到 Git
+.env
 .env.local
 .env.*.local
