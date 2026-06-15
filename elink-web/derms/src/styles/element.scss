@@ -102,13 +102,37 @@ html:root {
 div .el-table {
   --el-bg-color: #07172b;
   --el-table-bg-color: #081a30;
+  --el-table-tr-bg-color: #081a30;
+  --el-fill-color: #081a30;
   --el-fill-color-light: #072948;
   --el-fill-color-lighter: #081e37;
+  --el-fill-color-blank: #081a30;
   --el-table-header-bg-color: #072948;
   --el-table-header-text-color: #ffffff;
+  --el-table-text-color: rgba(255, 255, 255, 0.85);
   --el-table-row-hover-bg-color: #084768;
   --el-border-color-lighter: rgba(255, 255, 255, 0.1);
+  --el-table-border-color: rgba(255, 255, 255, 0.1);
   --el-table-expanded-cell-bg-color: rgba(255, 255, 255, 0);
+  color: var(--el-table-text-color);
+
+  // 行/单元格强制使用深色变量，避免某些 Element Plus 内部样式回退到 #ffffff
+  tr,
+  .el-table__row,
+  .el-table__cell,
+  .el-table__body tr > td.el-table__cell {
+    background-color: var(--el-table-tr-bg-color) !important;
+  }
+
+  // 斑马纹与悬浮态保留可读性
+  .el-table__row.el-table__row--striped > td.el-table__cell {
+    background-color: #07223d !important;
+  }
+
+  .el-table__body tr.hover-row > td.el-table__cell,
+  .el-table__body tr:hover > td.el-table__cell {
+    background-color: var(--el-table-row-hover-bg-color) !important;
+  }
 
   .el-table__empty-text {
     --el-text-color-secondary: #61B2FF;

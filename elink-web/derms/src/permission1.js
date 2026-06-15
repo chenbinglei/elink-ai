@@ -88,5 +88,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
   NProgress.done(); // 结束Progress
-  appStore.isSwitching = false);
+  // 修复：appStore 在 beforeEach 闭包内定义，afterEach 闭包不可见，需重新获取；并修正多余的右括号语法错误
+  const appStore = useAppStore();
+  appStore.isSwitching = false;
 });
