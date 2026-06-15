@@ -83,7 +83,7 @@ public class ProtocolFeignServiceImpl implements ProtocolFeignService {
                 log.info("更新用户V2G收益钱包失败，原因是：未找到该用户信息, 用户手机号：{}, 交易金额:{}, 站点id：{}", walletBalanceVo.getPhoneNum(),
                         walletBalanceVo.getTradeMoney(), walletBalanceVo.getSiteId());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("更新用户V2G收益钱包失败，原因是：{}", e.getMessage());
         }
         return ResponseResult.paramError(ResponseResult.FAIL);

@@ -25,7 +25,11 @@ import java.util.concurrent.TimeUnit;
  *
  * 支持的 grant_type：
  * - sys_pwd: 系统用户密码登录（Web平台）
- * - applet: 微信小程序登录
+ * - applet: 微信小程序登录（微信小程序端）
+ * - refresh_token: 刷新令牌（Web平台）
+ * - client_credentials: 客户端凭证（Web平台）
+ * - password: 密码登录（Web平台）
+ * - implicit: 隐式授权（Web平台）
  */
 @RestController
 @RequestMapping("/oauth")
@@ -98,7 +102,7 @@ public class OauthController {
                 default:
                     return ResponseResult.paramError("不支持的授权类型: " + grantType);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("登录处理异常: grant_type={}", grantType, e);
             return ResponseResult.error("登录失败: " + e.getMessage());
         }
@@ -254,7 +258,7 @@ public class OauthController {
                 return passwordEncoder.matches(clientSecret, client.getClientSecret());
             }
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.warn("客户端验证异常: clientId={},拒绝登录: {}", clientId, e.getMessage());
             return false;
         }
@@ -277,7 +281,7 @@ public class OauthController {
                     if (StringUtil.isNotEmpty(userId) && StringUtil.isNotEmpty(clientId)) {
                         stringRedisTemplate.delete(USER_TOKEN_INDEX_PREFIX + clientId + ":" + userId);
                     }
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.warn("登出时解析Token数据异常", e);
                 }
             }
@@ -300,7 +304,7 @@ public class OauthController {
         try {
             JSONObject userData = JSONObject.parseObject(userJson);
             return ResponseResult.ok(userData);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseResult.paramError("Token解析失败");
         }
     }

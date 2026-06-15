@@ -1,8 +1,11 @@
 package com.sunmax.webapp.util;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.io.IOException;
 
+@Slf4j
 public class WXMsgPushUtil {
 
     /**
@@ -35,8 +38,8 @@ public class WXMsgPushUtil {
                 hexStr.append(shaHex);
             }
             return hexStr.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
             throw new Exception("SHA1加密失败");
         }
 

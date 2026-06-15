@@ -125,7 +125,10 @@ public class TaskSchedulerRunner implements ApplicationRunner {
                 do {
                     Thread.sleep(500);
                 } while (!executors.isTerminated());
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("执行数据转发mqtt任务被中断", e);
+            } catch (RuntimeException e) {
                 log.error("执行数据转发mqtt任务报错", e);
             }
         }

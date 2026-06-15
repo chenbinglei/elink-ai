@@ -194,7 +194,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 }
             }
             return ResponseResult.paramError(ResponseResult.PARAM_ERROR);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("用户提现放电收益失败", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }

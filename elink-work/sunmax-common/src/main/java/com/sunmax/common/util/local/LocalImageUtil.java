@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.io.IOException;
 
 @Slf4j
 public class LocalImageUtil {
@@ -80,8 +81,8 @@ public class LocalImageUtil {
     public static void deleteAllImage(List<String> filePaths) {
         try {
             filePaths.forEach(LocalFileUtil::deleteFile);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -82,7 +82,7 @@ public class WebMessageCallback implements MqttCallback {
                     //解析新主题
                     protocolRecNewMain(topic, deviceCode, content);
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("外网协议服务解析MQTT数据报错", e);
             }
         });
@@ -291,7 +291,7 @@ public class WebMessageCallback implements MqttCallback {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT老主题数据处理报错", e);
         }
     }
@@ -322,7 +322,7 @@ public class WebMessageCallback implements MqttCallback {
                     WebMqttDataHandler.license(terminalCode, JSON.parseObject(content, LicenseSubscribeVo.class));
                     break;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("外网MQTT新主题数据处理报错", e);
         }
     }

@@ -51,12 +51,12 @@ public class DeviceUpdateWebSocket {
         if (StringUtil.isEmpty(userId)) {
             return;
         }
-        System.out.println("新开启了一个websocket连接" + sessionId.getId());
+        log.info("新开启了一个websocket连接" + sessionId.getId());
         //加入到set中
         session = sessionId;
         webSocketMap.put(userId, this);
         addOnlineCount();
-        System.out.println("有新的连接加入！当前在线人数为：" + getOnlineCount() + " ");
+        log.info("有新的连接加入！当前在线人数为：" + getOnlineCount() + " ");
         this.sendMessage(JSON.toJSONString(getDeviceTaskProgress()));
     }
 
@@ -67,7 +67,7 @@ public class DeviceUpdateWebSocket {
     public void onClose(Session sessionId, @PathParam("userId") String userId) {
         webSocketMap.remove(userId, this);
         subOnlineCount();
-        System.out.println("有一连接关闭" + sessionId.getId());
+        log.info("有一连接关闭" + sessionId.getId());
     }
 
     /**
@@ -85,7 +85,7 @@ public class DeviceUpdateWebSocket {
      */
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        log.error(t.getMessage(), t);
     }
 
     public void sendMessage(String message) throws IOException {

@@ -1,4 +1,5 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -6,12 +7,14 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
+import java.security.GeneralSecurityException;
 
 /**
  * Author     ：tk-pc-40
  * ModifiedBy ：tk-pc-40
  * CreatedAt  ：2022/3/23
  */
+@Slf4j
 public class SecretUtil {
 
     /***
@@ -36,7 +39,7 @@ public class SecretUtil {
 
             byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(encrypted);
-        } catch (Exception e) {
+        } catch (GeneralSecurityException e) {
             return null;
         }
     }
@@ -68,17 +71,17 @@ public class SecretUtil {
             cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
             byte[] original = cipher.doFinal(encrypted1);
             return new String(original).trim();
-        } catch (Exception e) {
-//            e.printStackTrace();
+        } catch (GeneralSecurityException e) {
+//            log.error(e.getMessage(), e);
             return null;
         }
     }
 
     public static void main(String[] args) {
         String encrypt = desEncrypt("9FlYo6cKxTFqp3U1WvDpeQ%3D%3D");
-        System.out.println(encrypt);
-        System.out.println(desEncrypt(encrypt));
-        System.out.println(Objects.equals("", desEncrypt(encrypt)));
+        log.info("{}", encrypt);
+        log.info("{}", desEncrypt(encrypt));
+        log.info("{}", Objects.equals("", desEncrypt(encrypt)));
     }
 
 }

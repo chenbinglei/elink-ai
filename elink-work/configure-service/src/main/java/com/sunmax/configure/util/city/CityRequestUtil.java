@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
+import java.io.IOException;
 
 /**
  * 市请求工具类
@@ -69,7 +70,7 @@ public class CityRequestUtil {
                 log.info("AccessToken：" + resultMap.get("AccessToken"));
                 tokenMap.put(commonVo.getOperatorId(), resultMap.get("AccessToken"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取数据失败: ", e);
         }
     }
@@ -137,7 +138,7 @@ public class CityRequestUtil {
                 cityRecord.setUpdateTime(updateTime);
                 cityRecordDao.save(cityRecord);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("市平台请求失败: ", e);
         }
 

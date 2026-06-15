@@ -78,7 +78,7 @@ public class RedisTokenAuthenticationFilter extends OncePerRequestFilter {
                         log.debug("Redis Token认证成功: userAccount={}", userAccount);
                     }
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.warn("Redis Token认证异常: {}", e.getMessage());
             }
         }

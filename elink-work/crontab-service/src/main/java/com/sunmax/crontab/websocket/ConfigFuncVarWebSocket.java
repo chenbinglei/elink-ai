@@ -54,7 +54,7 @@ public class ConfigFuncVarWebSocket {
      */
     @OnOpen
     public void onOpen(Session sessionId, @PathParam("clientId") String clientId, @PathParam("domainId") String domainId) {
-        System.out.println("组态系统变量实时数据新开启了一个webSocket连接" + sessionId.getId());
+        log.info("组态系统变量实时数据新开启了一个webSocket连接" + sessionId.getId());
 
         //加入到set中
         session = sessionId;
@@ -70,7 +70,7 @@ public class ConfigFuncVarWebSocket {
             }
         }
         addOnlineCount();
-        System.out.println("有新的连接加入！当前组态系统变量实时数据在线人数为：" + getOnlineCount() + " ");
+        log.info("有新的连接加入！当前组态系统变量实时数据在线人数为：" + getOnlineCount() + " ");
     }
 
     /**
@@ -82,7 +82,7 @@ public class ConfigFuncVarWebSocket {
         webSocketMap.remove(clientId, this);
         clientParamMap.remove(clientId);
         subOnlineCount();
-        System.out.println("组态系统变量实时数据有一连接关闭" + sessionId.getId());
+        log.info("组态系统变量实时数据有一连接关闭" + sessionId.getId());
     }
 
     /**
@@ -100,7 +100,7 @@ public class ConfigFuncVarWebSocket {
      */
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        log.error(t.getMessage(), t);
     }
 
     public void sendMessage(String message) throws IOException {

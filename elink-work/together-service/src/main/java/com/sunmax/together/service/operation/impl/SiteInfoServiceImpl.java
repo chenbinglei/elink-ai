@@ -1055,7 +1055,7 @@ public class SiteInfoServiceImpl implements SiteInfoService {
                         }
                     }
                     return pileResultDto;
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.error("电桩启动失败", e);
                     //如果启动失败，先判断电桩实时缓存数据中该枪状态是否为空闲，如果是则修改订单状态为启动失败
                     PileRealModel pileReal = getPileRealModel(pileStartVo.getPileCode());

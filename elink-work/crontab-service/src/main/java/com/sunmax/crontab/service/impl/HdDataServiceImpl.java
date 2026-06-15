@@ -34,6 +34,7 @@ import com.sunmax.crontab.vo.mqtt.StationPayLoadVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import java.lang.reflect.InvocationTargetException;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
@@ -109,7 +110,7 @@ public class HdDataServiceImpl implements HdDataService {
                                 } else {
                                     log.error("找不到对应的客户端id: " + clientId);
                                 }
-                            } catch (Exception e) {
+                            } catch (RuntimeException e) {
                                 log.error("推送充电站信息失败", e);
                             }
                         }
@@ -280,7 +281,7 @@ public class HdDataServiceImpl implements HdDataService {
         }
         try {
             BeanUtils.populate(result, resultMap);
-        } catch (Exception e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             log.error("数据转换错误", e);
         }
     }

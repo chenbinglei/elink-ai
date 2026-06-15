@@ -134,12 +134,12 @@ public class ScheduleTaskUtil {
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         for (Thread thread : threadSet) {
             if (thread.getName().startsWith("taskExecutor-")) {
-                System.out.println(thread.getName() + thread.getState());
+                log.info("{} {}", thread.getName(), thread.getState());
                 for (StackTraceElement s : thread.getStackTrace()) {
-                    System.out.println(s);
+                    log.info("{}", s);
                 }
             }
         }
-        System.out.println(activeCount);
+        log.info("{}", activeCount);
     }
 }

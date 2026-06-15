@@ -579,7 +579,7 @@ public class GraphServiceImpl implements GraphService {
     public static void main(String[] args) throws IOException {
         String requestValue = "{\"deviceIds\":\"ff8080818ef3fa91018ef51cc8b90005\",\"varCodes\":\"gunpower,gunoutputvoltage,gunoutputcurrent\"}";
         String responseData = DataHandleUtil.getResponseData(HttpUtil.sendPost("http://192.168.2.251:60006/scrontab/configFuncPoint/findSystemVarNewValue", requestValue));
-        System.out.println(responseData);
+        log.info(responseData);
     }
 
 }

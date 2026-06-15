@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
+import java.io.IOException;
 
 @Slf4j
 public class StorageUtil {
@@ -176,7 +177,7 @@ public class StorageUtil {
                     TOKEN_COUNT = 0;
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("推送数据异常", e);
             failDataMap.put(resourceNo, 5003);
         }

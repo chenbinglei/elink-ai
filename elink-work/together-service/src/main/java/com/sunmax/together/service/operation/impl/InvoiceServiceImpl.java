@@ -267,7 +267,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                         if (!status) {
                             log.error("发送邮件失败,发票申请单号:{},收票人邮箱:{}", invoice.getId(), invoice.getReceiptEmail());
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("发送邮件报错,发票申请单号:{},收票人邮箱:{}", invoice.getId(), invoice.getReceiptEmail());
                     }
                     invoice.setInvoiceFilePath(FileUtil.getFilePath(invoiceFile, invoice.getInvoiceFilePath()));//发票文件地址

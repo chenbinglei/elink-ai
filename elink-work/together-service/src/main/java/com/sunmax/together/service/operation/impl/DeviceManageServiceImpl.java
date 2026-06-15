@@ -255,7 +255,7 @@ public class DeviceManageServiceImpl implements DeviceManageService {
                 return ResponseResult.ok(resultList);
             }
             return ResponseResult.ok(new PageDto<>(resultList, alarmListQueryVo.getPage(), alarmListQueryVo.getSize()));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询告警列表失败", e);
             return ResponseResult.error("查询告警列表异常");
         }

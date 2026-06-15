@@ -1,10 +1,12 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Slf4j
 public class TimestampUtil {
 
     public static final Lock lock = new ReentrantLock();
@@ -28,7 +30,7 @@ public class TimestampUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getUniqueTimestamp());
+        log.info("{}", getUniqueTimestamp());
     }
 
 }

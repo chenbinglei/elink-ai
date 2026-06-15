@@ -17,7 +17,7 @@ public class RedisModelEventUtil {
                 return Lists.newArrayList();
             }
             return JsonUtil.objectToList(RedisUtil.get(modelEventKey), EventModel.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("获取redis中模型事件数据失败", e);
             return Lists.newArrayList();
         }
@@ -44,7 +44,7 @@ public class RedisModelEventUtil {
                 // 将模型的实时模型存储到Redis
                 RedisUtil.set(modelEventKey, eventList);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             // 记录存取数据失败的错误日志
             log.error("存取redis中模型事件实时数据失败", e);
         } finally {
@@ -67,7 +67,7 @@ public class RedisModelEventUtil {
                 String deviceKey = KeyUtil.MODEL_EVENT_KEY + modelEventId;
                 RedisUtil.delete(deviceKey);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("删除模型事件数据报错", e);
         } finally {
             RedisLockUtil.unlock(lockKey);

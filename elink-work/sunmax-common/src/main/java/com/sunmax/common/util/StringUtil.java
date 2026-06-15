@@ -1,4 +1,5 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
 import com.sunmax.common.model.general.PileRealModel;
 import jodd.net.URLDecoder;
@@ -12,6 +13,8 @@ import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +24,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class StringUtil {
 
     public static boolean isEmpty(Object str) {
@@ -112,7 +116,7 @@ public class StringUtil {
         try {
             dd = df.parse(time);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dd);
@@ -343,7 +347,7 @@ public class StringUtil {
                 str = PinyinHelper.toHanyuPinyinStringArray(chineseChar[i],
                         format);
             } catch (BadHanyuPinyinOutputFormatCombination e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             if (str != null) {
                 fullPinyin = fullPinyin.append(str[0]);
@@ -897,13 +901,13 @@ public class StringUtil {
                     if (keyValue.length == 2) {
                         // 对值进行 URL 解码，防止乱码
                         String key = keyValue[0];
-                        String value = URLDecoder.decode(keyValue[1], "UTF-8");
+                        String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
                         params.put(key, value);
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (URISyntaxException | IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
         }
         return params;
     }

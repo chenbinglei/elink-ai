@@ -67,7 +67,7 @@ public class ProvinceDataAccessController {
                 responseDto.setData(JSON.toJSONString(resultMap));
             }
             return HttpResponseUtil.responseData(responseDto);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -122,7 +122,7 @@ public class ProvinceDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("省级调用查询充电站信息接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);
@@ -169,7 +169,7 @@ public class ProvinceDataAccessController {
             String responseData = HttpResponseUtil.responseData(responseDto);
             log.info("省级调用查询充电站接口状态接口，返回数据加密后为@@@@@@@@@@@@@@@@@@@：{}", responseData);
             return responseData;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseDto.setRet(500);
             responseDto.setMsg("系统错误");
             String responseData = HttpResponseUtil.responseData(responseDto);

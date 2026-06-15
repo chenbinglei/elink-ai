@@ -67,7 +67,7 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                             controlRecord.setUpdateTime(LocalDateTime.now());
                             controlRecordMap.put(keyId, controlRecord);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("执行启动充电桩报错", e);
                     }
                 }));
@@ -76,7 +76,10 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                 do {
                     Thread.sleep(500);
                 } while (!executor.isTerminated());
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("执行启动充电桩任务被中断", e);
+            } catch (RuntimeException e) {
                 log.error("执行启动充电桩任务报错", e);
             }
             //更新控制记录状态
@@ -112,7 +115,7 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                             controlRecord.setUpdateTime(LocalDateTime.now());
                             controlRecordMap.put(keyId, controlRecord);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("执行停止充电桩报错", e);
                     }
                 }));
@@ -121,7 +124,10 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                 do {
                     Thread.sleep(500);
                 } while (!executor.isTerminated());
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("批量执行停止充电桩任务被中断", e);
+            } catch (RuntimeException e) {
                 log.error("批量执行停止充电桩任务报错", e);
             }
             //更新控制记录状态
@@ -156,7 +162,7 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                             controlRecord.setUpdateTime(LocalDateTime.now());
                             controlRecordMap.put(keyId, controlRecord);
                         }
-                    } catch (Exception e) {
+                    } catch (RuntimeException e) {
                         log.error("执行停止充电桩报错", e);
                     }
                 }));
@@ -165,7 +171,10 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                 do {
                     Thread.sleep(500);
                 } while (!executor.isTerminated());
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("批量执行停止充电桩任务被中断", e);
+            } catch (RuntimeException e) {
                 log.error("批量执行停止充电桩任务报错", e);
             }
             //更新控制记录状态
@@ -189,7 +198,7 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                     pileRateSetVo.setTemplateId(templateId);
                     //计费下发
                     executor.submit(() -> resultList.add(pileCtrlService.pileRateSet(pileRateSetVo).getData()));
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     log.error("电桩费率下发报错", e);
                 }
             });
@@ -199,7 +208,10 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                 do {
                     Thread.sleep(500);
                 } while (!executor.isTerminated());
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("线程池关闭被中断", e);
+            } catch (RuntimeException e) {
                 log.error("线程池关闭失败", e);
             }
         }
@@ -257,7 +269,7 @@ public class PileBatchCtrlServiceImpl implements PileBatchCtrlService {
                 // 如果超时，则尝试停止所有正在执行的任务
                 executorService.shutdownNow();
                 if (!executorService.awaitTermination(300, TimeUnit.SECONDS))
-                    System.err.println("Pool did not terminate");
+                    log.error("Pool did not terminate");
             }
         } catch (InterruptedException ex) {
             // 如果当前线程在等待过程中被中断，则尝试停止所有正在执行的任务

@@ -116,7 +116,7 @@ public class SystemManageServiceImpl implements SystemManageService {
             //删除用户组关联权限授权数据
             groupApplyEmpowerDao.deleteAllByGroupIdIn(groupIds);
             return ResponseResult.ok(ResponseResult.SUCCESS);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("删除用户组信息异常: ", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }
@@ -241,7 +241,7 @@ public class SystemManageServiceImpl implements SystemManageService {
             List<String> userIds = Arrays.stream(userId.split(FileUtil.COMMA)).collect(Collectors.toList());
             userDao.deleteAllByIdIn(userIds);
             return ResponseResult.ok(ResponseResult.SUCCESS);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("删除用户信息异常：", e);
             return ResponseResult.error(ResponseResult.FAIL);
         }

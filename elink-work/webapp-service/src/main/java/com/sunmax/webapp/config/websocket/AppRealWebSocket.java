@@ -60,7 +60,6 @@ public class AppRealWebSocket {
         webSocketClients.add(this);
         webSocketMap.put(userId + "@" + orderType, this);
         addOnlineCount();
-//        System.out.println("有新的连接加入！当前在线人数为：" + getOnlineCount() + " ");
         List<RealWebSocketDto> result = packageData(userId, orderType);
         this.sendMessage(JSON.toJSONString(result));
     }
@@ -92,7 +91,7 @@ public class AppRealWebSocket {
      */
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        log.error(t.getMessage(), t);
     }
 
     public void sendMessage(String message) throws IOException {

@@ -54,7 +54,7 @@ public class VarRealDataWebSocket {
     @OnOpen
     public void onOpen(Session sessionId, @PathParam("clientId") String clientId, @PathParam("siteId") String siteId,
                        @PathParam("deviceIds") String deviceIds, @PathParam("varCodes") String varCodes) {
-        System.out.println("系统变量实时数据推送新开启了一个webSocket连接" + sessionId.getId());
+        log.info("系统变量实时数据推送新开启了一个webSocket连接" + sessionId.getId());
 
         //加入到set中
         session = sessionId;
@@ -76,7 +76,7 @@ public class VarRealDataWebSocket {
             log.error("系统变量实时数据推送消息失败", ie);
         }
         addOnlineCount();
-        System.out.println("有新的连接加入！当前系统变量实时数据推送在线人数为：" + getOnlineCount() + " ");
+        log.info("有新的连接加入！当前系统变量实时数据推送在线人数为：" + getOnlineCount() + " ");
     }
 
     /**
@@ -88,7 +88,7 @@ public class VarRealDataWebSocket {
         webSocketMap.remove(clientId, this);
         clientDataMap.remove(clientId);
         subOnlineCount();
-        System.out.println("系统变量实时数据推送有一连接关闭" + sessionId.getId());
+        log.info("系统变量实时数据推送有一连接关闭" + sessionId.getId());
     }
 
     /**
@@ -106,7 +106,7 @@ public class VarRealDataWebSocket {
      */
     @OnError
     public void onError(Throwable t) {
-        t.printStackTrace();
+        log.error(t.getMessage(), t);
     }
 
     public void sendMessage(String message) throws IOException {
@@ -124,7 +124,7 @@ public class VarRealDataWebSocket {
 //            try {
 //                item.sendMessage(DateUtil.localDateTimeToStr(LocalDateTime.now()));
 //            } catch (Throwable e) {
-//                e.printStackTrace();
+//                log.error(e.getMessage(), e);
 //            }
 //        }
         webSocketMap.forEach((key, value) -> {
@@ -190,7 +190,7 @@ public class VarRealDataWebSocket {
                 systemVarNewValueVo.setSiteId(siteId);
                 result = configFuncPointService.findSystemVarNewValue(systemVarNewValueVo).getData();
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询功能点实时数据失败", e);
             return ResponseResult.error("程序出现异常", result);
         }

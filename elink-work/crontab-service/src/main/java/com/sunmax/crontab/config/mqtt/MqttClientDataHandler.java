@@ -17,6 +17,7 @@ import com.sunmax.crontab.vo.mqtt.HDReplyVo;
 import com.sunmax.crontab.vo.mqtt.HDSetReplyVo;
 import com.sunmax.crontab.vo.mqtt.HDSetVo;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 @Slf4j
 public class MqttClientDataHandler {
@@ -41,7 +42,7 @@ public class MqttClientDataHandler {
             } else {
                 log.error("未找到对应的mqtt客户端, clientId: " + mqttClientVo.getClientId());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("华电协议指令接收响应处理mqtt消息发送失败, 错误信息: ", e);
         }
     }
@@ -84,7 +85,7 @@ public class MqttClientDataHandler {
             } else {
                 log.error("未找到对应的mqtt客户端, clientId: " + mqttClientVo.getClientId());
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("华电协议指令返回响应处理mqtt消息发送失败, 错误信息: ", e);
         }
         //修改定时任务

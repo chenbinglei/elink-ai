@@ -1,4 +1,5 @@
 package com.sunmax.configure.util;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +9,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class MysqlTabToMdUtil {
 
     private static final String DATABASE = "sunos-configure";
@@ -70,10 +72,10 @@ public class MysqlTabToMdUtil {
 
         try {
             String markdown = generateMarkdown(tables);
-            System.out.println(markdown);
+            log.info(markdown);
             // 这里你也可以将markdown字符串写入文件或进行其他处理
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

@@ -1,4 +1,5 @@
 package com.sunmax.webapp.controller;
+import lombok.extern.slf4j.Slf4j;
 
 import com.sunmax.common.config.redis.RedisUtil;
 import com.sunmax.common.util.ResponseResult;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("sms")
 @Tag(name = "短信验证模块")
+@Slf4j
 public class SmsController {
 
     @Autowired
@@ -39,8 +41,8 @@ public class SmsController {
             }else{
                 return new ResponseResult(ResponseResult.CodeStatus.BREAKING,"发送失败");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
             return new ResponseResult(ResponseResult.CodeStatus.BREAKING,"发送失败");
         }
     }

@@ -453,25 +453,25 @@ public class InterflowServiceImpl implements InterflowService {
         String payload18 = "{\n  \"body\": {\n    \"body\": {\n      \"chId\": \"SMEMS_SCInfoReport_t\",\n      \"comType\": 1,\n      \"driver\": \"tcpServerEMS\",\n      \"groupList\": [],\n      \"pointList\": [\n        {\n          \"appType\": 1,\n          \"pId\": 511,\n          \"val\": \"2\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 512,\n          \"val\": \"2\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 513,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 514,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 515,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 516,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 517,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 518,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 519,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 520,\n          \"val\": \"0\"\n        }\n      ]\n    },\n    \"cmd\": \"44\",\n    \"devId\": \"TcpEMSDev\",\n    \"platformId\": \"\",\n    \"point\": \"\",\n    \"protCode\": \"0\",\n    \"type\": \"\"\n  },\n  \"timestamp\": \"2025.11.20 16:14:39\",\n  \"token\": \"sendCmdUp\"\n}";
         String payload19 = "{\n  \"body\": {\n    \"body\": {\n      \"chId\": \"SMEMS_PVInfoReport_t\",\n      \"comType\": 1,\n      \"driver\": \"tcpServerEMS\",\n      \"groupList\": [],\n      \"pointList\": [\n        {\n          \"appType\": 1,\n          \"pId\": 1,\n          \"val\": \"2\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 2,\n          \"val\": \"2\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 3,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 4,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 5,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 6,\n          \"val\": \"0\"\n        },\n        {\n          \"appType\": 1,\n          \"pId\": 7,\n          \"val\": \"0\"\n        }\n      ]\n    },\n    \"cmd\": \"44\",\n    \"devId\": \"TcpEMSDev\",\n    \"platformId\": \"\",\n    \"point\": \"\",\n    \"protCode\": \"0\",\n    \"type\": \"\"\n  },\n  \"timestamp\": \"2025.11.20 16:14:38\",\n  \"token\": \"sendCmdUp\"\n}";
 
-        System.out.println("枪编号1: " + JSON.parseObject(payload1));
-        System.out.println("枪编号2: " + JSON.parseObject(payload2));
-        System.out.println("枪编号3: " + JSON.parseObject(payload3));
-        System.out.println("枪编号4: " + JSON.parseObject(payload4));
-        System.out.println("枪编号5: " + JSON.parseObject(payload5));
-        System.out.println("枪编号6: " + JSON.parseObject(payload6));
-        System.out.println("枪编号7: " + JSON.parseObject(payload7));
-        System.out.println("枪编号8: " + JSON.parseObject(payload8));
-        System.out.println("枪编号9: " + JSON.parseObject(payload9));
-        System.out.println("枪编号10: " + JSON.parseObject(payload10));
-        System.out.println("枪编号11: " + JSON.parseObject(payload11));
-        System.out.println("枪编号12: " + JSON.parseObject(payload12));
-        System.out.println("枪编号13: " + JSON.parseObject(payload13));
-        System.out.println("枪编号14: " + JSON.parseObject(payload14));
-        System.out.println("枪编号15: " + JSON.parseObject(payload15));
-        System.out.println("V2G设备16: " + JSON.parseObject(payload16));
-        System.out.println("换电站设备17: " + JSON.parseObject(payload17));
-        System.out.println("数据18: " + JSON.parseObject(payload18));
-        System.out.println("数据19: " + JSON.parseObject(payload19));
+        log.info("枪编号1: " + JSON.parseObject(payload1));
+        log.info("枪编号2: " + JSON.parseObject(payload2));
+        log.info("枪编号3: " + JSON.parseObject(payload3));
+        log.info("枪编号4: " + JSON.parseObject(payload4));
+        log.info("枪编号5: " + JSON.parseObject(payload5));
+        log.info("枪编号6: " + JSON.parseObject(payload6));
+        log.info("枪编号7: " + JSON.parseObject(payload7));
+        log.info("枪编号8: " + JSON.parseObject(payload8));
+        log.info("枪编号9: " + JSON.parseObject(payload9));
+        log.info("枪编号10: " + JSON.parseObject(payload10));
+        log.info("枪编号11: " + JSON.parseObject(payload11));
+        log.info("枪编号12: " + JSON.parseObject(payload12));
+        log.info("枪编号13: " + JSON.parseObject(payload13));
+        log.info("枪编号14: " + JSON.parseObject(payload14));
+        log.info("枪编号15: " + JSON.parseObject(payload15));
+        log.info("V2G设备16: " + JSON.parseObject(payload16));
+        log.info("换电站设备17: " + JSON.parseObject(payload17));
+        log.info("数据18: " + JSON.parseObject(payload18));
+        log.info("数据19: " + JSON.parseObject(payload19));
     }
 
     //接收推送充电订单信息
@@ -875,6 +875,5 @@ public class InterflowServiceImpl implements InterflowService {
 //        String province = parseAddress.get("province");
 //        String city = parseAddress.get("city");
 //        String county = parseAddress.get("county");
-//        System.out.println(stationInfoDtos);
 //    }
 }

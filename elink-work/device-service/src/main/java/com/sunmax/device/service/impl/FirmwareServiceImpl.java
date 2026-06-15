@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.criteria.Predicate;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -214,7 +215,7 @@ public class FirmwareServiceImpl implements FirmwareService {
                 result = parseFirmwareData(SunMaxUtil.toHexString(file.getBytes()));
             }
             return ResponseResult.ok(result);
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("解析文件失败", e);
             return ResponseResult.paramError(ResponseResult.PARAM_PARSE_ERROR);
         }

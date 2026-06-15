@@ -1,42 +1,13 @@
 package com.sunmax.configure.service.feign;
-
-import com.sunmax.common.dto.system.PlatformDataForwardDto;
-import com.sunmax.common.dto.system.StorageDataForwardDto;
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
-import java.util.List;
-import java.util.Set;
 
 /**
- * 接收系统服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.configure.ConfigureSystemFeignClient
+ * 请直接使用 com.sunmax.common.feign.configure.ConfigureSystemFeignClient
  */
-@FeignClient(value = "system-service", path = "/system/feign/configure")
-public interface SystemService {
-
-    @PostMapping("getPlatformDataForward")
-    @Operation(summary = "根据平台id和协议标识查询平台数据转发")
-    @Parameters({
-            @Parameter(name = "platformId", description = "平台运营商id"),
-            @Parameter(name = "protocolCode", description = "协议标识")
-    })
-    
-    ResponseResult<PlatformDataForwardDto> getPlatformDataForward(@RequestParam String platformId, @RequestParam String protocolCode);
-
-    @PostMapping("getPlatformDataForwardList")
-    @Operation(summary = "根据多个协议标识查询平台数据转发")
-    @Parameter(name = "protocolCodes", description = "多个协议标识")
-    
-    ResponseResult<List<PlatformDataForwardDto>> getPlatformDataForwardList(@RequestBody Set<String> protocolCodes);
-
-    @PostMapping("getStorageDataForwardList")
-    @Operation(summary = "根据多个协议标识查询储能平台数据转发")
-    @Parameter(name = "protocolCodes", description = "多个协议标识")
-    
-    ResponseResult<List<StorageDataForwardDto>> getStorageDataForwardList(@RequestBody Set<String> protocolCodes);
-
+@FeignClient(value = "system-service", path = "/system/feign/configure", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface SystemService extends com.sunmax.common.feign.configure.ConfigureSystemFeignClient {
 }

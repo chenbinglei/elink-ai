@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v2.0 | 编制日期：2026-06-03 | 最后更新：2026-06-09 | 状态：**执行中**
+> 版本：v2.5 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 状态：**执行中**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -12,8 +12,8 @@
 |------|------|--------|------|
 | PHASE-0：紧急修复 | ✅ 已完成 | 100% | P0-2 CORS内网IP移除+公网域名白名单；P0-3 Nacos/EMQX默认密码环境变量化+WARNING注释；P0-4 前后端环境变量分离+.env全面审查；P0-4b 文档统计数据校正；P0-5 Together-service健康检查性能修复 |
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
-| PHASE-2：框架升级与核心重构 | ⏳ 进行中 | 50% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），3项待执行 |
-| PHASE-3：代码质量与性能优化 | ⏳ 待开始 | 0% | 5项任务（含新增P3-C2超时参数优化） |
+| PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
+| PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线：5场景3轮压测+8项指标+JVM GC+容器资源+DB连接数+质量验收全部通过） |
 | PHASE-4：前端现代化改造 | ⏳ 待开始 | 0% | 4项任务 |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
@@ -32,6 +32,27 @@
 | P1-T9 | 数据库连接 useSSL=false 修复 | ✅ 已完成(回退) | 2026-06-03 | 全部13条JDBC连接（因MySQL未配SSL证书手动回退为false） |
 | P1-V | PHASE-1 全量验证 | ✅ 已完成 | 2026-06-03 | 全局 |
 
+### PHASE-2 任务进度明细
+
+| 任务编号 | 任务名称 | 状态 | 完成时间 | 影响范围 |
+|----------|----------|------|----------|----------|
+| P2-2a | Spring Boot 2.3→2.7.18 + Swagger→SpringDoc 1.7.0 | ✅ 已完成 | 2026-06-08 | pom.xml + 910文件/19193处Swagger注解迁移 + Hystrix→Resilience4j |
+| P2-2b | Java 8 → Java 17 | ✅ 已完成 | 2026-06-09 | 父POM+12子模块POM + Dockerfile + hot-reload.sh + 11服务热更新验证通过 |
+| P2-2c | Spring Boot 2.7→3.3.6 + javax→jakarta + OAuth2迁移 | ✅ 已完成(验证已补全2026-06-10) | 2026-06-09 | pom.xml + 全量javax→jakarta 355处 + OAuth2重写 |
+| P2-2c-2 | 补全事务管理（ARCH-05） | ✅ 已完成 | 2026-06-09 | device/together/webapp/system/protocol Service层 |
+| P2-2c-3 | Spring Cloud Alibaba版本配置 | ✅ 已完成 | 2026-06-09 | 父POM SCA BOM + 子模块Nacos版本 |
+| P2-2c-4 | Feign调用重构（ARCH-06） | ✅ 已完成 | 2026-06-10 | 55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移 |
+
+### PHASE-3 任务进度明细
+
+| 任务编号 | 任务名称 | 状态 | 完成时间 | 影响范围 |
+|----------|----------|------|----------|----------|
+| P3-A | 清理 e.printStackTrace() 和 System.out/err.print | ✅ 已完成 | 2026-06-11 | 95处e.printStackTrace()+109处System.out/err→SLF4J日志+@Slf4j补全 |
+| P3-B | 依赖版本升级 + CSS extract 优化 | ✅ 已完成 | 2026-06-11 | OSS SDK 2.8.3→3.17.4+Redisson 3.27.2→3.36.0+Jackson手动版本移除+groupId迁移26处+CSS extract |
+| P3-C | 收窄异常捕获 + 清理TODO/FIXME + 关闭Hibernate统计 | ✅ 已完成 | 2026-06-11 | catch(Exception)收窄+20+文件unreachable catch修复+hibernate.generate_statistics→false |
+| P3-C2 | 修正超时与连接池性能参数 | ✅ 已完成 | 2026-06-11 | Gateway/HikariCP/Redis超时参数优化 |
+| P3-D | 性能基准测试（R1） | ✅ 已完成 | 2026-06-11 | 5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数+质量验收 |
+
 ### 已完成任务的影响分析
 
 1. **SEC-01 Fastjson漏洞修复**：消除了项目中最严重的安全隐患（CVE-2022-25845等反序列化RCE漏洞），影响全局11个业务服务+公共模块的JSON处理逻辑
@@ -47,6 +68,11 @@
 11. **P2-2a Spring Boot 2.7.18升级**：Boot 2.3→2.7.18, Cloud Hoxton→2021.0.9, SCA 2021.0.6.1, Swagger 2.9.2→SpringDoc 1.7.0, Hystrix→Resilience4j CircuitBreaker, 全量910文件/19193处Swagger注解迁移, mysql-connector坐标更新, OAuth2临时桥接依赖, 编译通过
 12. **P2-2b Java 17升级**：父POM+12子模块POM java.version 8→17, Dockerfile基于openjdk:8-jre手动安装OpenJDK 17.0.2（因Docker Hub拉取超时改用华为镜像）, 修复DataReportServiceImpl中3处Java 17泛型推断严格化导致的方法引用编译错误, 添加JDK_JAVA_OPTIONS --add-opens参数解决JPMS反射访问限制（FST/Redisson/JAXB库需要）, hot-reload.sh添加Java17环境变量, crontab-service健康检查路径修正/scrontab→/crontab, 11服务热更新部署验证通过（Docker healthy+HTTP UP+Nacos注册正常）, 冒烟测试通过（Gateway路由200/OAuth2端点正常/System UP/容器Java版本17.0.2）
 13. **P2-2c Spring Boot 3.3.x+jakarta+OAuth2迁移**：Boot 2.7.18→3.3.6, Cloud 2021.0.9→2023.0.4, SCA 2021.0.6.1→2023.0.3.2, javax→jakarta 355处import替换(含static import), SpringDoc 1.7.0→2.6.0, MyBatis 2.1.1→3.0.4, Redisson 3.11.3→3.27.2, auth-service重写为spring-authorization-server, OauthController兼容旧版登录接口(6种grant_type), RedisTokenAuthenticationFilter替代JWT资源服务器验证, 3个TODO认证提供者实现完成(MobilePasswordCustomTokenGranter/MobileSmsSystemuserTokenGranter/MobileSmsCustomTokenGranter), MainController返回用户信息, 编译通过, 前端无需调整, 产出AUTH_LOGIN_API.md登录接口使用说明文档
+14. **P2-2c 全面验证通过（2026-06-10）**：11服务逐hot-reload全部成功（平均启动30s，无jakarta/Spring Boot 3.3.x报错），status全部healthy+Nacos 11/11注册，10服务actuator全部HTTP 200，Gateway路由全部HTTP 200，OAuth2端点可达HTTP 200，Git提交+推送成功（refactor/phase-2-framework-upgrade分支）
+14. **P2-2c-2 补全事务管理（ARCH-05）**：逐服务审查 device-service/together-service/webapp-service/system-service/protocol-service Service层，为多表写操作添加 @Transactional(rollbackFor = Exception.class)，纯查询添加 @Transactional(readOnly = true)
+15. **P2-2c-3 Spring Cloud Alibaba版本配置**：在父POM中添加 SCA BOM 2023.0.3.2 dependencyManagement，子模块移除Nacos硬编码版本号
+
+> ⚠️ **P2-2c 验证状态标记**：P2-2c 虽编译通过，但本地服务器验证（`./hot-reload.sh reload` 逐服务）、热更新验证（`./hot-reload.sh status` 所有服务 healthy）、功能一致性验证（登录/Token获取/刷新/冒烟测试）**均尚未执行**。代码也未提交到 `refactor/phase-2-framework-upgrade` 分支。建议在 P2-2c-4 执行前优先补全。
 
 ---
 

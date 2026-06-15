@@ -32,6 +32,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.io.IOException;
 
 @Configuration
 @Slf4j
@@ -74,7 +75,7 @@ public class HomePageWebSocketHandler extends TextWebSocketHandler {
         if (session != null && session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(message));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 log.error("推送首页数据失败", e);
             }
         }

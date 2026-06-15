@@ -119,7 +119,7 @@ public class PlatformUtil {
                     return Boolean.parseBoolean(responseResult.getString("success")); //未加密的数据处理
                 }
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return false;
         }
         return false;
@@ -134,7 +134,6 @@ public class PlatformUtil {
 //        platformPileStartVo.setDirection(1);
 //        platformPileStartVo.setAccountType(3);
 //        platformPileStartVo.setAccountData("13112345678");
-//        System.out.println(JSON.toJSONString(platformPileStartVo));
 //
 //        PlatformPileStopVo platformPileStopVo = new PlatformPileStopVo();
 //        platformPileStopVo.setPileCode("3102620250121001");
@@ -143,14 +142,11 @@ public class PlatformUtil {
 //        platformPileStopVo.setType(1);
 //
 
-    /// /        System.out.println(JSON.toJSONString(platformPileStopVo));
+    /// /        log.info(JSON.toJSONString(platformPileStopVo));
 //
-//        System.out.println(AESUtil.encrypt("sunmaxandwnkey00", "sunmaxandwniv000", JSON.toJSONString(platformPileStopVo)));
 //
-//        System.out.println(AESUtil.desEncrypt("sunmaxandwnkey00", "sunmaxandwniv000", "vM8IP23KVw6MDaFXqCw7xLJ0pGcZzkWXgISS4RNZWZh4ENWI9nuF6XNXr/WmJgRzZfvwOHvh0Bg7921TT/2SWGLeRfxKqexwMV5cYN9hxaFxoXWe1CwwnY1r1UY+UrpanAPpcxgBvVXAip54FtZdEZpeIV+YCZdNgN0qoR75Gzw="));
 //    }
 //    public static void main(String[] args) {
-//        System.out.println(AESUtil.desEncrypt("1234567890wnvpp1", "1wnvpp1234567890", "DVb+JPAqEsXMnoHBcFGK0AMgjsEk6cfSh5c0noziXCL61DZIWpmZEYfuysdnfhoVIuOiUiKKfduAZoiMjO4sGuTLEVw4tbWTKf/h/MQ0p+vPvBKeA9DX/CwFf5v1qAPvZqWfnqwLrA4AGvlVBeKJ4A=="));
 //    }
 
 }

@@ -109,7 +109,7 @@ public class WebFeignServiceImpl implements WebFeignService {
                 }
             }
             return ResponseResult.ok(resultMap);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("查询电枪数据报错", e);
             return ResponseResult.error("查询电枪数据报错,请稍后重试!!");
         }

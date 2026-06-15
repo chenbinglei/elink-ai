@@ -378,7 +378,7 @@ public class MonitorServiceImpl implements MonitorService {
                                             String timeAgoStr = calculateTimeAgo(createTime, nowTime);
                                             alarm.setAlarmTime(timeAgoStr);
                                         }
-                                    } catch (Exception e) {
+                                    } catch (RuntimeException e) {
                                         // 如果日期解析失败，保持alarmTime为默认值或设置错误提示
                                         alarm.setAlarmTime(null);
                                     }

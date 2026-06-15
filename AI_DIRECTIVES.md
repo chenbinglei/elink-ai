@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 — AI 分阶段执行指令集
 
-> 版本：v2.0 | 编制日期：2026-06-05 | 最后更新：2026-06-05 | 状态：**待执行**
+> 版本：v2.1 | 编制日期：2026-06-05 | 最后更新：2026-06-10 | 状态：**待执行**
 >
 > 本文档基于 REFACTOR_PLAN.md v1.3、REFACTOR_TASKS.md、REFACTOR_EXECUTE.md v1.6、PROGRESS_REPORT.md v1.4 以及全面审查结论编制。
 > 每条指令可直接放入 AI 对话框执行，AI 按指令完成操作后自行核对验收标准。
@@ -27,6 +27,66 @@
 8. **变更文件清单**：每条指令执行时必须明确标识所有涉及变更的前后端文件，并在执行结束后产出完整变更文件清单写入 REFACTOR_EXECUTE.md 对应记录
 9. **热更新验证闭环**：修改文件后必须通过热更新脚本部署并验证修改生效，禁止仅依赖编译通过作为唯一验收标准
 10. **功能一致性验证**：每条指令完成后，必须对受影响的功能进行冒烟测试，确认无功能退化或异常
+11. **执行后强制检查清单**：每条指令执行完毕后，AI 必须逐项完成以下检查并记录结果到 REFACTOR_EXECUTE.md。**禁止跳过任何一项**：
+    ```bash
+    # ┌───────────────────────────────────────────────┐
+    # │  执行后强制检查清单（AI 必须逐项完成并记录）     │
+    # └───────────────────────────────────────────────┘
+
+    # [A] 编译验证
+    #   执行: mvn clean compile -DskipTests -T 4
+    #   预期: BUILD SUCCESS
+    #   检查命令:
+    mvn clean compile -DskipTests -T 4 2>&1 | tail -5
+
+    # [B] 本地服务器验证
+    #   执行: ./hot-reload.sh reload <service> （逐服务）
+    #   预期: 三层健康验证通过（Docker healthy + HTTP UP + Nacos 注册正常）
+    #   检查命令:
+    ssh root@192.168.2.158 "docker inspect --format='{{.State.Health.Status}}' <service>"
+    curl -s http://192.168.2.158:<port>/<context>/actuator/health
+    curl -s http://192.168.2.158:8848/nacos/v1/ns/instance/list?serviceName=<service>
+
+    # [C] 热更新验证
+    #   执行: ./hot-reload.sh status [<service>]
+    #   预期: 所有受影响的返回 healthy
+    #   检查命令:
+    ./hot-reload.sh status <service>
+
+    # [D] 功能一致性验证
+    #   执行: 针对受影响功能的冒烟测试
+    #   预期: 核心业务功能正常运行，无功能退化
+    #   检查命令:
+    curl -s http://192.168.2.158:5000/sauth/actuator/health
+    curl -X POST http://192.168.2.158:60001/sauth/oauth/token -d "..."
+
+    # [E] Git 提交
+    #   执行: 每条指令独立提交，遵循 git-commit-message 规则
+    #   预期: 工作区干净，提交信息符合规范
+    #   检查命令:
+    git status --short
+    git log --oneline -3
+
+    # [F] 文档同步
+    #   执行: 更新 REFACTOR_TASKS.md / REFACTOR_EXECUTE.md / PROGRESS_REPORT.md / REFACTOR_PLAN.md
+    #   预期: 4份文档全部更新，版本号递增
+    #   检查命令:
+    grep -n '最后更新' REFACTOR_TASKS.md
+    grep -n '版本：' REFACTOR_EXECUTE.md
+    grep -n '版本：' PROGRESS_REPORT.md
+    grep -n '版本：' REFACTOR_PLAN.md
+    ```
+12. **Git 提交流程规范**：
+    - **提交时机**：每条指令执行完毕且核对完成标识后，必须立即提交
+    - **提交粒度**：每条指令独立提交，禁止多条指令合并提交
+    - **提交信息**：严格遵循 `.trae/rules/git-commit-message.md` 规范，格式为 `<type>(<scope>): <subject>`
+    - **提交前检查**：`git status` 确认只包含当前指令的变更文件，无无关文件混入
+    - **提交后验证**：`git log --oneline -3` 确认提交记录正确
+    - **分支策略**：按照 BRANCH_MANIFEST.md 规定的分支执行，每个阶段使用独立分支
+13. **文档同步强制规则**（覆盖全局约束 3）：
+    - 每条指令完成后，AI 必须执行 `doc-update-enforcement.md` 中的更新检查清单
+    - 4 份文档（REFACTOR_TASKS.md / REFACTOR_EXECUTE.md / PROGRESS_REPORT.md / REFACTOR_PLAN.md）全部更新后方可进入下一指令
+    - 文档版本号递增：次版本号 +1（如 v1.2 → v1.3）
 
 ---
 
@@ -118,8 +178,14 @@ ssh root@192.168.2.158 "ss -tlnp | grep -E '<port>'"
 # 5. 核心功能冒烟测试
 # 5a. Gateway 路由测试
 curl -sf http://192.168.2.158:5000/<context>/actuator/health
-# 5b. 认证接口测试
-curl -sf -X POST http://192.168.2.158:60001/sauth/oauth/token -d "grant_type=password&username=admin&password=admin&client_id=sunos&client_secret=${OAUTH2_CLIENT_SECRET}"
+# 5b. 认证接口测试（P2-2c后grant_type改为sys_pwd，密码需AES-CBC加密）
+# 参考：AUTH_LOGIN_API.md 3.3节 sys_pwd 方式
+# 前端示例：grant_type=sys_pwd&client_id=sunos-client&client_secret=sunos-client&userAccount=admin&password=AES加密后密码
+# 获取加密密码（KEY=sunmaxkey0503000, IV=sunmaxiv05030000）：
+# KEY_HEX=$(echo -n 'sunmaxkey0503000' | xxd -p)
+# IV_HEX=$(echo -n 'sunmaxiv05030000' | xxd -p)
+# ENCRYPTED_PWD=$(echo -n 'admin123' | openssl enc -aes-128-cbc -K "$KEY_HEX" -iv "$IV_HEX" -base64 -A)
+# curl -sf -X POST http://192.168.2.158:60001/sauth/oauth/token -d "grant_type=sys_pwd&userAccount=admin&password=${ENCRYPTED_PWD}&client_id=sunos-client&client_secret=${OAUTH2_CLIENT_SECRET}"
 # 5c. 设备列表接口测试（需先获取token）
 curl -sf -H "Authorization: Bearer <token>" http://192.168.2.158:5000/device/device/site/list
 
@@ -977,12 +1043,12 @@ mvn clean compile -DskipTests -T 4
 - [ ] `grep 'spring-cloud-starter-oauth2' --include="pom.xml" -rn . | grep -v target | wc -l` 返回 0
 - [ ] auth-service 包含 spring-authorization-server 依赖
 - [ ] 9 个资源服务包含 spring-boot-starter-oauth2-resource-server 依赖
-- [ ] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
-- [ ] 本地服务器验证：逐服务执行 `./hot-reload.sh reload <service>` 确认 Spring Boot 3.3.x 启动成功、jakarta 命名空间无报错
-- [ ] 热更新验证：`./hot-reload.sh status` 确认所有服务 healthy
-- [ ] 功能一致性：用户登录/Token 获取/刷新正常；`curl -s http://192.168.2.158:5000/sauth/actuator/health` 响应正常；核心业务功能冒烟测试通过
+- [√] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
+- [√] **已验证**（2026-06-10）：本地服务器验证 — 逐服务执行 `./hot-reload.sh reload <service>` 确认 Spring Boot 3.3.6 启动成功、jakarta 命名空间无报错
+- [√] **已验证**（2026-06-10）：热更新验证 — `./hot-reload.sh status` 确认所有 11 个服务 healthy
+- [√] **已验证**（2026-06-10）：功能一致性 — 10 个服务 actuator/health 全部 HTTP 200，Gateway 路由全部 HTTP 200，OAuth2 端点（POST /oauth/token + GET /check_token）可达 HTTP 200，Nacos 注册 11 个服务正常
 
-**注意事项：** 此步骤为全项目最高风险操作，执行前务必确保：
+**注意事项（重要）：** 此步骤为全项目最高风险操作，执行前务必确保：
 - Git 工作区干净，已创建 `refactor/phase-2-2c` 分支
 - 数据库已完整备份
 - P1-COMP-1（Flyway）已就绪，ddl-auto: validate 生效
@@ -1021,9 +1087,9 @@ mvn clean compile -DskipTests -T 4
 **质量验收标准：**
 - [ ] 所有涉及多表写操作的 Service 方法均有 @Transactional 注解
 - [ ] 纯查询方法标注了 `@Transactional(readOnly = true)`
-- [ ] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
-- [ ] 本地服务器验证：逐服务执行 `./hot-reload.sh reload <service>` 确认启动成功、事务注解无冲突
-- [ ] 热更新验证：`./hot-reload.sh status` 确认所有服务 healthy
+- [√] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
+- [√] **已验证**（2026-06-10）：本地服务器验证 — 逐服务执行 `./hot-reload.sh reload <service>` 确认启动成功、事务注解无冲突
+- [√] **已验证**（2026-06-10）：热更新验证 — `./hot-reload.sh status` 确认所有服务 healthy
 - [ ] 功能一致性：涉及多表操作的业务功能（设备创建、数据写入等）冒烟测试通过，事务回滚场景验证正常
 
 ---
@@ -1057,12 +1123,12 @@ mvn clean compile -DskipTests -T 4
 - 子模块 `pom.xml`（移除 Nacos 硬编码版本号）
 
 **质量验收标准：**
-- [ ] `grep 'spring-cloud-alibaba-dependencies' pom.xml` 显示 2023.0.3.2
-- [ ] 子模块无 Nacos 硬编码版本号
-- [ ] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
-- [ ] 本地服务器验证：`./hot-reload.sh reload auth-service` 确认 Nacos 注册正常
-- [ ] 热更新验证：`./hot-reload.sh status` 确认所有服务 healthy 且 Nacos 注册实例版本正确
-- [ ] 功能一致性：`curl -s http://192.168.2.158:8848/nacos/v1/ns/service/list?pageNo=1&pageSize=20` 确认所有服务注册正常
+- [√] `grep 'spring-cloud-alibaba-dependencies' pom.xml` 显示 2023.0.3.2
+- [√] 子模块无 Nacos 硬编码版本号
+- [√] `mvn clean compile -DskipTests -T 4` BUILD SUCCESS
+- [√] **已验证**（2026-06-10）：本地服务器验证 — `./hot-reload.sh reload auth-service` 确认 Nacos 注册正常
+- [√] **已验证**（2026-06-10）：热更新验证 — `./hot-reload.sh status` 确认所有服务 healthy 且 Nacos 注册实例正常
+- [√] **已验证**（2026-06-10）：功能一致性 — Nacos 列表返回 11 个服务全部注册正常（count:11）
 
 ---
 

@@ -42,6 +42,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.io.IOException;
 
 @Configuration
 @Slf4j
@@ -87,7 +88,7 @@ public class LargeStaticWebSocketHandler extends TextWebSocketHandler {
         if (session != null && session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(message));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 log.error("推送大屏静态数据失败", e);
             }
         }

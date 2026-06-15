@@ -1,5 +1,7 @@
 package com.sunmax.common.util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class IntegerUtil {
 
     public static boolean isEmpty( Integer value) {
@@ -27,7 +29,7 @@ public class IntegerUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getBit(15,2));
+        log.info("{}", getBit(15,2));
     }
 
 }

@@ -25,7 +25,7 @@ module.exports = defineConfig({
     ]
   },
   css: {
-    extract: false,
+    extract: true,
     // 是否为 CSS 开启 source map。设置为 true 之后可能会影响构建的性能
     sourceMap: false,
     //向 CSS 相关的 loader 传递选项(支持 css-loader postcss-loader sass-loader less-loader stylus-loader)

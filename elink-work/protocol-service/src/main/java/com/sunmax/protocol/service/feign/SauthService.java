@@ -1,23 +1,13 @@
 package com.sunmax.protocol.service.feign;
-
-import com.sunmax.common.dto.auth.PermissionInfoListDto;
-import com.sunmax.common.util.ResponseResult;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
-import java.util.List;
 
 /**
- * 获取接入服务提供的接口
+ * @deprecated 此接口已迁移至 com.sunmax.common.feign.crontab.CrontabSauthFeignClient
+ * 请直接使用 com.sunmax.common.feign.crontab.CrontabSauthFeignClient
  */
-@FeignClient(value = "sauth-service", path = "/sauth/feign/permission")
-public interface SauthService {
-
-    @PostMapping("findPermissionByUserAccount")
-    @Operation(summary = "根据用户账号查询权限数据")
-    
-    ResponseResult<List<PermissionInfoListDto>> findPermissionByUserAccount(@RequestParam String userAccount, @RequestParam String clientId);
-
+@FeignClient(value = "sauth-service", path = "/sauth/feign/permission", fallbackFactory = GenericFeignFallbackFactory.class)
+@Deprecated
+public interface SauthService extends com.sunmax.common.feign.crontab.CrontabSauthFeignClient {
 }

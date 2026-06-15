@@ -1,6 +1,7 @@
 package com.sunmax.common.util.oss;
 
-import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.sunmax.common.vo.AliYunParamVo;
@@ -47,7 +48,7 @@ public class OssImageUtil {
             InputStream inputStream = file.getInputStream();
             uploadImg2(inputStream, name);
             return name;//RestResultGenerator.createSuccessResult(name);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return "上传失败";//RestResultGenerator.createErrorResult(ResponseEnum.PHOTO_UPLOAD);
         }
     }
@@ -70,10 +71,10 @@ public class OssImageUtil {
             objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             //上传文件
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             PutObjectResult putResult = ossClient.putObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.IMAGER_DIR + fileName, inStream, objectMetadata);
             ret = putResult.getETag();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             try {
@@ -81,7 +82,7 @@ public class OssImageUtil {
                     inStream.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
         return ret;
@@ -151,7 +152,7 @@ public class OssImageUtil {
         // 设置URL过期时间为10年  3600l* 1000*24*365*10
         Date expiration = new Date(new Date().getTime() + 3600L * 1000 * 24 * 365 * 10);
         // 生成URL
-        OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+        OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
         URL url = ossClient.generatePresignedUrl(AliYunParamVo.BUCKET_NAME, key, expiration);
         if (url != null) {
             return url.toString();
@@ -209,11 +210,11 @@ public class OssImageUtil {
      */
     public static void deleteImage(String fileName) {
         try {
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             ossClient.deleteObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.IMAGER_DIR + fileName);
             ossClient.shutdown();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -222,11 +223,11 @@ public class OssImageUtil {
      */
     public static void deleteAllImage(List<String> fileNames) {
         try {
-            OSSClient ossClient = new OSSClient(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
+            OSS ossClient = new OSSClientBuilder().build(AliYunParamVo.ENDPOINT, AliYunParamVo.ACCESS_KEY_ID, AliYunParamVo.ACCESS_KEY_SECRET);
             fileNames.forEach(f -> ossClient.deleteObject(AliYunParamVo.BUCKET_NAME, AliYunParamVo.IMAGER_DIR + f));
             ossClient.shutdown();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

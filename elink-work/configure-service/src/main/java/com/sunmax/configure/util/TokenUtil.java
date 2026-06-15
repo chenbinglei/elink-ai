@@ -1,9 +1,11 @@
 package com.sunmax.configure.util;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class TokenUtil {
 
     private static final long EXPIRATION_TIME = 7200; // token有效期为7200秒
@@ -59,8 +61,8 @@ public class TokenUtil {
 
     public static void main(String[] args) {
         String token = generateToken("002485048");
-        System.out.println(token);
-        System.out.println(validateToken(token, "002485048"));
+        log.info(token);
+        log.info("{}", validateToken(token, "002485048"));
     }
 
 }
