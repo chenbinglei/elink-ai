@@ -1,19 +1,9 @@
+// auth 模块通过依赖注入获得 Cookies 实例
 import Cookies from "js-cookie";
+import { createAuthManager, AUTH_PREFIX } from "@elink/shared/auth";
 
-//本js文件为操作用户token值的
-const TokenKey = "SUN_OS_AdminToken";
+export const linkosAuth = createAuthManager(Cookies, AUTH_PREFIX.LINKOS);
 
-export function getToken(cookieKey) {
-	return Cookies.get(cookieKey ? "SUN_OS_" + cookieKey : TokenKey);
-}
-
-export function setToken(cookieData, cookieKey, expires) {
-	//登录有效期  { expires: 1 / 24 }  一小时
-	return Cookies.set(cookieKey ? "SUN_OS_" + cookieKey : TokenKey, cookieData, {
-		expires: expires ? expires : 24,
-	});
-}
-
-export function removeToken(cookieKey) {
-	return Cookies.remove(cookieKey ? "SUN_OS_" + cookieKey : TokenKey);
-}
+export const getToken = linkosAuth.getToken;
+export const setToken = linkosAuth.setToken;
+export const removeToken = linkosAuth.removeToken;

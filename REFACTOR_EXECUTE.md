@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.1 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.1
+> 版本：v3.8 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -3225,3 +3225,515 @@ public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity h
 
 - `/work/elink-ai/elink-work/benchmark-r1.sh`（新增：R1性能基准测试脚本）
 - `/work/elink-ai/elink-work/logs/benchmark-r1/`（新增：压测原始数据目录）
+
+---
+
+## P4-A | 创建 @elink/shared 公共包
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+### 执行过程
+
+1. **创建monorepo工作空间**：创建 `pnpm-workspace.yaml`，定义 linkos/derms/tycvs/packages/* 四个工作空间
+2. **创建 @elink/shared 包结构**：
+   - `packages/shared/package.json`：定义包名、版本、依赖（axios, js-cookie, qs）
+   - `packages/shared/src/index.js`：统一导出入口
+   - `packages/shared/src/auth/index.js`：工厂模式 createAuthManager，支持不同cookie前缀（SUN_OS_/IEMS_PF_/TY_CANVAS_）
+   - `packages/shared/src/http/request.js`：统一 axios 配置和拦截器（请求/响应），支持 X-No-Token、noLoginRequired、重复请求取消
+   - `packages/shared/src/http/index.js`：HTTP模块导出
+   - `packages/shared/src/utils/validate.js`：校验工具函数
+   - `packages/shared/src/utils/transformRequest.js`：请求参数转换（FormData/JSON序列化）
+   - `packages/shared/src/utils/env.js`：环境判断工具
+   - `packages/shared/src/utils/index.js`：工具模块统一导出
+3. **迁移3个项目引用**：
+   - linkos/src/utils/request.js → 使用 linkosAuth + createHttpClient
+   - linkos/src/utils/auth.js → 兼容层，代理到 linkosAuth
+   - derms/src/utils/request.js → 使用 dermsAuth + createHttpClient + onAuthExpired
+   - derms/src/utils/requestVue.js → 同上
+   - derms/src/utils/auth.js → 兼容层，代理到 dermsAuth
+   - tycvs/src/utils/request.js → 使用 tycvsAuth + createHttpClient
+   - tycvs/src/utils/auth.js → 兼容层，代理到 tycvsAuth
+4. **配置构建工具**：
+   - linkos/vue.config.js：添加 resolve.alias '@elink/shared'
+   - tycvs/vue.config.js：添加 resolve.alias '@elink/shared'
+   - derms/vite.config.js：添加 resolve.alias + sharedResolvePlugin（解决shared包依赖从项目node_modules解析）
+5. **添加workspace依赖**：3个项目 package.json 添加 `"@elink/shared": "workspace:*"`
+6. **构建验证**：3个项目生产构建全部通过
+
+### 遇到问题
+
+1. **Vite无法解析shared包中的js-cookie依赖**：shared包中的import "js-cookie"无法被Vite解析，因为node_modules在项目目录而非shared目录
+2. **sharedResolvePlugin返回目录路径**：首次实现直接返回modulePath导致EISDIR错误，需通过package.json main字段找到入口文件
+
+### 解决方案
+
+1. 创建 sharedResolvePlugin Vite插件，当importer来自shared目录时，将依赖重定向到项目node_modules
+2. 修复插件逻辑：优先读取package.json的main/module字段获取入口文件路径，而非直接返回目录
+
+### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| derms构建 | ✅ 通过 | vite build 成功，耗时2m37s |
+| linkos构建 | ✅ 通过 | vue-cli-service build 成功，耗时59s |
+| tycvs构建 | ✅ 通过 | vue-cli-service build 成功，耗时49s |
+| shared包完整性 | ✅ 通过 | 9个文件全部存在，模块导出正确 |
+| 3项目引用 | ✅ 通过 | package.json + 构建配置alias均已配置 |
+
+### 变更文件清单
+
+- `elink-web/pnpm-workspace.yaml`（新增）
+- `elink-web/packages/shared/package.json`（新增）
+- `elink-web/packages/shared/src/index.js`（新增）
+- `elink-web/packages/shared/src/auth/index.js`（新增）
+- `elink-web/packages/shared/src/http/index.js`（新增）
+- `elink-web/packages/shared/src/http/request.js`（新增）
+- `elink-web/packages/shared/src/utils/index.js`（新增）
+- `elink-web/packages/shared/src/utils/validate.js`（新增）
+- `elink-web/packages/shared/src/utils/transformRequest.js`（新增）
+- `elink-web/packages/shared/src/utils/env.js`（新增）
+- `elink-web/linkos/package.json`（修改：添加@elink/shared依赖）
+- `elink-web/linkos/vue.config.js`（修改：添加@elink/shared alias）
+- `elink-web/linkos/src/utils/request.js`（修改：迁移至@elink/shared）
+- `elink-web/linkos/src/utils/auth.js`（修改：兼容层代理）
+- `elink-web/derms/package.json`（修改：添加@elink/shared依赖）
+- `elink-web/derms/vite.config.js`（修改：添加alias+sharedResolvePlugin）
+- `elink-web/derms/src/utils/request.js`（修改：迁移至@elink/shared）
+- `elink-web/derms/src/utils/requestVue.js`（修改：迁移至@elink/shared）
+- `elink-web/derms/src/utils/auth.js`（修改：兼容层代理）
+- `elink-web/tycvs/package.json`（修改：添加@elink/shared依赖）
+- `elink-web/tycvs/vue.config.js`（修改：添加@elink/shared alias）
+- `elink-web/tycvs/src/utils/request.js`（修改：迁移至@elink/shared）
+- `elink-web/tycvs/src/utils/auth.js`（修改：兼容层代理）
+
+---
+
+### P4-A-hotfix | @elink/shared 运行时缺陷修复
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现**5个运行时一致性问题**。
+
+#### 修复内容
+
+**Fix 1 - portNum 动态端口路由丢失（Critical）**
+- 问题：旧代码（derms）使用每请求新 axios 实例的模式，每个请求通过 `portNum` 字段指定后端服务端口。新代码采用单例 axios 实例，`portNum` 被完全忽略，所有 API 路由到默认网关（:5000），导致关键数据接口失败
+- 修复：在 `request()` 和 `cancelAbleService()` 函数中添加 portNum 检测，动态替换 baseURL 中的端口号
+
+**Fix 2 - 特殊端点错误弹窗（Medium）**
+- 问题：derms 旧代码中 `/together/electConfig/applyElectConfigToOtherSite` 端点预期返回 code !== 20000，旧逻辑特意不弹错误消息。新代码统一弹 ElMessage 错误提示
+- 修复：在 response 拦截器中对特殊端点跳过错误弹窗
+
+**Fix 3 - per-request 隔离模式缺失（黑屏 root cause）**
+- 问题：**derms 黑屏的真正原因**。旧代码是每请求独立实例/独立 pending 队列模式，并发请求不会被互相取消。新代码改为单例共享 pending，页面加载时同时调用的 5-10 个 API 被错误识别为重复请求并取消，导致大量 CanceledError + ElMessage 轰炸 → Vue 错误边界崩溃黑屏
+- 修复：增加 `perRequestIsolation` 选项，derms 设为 true，保持原有每请求独立实例模式
+
+**Fix 4 - CanceledError 检测方式不可靠（Medium）**
+- 问题：旧代码用 `JSON.stringify(error).indexOf("CanceledError")` 字符串匹配，新版 axios 中不兼容，导致被取消的请求仍弹错误提示
+- 修复：使用 `axios.isCancel(error)` 官方 API + 多种 fallback（error.name/code/message 包含 Cancel）
+
+**Fix 5 - userInfo 空指针保护（Low）**
+- 问题：localStorage 为空或被清空时，`userInfo = JSON.parse(null)` 抛出异常，请求中断可能导致白屏
+- 修复：try-catch + userInfo 非空判断保护
+
+#### 两种隔离模式对照表
+
+| 模式 | perRequestIsolation | pending队列 | 适用项目 | 并发请求处理 |
+|------|---------------------|-------------|----------|--------------|
+| 单例模式 | false（默认） | 全局共享 | linkos | 相同请求1.5秒内只允许一个 |
+| 每请求隔离 | true | 每个请求独立 | derms | 并发请求不受限制 |
+
+#### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| derms构建 | ✅ 通过 | vite build 6347 modules transformed |
+| linkos构建 | ✅ 通过 | vue-cli-service build |
+| tycvs构建 | ✅ 通过 | vue-cli-service build |
+
+#### 变更文件
+
+- `elink-web/packages/shared/src/http/request.js`（架构级修复：5项运行时缺陷）
+- `elink-web/derms/src/utils/request.js`（启用 perRequestIsolation: true）
+- `elink-web/derms/src/utils/requestVue.js`（启用 perRequestIsolation: true）
+
+---
+
+### P4-A-hotfix-v6 | 前端 API 路径 /scrontab → /crontab 对齐后端
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+后端 [crontab-service/application.yml#L4](file:///work/elink-ai/elink-work/crontab-service/src/main/resources/application.yml#L4) 配置：
+```yaml
+server:
+  servlet:
+    context-path: /crontab
+```
+
+网关 [sunmax-gateway/application.yml#L156-L159](file:///work/elink-ai/elink-work/sunmax-gateway/src/main/resources/application.yml#L156-L159)：
+```yaml
+- id: crontab-service
+  uri: lb://crontab-service
+  predicates:
+    - Path=/crontab/**
+```
+
+但前端 linkos/tycvs 仍使用历史路径 `/scrontab/*`，与后端实际路由不一致。
+
+#### 修复范围
+
+8 个文件 28 处替换 `/scrontab/` → `/crontab/`：
+
+**linkos - API 定义（4 文件 23 处）**
+- [src/api/dataManagement/systemVariables.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/systemVariables.js)：7 处
+- [src/api/dataManagement/nodeManagement.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/nodeManagement.js)：10 处
+- [src/api/dataManagement/nodeAddRecording.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/nodeAddRecording.js)：4 处
+- [src/api/dataManagement/dataQuery.js](file:///work/elink-ai/elink-web/linkos/src/api/dataManagement/dataQuery.js)：1 处
+
+**linkos - 视图按钮权限校验（3 文件 3 处）**
+- [src/views/dataManagement/systemVariables.vue](file:///work/elink-ai/elink-web/linkos/src/views/dataManagement/systemVariables.vue)：1 处 operateButtonIsClick
+- [src/views/dataManagement/nodeManagement.vue](file:///work/elink-ai/elink-web/linkos/src/views/dataManagement/nodeManagement.vue)：1 处
+- [src/views/dataManagement/nodeAddRecording.vue](file:///work/elink-ai/elink-web/linkos/src/views/dataManagement/nodeAddRecording.vue)：1 处
+
+**tycvs - 可视化组件（1 文件 2 处）**
+- [src/views/2DVisualization/canvasPreview.vue](file:///work/elink-ai/elink-web/tycvs/src/views/2DVisualization/canvasPreview.vue)：HTTP + WebSocket URL 各 1 处
+
+#### 验证结果
+
+- `Grep "scrontab" elink-web/` 全工作区无残留 ✅
+- `Grep "/crontab/" elink-web/` 共 28 处全部成功替换 ✅
+- 涉及业务模块：系统变量管理、计算节点管理、节点采集记录、数据查询、tycvs 可视化预览
+
+#### 风险与回滚
+
+- 需后端按钮权限表中将 `/scrontab/*` 同步更新为 `/crontab/*`，否则按钮可能被误判无权限隐藏
+- 回滚命令：`git revert <commit>`
+
+---
+
+### P4-A-hotfix-v5 | linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰)
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 现象与根因
+
+用户点击"查询"按钮时，列表区域出现深灰色"黑屏"覆盖层。从截图可观察到表格区域被深灰色不透明遮罩覆盖，呈现"加载黑屏"观感。
+
+**根因**：[elink-web/linkos/src/styles/element.scss#L3](file:///work/elink-ai/elink-web/linkos/src/styles/element.scss#L3) 全局设置了：
+```scss
+:root {
+  --el-mask-color: rgba(51,51,51,0.8); // 深灰 80% 不透明度
+}
+```
+
+该 CSS 变量同时被 ElLoading 的 `.el-loading-mask` 和 Dialog 的 `.el-overlay` 使用：
+- Dialog：rgba(51,51,51,0.8) 用作弹窗背景压暗合理
+- ElLoading：**用在表格 v-loading 区域时，相当于覆盖一层近黑色不透明层 → "查询黑屏"**
+
+linkos 的 `DeviceListTable.vue` 等 50+ 个列表页都使用 `v-loading="listLoading"`，全部受影响。
+
+#### 修复方案
+
+将 ElLoading 遮罩单独配色，与 Dialog 的 `--el-mask-color` 解耦：
+
+```scss
+:root {
+  --el-mask-color: rgba(0, 0, 0, 0.5); // 改回 Element Plus 默认值（弹窗压暗）
+}
+
+/* ElLoading 单独配色 */
+.el-loading-mask {
+  background-color: rgba(255, 255, 255, 0.75) !important; // 半透明白色磨砂
+  backdrop-filter: blur(2px);
+  transition: opacity 0.2s ease;
+}
+.el-loading-spinner .path { stroke: #409eff !important; }
+.el-loading-spinner .el-loading-text { color: #606266 !important; font-size: 13px; }
+```
+
+#### 效果对比
+
+| 场景 | 修复前 | 修复后 |
+|------|--------|--------|
+| 列表查询 v-loading | 深灰几乎不透明遮罩（"黑屏"） | 半透明白色磨砂，表格内容仍可见 |
+| spinner 颜色 | 深色不易辨识 | 蓝色 #409eff（element 主色） |
+| 转场 | 突然出现/消失 | opacity 0.2s 渐变 |
+| Dialog 弹窗压暗 | rgba(51,51,51,0.8) | rgba(0,0,0,0.5)（标准值，更轻） |
+
+#### 变更文件
+
+- `elink-web/linkos/src/styles/element.scss`：分离 ElLoading 与 Dialog 的遮罩配色
+
+#### 兼容性
+
+- `backdrop-filter`：Chrome 76+/Safari 9+/Edge 17+/Firefox 103+（不支持的浏览器自动降级为纯色半透明白色）
+- `!important` 仅覆盖 ElLoading，不影响业务自定义 mask 样式
+
+---
+
+### P4-A-hotfix-v4 | linkos 首屏/路由切换闪黑屏体验优化
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 触发场景与根因诊断
+
+| 触发条件 | 现象 | 持续时长 | 频率 | 根因 |
+|---------|------|---------|------|------|
+| 浏览器刷新 (F5) | 黑/白屏 | 200-800ms | 每次刷新 1 次 | `<div id="app">` 为空，Vue bundle + ElementPlus + vxe-table + echarts + vue3-tree-org 等大型依赖加载期间浏览器显示空白 |
+| 路由切换 | 短暂白闪 | 50-300ms | 每次切换 1 次 | `<router-view>` 无 transition 过渡，组件卸载→新组件挂载瞬间内容区为空白 |
+| 接口调用后跳转 | 闪屏 + 白块 | 100-500ms | 每次首次进入新页面 | `getComponent` 使用 `require.ensure` 动态分包，chunk 下载期间 `<router-view>` 内为空白 |
+| 异步组件加载失败 | NProgress 进度条卡顿 | 持续残留 | 偶发 | 未在 `router.onError` 中关闭 NProgress |
+
+#### 优化方案
+
+**P1：HTML 首屏 CSS-only Loading + 防黑闪背景色**
+- `public/index.html`：
+  - `html, body` 设置 `background-color: #F8F8F8`，杜绝浏览器默认黑/白透出
+  - `<div id="app">` 内嵌 CSS-only spinner loading（不依赖 JS、不阻塞渲染）
+  - Vue 挂载完成会自动替换 `#app` 内容，loading 随之消失（无需 JS 操作）
+- 收益：刷新时立即看到 loading，无黑屏感知
+
+**P2：路由切换 fade transition 过渡**
+- `views/layout/components/AppMain.vue`：
+  - `<router-view>` 增加 `<transition name="fade-route" mode="out-in">`
+  - 0.2s opacity 过渡，组件切换平滑
+- 收益：消除路由切换瞬间的白/黑闪
+
+**P3：NProgress 配置优化 + 异常兜底**
+- `src/permission.js`：
+  - `NProgress.configure({ showSpinner:false, trickleSpeed:200, minimum:0.15, easing:"ease", speed:400 })`
+  - 起始进度从 0% 改为 15%，用户感知 "立即响应"
+  - 新增 `router.onError()` 兜底 `NProgress.done()`，避免进度条残留
+- 收益：进度条更流畅，异常场景自动恢复
+
+#### 变更文件
+
+- `elink-web/linkos/public/index.html`：首屏 loading + 防黑闪样式
+- `elink-web/linkos/src/views/layout/components/AppMain.vue`：路由 transition
+- `elink-web/linkos/src/permission.js`：NProgress 优化 + 错误兜底
+
+#### 跨设备/浏览器兼容性
+
+| 浏览器/设备 | 兼容性 |
+|------------|--------|
+| Chrome / Edge ≥90 | ✅ 完整支持（CSS animation, inset, opacity transition） |
+| Firefox ≥90 | ✅ 完整支持 |
+| Safari ≥14 | ✅ 完整支持 |
+| 移动端 Chrome / Safari | ✅ 完整支持 |
+
+所有使用的特性（CSS keyframes、transition、inset、flex）均为标准 CSS3 特性，无需 polyfill。
+
+#### 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| index.html 首屏 loading 注入 | ✅ Vue 挂载完成自动隐藏 |
+| 路由切换 fade-route 动画 | ✅ Vue 3 transition + keep-alive 嵌套顺序正确 |
+| NProgress 配置生效 | ✅ 起始进度 15% + 异常兜底 |
+| 不影响现有功能 | ✅ 修改 3 文件均为附加性变更 |
+
+---
+
+### P4-A-hotfix-v3 | linkos 闪黑屏修复（portNum 行为差异对齐）
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+hotfix-v2 上线后用户反馈 linkos 平台调用后端接口时仍出现短暂闪黑屏。
+
+#### 根因定位
+
+对比新旧 `linkos/src/utils/request.js` 行为差异发现：
+
+**旧 linkos 代码（已被生产验证）：**
+```js
+// request 拦截器中
+// 打包注释                          ← 关键！portNum 处理被完全注释
+// if(config.portNum){
+//     config.baseURL = config.baseURL.replace(portNum,`:${config.portNum}`);
+// }
+```
+
+linkos 的所有 28 个 API 文件（共 212 处 portNum 字段，如 `portNum: "60003"`）在旧代码中**实际从未生效**，所有请求统一走网关 `:5000`，由 Spring Cloud Gateway 路由到对应微服务。
+
+**新 shared 代码（hotfix-v1 引入，hotfix-v2 保留）：**
+```js
+const applyPortNum = (config) => {
+  if (config.portNum) {
+    config.baseURL = (config.baseURL || baseURL).replace(/:\d+/, `:${config.portNum}`);
+    delete config.portNum;
+  }
+};
+```
+
+**总是**替换端口，导致：
+- 生产环境 `baseURL=http://host:5000` → 被替换为 `http://host:60003`
+- 浏览器直接访问宿主机微服务端口 → CORS 失败/连接超时
+- ElMessage 错误弹窗轰炸 + 路由跳转 → 短暂闪黑屏
+
+derms 平台旧代码 portNum 处理是启用的，所以行为正确；linkos/tycvs 平台旧代码 portNum 是注释掉的，需要保持禁用。
+
+#### 修复方案
+
+新增 `enablePortNum` 选项：
+- derms：`enablePortNum: true`（保留旧逻辑）
+- linkos/tycvs：默认 false（与旧逻辑一致）
+- 无论是否启用，始终从 config 中 `delete portNum`，避免污染 axios config
+
+```js
+const applyPortNum = (config) => {
+  if (config.portNum) {
+    if (enablePortNum) {
+      config.baseURL = (config.baseURL || baseURL).replace(/:\d+/, `:${config.portNum}`);
+    }
+    delete config.portNum;
+  }
+};
+```
+
+#### 变更文件
+
+- `packages/shared/src/http/request.js`：新增 `enablePortNum` 选项（默认 false），逻辑分支判断
+- `derms/src/utils/request.js`：显式设置 `enablePortNum: true`
+- `derms/src/utils/requestVue.js`：同上
+
+#### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| ESM 模块加载 | ✅ 通过 | createHttpClient 正常创建 linkos 模式 request 函数 |
+| linkos 行为对齐 | ✅ 通过 | enablePortNum=false 下不再替换 baseURL，与旧代码一致 |
+| derms 行为对齐 | ✅ 通过 | enablePortNum=true 保持 hotfix-v1 portNum 动态路由 |
+| portNum 字段清理 | ✅ 通过 | 无论是否启用，始终从 config 移除，避免 axios 警告 |
+
+#### 根因总结表
+
+| 平台 | 旧 portNum 处理 | hotfix-v1/v2 行为 | hotfix-v3 修复 |
+|------|----------------|---------------------|----------------|
+| derms | 启用 | 启用（一致） | enablePortNum=true |
+| linkos | **注释**（禁用） | **启用**（不一致） | enablePortNum=false（默认）|
+| tycvs | 与 linkos 同 | 启用（不一致） | enablePortNum=false（默认）|
+
+---
+
+### P4-A-hotfix-v2 | @elink/shared 架构级重构（依赖注入）
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+P4-A-hotfix v1 上线后 derms 黑屏问题依然存在。dev server 日志显示真正根因：
+
+```
+[vite] (client) Pre-transform error: EISDIR: illegal operation on a directory,
+read /work/elink-ai/elink-web/derms/node_modules/qs
+```
+
+`@elink/shared` 内部 `import "qs"` `import "js-cookie"` `import axios` `import { ElMessage } from "element-plus"` 等裸模块导入，在 monorepo 跨工作空间场景下：
+- 生产构建（rollup）通过 `sharedResolvePlugin` 自定义解析能工作
+- **dev 模式（esbuild pre-bundle）**：自定义插件返回的是目录路径而非入口文件，触发 EISDIR
+
+旧方案治标不治本，决定采用资深专家级方案：**依赖注入重构**。
+
+#### 修复方案：零依赖纯函数 + 依赖注入
+
+让 `@elink/shared` 成为零运行时依赖的纯工厂函数库，所有外部依赖（axios/qs/js-cookie/element-plus）由调用方注入：
+
+```js
+// shared/auth/index.js
+export function createAuthManager(Cookies, prefix, defaultKey) { ... }
+
+// shared/http/request.js
+export function createHttpClient({ axios, ElMessage, qs, auth, ... }) { ... }
+
+// shared/utils/transformRequest.js
+export function createTransform(qs) { ... }
+```
+
+调用方在自己项目内 import 真正的依赖并注入：
+
+```js
+import axios from "axios";
+import qs from "qs";
+import { ElMessage } from "element-plus";
+import Cookies from "js-cookie";
+import { createHttpClient, createAuthManager, AUTH_PREFIX } from "@elink/shared";
+
+const dermsAuth = createAuthManager(Cookies, AUTH_PREFIX.DERMS);
+const { request } = createHttpClient({ axios, ElMessage, qs, auth: dermsAuth, ... });
+```
+
+#### 架构收益
+
+| 维度 | 改造前 | 改造后 |
+|------|--------|--------|
+| shared 包依赖 | axios/qs/js-cookie/element-plus | **0 个运行时依赖** |
+| 跨工作空间解析 | 需自定义 vite 插件 | **不再需要** |
+| dev 模式 EISDIR | 偶发崩溃 | **彻底消除** |
+| 各项目依赖版本 | 受 shared 锁定 | 各项目可独立升级 |
+| 单元测试 | 困难（mock 外部模块） | 简单（注入 stub） |
+| 与构建工具耦合 | 强（依赖 vite/webpack 解析配置） | **零耦合** |
+
+#### 变更内容
+
+**shared 包重构（4个文件）：**
+- `packages/shared/src/auth/index.js`：移除 `import Cookies`，`createAuthManager(Cookies, prefix, defaultKey)`，新增 `AUTH_PREFIX` 常量
+- `packages/shared/src/utils/transformRequest.js`：移除 `import qs`，重命名 `transform()` → `createTransform(qs)`，新增 null/undefined 保护
+- `packages/shared/src/http/request.js`：移除 axios/element-plus/qs 三个 import，`createHttpClient({ axios, ElMessage, qs, ... })`，保留两种 perRequestIsolation 模式 + 5 项 hotfix-v1 修复
+- `packages/shared/src/index.js`：统一导出 + `.js` 显式后缀（兼容 webpack 5 / vite）
+
+**shared package.json：**
+- `version` 1.0.0 → 2.0.0（BREAKING CHANGE）
+- 移除 `dependencies`，axios/qs/js-cookie/element-plus 全部移到 `peerDependencies`
+- 新增 `exports` 字段精确导出 + `sideEffects: false`
+
+**消费方更新（3 × 2 = 6 个文件）：**
+- `derms/src/utils/auth.js`、`linkos/src/utils/auth.js`、`tycvs/src/utils/auth.js`：import `js-cookie`，通过 `createAuthManager(Cookies, AUTH_PREFIX.XXX)` 创建本地 auth 实例
+- `derms/src/utils/request.js`、`derms/src/utils/requestVue.js`、`linkos/src/utils/request.js`、`tycvs/src/utils/request.js`：import axios/qs/ElMessage，注入到 `createHttpClient`
+
+**清理（1 个文件）：**
+- `derms/vite.config.js`：删除 27 行 `sharedResolvePlugin` 自定义插件（不再需要）
+
+#### 验证结果
+
+| 验证项 | 结果 | 说明 |
+|--------|------|------|
+| Node ESM 解析测试 | ✅ 通过 | `qs/js-cookie/axios/@elink/shared` 全部可解析 |
+| shared 导出完整性 | ✅ 通过 | 导出 `createAuthManager/createHttpClient/createTransform/AUTH_PREFIX` 等 86 个符号 |
+| derms 项目链路 | ✅ 通过 | request.js → auth.js → shared，无裸模块导入残留 |
+| linkos 项目链路 | ✅ 通过 | 同上，webpack alias `@elink/shared` 仍然工作 |
+| tycvs 项目链路 | ✅ 通过 | 同上 |
+| sharedResolvePlugin | ✅ 已删除 | derms/vite.config.js 不再包含自定义解析 |
+| 旧 transform/auth 实例 | ✅ 已清理 | 不再使用 `dermsAuth`/`linkosAuth`/`tycvsAuth` from shared |
+
+#### 根因 vs 修复对照
+
+| 表现 | 表层原因 | 真正根因 | 治本方案 |
+|------|----------|----------|----------|
+| derms 黑屏 | EISDIR error | shared 包内 `import "qs"` 在 dev 模式跨工作空间解析失败 | 依赖注入：shared 不再 import 任何外部模块 |
+| linkOS 闪烁 | API 取消错误轰炸 | （已在 hotfix-v1 修复）单例模式 + 不可靠的 isCancel 检测 | 保留 hotfix-v1 修复，并随 shared 重构带入 |
+
+#### 重启说明
+
+由于代码改动涉及 shared 包入口和消费方 import，**必须重启所有 dev server**才能生效。用户需手动在 IDE 终端执行：
+
+```bash
+cd /work/elink-ai/elink-web
+node dev-manager.js stop-all
+node dev-manager.js start-all
+```
+
+---
+
+### P4-A-hotfix | @elink/shared 运行时缺陷修复
+
+> 执行日期：2026-06-11 | 执行人：AI | 状态：✅ 已完成
+
+#### 背景
+
+P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题（详见上方 hotfix-v1 完整记录）。

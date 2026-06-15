@@ -1,19 +1,9 @@
+// auth 模块通过依赖注入获得 Cookies 实例
 import Cookies from "js-cookie";
+import { createAuthManager, AUTH_PREFIX } from "@elink/shared/auth";
 
-//本js文件为操作用户token值的
-const TokenKey = "TY_CANVAS_AdminToken";
+export const tycvsAuth = createAuthManager(Cookies, AUTH_PREFIX.TYCVS);
 
-export function getToken(cookieKey) {
-	return Cookies.get(cookieKey ? "TY_CANVAS_" + cookieKey : TokenKey);
-}
-
-export function setToken(cookieData, cookieKey, expires) {
-	//登录有效期  { expires: 1 / 24 }  一小时
-	return Cookies.set(cookieKey ? "TY_CANVAS_" + cookieKey : TokenKey, cookieData, {
-		expires: expires ? expires : 24,
-	});
-}
-
-export function removeToken(cookieKey) {
-	return Cookies.remove(cookieKey ? "TY_CANVAS_" + cookieKey : TokenKey);
-}
+export const getToken = tycvsAuth.getToken;
+export const setToken = tycvsAuth.setToken;
+export const removeToken = tycvsAuth.removeToken;

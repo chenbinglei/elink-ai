@@ -1,9 +1,11 @@
 <template>
   <div class="appMain" :style="{ maxHeight: contentMainMaxHeight + 'px'}">
     <router-view v-slot="{ Component, route }">
-      <keep-alive :include="cachedViews">
-        <component :is="Component" :key="route.fullPath" :contentMaxHeight="contentMainMaxHeight" />
-      </keep-alive>
+      <transition name="fade-route" mode="out-in">
+        <keep-alive :include="cachedViews">
+          <component :is="Component" :key="route.fullPath" :contentMaxHeight="contentMainMaxHeight" />
+        </keep-alive>
+      </transition>
     </router-view>
   </div>
 </template>
@@ -38,6 +40,20 @@ export default {
   padding: 12px 14px;
   box-sizing: border-box;
   background-color: #F8F8F8;
+}
+
+/* 路由切换淡入淡出，消除黑/白闪 */
+.fade-route-enter-active,
+.fade-route-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-route-enter-from,
+.fade-route-leave-to {
+  opacity: 0;
+}
+.fade-route-enter-to,
+.fade-route-leave-from {
+  opacity: 1;
 }
 </style>
 

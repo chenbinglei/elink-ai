@@ -1,19 +1,9 @@
+// auth 模块通过依赖注入获得 Cookies 实例
 import Cookies from "js-cookie";
+import { createAuthManager, AUTH_PREFIX } from "@elink/shared/auth";
 
-//本js文件为操作用户token值的
-const TokenKey = "IEMS_PF_AdminToken";
+export const dermsAuth = createAuthManager(Cookies, AUTH_PREFIX.DERMS);
 
-export function getToken(cookieKey) {
-	return Cookies.get(cookieKey ? "IEMS_PF_" + cookieKey : TokenKey);
-}
-
-export function setToken(cookieData, cookieKey, expires) {
-	//登录有效期  { expires: 1 / 24 }  一小时
-	return Cookies.set(cookieKey ? "IEMS_PF_" + cookieKey : TokenKey, cookieData, {
-		expires: expires ? expires : 24,
-	});
-}
-
-export function removeToken(cookieKey) {
-	return Cookies.remove(cookieKey ? "IEMS_PF_" + cookieKey : TokenKey);
-}
+export const getToken = dermsAuth.getToken;
+export const setToken = dermsAuth.setToken;
+export const removeToken = dermsAuth.removeToken;

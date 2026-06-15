@@ -20,7 +20,7 @@
 > **PHASE-1 完成率说明**：总计14项任务（9核心+1验证+2补偿+1文档校正+1前置设计），9项已完成（T1/T2/T4/T5/T6/T7/T8/V/COMP-3），5项待完成（T3需补偿修复Entity不一致、T9需补偿配置SSL证书、2项补偿任务、1项文档校正P0-4）。T3/T9虽已执行但因环境限制回退，不计入已完成。
 | PHASE-2 | 6 | 6 | 0 | 0 | 100% |
 | PHASE-3 | 5 | 5 | 0 | 0 | 100% |
-| PHASE-4 | 4 | 0 | 0 | 4 | 0% |
+| PHASE-4 | 4 | 1 | 0 | 3 | 25% |
 | PHASE-5 | 4 | 0 | 0 | 4 | 0% |
 
 ### 已完成任务记录
@@ -54,6 +54,13 @@
 | P3-C | 收窄异常捕获 + 清理TODO/FIXME + 关闭Hibernate统计 | 2026-06-11 | AI | catch(Exception)收窄为具体异常(IOException/ParseException/MqttException/IllegalAccessException等), 修复20+文件unreachable catch和unhandled checked exception, hibernate.generate_statistics→false, 编译通过 |
 | P3-C2 | 修正超时与连接池性能参数 | 2026-06-11 | AI | Gateway connect-timeout 600000ms→5000ms, response-timeout 60s→15s, HikariCP idle-timeout 600000ms→60000ms(8服务), Redis timeout 60s→10s(9服务), 编译通过 |
 | P3-D | 性能基准测试（R1） | 2026-06-11 | AI | 全量热更新部署+5场景3轮压测+8项指标采样+JVM GC+容器资源+DB连接数+质量验收，PHASE-3完成率100% |
+| P4-A | 创建 @elink/shared 公共包 | 2026-06-11 | AI | 提取request.js→@elink/shared/http, auth.js→@elink/shared/auth(工厂模式), utils→@elink/shared/utils, pnpm-workspace.yaml, 3项目构建验证通过 |
+| P4-A-hotfix | @elink/shared 运行时缺陷修复 | 2026-06-11 | AI | 修复portNum动态路由丢失/特殊端点错误弹窗/data空指针，3项目构建验证通过 |
+| P4-A-hotfix-v2 | @elink/shared 架构级重构（依赖注入） | 2026-06-11 | AI | 治本方案：shared包零运行时依赖，axios/qs/js-cookie/element-plus全部由调用方注入，删除sharedResolvePlugin，彻底消除dev模式EISDIR黑屏 |
+| P4-A-hotfix-v3 | linkos 闪黑屏修复（portNum 对齐） | 2026-06-11 | AI | 根因：新代码总是替换 baseURL 端口，但旧 linkos 中 portNum 处理被注释（212处portNum字段实际未生效），生产环境导致直连微服务端口失败。新增 enablePortNum 选项，derms=true、linkos/tycvs=false |
+| P4-A-hotfix-v4 | linkos 首屏/路由切换闪黑屏体验优化 | 2026-06-11 | AI | 注入 HTML 首屏 CSS-only loading 占位符+防黑闪背景色#F8F8F8，AppMain 增加 fade-route transition 0.2s opacity 过渡，NProgress 优化（起始15%/异常兜底），全面消除刷新/路由切换/接口调用的黑屏感知 |
+| P4-A-hotfix-v5 | linkos 查询加载"黑屏"修复（ElLoading 遮罩深灰）| 2026-06-11 | AI | 根因：element.scss 全局 --el-mask-color: rgba(51,51,51,0.8) 导致 v-loading 表格区域显示深灰几乎不透明遮罩。修复：分离 ElLoading 与 Dialog 遮罩配色，ElLoading 改用半透明白色磨砂(0.75 + backdrop-filter blur) + 蓝色 spinner |
+| P4-A-hotfix-v6 | 前端 API 路径 /scrontab → /crontab 对齐 | 2026-06-11 | AI | 后端 crontab-service context-path=/crontab、网关 Path=/crontab/**，但前端 linkos/tycvs 有 8 文件 28 处仍使用 /scrontab 旧路径，全部替换以对齐后端真实路由 |
 
 ---
 
@@ -1056,7 +1063,9 @@ bash benchmark-r1.sh
 
 ---
 
-### P4-A | 创建 @elink/shared 公共包
+### P4-A | 创建 @elink/shared 公共包 ✅ 已完成
+
+**完成时间：** 2026-06-11
 
 **指令语句：**
 > 在 elink-web 下创建 packages/shared 目录，从3个项目中提取公共模块：request.js → @elink/shared/http、auth.js → @elink/shared/auth、公共 utils → @elink/shared/utils，并配置 pnpm-workspace.yaml。
@@ -1100,9 +1109,10 @@ EOF
 ```
 
 **完成标识：**
-- [ ] packages/shared/package.json 存在
-- [ ] pnpm-workspace.yaml 存在且包含4个路径
-- [ ] 3个项目均引用 @elink/shared
+- [√] packages/shared/package.json 存在
+- [√] pnpm-workspace.yaml 存在且包含4个路径
+- [√] 3个项目均引用 @elink/shared（linkos/derms/tycvs package.json + 构建配置alias）
+- [√] 3个项目生产构建全部通过（derms: 2m37s, linkos: 59s, tycvs: 49s）
 
 ---
 

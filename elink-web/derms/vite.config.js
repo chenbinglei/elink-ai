@@ -73,6 +73,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": resolve("src"),
+        "@elink/shared": path.resolve(__dirname, '../packages/shared/src'),
         localStorage: resolve("./src/utils/localStorageUtil.js"),
       },
     },
