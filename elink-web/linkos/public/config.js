@@ -1,7 +1,7 @@
 Object.defineProperty(window, "siteConfig", {
   value: {
     // iemsUrl: "https://derms.enlinkitech.com",
-    iemsUrl: "http://47.110.235.112:21002/",
+    iemsUrl: window.__APP_CONFIG__?.iemsUrl || "",
    
   },
   writable: false,

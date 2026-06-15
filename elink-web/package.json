@@ -1,0 +1,28 @@
+{
+  "name": "elink-web-dev-manager",
+  "version": "1.0.0",
+  "description": "elink-web 前端开发环境管理器 - 统一管理 linkos/derms/tycvs 项目的启动、停止、重启与热更新",
+  "private": true,
+  "scripts": {
+    "dev:start-all": "node dev-manager.js start-all",
+    "dev:stop-all": "node dev-manager.js stop-all",
+    "dev:restart-all": "node dev-manager.js restart-all",
+    "dev:status": "node dev-manager.js status",
+    "dev:logs": "node dev-manager.js logs",
+    "dev:start:linkos": "node dev-manager.js start linkos",
+    "dev:start:derms": "node dev-manager.js start derms",
+    "dev:start:tycvs": "node dev-manager.js start tycvs",
+    "dev:stop:linkos": "node dev-manager.js stop linkos",
+    "dev:stop:derms": "node dev-manager.js stop derms",
+    "dev:stop:tycvs": "node dev-manager.js stop tycvs",
+    "dev:restart:linkos": "node dev-manager.js restart linkos",
+    "dev:restart:derms": "node dev-manager.js restart derms",
+    "dev:restart:tycvs": "node dev-manager.js restart tycvs",
+    "dev:logs:linkos": "node dev-manager.js logs linkos",
+    "dev:logs:derms": "node dev-manager.js logs derms",
+    "dev:logs:tycvs": "node dev-manager.js logs tycvs"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

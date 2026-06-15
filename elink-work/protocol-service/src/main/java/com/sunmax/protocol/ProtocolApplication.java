@@ -1,6 +1,5 @@
 package com.sunmax.protocol;
 
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import com.sunmax.common.dao.base.impl.BaseDaoImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableFeignClients //启启用feign客户端
 @EnableScheduling // 开启定时任务功能
-@EnableSwaggerBootstrapUI
 @EnableDiscoveryClient
 @EnableJpaAuditing
 @SpringBootApplication

@@ -1,9 +1,9 @@
 package com.sunmax.configure.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sunmax.common.config.redis.RedisDeviceUtil;
@@ -121,7 +121,7 @@ public class InterflowServiceImpl implements InterflowService {
                 //存储互联互通设备接口记录表数据
                 List<InterflowConnectorEntity> interflowConnectorEntities = Lists.newArrayList();
                 //获取站点列表对象信息
-                JSONArray.parseArray(String.valueOf(jsonData.get("StationInfos")), StationInfoDto.class).forEach(stationInfoDto -> {
+                JSON.parseArray(String.valueOf(jsonData.get("StationInfos")), StationInfoDto.class).forEach(stationInfoDto -> {
                     //站点记录数据
                     InterflowStationEntity interflowStationEntity = new InterflowStationEntity();
                     BeanUtils.copyProperties(stationInfoDto, interflowStationEntity);
@@ -301,7 +301,7 @@ public class InterflowServiceImpl implements InterflowService {
         //处理设备接口信息
         String connectorInfos = InterflowEquipmentEntity.getConnectorInfos();
         if (isNotEmpty(connectorInfos)) {
-            List<ConnectorInfoDto> connectorInfoDtoList = JSONArray.parseArray(connectorInfos, ConnectorInfoDto.class);
+            List<ConnectorInfoDto> connectorInfoDtoList = JSON.parseArray(connectorInfos, ConnectorInfoDto.class);
             vo.setInterflowGunVoList(connectorInfoDtoList.stream().map(connectorInfoDto -> {
                 InterflowGunVo interflowGunVo = new InterflowGunVo();
                 //获取电枪编码
@@ -707,7 +707,7 @@ public class InterflowServiceImpl implements InterflowService {
                 JSONArray stationStatusInfos = jsonObject.getJSONArray("StationStatusInfos");
                 stationStatusInfos.forEach(item -> {
                     JSONObject stationStatusInfo = (JSONObject) item;
-                    resultMap.put(stationStatusInfo.getString("StationID"), JSONObject.parseArray(stationStatusInfo.getString("ConnectorStatusInfos"), ConnectorStatusInfoDto.class)
+                    resultMap.put(stationStatusInfo.getString("StationID"), JSON.parseArray(stationStatusInfo.getString("ConnectorStatusInfos"), ConnectorStatusInfoDto.class)
                             .stream().map(connectorStatusInfoDto -> {
                                 GunStatusInfoDto gunStatusInfoDto = new GunStatusInfoDto();
                                 JSONObject jsonObject1 = this.getPileCodeAndGunCode(platformId, connectorStatusInfoDto.getConnectorId());
@@ -870,7 +870,7 @@ public class InterflowServiceImpl implements InterflowService {
 //                "    }";
 //
 ////        notificationEquipChargeStatus1(test);
-//        List<StationInfoDto> stationInfoDtos = JSONArray.parseArray(test, StationInfoDto.class);
+//        List<StationInfoDto> stationInfoDtos = JSON.parseArray(test, StationInfoDto.class);
 //        Map<String, String> parseAddress = parseAddress("浙江省绍兴市柯桥区湖塘街道湖庵村");
 //        String province = parseAddress.get("province");
 //        String city = parseAddress.get("city");

@@ -1,6 +1,6 @@
 package com.sunmax.protocol.task;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.protocol.model.GatewayDemandModel;
 import com.sunmax.protocol.model.PileDemandModel;
 import lombok.extern.slf4j.Slf4j;

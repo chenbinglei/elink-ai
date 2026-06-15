@@ -1,10 +1,10 @@
 package com.sunmax.device.dto.task;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "EventStoreDataDto", description = "事件存储数据实体类")
+@Schema(description = "事件存储数据实体类")
 public class EventStoreDataDto {
 
     /**

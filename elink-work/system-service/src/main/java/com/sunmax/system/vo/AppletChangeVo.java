@@ -1,83 +1,82 @@
 package com.sunmax.system.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "AppletChangeVo", description = "小程序编辑参数实体类")
+@Schema(description = "小程序编辑参数实体类")
 public class AppletChangeVo {
 
     /**
      * 主键id
      */
-    @ApiModelProperty(value = "主键id")
+    @Schema(description = "主键id")
     private String id;
 
     /**
      * 小程序名称
      */
-    @ApiModelProperty(value = "小程序名称", required = true)
+    @Schema(description = "小程序名称")
     private String appletName;
 
     /**
      * 小程序id
      */
-    @ApiModelProperty(value = "小程序id", required = true)
+    @Schema(description = "小程序id")
     private String appletCode;
 
     /**
      * 小程序密钥
      */
-    @ApiModelProperty(value = "小程序密钥", required = true)
+    @Schema(description = "小程序密钥")
     private String appletSecret;
 
     /**
      * 小程序类型 1-微信 2-支付宝
      */
-    @ApiModelProperty(value = "小程序类型 1-微信 2-支付宝", required = true)
+    @Schema(description = "小程序类型 1-微信 2-支付宝")
     private Integer appletType;
 
     /**
      * 联系电话
      */
-    @ApiModelProperty(value = "联系电话")
+    @Schema(description = "联系电话")
     private String phone;
 
     /**
      * 邮箱
      */
-    @ApiModelProperty(value = "邮箱")
+    @Schema(description = "邮箱")
     private String email;
 
     /**
      * 公众号名称
      */
-    @ApiModelProperty(value = "公众号名称")
+    @Schema(description = "公众号名称")
     private String tencentName;
 
     /**
      * 公众号id
      */
-    @ApiModelProperty(value = "公众号id")
+    @Schema(description = "公众号id")
     private String tencentCode;
 
     /**
      * 公众号密钥
      */
-    @ApiModelProperty(value = "公众号密钥")
+    @Schema(description = "公众号密钥")
     private String tencentSecret;
 
     /**
      * 绑定多个租户id
      */
-    @ApiModelProperty(value = "绑定多个租户id")
+    @Schema(description = "绑定多个租户id")
     private String tenantIds;
 
     /**
      * 用户id
      */
-    @ApiModelProperty(value = "用户id", required = true)
+    @Schema(description = "用户id")
     private String userId;
 
 }

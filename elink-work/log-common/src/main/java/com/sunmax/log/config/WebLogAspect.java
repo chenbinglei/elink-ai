@@ -1,7 +1,7 @@
 package com.sunmax.log.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.log.dao.AccessLogDao;
 import com.sunmax.log.entity.AccessLogEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +13,12 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -109,9 +108,9 @@ public class WebLogAspect {
      * @return
      */
     public static String getClientId(Authentication authentication) {
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication oauthAuthentication = (OAuth2Authentication) authentication;
-            return oauthAuthentication.getOAuth2Request().getClientId();
+        if (authentication != null && authentication.getDetails() instanceof JSONObject) {
+            JSONObject details = (JSONObject) authentication.getDetails();
+            return details.getString("clientId");
         }
         return null;
     }

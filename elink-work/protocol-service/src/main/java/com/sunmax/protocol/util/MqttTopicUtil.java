@@ -1,6 +1,6 @@
 package com.sunmax.protocol.util;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sunmax.common.config.redis.KeyUtil;

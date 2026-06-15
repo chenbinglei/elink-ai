@@ -1,41 +1,40 @@
 package com.sunmax.together.vo.operation.storageCount;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "StorageCountVo", description = "储能统计入参实体类")
+@Schema(description = "储能统计入参实体类")
 public class StorageCountVo {
 
     /**
      * 查询类型 1-站点 2-设备
      */
-    @ApiModelProperty(value = "查询类型 1-站点 2-设备", required = true)
+    @Schema(description = "查询类型 1-站点 2-设备")
     private Integer queryType;
 
     /**
      * 查询数据id
      */
-    @ApiModelProperty(value = "查询数据id", required = true)
+    @Schema(description = "查询数据id")
     private String dataId;
 
     /**
      * 日期类型 1-日 2-月 3-年
      */
-    @ApiModelProperty(value = "日期类型 1-日 2-月 3-年", required = true)
+    @Schema(description = "日期类型 1-日 2-月 3-年")
     private Integer dateType;
 
     /**
      * 开始日期(yyyy-MM-dd)
      */
-    @ApiModelProperty(value = "开始日期(yyyy-MM-dd)", required = true)
+    @Schema(description = "开始日期(yyyy-MM-dd)")
     private String startDate;
 
     /**
      * 结束日期(yyyy-MM-dd)
      */
-    @ApiModelProperty(value = "结束日期(yyyy-MM-dd)", required = true)
+    @Schema(description = "结束日期(yyyy-MM-dd)")
     private String endDate;
 
 }

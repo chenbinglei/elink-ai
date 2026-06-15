@@ -1,59 +1,58 @@
 package com.sunmax.configure.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "DataSourceChangeVo", description = "数据源编辑参数实体类")
+@Schema(description = "数据源编辑参数实体类")
 public class DataSourceChangeVo {
 
     /**
      * 主键id
      */
-    @ApiModelProperty(value = "主键id")
+    @Schema(description = "主键id")
     private String id;
 
     /**
      * 数据源名称
      */
-    @ApiModelProperty(value = "数据源名称", required = true)
+    @Schema(description = "数据源名称")
     private String name;
 
     /**
      * 通信方式 1-websocket 2-http 3-mqtt
      */
-    @ApiModelProperty(value = "通信方式 1-websocket 2-http 3-mqtt", required = true)
+    @Schema(description = "通信方式 1-websocket 2-http 3-mqtt")
     private Integer type;
 
     /**
      * url地址
      */
-    @ApiModelProperty(value = "url地址", required = true)
+    @Schema(description = "url地址")
     private String url;
 
     /**
      * 描述
      */
-    @ApiModelProperty(value = "描述")
+    @Schema(description = "描述")
     private String description;
 
     /**
      * 动态字段
      */
-    @ApiModelProperty(value = "动态字段", required = true)
+    @Schema(description = "动态字段")
     private String dynamicField;
 
     /**
      * 请求参数Key
      */
-    @ApiModelProperty(value = "请求参数Key")
+    @Schema(description = "请求参数Key")
     private String requestKey;
 
     /**
      * 用户id
      */
-    @ApiModelProperty(value = "用户id", required = true)
+    @Schema(description = "用户id")
     private String userId;
 
 }

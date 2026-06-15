@@ -5,33 +5,32 @@ import com.sunmax.common.util.ResponseResult;
 import com.sunmax.common.vo.protocol.PileStartVo;
 import com.sunmax.common.vo.protocol.PileStopVo;
 import com.sunmax.protocol.service.PileCtrlService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/feign/swebapp")
-@Api(tags = "提供给webapp服务调用的远程接口")
-@ApiIgnore()
+@Tag(name = "提供给webapp服务调用的远程接口")
+@Hidden()
 public class WebAppFeignController {
 
     @Resource
     private PileCtrlService pileCtrlService;
 
     @PostMapping("pileStart")
-    @ApiOperation("启动充电桩")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "启动充电桩")
+    
     public ResponseResult<PileResultDto> pileStart(@RequestBody PileStartVo pileStartVo) {
         return pileCtrlService.pileStart(pileStartVo);
     }
     @PostMapping("pileStop")
-    @ApiOperation("停止充电桩")
-    @ApiOperationSupport(order = 2)
+    @Operation(summary = "停止充电桩")
+    
     public ResponseResult<PileResultDto> pileStop(@RequestBody PileStopVo pileStopVo) {
         return pileCtrlService.pileStop(pileStopVo);
     }

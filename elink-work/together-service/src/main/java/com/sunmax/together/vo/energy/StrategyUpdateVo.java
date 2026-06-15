@@ -1,32 +1,31 @@
 package com.sunmax.together.vo.energy;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 策略编辑参数实体类
  */
 @Data
-@ApiModel(value = "StrategyUpdateVo", description = "策略编辑参数实体类")
+@Schema(description = "策略编辑参数实体类")
 public class StrategyUpdateVo {
 
     /**
      * 主键id
      */
-    @ApiModelProperty(value = "主键id", required = true)
+    @Schema(description = "主键id")
     private String id;
 
     /**
      * 策略名称
      */
-    @ApiModelProperty(value = "策略名称", required = true)
+    @Schema(description = "策略名称")
     private String strategyName;
 
     /**
      * 用户id
      */
-    @ApiModelProperty(value = "用户id", required = true)
+    @Schema(description = "用户id")
     private String userId;
 
 }

@@ -1,8 +1,8 @@
 package com.sunmax.protocol.util.platform;
 
 import cn.hutool.http.HttpRequest;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.common.util.oss.FileUtil;
@@ -10,7 +10,7 @@ import com.sunmax.protocol.dto.platform.PlatformDataDto;
 import com.sunmax.protocol.runner.ProtocolRunner;
 import com.sunmax.protocol.vo.PlatformRequestVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 

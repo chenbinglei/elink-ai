@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,25 +13,25 @@ public class VehicleInfoResVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 车辆VIN码
      */
-    @ApiModelProperty(value = "车辆VIN码", required = true)
+    @Schema(description = "车辆VIN码")
     private String busVin;
 
     /**
      * SOC值 范围 0～100，精度 1%
      */
-    @ApiModelProperty(value = "SOC值", required = true)
+    @Schema(description = "SOC值")
     private Integer soc;
 
 }

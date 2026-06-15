@@ -1,6 +1,6 @@
 package com.sunmax.configure.util;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.dto.system.PlatformDataForwardDto;
 import com.sunmax.common.enums.ProtocolEnum;
 import com.sunmax.common.util.ResponseResult;
@@ -17,7 +17,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Objects;
 
 @Component
@@ -127,7 +127,7 @@ public class HttpResponseUtil {
 
     public static void main(String[] args) {
         String data = "{\"PageNo\":1,\"PageSize\":10}";
-        String encrypt = AESUtil.encrypt("RVPxJ4aiZwMxnGri", "kWKNeZyRYVCgYlX1", data);
+        String encrypt = AESUtil.encrypt(DATA_SECRET, DATA_SECRET_IV, data);
         System.out.println(encrypt);
     }
 

@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,7 +13,7 @@ public class SubLinkUpNotifyVo {
     /**
      * 设备id
      */
-    @ApiModelProperty(value = "设备id", required = true)
+    @Schema(description = "设备id")
     private String deviceId;
 
     /**
@@ -21,19 +21,19 @@ public class SubLinkUpNotifyVo {
      * ONLINE：设备在线
      * OFFLINE：设备离线
      */
-    @ApiModelProperty(value = "子设备状态", required = true)
+    @Schema(description = "子设备状态")
     private String status;
 
     /**
      * 子设备上线原因 1-复位上线 2-离网上线 3-离网断开
      */
-    @ApiModelProperty(value = "子设备上线原因", required = true)
+    @Schema(description = "子设备上线原因")
     private Integer reason;
 
     /**
      * 特征码
      */
-    @ApiModelProperty(value = "特征码", required = true)
+    @Schema(description = "特征码")
     private Long featureCode;
 
 }

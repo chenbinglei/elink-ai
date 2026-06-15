@@ -1,4 +1,8 @@
 package com.sunmax.webapp.controller;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 import com.sunmax.common.dto.system.AppletDto;
 import com.sunmax.common.dto.together.AppletUserInfoDto;
@@ -11,7 +15,7 @@ import com.sunmax.webapp.dto.WechatMchTransferDto;
 import com.sunmax.webapp.service.UserInfoService;
 import com.sunmax.webapp.service.feign.SystemService;
 import com.sunmax.webapp.vo.AppletTradeQueryVo;
-import io.swagger.annotations.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +28,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("userInfo")
-@Api(tags = "用户信息管理")
+@Tag(name = "用户信息管理")
 public class UserInfoController {
 
     @Autowired
@@ -34,10 +38,10 @@ public class UserInfoController {
     private SystemService systemService;
 
     @PostMapping("queryAppletUserInfoById")
-    @ApiOperation("根据小程序用户id查询基本信息")
-    @ApiOperationSupport(order = 1)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "appletUserId", value = "小程序用户id", paramType = "query", required = true)
+    @Operation(summary = "根据小程序用户id查询基本信息")
+    
+    @Parameters({
+            @Parameter(name = "appletUserId", description = "小程序用户id")
     })
     public ResponseResult<AppletUserInfoDto> queryAppletUserInfoById(String appletUserId) {
         /*appletUserId = SecretUtil.desEncrypt(appletUserId);
@@ -48,15 +52,15 @@ public class UserInfoController {
     }
 
     @PostMapping("updateAppletUser")
-    @ApiOperation("编辑小程序用户")
-    @ApiOperationSupport(order = 2)
+    @Operation(summary = "编辑小程序用户")
+    
     public ResponseResult<String> updateAppletUser(AppletUserChangeVo appletUserChangeVo) {
         return userInfoService.updateAppletUser(appletUserChangeVo);
     }
 
     @PostMapping("findAppletByAppletCode")
-    @ApiOperation("根据小程序id查询小程序数据")
-    @ApiOperationSupport(order = 3)
+    @Operation(summary = "根据小程序id查询小程序数据")
+    
     public ResponseResult<AppletDto> findAppletByAppletCode(String appletCode) {
         AppletDto appletDto = systemService.findAppletByAppletCode(appletCode).getData();
         appletDto.setAppletSecret(null);
@@ -65,30 +69,30 @@ public class UserInfoController {
     }
 
     @PostMapping("findAppletDisWalletListById")
-    @ApiOperation("根据小程序用户id查询用户V2G钱包列表")
-    @ApiOperationSupport(order = 4)
-    @ApiImplicitParam(name = "appletUserId", value = "小程序用户唯一id", paramType = "String", required = true)
+    @Operation(summary = "根据小程序用户id查询用户V2G钱包列表")
+    
+    @Parameter(name = "appletUserId", description = "小程序用户唯一id")
     public ResponseResult<List<AppletDisWalletDto>> findAppletDisWalletListById(String appletUserId) {
         return userInfoService.findAppletDisWalletListById(appletUserId);
     }
 
     @PostMapping("submitAppletCancel")
-    @ApiOperation("提交小程序用户注销申请")
-    @ApiOperationSupport(order = 5)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "appletUserId", value = "小程序用户id", paramType = "String", required = true),
-            @ApiImplicitParam(name = "appletName", value = "小程序名称", paramType = "String", required = true)
+    @Operation(summary = "提交小程序用户注销申请")
+    
+    @Parameters({
+            @Parameter(name = "appletUserId", description = "小程序用户id"),
+            @Parameter(name = "appletName", description = "小程序名称")
     })
     public ResponseResult<String> submitAppletCancel(String appletUserId, String appletName) {
         return userInfoService.submitAppletCancel(appletUserId, appletName);
     }
 
     @PostMapping("updateAppletUserPhoneById")
-    @ApiOperation("根据小程序用户id更新手机号")
-    @ApiOperationSupport(order = 6)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "appletUserId", value = "小程序用户id", paramType = "String", required = true),
-            @ApiImplicitParam(name = "phoneNum", value = "手机号", paramType = "query", required = true)
+    @Operation(summary = "根据小程序用户id更新手机号")
+    
+    @Parameters({
+            @Parameter(name = "appletUserId", description = "小程序用户id"),
+            @Parameter(name = "phoneNum", description = "手机号")
     })
     public ResponseResult<String> updateAppletUserPhoneById(String appletUserId, String phoneNum) {
         phoneNum = SecretUtil.desEncrypt(phoneNum);
@@ -96,20 +100,20 @@ public class UserInfoController {
     }
 
     @PostMapping("withdrawMoney")
-    @ApiOperation("小程序用户提现放电收益")
-    @ApiOperationSupport(order = 7)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "appletUserId", value = "小程序用户id", paramType = "String", required = true),
-            @ApiImplicitParam(name = "disWalletId", value = "小程序放电钱包id", paramType = "String", required = true),
-            @ApiImplicitParam(name = "money", value = "提现金额", paramType = "query", required = true)
+    @Operation(summary = "小程序用户提现放电收益")
+    
+    @Parameters({
+            @Parameter(name = "appletUserId", description = "小程序用户id"),
+            @Parameter(name = "disWalletId", description = "小程序放电钱包id"),
+            @Parameter(name = "money", description = "提现金额")
     })
     public ResponseResult<WechatMchTransferDto> withdrawAppletUserMoney(String appletUserId, String disWalletId, BigDecimal money) {
         return userInfoService.withdrawAppletUserMoney(appletUserId, disWalletId, money);
     }
 
     @PostMapping("queryAppletTradeList")
-    @ApiOperation("查询小程序用户交易明细列表")
-    @ApiOperationSupport(order = 8)
+    @Operation(summary = "查询小程序用户交易明细列表")
+    
     public ResponseResult<List<AppletTradeListDto>> queryAppletTradeList(AppletTradeQueryVo appletTradeQueryVo) {
         return userInfoService.queryAppletTradeList(appletTradeQueryVo);
     }

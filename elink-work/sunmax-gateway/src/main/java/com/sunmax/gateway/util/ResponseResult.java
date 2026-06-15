@@ -20,7 +20,7 @@ public class ResponseResult<T> implements Serializable {
 
     public static final String PARAM_ERROR = "参数错误";
 
-    public static final String PAEAM_PARSE_ERROR = "参数解析错误";
+    public static final String PARAM_PARSE_ERROR = "参数解析错误";
 
     public static final String PARAM_EXIST = "参数已存在";
 

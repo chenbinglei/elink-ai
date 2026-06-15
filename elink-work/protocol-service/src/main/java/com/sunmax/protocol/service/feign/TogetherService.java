@@ -5,10 +5,9 @@ import com.sunmax.common.dto.operate.OccupyPileRateDto;
 import com.sunmax.common.dto.together.UserGroupInfoDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.common.vo.protocol.mqtt.web.response.EventRateReqPublicVo;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,50 +17,48 @@ import java.util.Map;
 /**
  * 接收聚合服务提供的接口
  */
-@FeignClient(value = "together-service")
-@RestController
-@RequestMapping("/together/feign/protocol")
+@FeignClient(value = "together-service", path = "/together/feign/protocol")
 public interface TogetherService {
 
     @PostMapping("queryUserDiscountByPhoneNum")
-    @ApiOperation("根据电桩编码和用户手机号查询用户折扣")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "根据电桩编码和用户手机号查询用户折扣")
+    
     ResponseResult<UserGroupInfoDto> queryUserDiscountByPhoneNum(@RequestParam String pileCode, @RequestParam String phoneNum);
 
     @PostMapping("checkAccountCode")
-    @ApiOperation("校验账号是否在白名单中")
-    @ApiOperationSupport(order = 2)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "pileCode", value = "电桩编码", dataType = "String", required = true),
-            @ApiImplicitParam(name = "accountCode", value = "账号", paramType = "query", required = true)
+    @Operation(summary = "校验账号是否在白名单中")
+    
+    @Parameters({
+            @Parameter(name = "pileCode", description = "电桩编码"),
+            @Parameter(name = "accountCode", description = "账号")
     })
     ResponseResult<Boolean> checkAccountCode(@RequestParam String pileCode, @RequestParam String accountCode);
 
     @PostMapping("findOccupyPileRateByPileCodes")
-    @ApiOperation("根据多个电桩编码查询占桩计费数据")
-    @ApiOperationSupport(order = 3)
+    @Operation(summary = "根据多个电桩编码查询占桩计费数据")
+    
     ResponseResult<Map<String, OccupyPileRateDto>> findOccupyPileRateByPileCodes(@RequestBody List<String> pileCodes);
 
     @PostMapping("findChargerRateListByPileCodes")
-    @ApiOperation("根据多个电桩编码查询充放电费率列表")
-    @ApiOperationSupport(order = 4)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "pileCodes", value = "多个电桩编码", dataType = "String", required = true),
-            @ApiImplicitParam(name = "priceType", value = "价格类型 1-充电 2-放电", paramType = "query", required = true)
+    @Operation(summary = "根据多个电桩编码查询充放电费率列表")
+    
+    @Parameters({
+            @Parameter(name = "pileCodes", description = "多个电桩编码"),
+            @Parameter(name = "priceType", description = "价格类型 1-充电 2-放电")
     })
     ResponseResult<Map<String, List<ChargerPriceRateDto>>> findChargerRateListByPileCodes(@RequestBody List<String> pileCodes, @RequestParam Integer priceType);
 
     @PostMapping("findSiteRateInfoByPileCodes")
-    @ApiOperation("根据多个电桩编码查询站点充放电费率")
-    @ApiOperationSupport(order = 5)
-    @ApiImplicitParam(name = "pileCodes", value = "多个电桩编码", dataType = "String", required = true)
+    @Operation(summary = "根据多个电桩编码查询站点充放电费率")
+    
+    @Parameter(name = "pileCodes", description = "多个电桩编码")
     ResponseResult<Map<String, EventRateReqPublicVo>> findSiteRateInfoByPileCodes(@RequestBody List<String> pileCodes);
 
     @PostMapping("findChargerRateListByPriceInfoIds")
-    @ApiOperation("根据多个费率id查询充放电费率列表")
-    @ApiOperationSupport(order = 6)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "priceInfoIds", value = "多个费率id", dataType = "String", required = true)
+    @Operation(summary = "根据多个费率id查询充放电费率列表")
+    
+    @Parameters({
+            @Parameter(name = "priceInfoIds", description = "多个费率id")
     })
     ResponseResult<Map<String, List<ChargerPriceRateDto>>> findChargerRateListByPriceInfoIds(@RequestBody List<String> priceInfoIds);
 

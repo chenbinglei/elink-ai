@@ -1,7 +1,8 @@
 package com.sunmax.common.util;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.alibaba.fastjson2.annotation.JSONType;
+import com.alibaba.fastjson2.JSONWriter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,8 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("ResponseResult")
+@Schema(description = "ResponseResult")
+@JSONType(serializeFeatures = {JSONWriter.Feature.NotWriteRootClassName})
 public class ResponseResult<T> implements Serializable {
 
     private static final long serialVersionUID = 3468352004150968551L;
@@ -40,25 +42,25 @@ public class ResponseResult<T> implements Serializable {
     /**
      * 状态码 20000-请求成功 20001-前端展示错误 20004-熔断请求 50000-请求失败 50001-非法请求 50015-服务器认证失败 9999-token失效
      */
-    @ApiModelProperty("状态码 20000-请求成功 20001-前端展示错误 20004-熔断请求 50000-请求失败 50001-非法请求 50015-服务器认证失败 9999-token失效")
+    @Schema(description = "状态码 20000-请求成功 20001-前端展示错误 20004-熔断请求 50000-请求失败 50001-非法请求 50015-服务器认证失败 9999-token失效")
     private Integer code;
 
     /**
      * 返回信息
      */
-    @ApiModelProperty("返回信息")
+    @Schema(description = "返回信息")
     private String message;
 
     /**
      * 返回对象
      */
-    @ApiModelProperty("返回数据")
+    @Schema(description = "返回数据")
     private T data;
 
     /**
      * 返回状态 20000-true 其它的-false
      */
-    @ApiModelProperty("返回状态 20000-true 其它的-false")
+    @Schema(description = "返回状态 20000-true 其它的-false")
     private boolean success;
 
 

@@ -1,7 +1,7 @@
 package com.sunmax.common.dto.protocol.mqtt.inter;
 
 import com.sunmax.common.dto.protocol.mqtt.web.model.CostFormat;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -16,43 +16,43 @@ public class RateResDto {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 充电费率id
      */
-    @ApiModelProperty(value = "充电费率id", required = true)
+    @Schema(description = "充电费率id")
     private String cRateId;
 
     /**
      * 充电费率时段时段数量
      */
-    @ApiModelProperty(value = "充电费率时段时段数量", required = true)
+    @Schema(description = "充电费率时段时段数量")
     private Integer cTimeFrameNum;
 
     /**
      * 充电费率
      */
-    @ApiModelProperty(value = "充电费率", required = true)
+    @Schema(description = "充电费率")
     private List<CostFormat> cTimeFrameRate;
 
     /**
      * 放电费率id
      */
-    @ApiModelProperty(value = "放电费率id", required = true)
+    @Schema(description = "放电费率id")
     private String dRateId;
 
     /**
      * 放电费率时段时段数量
      */
-    @ApiModelProperty(value = "放电费率时段时段数量", required = true)
+    @Schema(description = "放电费率时段时段数量")
     private Integer dTimeFrameNum;
 
     /**
      * 放电费率
      */
-    @ApiModelProperty(value = "放电费率", required = true)
+    @Schema(description = "放电费率")
     private List<CostFormat> dTimeFrameRate;
 
 }

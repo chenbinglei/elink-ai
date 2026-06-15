@@ -2,7 +2,7 @@ package com.sunmax.common.config.wechat;
 
 import com.sunmax.common.util.StringUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;

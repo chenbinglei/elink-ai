@@ -1,12 +1,10 @@
 package com.sunmax.common.util.oss;
 
-
 import com.sunmax.common.util.StringUtil;
 import com.sunmax.common.util.local.LocalFileUtil;
 import com.sunmax.common.util.local.LocalImageUtil;
 import com.sunmax.common.vo.LocalParamVo;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -77,7 +75,7 @@ public class FileUtil {
      * @param end   第一次出现的字符串中的字符
      */
     public static String subString(String name, String start, String end) {
-        if (StringUtils.isNotEmpty(start) && StringUtils.isNotEmpty(end)) {
+        if (StringUtil.isNotEmpty(start) && StringUtil.isNotEmpty(end)) {
             return name.substring(name.lastIndexOf(start) + 1, name.indexOf(end));
         } else {
             return null;

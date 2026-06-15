@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -15,31 +15,31 @@ public class PileFaultReportVo {
     /**
      * 电桩紧急停止故障
      */
-    @ApiModelProperty(value = "紧急停止故障", required = true)
+    @Schema(description = "紧急停止故障")
     private Integer emergencyStopFault;
 
     /**
      * 电桩通用故障
      */
-    @ApiModelProperty(value = "电桩通用故障", required = true)
+    @Schema(description = "电桩通用故障")
     private Integer generalFault;
 
     /**
      * Tcu上报故障
      */
-    @ApiModelProperty(value = "Tcu上报故障", required = true)
+    @Schema(description = "Tcu上报故障")
     private Integer tcuReportFault;
 
     /**
      * 充放电接口故障
      */
-    @ApiModelProperty(value = "充放电接口故障", required = true)
+    @Schema(description = "充放电接口故障")
     private List<ItfRunFault> gun_fault;
 
     /**
      * 电力模块故障
      */
-    @ApiModelProperty(value = "电力模块故障", required = true)
+    @Schema(description = "电力模块故障")
     private List<EleModuleFault> emodule_fault;
 
     @Data
@@ -48,37 +48,37 @@ public class PileFaultReportVo {
         /**
          * 枪标识
          */
-        @ApiModelProperty(value = "枪标识", required = true)
+        @Schema(description = "枪标识")
         private Integer gunCode;
 
         /**
          * ccu上报故障信息
          */
-        @ApiModelProperty(value = "ccu上报故障信息", required = true)
+        @Schema(description = "ccu上报故障信息")
         private Integer ccuReportFault;
 
         /**
          * 车辆BMS故障信息
          */
-        @ApiModelProperty(value = "车辆BMS故障信息", required = true)
+        @Schema(description = "车辆BMS故障信息")
         private Integer bmsReportFault;
 
         /**
          * ccu超时类故障信息
          */
-        @ApiModelProperty(value = "ccu超时类故障信息", required = true)
+        @Schema(description = "ccu超时类故障信息")
         private Integer ccuTimeOutFault;
 
         /**
          * Bms超时类故障
          */
-        @ApiModelProperty(value = "Bms超时类故障", required = true)
+        @Schema(description = "Bms超时类故障")
         private Integer bmsTimeOutFault;
 
         /**
          * 绝缘监测故障
          */
-        @ApiModelProperty(value = "绝缘监测故障", required = true)
+        @Schema(description = "绝缘监测故障")
         private Integer idmFault;
     }
 
@@ -88,19 +88,19 @@ public class PileFaultReportVo {
         /**
          * 模块地址
          */
-        @ApiModelProperty(value = "模块地址", required = true)
+        @Schema(description = "模块地址")
         private Integer addr;
 
         /**
          * pcu上报故障信息
          */
-        @ApiModelProperty(value = "pcu上报故障信息", required = true)
+        @Schema(description = "pcu上报故障信息")
         private Integer pcuReportFault;
 
         /**
          * pcu超时类故障信息
          */
-        @ApiModelProperty(value = "pcu超时类故障信息", required = true)
+        @Schema(description = "pcu超时类故障信息")
         private Integer pcuTimeOutFault;
 
     }

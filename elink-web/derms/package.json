@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue src",
     "fix": "eslint --ext .js,.vue src --fix",
-    "analyze": "vite build --mode analyze"
+    "analyze": "vite build --mode analyze",
+    "setup:env": "test -f .env || (cp .env.example .env && echo 'Created .env from .env.example - please fill in actual values')"
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",

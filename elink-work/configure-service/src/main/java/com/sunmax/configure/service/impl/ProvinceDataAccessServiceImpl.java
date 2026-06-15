@@ -1,8 +1,8 @@
 package com.sunmax.configure.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -110,7 +110,7 @@ public class ProvinceDataAccessServiceImpl implements ProvinceDataAccessService 
 
                 //如果传了站点id查询，则按照站点id过滤
                 if (StringUtil.isNotEmpty(stationIds)) {
-                    List<String> provinceStationIdList = JSONObject.parseArray(stationIds, String.class);
+                    List<String> provinceStationIdList = JSON.parseArray(stationIds, String.class);
                     siteInfoDtoList = siteInfoDtoList.stream().filter(item -> provinceStationIdList.stream().anyMatch(stationId -> stationId.equals(item.getId()))).collect(Collectors.toList());
                 }
                 if (CollectionUtils.isNotEmpty(siteInfoDtoList)) {
@@ -325,7 +325,7 @@ public class ProvinceDataAccessServiceImpl implements ProvinceDataAccessService 
 
                 //如果传了站点id查询，则按照站点id过滤
                 if (StringUtil.isNotEmpty(stationIds)) {
-                    List<String> provinceStationIdList = JSONObject.parseArray(stationIds, String.class);
+                    List<String> provinceStationIdList = JSON.parseArray(stationIds, String.class);
                     siteInfoDtoList = siteInfoDtoList.stream().filter(item -> provinceStationIdList.stream().anyMatch(stationId -> stationId.equals(item.getId()))).collect(Collectors.toList());
                 }
                 if (CollectionUtils.isNotEmpty(siteInfoDtoList)) {

@@ -1,7 +1,6 @@
 package com.sunmax.common.vo.system;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,49 +10,49 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel(value = "MqttClientVo", description = "mqtt客户端实体类")
+@Schema(description = "mqtt客户端实体类")
 public class MqttClientVo {
 
     /**
      * 接入协议标识
      */
-    @ApiModelProperty(value = "接入协议标识", required = true)
+    @Schema(description = "接入协议标识")
     private String protocolCode;
 
     /**
      * 客户端id
      */
-    @ApiModelProperty(value = "客户端id", required = true)
+    @Schema(description = "客户端id")
     private String clientId;
 
     /**
      * 厂商标识
      */
-    @ApiModelProperty(value = "厂商标识", required = true)
+    @Schema(description = "厂商标识")
     private String vendor;
 
     /**
      * 网关编码
      */
-    @ApiModelProperty(value = "网关编码", required = true)
+    @Schema(description = "网关编码")
     private String gwSn;
 
     /**
      * 地址
      */
-    @ApiModelProperty(value = "地址", required = true)
+    @Schema(description = "地址")
     private String address;
 
     /**
      * 用户名
      */
-    @ApiModelProperty(value = "用户名", required = true)
+    @Schema(description = "用户名")
     private String username;
 
     /**
      * 密码
      */
-    @ApiModelProperty(value = "密码", required = true)
+    @Schema(description = "密码")
     private String password;
 
 }

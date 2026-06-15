@@ -1,13 +1,13 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
 @Data
-@ApiModel(value = "ModbusInfoReportVo", description = "Modbus协议数据上报实体类")
+@Schema(description = "Modbus协议数据上报实体类")
 public class ModbusInfoReportVo {
 
     private String chld;

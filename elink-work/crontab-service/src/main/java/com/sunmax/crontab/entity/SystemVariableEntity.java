@@ -4,7 +4,7 @@ import com.sunmax.common.entity.BaseEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @Author: yqz

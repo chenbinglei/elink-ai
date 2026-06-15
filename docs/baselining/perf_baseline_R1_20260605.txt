@@ -1,0 +1,102 @@
+================================================
+  R1 Performance Baseline Test
+  Date: 2026-06-05 14:02:34
+  Host: 192.168.2.158
+  Mode: Direct service port access
+  Iterations: 30
+================================================
+
+--- Gateway Health --- ✅ 30/30
+  URL: http://192.168.2.158:5000/actuator/health
+  平均: 11ms | 最小: 8ms | 最大: 17ms | P95≈17ms
+  状态码:      30 200 
+
+--- Auth Health --- ✅ 30/30
+  URL: http://192.168.2.158:60001/sauth/actuator/health
+  平均: 14ms | 最小: 10ms | 最大: 21ms | P95≈21ms
+  状态码:      30 200 
+
+--- System Health --- ✅ 30/30
+  URL: http://192.168.2.158:60002/system/actuator/health
+  平均: 12ms | 最小: 9ms | 最大: 26ms | P95≈26ms
+  状态码:      30 200 
+
+--- Device Health --- ✅ 30/30
+  URL: http://192.168.2.158:60003/device/actuator/health
+  平均: 16ms | 最小: 10ms | 最大: 20ms | P95≈20ms
+  状态码:      30 200 
+
+--- Data Health --- ✅ 30/30
+  URL: http://192.168.2.158:60004/data/actuator/health
+  平均: 18ms | 最小: 12ms | 最大: 23ms | P95≈23ms
+  状态码:      30 200 
+
+--- Protocol Health --- ✅ 30/30
+  URL: http://192.168.2.158:60005/protocol/actuator/health
+  平均: 17ms | 最小: 12ms | 最大: 22ms | P95≈22ms
+  状态码:      30 200 
+
+--- Crontab Health --- ✅ 30/30
+  URL: http://192.168.2.158:60006/scrontab/actuator/health
+  平均: 2ms | 最小: 1ms | 最大: 12ms | P95≈12ms
+  状态码:      30 404 
+
+--- DevOps Health --- ✅ 30/30
+  URL: http://192.168.2.158:60007/devops/actuator/health
+  平均: 15ms | 最小: 10ms | 最大: 25ms | P95≈25ms
+  状态码:      30 200 
+
+--- Configure Health --- ✅ 30/30
+  URL: http://192.168.2.158:60008/configure/actuator/health
+  平均: 14ms | 最小: 10ms | 最大: 22ms | P95≈22ms
+  状态码:      30 200 
+
+--- Together Health --- ✅ 30/30
+  URL: http://192.168.2.158:60009/together/actuator/health
+  平均: 2575ms | 最小: 349ms | 最大: 8132ms | P95≈8132ms
+  状态码:      30 200 
+
+--- WebApp Health --- ✅ 30/30
+  URL: http://192.168.2.158:60010/swebapp/actuator/health
+  平均: 18ms | 最小: 12ms | 最大: 29ms | P95≈29ms
+  状态码:      30 200 
+
+--- Auth Token (POST) --- ✅ 30/30
+  URL: http://192.168.2.158:60001/sauth/oauth/token
+  平均: 19ms | 最小: 2ms | 最大: 503ms | P95≈503ms
+  状态码:      30 200 
+
+--- System User List --- ✅ 30/30
+  URL: http://192.168.2.158:60002/system/user/list
+  平均: 6ms | 最小: 2ms | 最大: 112ms | P95≈112ms
+  状态码:      30 200 
+
+--- Device Site List --- ✅ 30/30
+  URL: http://192.168.2.158:60003/device/site/list
+  平均: 6ms | 最小: 2ms | 最大: 111ms | P95≈111ms
+  状态码:      30 200 
+
+================================================
+  Docker容器资源快照
+================================================
+NAME                CPU %     MEM USAGE / LIMIT
+webapp-service      1.68%     715.3MiB / 62.52GiB
+together-service    1.48%     838.9MiB / 62.52GiB
+configure-service   1.37%     751.2MiB / 62.52GiB
+devops-service      1.47%     696.2MiB / 62.52GiB
+crontab-service     2.61%     768.9MiB / 62.52GiB
+protocol-service    7.55%     736.5MiB / 62.52GiB
+data-service        2.56%     676.4MiB / 62.52GiB
+device-service      9.61%     812.6MiB / 62.52GiB
+system-service      2.51%     783.6MiB / 62.52GiB
+sunmax-gateway      0.13%     482.7MiB / 62.52GiB
+auth-service        1.76%     748.7MiB / 62.52GiB
+emqx1               91.84%    250.9MiB / 62.52GiB
+nacos               11.16%    1.154GiB / 62.52GiB
+redis               2.08%     4.977MiB / 62.52GiB
+emqx2               0.77%     273.1MiB / 62.52GiB
+
+================================================
+  R1基线测试完成
+  报告路径: /work/elink-ai/elink-work/logs/perf_baseline_R1_20260605.txt
+================================================

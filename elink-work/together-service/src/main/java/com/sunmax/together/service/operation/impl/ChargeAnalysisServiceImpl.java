@@ -1,7 +1,7 @@
 package com.sunmax.together.service.operation.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.data.NodeDifHistoryDto;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
@@ -38,7 +38,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;

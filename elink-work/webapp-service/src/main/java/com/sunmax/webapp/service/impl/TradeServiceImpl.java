@@ -3,7 +3,7 @@ package com.sunmax.webapp.service.impl;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.system.AccountDto;
 import com.sunmax.common.util.DateUtil;

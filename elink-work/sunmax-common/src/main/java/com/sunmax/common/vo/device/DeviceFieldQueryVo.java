@@ -1,7 +1,6 @@
 package com.sunmax.common.vo.device;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,19 +15,19 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel(value = "DeviceFieldQueryVo", description = "设备字段查询数据")
+@Schema(description = "设备字段查询数据")
 public class DeviceFieldQueryVo {
 
     /**
      * 多个设备id
      */
-    @ApiModelProperty("多个设备id")
+    @Schema(description = "多个设备id")
     private Set<String> deviceIds;
 
     /**
      * 多个功能点标识
      */
-    @ApiModelProperty("多个功能点标识")
+    @Schema(description = "多个功能点标识")
     private Set<String> functionLogos;
 
 }

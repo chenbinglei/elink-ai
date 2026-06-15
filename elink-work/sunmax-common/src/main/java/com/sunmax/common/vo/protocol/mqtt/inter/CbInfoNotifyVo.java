@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -15,13 +15,13 @@ public class CbInfoNotifyVo {
     /**
      * 控制板个数
      */
-    @ApiModelProperty(value = "控制板个数", required = true)
+    @Schema(description = "控制板个数")
     private Integer cbNum;
 
     /**
      * 控制板固件信息数据
      */
-    @ApiModelProperty(value = "控制板固件信息数据", required = true)
+    @Schema(description = "控制板固件信息数据")
     private List<ControlBoardInfo> cbInfos;
 
     @Data
@@ -30,7 +30,7 @@ public class CbInfoNotifyVo {
         /**
          * 硬件名称
          */
-        @ApiModelProperty(value = "硬件名称", required = true)
+        @Schema(description = "硬件名称")
         private String hardwareName;
 
         /**
@@ -44,49 +44,49 @@ public class CbInfoNotifyVo {
          * 7-V2G_7.0 控制板
          * 8-V2G_8.0 控制板
          */
-        @ApiModelProperty(value = "控制板类型", required = true)
+        @Schema(description = "控制板类型")
         private Integer cbType;
 
         /**
          * 序号
          */
-        @ApiModelProperty(value = "序号", required = true)
+        @Schema(description = "序号")
         private Integer seq;
 
         /**
          * 硬件主版本号
          */
-        @ApiModelProperty(value = "硬件主版本号", required = true)
+        @Schema(description = "硬件主版本号")
         private Integer hMajorNo;
 
         /**
          * 硬件次版本号
          */
-        @ApiModelProperty(value = "硬件次版本号", required = true)
+        @Schema(description = "硬件次版本号")
         private Integer hChildNo;
 
         /**
          * 固件名称
          */
-        @ApiModelProperty(value = "固件名称", required = true)
+        @Schema(description = "固件名称")
         private String fwName;
 
         /**
          * 固件主版本号
          */
-        @ApiModelProperty(value = "固件主版本号", required = true)
+        @Schema(description = "固件主版本号")
         private Integer fwMajorNo;
 
         /**
          * 固件次版本号
          */
-        @ApiModelProperty(value = "固件次版本号", required = true)
+        @Schema(description = "固件次版本号")
         private Integer fwChildNo;
 
         /**
          * 固件内测版本号
          */
-        @ApiModelProperty(value = "固件内测版本号", required = true)
+        @Schema(description = "固件内测版本号")
         private Integer fwBetaNo;
 
     }

@@ -41,7 +41,7 @@ service.interceptors.request.use((config) => {
     }
 
     // 打包注释
-    // config.url = config.url.replace("https://derms.enlinkitech.com:9536",`http://121.41.109.130:5000`);
+    // 已迁移至环境变量控制，不再硬编码替换
 
     removePending(config); //在一个ajax发送前执行一下取消操作
 

@@ -1,7 +1,7 @@
 package com.sunmax.configure.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.configure.DeviceVariableDto;
 import com.sunmax.common.dto.device.SiteInfoDto;
@@ -41,10 +41,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
-import javax.websocket.ContainerProvider;
-import javax.websocket.WebSocketContainer;
+import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;

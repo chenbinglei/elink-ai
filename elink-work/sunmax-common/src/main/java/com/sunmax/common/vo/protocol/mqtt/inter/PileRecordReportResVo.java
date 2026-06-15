@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,43 +13,43 @@ public class PileRecordReportResVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 订单序号
      */
-    @ApiModelProperty(value = "订单序号", required = true)
+    @Schema(description = "订单序号")
     private Integer recordSeq;
 
     /**
      * 记录上报类型 0-正常 1-离线 2-当前
      */
-    @ApiModelProperty(value = "记录上报类型", required = true)
+    @Schema(description = "记录上报类型")
     private Integer recordReportType;
 
     /**
      * 失败原因 0-成功 1-失败 255-其他原因
      */
-    @ApiModelProperty(value = "失败原因", required = true)
+    @Schema(description = "失败原因")
     private Integer failReason;
 
     /**
      * 正常记录总条数
      */
-    @ApiModelProperty(value = "正常记录总条数", required = true)
+    @Schema(description = "正常记录总条数")
     private Integer onlineNum;
 
     /**
      * 离线记录总条数
      */
-    @ApiModelProperty(value = "离线记录总条数", required = true)
+    @Schema(description = "离线记录总条数")
     private Integer offlineNum;
 
 }

@@ -1,6 +1,6 @@
 package com.sunmax.device.websocket;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.dto.protocol.mqtt.UpdateInfoDto;
 import com.sunmax.common.model.general.PileRealModel;
@@ -18,9 +18,9 @@ import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;

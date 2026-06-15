@@ -1,38 +1,37 @@
 package com.sunmax.device.vo.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 参数配置查询实体类
  */
 @Data
-@ApiModel(value = "ConfigQueryVo", description = "参数配置查询实体类")
+@Schema(description = "参数配置查询实体类")
 public class ConfigQueryVo {
 
     /**
      * 关联资产分类id
      */
-    @ApiModelProperty(value = "关联资产分类id", required = true)
+    @Schema(description = "关联资产分类id")
     private String typeId;
 
     /**
      * 关键字
      */
-    @ApiModelProperty(value = "关键字")
+    @Schema(description = "关键字")
     private String keyword;
 
     /**
      * 当前页
      */
-    @ApiModelProperty(value = "当前页", required = true)
+    @Schema(description = "当前页")
     private Integer page;
 
     /**
      * 当前页条数
      */
-    @ApiModelProperty(value = "当前页条数", required = true)
+    @Schema(description = "当前页条数")
     private Integer size;
 
 }

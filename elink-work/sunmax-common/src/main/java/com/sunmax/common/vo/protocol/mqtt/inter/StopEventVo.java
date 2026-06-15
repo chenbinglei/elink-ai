@@ -1,6 +1,6 @@
 package com.sunmax.common.vo.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,31 +13,31 @@ public class StopEventVo {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪标识 从1开始
      */
-    @ApiModelProperty(value = "枪标识", required = true)
+    @Schema(description = "枪标识")
     private Integer gunCode;
 
     /**
      * 停止详细原因
      */
-    @ApiModelProperty(value = "停止详细原因", required = true)
+    @Schema(description = "停止详细原因")
     private Integer failReason;
 
     /**
      * 停止充放电时间
      */
-    @ApiModelProperty(value = "停止充放电时间", required = true)
+    @Schema(description = "停止充放电时间")
     private Long stopTime;
 
     /**
      * 交易号
      */
-    @ApiModelProperty(value = "交易号", required = true)
+    @Schema(description = "交易号")
     private String recordId;
 
 }

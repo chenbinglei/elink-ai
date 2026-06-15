@@ -1,7 +1,9 @@
 package com.sunmax.configure.controller;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.google.common.collect.Maps;
 import com.sunmax.common.dto.configure.GunStatusInfoDto;
 import com.sunmax.common.dto.configure.PowerControlResDto;
@@ -16,7 +18,7 @@ import com.sunmax.configure.util.HttpResponseUtil;
 import com.sunmax.configure.util.PlatformConfig;
 import com.sunmax.configure.util.TokenUtil;
 import com.sunmax.configure.vo.RequestVo;
-import io.swagger.annotations.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ import java.util.Objects;
 @RestController
 @CrossOrigin
 @RequestMapping("interflow")
-@Api(tags = "互联互通管理层")
+@Tag(name = "互联互通管理层")
 @Slf4j
 public class InterflowController {
 
@@ -38,22 +40,22 @@ public class InterflowController {
     private InterflowService interflowService;
 
     @PostMapping("queryInterflowToken")
-    @ApiOperation("查询token")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "查询token")
+    
     public ResponseResult<String> queryToken(String platformId) {
         return interflowService.queryToken(platformId);
     }
 
     @PostMapping("queryInterflowData")
-    @ApiOperation("查询互联互通接口数据")
-    @ApiOperationSupport(order = 2)
+    @Operation(summary = "查询互联互通接口数据")
+    
     public ResponseDto queryInterflowData(String platformId, String methodName, String paramData) {
         return interflowService.queryInterflowData(platformId, methodName, paramData);
     }
 
     @PostMapping("notification_equip_charge_status")
-    @ApiOperation("接收推送充电状态信息")
-    @ApiOperationSupport(order = 3)
+    @Operation(summary = "接收推送充电状态信息")
+    
     public String notificationEquipChargeStatus(@RequestBody RequestVo requestVo) {
         log.info("互联互通推送充电状态接口，原始参数：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.INTERFLOW.getCode());
@@ -79,8 +81,8 @@ public class InterflowController {
     }
 
     @PostMapping("notification_charge_order_info")
-    @ApiOperation("接收推送充电订单信息")
-    @ApiOperationSupport(order = 4)
+    @Operation(summary = "接收推送充电订单信息")
+    
     public String notificationChargeOrderInfo(@RequestBody RequestVo requestVo) {
         log.info("推送充电订单接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.INTERFLOW.getCode());
@@ -106,8 +108,8 @@ public class InterflowController {
     }
 
     @PostMapping("notification_stationStatus")
-    @ApiOperation("接收推送设备状态变化信息")
-    @ApiOperationSupport(order = 4)
+    @Operation(summary = "接收推送设备状态变化信息")
+    
     public String notificationStationStatus(@RequestBody RequestVo requestVo) {
         log.info("推送设备状态变化接口，原始参数为@@@@@@@@@@@@@@@@@@@：{}", JSON.toJSONString(requestVo));
         ResponseDto responseDto = HttpResponseUtil.checkData(requestVo, ProtocolEnum.INTERFLOW.getCode());
@@ -133,15 +135,15 @@ public class InterflowController {
     }
 
     @PostMapping("queryStationStatus")
-    @ApiOperation("查询站点下设备接口状态")
-    @ApiOperationSupport(order = 5)
+    @Operation(summary = "查询站点下设备接口状态")
+    
     public ResponseResult<Map<String, List<GunStatusInfoDto>>> queryStationStatus(@RequestParam String platformId, @RequestBody List<String> stationIds) {
         return interflowService.queryStationStatus(platformId, stationIds);
     }
 
     @PostMapping("interflowPowerControl")
-    @ApiOperation("城市充电功率控制")
-    @ApiOperationSupport(order = 7)
+    @Operation(summary = "城市充电功率控制")
+    
     public ResponseResult<List<PowerControlResDto>> interflowPowerControl(String pileCode, Integer gunCode, Double outPower, Integer controlDurationValue) {
         PowerControlParamVo powerControlParamVo = new PowerControlParamVo();
         powerControlParamVo.setPileCode(pileCode);
@@ -152,8 +154,8 @@ public class InterflowController {
     }
 
     @PostMapping(value = "query_token")
-    @ApiOperation("查询平台token")
-    @ApiOperationSupport(order = 6)
+    @Operation(summary = "查询平台token")
+    
     public String queryToken(@RequestBody RequestVo request) {
         log.info("城市充电查询token请求参数: {}", request);
         String data = request.getData();
@@ -199,8 +201,8 @@ public class InterflowController {
     }
 
     @PostMapping("queryStationsInfo")
-    @ApiOperation("查询所有站点信息")
-    @ApiOperationSupport(order = 7)
+    @Operation(summary = "查询所有站点信息")
+    
     public ResponseResult<Void> queryStationsInfo(String platformId) {
         interflowService.queryStationsInfo(platformId);
         return ResponseResult.ok();

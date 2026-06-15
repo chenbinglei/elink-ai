@@ -1,7 +1,7 @@
 package com.sunmax.common.dto.protocol.mqtt.inter;
 
 import com.sunmax.common.dto.protocol.mqtt.web.model.CostFormat;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -16,31 +16,31 @@ public class RateSetCmdDto {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 费率类型 0-充电费率 1-放电费率
      */
-    @ApiModelProperty(value = "费率类型", required = true)
+    @Schema(description = "费率类型")
     private Integer type;
 
     /**
      * 费率模型Id
      */
-    @ApiModelProperty(value = "费率模型Id", required = true)
+    @Schema(description = "费率模型Id")
     private String rateId;
 
     /**
      * 时段数量
      */
-    @ApiModelProperty(value = "时段数量", required = true)
+    @Schema(description = "时段数量")
     private Integer timeFrameNum;
 
     /**
      * 充/放电费率
      */
-    @ApiModelProperty(value = "充/放电费率", required = true)
+    @Schema(description = "充/放电费率")
     private List<CostFormat> timeFrameRates;
 
 }

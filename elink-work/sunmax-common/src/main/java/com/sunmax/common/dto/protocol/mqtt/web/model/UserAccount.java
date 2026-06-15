@@ -1,5 +1,5 @@
 package com.sunmax.common.dto.protocol.mqtt.web.model;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +15,13 @@ public class UserAccount {
     /**
      * 账户类型 1-充/放电卡 2-VIN 3-手机号
      */
-    @ApiModelProperty(value = "账户类型 1-充/放电卡 2-VIN 3-手机号", required = true)
+    @Schema(description = "账户类型 1-充/放电卡 2-VIN 3-手机号")
     private Integer accountType;
 
     /**
      * 账号数据
      */
-    @ApiModelProperty(value = "账号数据", required = true)
+    @Schema(description = "账号数据")
     private String accountData;
 
 }

@@ -1,6 +1,15 @@
 ---
 alwaysApply: true
 scene: git_message
+version: "1.1.0"
+lastUpdated: "2026-06-03"
+changelog:
+  - version: "1.0.0"
+    date: "2026-06-03"
+    changes: "初始版本"
+  - version: "1.1.0"
+    date: "2026-06-03"
+    changes: "集成至智能体系统，添加场景元数据和迭代追踪"
 ---
 
 在此处编写规则，自定义 AI 生成提交信息的风格。

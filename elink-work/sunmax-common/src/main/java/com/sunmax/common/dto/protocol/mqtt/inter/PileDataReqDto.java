@@ -1,6 +1,6 @@
 package com.sunmax.common.dto.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,13 +13,13 @@ public class PileDataReqDto {
     /**
      * 桩编码
      */
-    @ApiModelProperty(value = "桩编码", required = true)
+    @Schema(description = "桩编码")
     private String pilesCode;
 
     /**
      * 枪编号
      */
-    @ApiModelProperty(value = "枪编号", required = true)
+    @Schema(description = "枪编号")
     private Integer gunCode;
 
 }

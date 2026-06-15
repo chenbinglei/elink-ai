@@ -1,6 +1,6 @@
 package com.sunmax.crontab.vo.mqtt;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * 指令返回响应
  */
 @Data
-@ApiModel(value = "HDReplyVo", description = "指令返回响应实体类")
+@Schema(description = "指令返回响应实体类")
 public class HDReplyVo {
 
     /**

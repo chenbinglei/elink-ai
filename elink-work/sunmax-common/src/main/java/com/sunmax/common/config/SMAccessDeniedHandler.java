@@ -6,8 +6,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -22,7 +22,7 @@ public class SMAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         ResponseResult<ObjectMapper> responseVo = new ResponseResult<>(ResponseResult.CodeStatus.ACCESS_FAIL,"无权访问,请联系管理员开通权限");
         response.setHeader("Content-Type", "application/json;charset=utf-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        // CORS 由 Gateway 统一处理，下游服务不再设置 Access-Control-Allow-Origin
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getOutputStream(), responseVo);
     }

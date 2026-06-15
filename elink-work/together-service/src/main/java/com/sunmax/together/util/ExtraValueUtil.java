@@ -1,6 +1,6 @@
 package com.sunmax.together.util;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.common.dto.device.DeviceReaDto;
 import com.sunmax.common.util.DoubleUtil;
 import com.sunmax.common.util.StringUtil;

@@ -1,7 +1,7 @@
 package com.sunmax.common.dto;
 
 import com.sunmax.common.util.PageUtil;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,22 +13,22 @@ import java.util.List;
 @NoArgsConstructor
 public class PageDto<T> {
 
-    @ApiModelProperty("当前页数据")
+    @Schema(description = "当前页数据")
     protected List<T> items = new ArrayList<>();
     /**
      * 每页条数
      */
-    @ApiModelProperty("每页条数")
+    @Schema(description = "每页条数")
     protected int pageSize;
     /**
      * 总条数
      */
-    @ApiModelProperty("总条数")
+    @Schema(description = "总条数")
     protected int totalSize;
     /**
      * 第几页
      */
-    @ApiModelProperty("第几页")
+    @Schema(description = "第几页")
     protected int index;
 
     public PageDto(List<T> items, int index, int pageSize) {

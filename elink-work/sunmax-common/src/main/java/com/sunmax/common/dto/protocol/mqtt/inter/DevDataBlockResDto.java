@@ -1,6 +1,6 @@
 package com.sunmax.common.dto.protocol.mqtt.inter;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -21,43 +21,43 @@ public class DevDataBlockResDto {
      * 7 V2G_7.0 控制板
      * 8 V2G_8.0 控制板
      */
-    @ApiModelProperty(value = "固件类型", required = true)
+    @Schema(description = "固件类型")
     private Integer deviceType;
 
     /**
      * 固件主版本号
      */
-    @ApiModelProperty(value = "固件主版本号", required = true)
+    @Schema(description = "固件主版本号")
     private Integer majorNo;
 
     /**
      * 固件次版本号
      */
-    @ApiModelProperty(value = "固件次版本号", required = true)
+    @Schema(description = "固件次版本号")
     private Integer childNo;
 
     /**
      * 固件内测版本号
      */
-    @ApiModelProperty(value = "固件内测版本号", required = true)
+    @Schema(description = "固件内测版本号")
     private Integer betaNo;
 
     /**
      * 数据块标号
      */
-    @ApiModelProperty(value = "数据块标号", required = true)
+    @Schema(description = "数据块标号")
     private Integer dataFlag;
 
     /**
      * 固件数据块大小
      */
-    @ApiModelProperty(value = "固件数据块大小", required = true)
+    @Schema(description = "固件数据块大小")
     private Integer dataLen;
 
     /**
      * 数据块
      */
-    @ApiModelProperty(value = "数据块", required = true)
+    @Schema(description = "数据块")
     private String dataBlock;
 
 }

@@ -1,6 +1,6 @@
 package com.sunmax.auth.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.sunmax.auth.service.WechatService;
 import com.sunmax.common.config.wechat.*;
 import com.sunmax.common.util.StringUtil;

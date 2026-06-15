@@ -12,10 +12,9 @@ public class GatewaySecurityConfigure {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        //配置白名单和访问规则，CommonEnum枚举类
-        http.csrf().disable()
-        // ⚠️ 不要调用 .cors()！
-        .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll());
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll());
         return http.build();
     }
 }

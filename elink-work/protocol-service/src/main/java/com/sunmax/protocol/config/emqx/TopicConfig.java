@@ -9,7 +9,7 @@ import com.sunmax.common.util.StringUtil;
 import com.sunmax.protocol.service.feign.DeviceService;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;

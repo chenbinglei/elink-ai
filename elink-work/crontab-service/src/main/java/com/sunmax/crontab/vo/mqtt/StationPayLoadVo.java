@@ -1,10 +1,10 @@
 package com.sunmax.crontab.vo.mqtt;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "StationAdjustVo", description = "站点可调参数")
+@Schema(description = "站点可调参数")
 public class StationPayLoadVo {
 
     /**

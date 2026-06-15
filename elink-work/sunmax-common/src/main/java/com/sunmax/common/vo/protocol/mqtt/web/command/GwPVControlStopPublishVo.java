@@ -1,26 +1,25 @@
 package com.sunmax.common.vo.protocol.mqtt.web.command;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * 调控需求终止下发
  */
 @Data
-@ApiModel(value = "GwPVControlStopPublishVo")
+@Schema(description = "GwPVControlStopPublishVo")
 public class GwPVControlStopPublishVo {
 
     /**
      * 需求响应事件编号
      */
-    @ApiModelProperty(value = "事件编号", required = true)
+    @Schema(description = "事件编号")
     private String sjbh;
 
     /**
      * 事件状态
      */
-    @ApiModelProperty(value = "事件状态", required = true)
+    @Schema(description = "事件状态")
     private String sjzt;
 
 }

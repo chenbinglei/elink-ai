@@ -1,8 +1,7 @@
 package com.sunmax.configure.dto.city;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.alibaba.fastjson2.annotation.JSONField;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -12,20 +11,20 @@ import lombok.Data;
  * @注释:
  */
 @Data
-@ApiModel(value = "ConnectorStatsDto", description = "充电设备接口统计实体类")
+@Schema(description = "充电设备接口统计实体类")
 public class ConnectorStatsDto {
 
     /**
      * 接口编码
      */
-    @ApiModelProperty(value = "接口编码")
+    @Schema(description = "接口编码")
     @JSONField(name = "ConnectorID")
     private String connectorId;
 
     /**
      * 充电设备接口累计电量
      */
-    @ApiModelProperty(value = "充电设备接口累计电量")
+    @Schema(description = "充电设备接口累计电量")
     @JSONField(name = "ConnectorElectricity")
     private Double connectorElectricity;
 }

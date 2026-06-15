@@ -1,47 +1,46 @@
 package com.sunmax.together.vo.operation.dataReport;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "PvSiteReportQueryVo", description = "光伏站点报表查询参数")
+@Schema(description = "光伏站点报表查询参数")
 public class PvSiteReportQueryVo {
 
 
     /**
      * 当前页
      */
-    @ApiModelProperty(value = "当前页", required = true)
+    @Schema(description = "当前页")
     private Integer page;
 
     /**
      * 当前页条数
      */
-    @ApiModelProperty(value = "当前页条数(传0不分页，返回所有列表)", required = true)
+    @Schema(description = "当前页条数(传0不分页，返回所有列表)")
     private Integer size;
 
     /**
      * 多个站点id
      */
-    @ApiModelProperty(value = "多个站点id", required = true)
+    @Schema(description = "多个站点id")
     private String siteIds;
 
     /**
      * 时间维度 1-日 2-月 3-年
      */
-    @ApiModelProperty(value = "时间维度 1-日 2-月 3-年", required = true)
+    @Schema(description = "时间维度 1-日 2-月 3-年")
     private Integer dateType;
 
     /**
      * 开始时间
      */
-    @ApiModelProperty(value = "开始时间", required = true)
+    @Schema(description = "开始时间")
     private String startTime;
 
     /**
      * 结束时间
      */
-    @ApiModelProperty(value = "结束时间", required = true)
+    @Schema(description = "结束时间")
     private String endTime;
 }

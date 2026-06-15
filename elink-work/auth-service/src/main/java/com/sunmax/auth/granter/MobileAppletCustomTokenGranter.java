@@ -2,32 +2,50 @@ package com.sunmax.auth.granter;
 
 import com.sunmax.auth.dto.UserLoginDto;
 import com.sunmax.auth.service.UserLoginService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
- * 微信小程序登录 微信小程序登录校验
+ * 微信小程序登录认证提供者
+ * 替代旧的 MobileAppletCustomTokenGranter
+ * grant_type: applet
  */
-@Slf4j
-public class MobileAppletCustomTokenGranter extends AbstractCustomTokenGranter {
+public class MobileAppletCustomTokenGranter implements AuthenticationProvider {
 
-    protected UserLoginService userLoginService;
+    private final UserLoginService userLoginService;
 
-    public MobileAppletCustomTokenGranter(UserLoginService userLoginService, AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory) {
-        super(tokenServices, clientDetailsService, requestFactory, "applet");
+    public MobileAppletCustomTokenGranter(UserLoginService userLoginService) {
         this.userLoginService = userLoginService;
     }
 
     @Override
-    protected UserLoginDto getCustomUser(Map<String, String> parameters) {
-        String appletCode = parameters.get("code");//微信小程序code
-        String appletKey = parameters.get("appletKey");//微信小程序Id
-        String encryptedData = parameters.get("encryptedData");
-        String iv = parameters.get("iv");
-        return userLoginService.loadUserByAppletCodeAndMobile(appletCode, appletKey, encryptedData, iv);
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        if (authentication.getDetails() instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, String> params = (Map<String, String>) authentication.getDetails();
+            String appletCode = params.get("code");
+            String appletKey = params.get("appletKey");
+            String encryptedData = params.get("encryptedData");
+            String iv = params.get("iv");
+            UserLoginDto user = userLoginService.loadUserByAppletCodeAndMobile(appletCode, appletKey, encryptedData, iv);
+            if (user == null) {
+                throw new BadCredentialsException("微信小程序登录失败");
+            }
+            return new UsernamePasswordAuthenticationToken(user, null,
+                    user.getAuthorities() != null ? user.getAuthorities() : Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        }
+        throw new BadCredentialsException("缺少微信小程序登录参数");
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

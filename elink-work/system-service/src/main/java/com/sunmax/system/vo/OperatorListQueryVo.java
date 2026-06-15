@@ -1,7 +1,6 @@
 package com.sunmax.system.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -11,24 +10,24 @@ import lombok.Data;
  * @注释:
  */
 @Data
-@ApiModel(value = "OperatorListQueryVo", description = "运营商列表查询实体类")
+@Schema(description = "运营商列表查询实体类")
 public class OperatorListQueryVo {
 
     /**
      * 当前页
      */
-    @ApiModelProperty(value = "当前页", required = true)
+    @Schema(description = "当前页")
     private Integer page;
 
     /**
      * 当前页条数
      */
-    @ApiModelProperty(value = "当前页条数", required = true)
+    @Schema(description = "当前页条数")
     private Integer size;
 
     /**
      * 运营商名称
      */
-    @ApiModelProperty(value = "运营商名称")
+    @Schema(description = "运营商名称")
     private String operatorName;
 }

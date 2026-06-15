@@ -3,33 +3,32 @@ package com.sunmax.crontab.controller.feign;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.common.vo.system.MqttClientVo;
 import com.sunmax.crontab.service.SystemFeignService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/feign/system")
-@Api(tags = "提供给运营服务调用的远程接口")
-@ApiIgnore()
+@Tag(name = "提供给运营服务调用的远程接口")
+@Hidden()
 public class SystemFeignController {
 
     @Autowired
     private SystemFeignService systemFeignService;
 
     @PostMapping("createMqttClient")
-    @ApiOperation("创建mqtt客户端数据")
-    @ApiOperationSupport(order = 1)
+    @Operation(summary = "创建mqtt客户端数据")
+    
     public ResponseResult<Void> createMqttClient(@RequestBody MqttClientVo mqttClientVo) {
         return systemFeignService.createMqttClient(mqttClientVo);
     }
 
     @PostMapping("deleteMqttClient")
-    @ApiOperation("删除mqtt客户端数据")
-    @ApiOperationSupport(order = 2)
+    @Operation(summary = "删除mqtt客户端数据")
+    
     public ResponseResult<Void> deleteMqttClient(@RequestParam String clientId) {
         return systemFeignService.deleteMqttClient(clientId);
     }
