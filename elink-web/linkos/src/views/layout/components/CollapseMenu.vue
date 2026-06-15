@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useSidebarStore } from '@/stores/index';
 
 import {computed, onMounted, reactive, toRefs, defineComponent} from "vue";

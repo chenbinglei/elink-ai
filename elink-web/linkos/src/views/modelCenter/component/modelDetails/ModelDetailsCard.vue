@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Box, Picture} from '@element-plus/icons-vue';
 import {getCurrentInstance, onMounted, reactive, toRefs} from "vue"
 import CreateModelDialog from "../modelManagement/CreateModelDialog";

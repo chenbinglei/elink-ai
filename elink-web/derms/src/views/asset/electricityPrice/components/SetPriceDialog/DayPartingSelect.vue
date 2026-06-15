@@ -60,7 +60,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { ElMessage } from "element-plus";
 import { Select, RefreshRight, CloseBold } from '@element-plus/icons-vue';
 import { getCurrentInstance, reactive, toRefs, defineComponent, ref, onMounted, nextTick } from "vue";

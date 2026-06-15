@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore, useTagsViewStore } from '@/stores/index';
 
 import {computed, reactive, toRefs} from "vue";

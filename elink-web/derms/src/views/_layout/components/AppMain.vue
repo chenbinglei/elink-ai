@@ -6,7 +6,7 @@
   </router-view>
 </template>
 
-<script>
+<script lang="ts">
 import { useTagsViewStore } from '@/stores/index';
 
 import {computed, reactive, toRefs, defineComponent} from "vue";

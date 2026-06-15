@@ -2,7 +2,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 
 export default defineComponent({

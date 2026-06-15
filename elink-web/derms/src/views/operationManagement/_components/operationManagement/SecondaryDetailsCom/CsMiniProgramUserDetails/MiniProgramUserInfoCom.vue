@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs} from "vue";
 import BasicInformationCom from "./BasicInformationCom.vue";
 import CommonChargingStationsCom from "./CommonChargingStationsCom.vue";

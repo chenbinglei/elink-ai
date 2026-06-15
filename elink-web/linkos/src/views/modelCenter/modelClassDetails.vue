@@ -59,7 +59,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useTagsViewStore } from '@/stores/index';
 
 import {useRoute,useRouter} from "vue-router";

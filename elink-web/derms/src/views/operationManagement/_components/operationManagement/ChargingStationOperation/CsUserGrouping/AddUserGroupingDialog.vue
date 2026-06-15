@@ -43,7 +43,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {num0to200, someCharmap} from "@/utils/validate";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, ref, onMounted} from "vue";

@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Viewer from "@/components/component/Viewer.vue";
 import {ElMessage, ElMessageBox, genFileId} from "element-plus";
 import {Delete, Plus, Minus, Search} from '@element-plus/icons-vue';

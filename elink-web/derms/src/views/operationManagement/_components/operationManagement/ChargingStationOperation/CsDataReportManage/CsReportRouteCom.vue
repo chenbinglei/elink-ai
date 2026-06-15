@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getLeftTreeDataFun } from "@/utils";
 import { reactive, toRefs, defineComponent, watch } from "vue";
 

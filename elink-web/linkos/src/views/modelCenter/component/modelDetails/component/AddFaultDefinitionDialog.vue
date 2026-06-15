@@ -20,7 +20,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, onMounted, reactive, ref, toRefs, watch,defineComponent} from "vue";
 import {letterNumLine, someCharmap} from "@/utils/validate";
 import {savePileFault} from "@/api/modelCenter/modelManagement";

@@ -139,7 +139,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {pile_type_array} from "@/utils/setVariate";
 import RunTableHeaderCom from "./RunTableHeaderCom.vue";

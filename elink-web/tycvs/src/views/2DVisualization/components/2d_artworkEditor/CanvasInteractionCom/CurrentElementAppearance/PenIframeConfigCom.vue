@@ -29,7 +29,7 @@
   </el-collapse-item>
 </template>
 
-<script>
+<script lang="ts">
 import {LxInputColorPicker} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance} from "vue";
 

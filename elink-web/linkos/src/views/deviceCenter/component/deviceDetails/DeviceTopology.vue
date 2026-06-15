@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore } from '@/stores/index';
 
 import { TopologyMap,TopologyList} from "./component";

@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, getCurrentInstance, reactive, toRefs} from "vue";
 import StrategyControlCom from "./EMControlStrategy/StrategyControlCom.vue";
 import StationMenuListCom from "../centralMonitoring/StationMenuListCom.vue";

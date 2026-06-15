@@ -58,7 +58,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {QuestionFilled} from '@element-plus/icons-vue';
 import {queryDataSourceList} from "@/api/dataManagement/dataSourceManagement";

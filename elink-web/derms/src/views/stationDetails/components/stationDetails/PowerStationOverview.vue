@@ -29,7 +29,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { reactive, defineComponent, watch, toRefs, ref, nextTick, onMounted, inject, computed } from "vue";
 import { pickerOptionsGthanAcTime } from "@/utils/dateTime";
 import { useMonitorStore } from '@/stores/index';

@@ -7,7 +7,7 @@
   </TableHeaderTitle>
 </template>
 
-<script>
+<script lang="ts">
 import {Folder} from "@element-plus/icons-vue";
 import {getNowDateAll} from "@/utils/dateTime";
 import {exportCustomExcel} from "@/common/exportExcel";

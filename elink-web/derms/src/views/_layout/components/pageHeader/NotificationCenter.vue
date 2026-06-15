@@ -40,11 +40,9 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, reactive, toRefs, computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
-
-
+<script lang="ts">
+import { defineComponent, reactive, toRefs } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "NotificationCenter",
@@ -57,17 +55,11 @@ export default defineComponent({
       ],
       routeIshow: false,
     });
-    const isFullscreen = computed(() => store.state.fullscreen.isFullscreen);
-    
 
     const vueRouter = useRouter();
 
     const list = JSON.parse(localStorage.getItem('AUTH_ROUTER') || '[]');
     that.routeIshow = list.some(item => item.url === 'customized');
-
-
-
-    console.log(that.routeIshow, '获取道德数据')
 
     const changeSiteStation = (command) => {
       if (command) {
@@ -75,68 +67,48 @@ export default defineComponent({
       }
     }
 
-
     return { ...toRefs(that), changeSiteStation };
-
   },
 });
 </script>
-<style>
-.el-dropdown,
-.el-dropdown * {
-  outline: none;
-}
 
-/* 强制移除 el-dropdown 悬停和聚焦时的边框 */
-.el-dropdown__inner:hover,
-.el-dropdown__inner:focus {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-</style>
 <style lang="scss" scoped>
 .notificationCenter {
   height: 100%;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-end;
   align-items: center;
-  transform: translateY(8px);
-  z-index: 99;
+}
 
-  .comprehensive-analysis {
-    background: linear-gradient(180deg, #006091 0%, #00416d 100%);
-  }
+.PanoramicMonitorCenter {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
 
-  .circle {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    margin-right: 18px;
-    box-shadow: inset 0 0 8px 3px #34adffb8;
-    // background: linear-gradient(180deg, rgba(52, 173, 255, 0.72) 0%, rgba(52, 173, 255, 0) 50%, rgba(52, 173, 255, 0.72) 100%);
-  }
-
-  .iconfont {
-    color: #ffffff;
-    font-size: 12px;
-  }
-
-  .text {
-    color: #ffffff;
-    font-size: 16px;
-    font-family: Inter, serif;
+  img {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+    cursor: pointer;
   }
 }
 
-.custom-trigger {
+.comprehensive-analysis {
+  background-color: rgba(63, 140, 255, 0.4);
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(63, 140, 255, 0.4);
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  margin-right: 10px;
+  cursor: pointer;
 }
 </style>

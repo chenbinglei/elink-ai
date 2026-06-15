@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs} from "vue";
 import emptyImg from "@/assets/image/empty.png";
 export default defineComponent({

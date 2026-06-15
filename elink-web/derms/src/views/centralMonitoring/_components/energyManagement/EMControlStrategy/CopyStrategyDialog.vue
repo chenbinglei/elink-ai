@@ -26,7 +26,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { useEnergyManagementStore } from '@/stores/index';
 
 import {ElMessage} from "element-plus";

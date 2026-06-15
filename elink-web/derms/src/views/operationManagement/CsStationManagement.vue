@@ -14,14 +14,14 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useOperationManagementStore } from '@/stores/index';
 
 import { computed, defineComponent, onMounted, reactive, toRefs, ref, watch } from "vue";
 import SecondaryDetailsCom from "./_components/operationManagement/SecondaryDetailsCom.vue";
 import {
   CsStationManagement, CsChargingRecord, CsDisChargingRecord, CsPileOccupationRecord, CsSettlementManagement
-} from "./_components/operationManagement/ChargingStationOperation"
+} from "./_components/operationManagement/ChargingStationOperation/index"
 
 export default defineComponent({
   components: {

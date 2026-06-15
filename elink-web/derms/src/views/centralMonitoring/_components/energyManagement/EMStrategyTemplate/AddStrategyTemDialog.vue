@@ -31,7 +31,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessage } from "element-plus";
 import { someCharmap } from "@/utils/validate";
 import {strategy_type_array} from "@/utils/setVariate";

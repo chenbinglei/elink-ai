@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {reactive, toRefs, defineComponent, onMounted} from "vue";
 import {GraphicAssTableList} from "@/views/visualization/component";

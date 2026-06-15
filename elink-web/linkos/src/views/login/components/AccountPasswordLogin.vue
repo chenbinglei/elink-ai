@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import Crypto from '@/common/common/crypto.js';
 import {login} from "@/api/login/login";

@@ -77,7 +77,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {someCharmap} from "@/utils/validate";
 import {CirclePlusFilled, RemoveFilled} from '@element-plus/icons-vue';

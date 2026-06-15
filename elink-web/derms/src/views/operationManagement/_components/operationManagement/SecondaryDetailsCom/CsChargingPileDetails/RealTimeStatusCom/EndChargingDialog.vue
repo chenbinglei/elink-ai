@@ -9,7 +9,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {pileStopDisAndCharging} from "@/api/operationManagement/CsPileGunRunningStatus";
 import {getCurrentInstance, onMounted, reactive, toRefs, watch, defineComponent} from "vue";

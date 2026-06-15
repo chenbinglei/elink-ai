@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { onMounted, reactive, toRefs, watch, onUnmounted, defineComponent } from "vue";
 
 export default defineComponent({

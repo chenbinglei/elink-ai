@@ -1,7 +1,7 @@
 <template>
   <router-view/>
 </template>
-<script>
+<script lang="ts">
 import { useAppStore, useTagsViewStore } from '@/stores/index';
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 

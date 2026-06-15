@@ -23,7 +23,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {Edit} from '@element-plus/icons-vue';
 import {defineComponent, onMounted, reactive, toRefs} from "vue";
 import {queryAppletUserDetailById} from "@/api/operationManagement/CsMiniProgramUserDetails";

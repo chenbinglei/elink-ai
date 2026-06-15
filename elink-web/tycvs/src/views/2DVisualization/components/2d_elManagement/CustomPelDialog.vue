@@ -8,7 +8,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import Meta2dEditorCom from "@/views/2DVisualization/components/2d_artworkEditor/Meta2dEditorCom.vue";

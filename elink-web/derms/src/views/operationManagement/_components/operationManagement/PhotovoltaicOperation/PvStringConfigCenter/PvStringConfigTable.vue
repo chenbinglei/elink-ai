@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessage, ElMessageBox } from "element-plus";
 import PvStringConfigDialog from "./PvStringConfigDialog.vue";
 import { RefreshRight, Search, Delete } from "@element-plus/icons-vue";

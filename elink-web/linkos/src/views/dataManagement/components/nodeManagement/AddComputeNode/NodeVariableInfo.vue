@@ -62,7 +62,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { treeToArray } from "@/utils";
 import { ElMessage } from "element-plus";
 import { someCharmap } from "@/utils/validate";

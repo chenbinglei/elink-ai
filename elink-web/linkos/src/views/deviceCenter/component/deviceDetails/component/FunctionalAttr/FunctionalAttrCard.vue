@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import FunctionHistoryData from "./FunctionHistoryData";
 import {reactive, toRefs, defineComponent, watch} from "vue";

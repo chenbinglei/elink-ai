@@ -65,7 +65,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {onMounted, reactive, ref, toRefs, defineComponent} from "vue";
 import {AddModelExtendedAttr,EditModelDefaultValueDialog} from "./component";

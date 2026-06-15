@@ -32,7 +32,7 @@
   </el-row>
 </template>
 
-<script>
+<script lang="ts">
 import { useAssetManagementStore } from '@/stores/index';
 
 import { findPSCAssetCountData } from "@/api/assetManagement/assetManagement";

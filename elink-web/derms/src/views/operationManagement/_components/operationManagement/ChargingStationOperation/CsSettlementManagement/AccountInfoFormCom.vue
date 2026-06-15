@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {pay_plat_form_array} from "@/utils/setVariate";
 import {reactive, toRefs, defineComponent, ref, onMounted, watch} from "vue";
 import {findSiteAccountListBySiteIdAndType, findTenantAccountList, findTenantListByUserId} from "@/api/operationManagement/CsSettlementManagement";

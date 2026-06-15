@@ -79,7 +79,7 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Edit} from '@element-plus/icons-vue';
 import Viewer from "@/components/component/Viewer.vue";
 import {setTimerSplitTallyFun} from "@/utils/dateTime";

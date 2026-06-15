@@ -6,7 +6,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent} from "vue";
 import {SideToolbarCom, CanvasStructureCom, CanvasElementList} from "./GroupsPanelCom/index";
 

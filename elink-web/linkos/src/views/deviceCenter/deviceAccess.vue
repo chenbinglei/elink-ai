@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {onActivated, reactive, toRefs, ref} from "vue";
 import {getSiteDeviceTreeList} from "@/api/deviceCenter/deviceList";

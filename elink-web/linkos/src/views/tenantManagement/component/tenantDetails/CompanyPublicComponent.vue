@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CompanyInfo from "./CompanyInfo";
 import Organization from "./Organization";
 import MerchantConfig from "./MerchantConfig";

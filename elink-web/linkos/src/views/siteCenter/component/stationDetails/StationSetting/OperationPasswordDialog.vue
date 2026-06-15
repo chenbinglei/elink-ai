@@ -18,7 +18,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {num1to9999, onlyNum} from "@/utils/validate";
 import {updateSiteSetUp} from "@/api/siteCenter/stationDetails";

@@ -17,7 +17,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {findSiteListByUserId, saveGraph} from "@/api/2DVisualization/2d_drawManagement";
 import {getCurrentInstance, onMounted, reactive, ref, toRefs, watch, defineComponent} from "vue";

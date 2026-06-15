@@ -34,7 +34,7 @@
     <CanvasMeta2dPublishDialog v-if="canvasMeta2dPublishVisible" v-model:isVisible="canvasMeta2dPublishVisible" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import {deepClone} from "@meta2d/core";

@@ -50,7 +50,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useAssetManagementStore } from '@/stores/index';
 
 import {reactive, defineComponent, toRefs, onMounted, computed, watch} from "vue";

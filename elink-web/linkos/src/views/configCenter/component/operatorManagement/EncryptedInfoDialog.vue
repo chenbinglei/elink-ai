@@ -12,7 +12,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {defineComponent, getCurrentInstance, onMounted, reactive, toRefs, watch} from "vue";
 
 export default defineComponent({

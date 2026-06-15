@@ -100,7 +100,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Edit } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import { integer1tox, num0to9999999 } from "@/utils/validate";

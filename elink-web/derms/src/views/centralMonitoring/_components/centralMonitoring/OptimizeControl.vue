@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs} from "vue";
 import OperationControl from "./OptimizeControl/OperationControl.vue";
 import StrategicManagement from "./OptimizeControl/StrategicManagement.vue";

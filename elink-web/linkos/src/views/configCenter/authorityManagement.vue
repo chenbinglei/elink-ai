@@ -67,7 +67,7 @@
                             :authorityFormDialog="authorityFormDialog" :tiledList="tiledList" @changeEvent="queryPermissionByModuleId" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import Draggable from 'vuedraggable'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {CirclePlus, Delete} from '@element-plus/icons-vue';

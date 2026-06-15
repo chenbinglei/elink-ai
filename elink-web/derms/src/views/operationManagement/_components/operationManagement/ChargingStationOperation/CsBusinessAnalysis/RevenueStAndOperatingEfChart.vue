@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import cloneDeep from "lodash/cloneDeep";
 import {colorHexTurnRgba} from "@/utils";
 import {defineComponent, reactive, toRefs, watch, ref} from "vue";

@@ -57,7 +57,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { getLeftTreeDataFun } from "@/utils";
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed, reactive, defineComponent, toRefs, unref } from "vue";

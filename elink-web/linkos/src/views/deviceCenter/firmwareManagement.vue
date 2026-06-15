@@ -84,7 +84,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {operateButtonIsClick,setTreeData} from "@/utils";
 import {Plus, Search, Refresh} from "@element-plus/icons-vue";

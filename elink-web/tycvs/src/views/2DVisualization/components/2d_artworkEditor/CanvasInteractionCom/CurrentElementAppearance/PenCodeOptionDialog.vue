@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import CodeEditor from "@/components/component/CodeEditor.vue";
 import {reactive, toRefs, watch, getCurrentInstance, defineComponent, onMounted} from 'vue';

@@ -8,7 +8,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import FileShowView from "@/components/uploadFileCom/FileShowView.vue";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, onMounted} from "vue";
 

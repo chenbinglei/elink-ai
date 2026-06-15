@@ -75,7 +75,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent,reactive, watchEffect, toRefs } from "vue";
 import {EchartsBar,TabGroup,} from "@/views/panoramicMonitor/components/index";
 import arrowLine1 from '@/assets/image/panoramic-monitor/arrow-line-1.png'

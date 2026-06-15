@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getBracketPreStr} from "@/utils";
 import {getCurrentInstance, onMounted, reactive, defineComponent, toRefs} from "vue";
 

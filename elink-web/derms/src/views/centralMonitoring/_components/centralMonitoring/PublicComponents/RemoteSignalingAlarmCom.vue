@@ -24,7 +24,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "vue";
 import {findNotRecoveEventList} from "@/api/centralMonitoring/centralMonitoring";
 

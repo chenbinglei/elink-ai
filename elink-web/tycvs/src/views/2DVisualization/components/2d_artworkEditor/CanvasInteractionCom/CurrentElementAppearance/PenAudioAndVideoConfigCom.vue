@@ -33,7 +33,7 @@
   </el-collapse-item>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance} from "vue";
 
 export default defineComponent({

@@ -26,7 +26,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 import {Plus, Delete} from '@element-plus/icons-vue';

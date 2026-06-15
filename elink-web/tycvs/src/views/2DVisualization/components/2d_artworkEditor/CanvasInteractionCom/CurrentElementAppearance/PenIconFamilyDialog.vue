@@ -19,7 +19,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import iconfont from "@/assets/iconfont/iconfont.json";
 import {reactive, toRefs, watch, getCurrentInstance, defineComponent, onMounted} from 'vue';
 

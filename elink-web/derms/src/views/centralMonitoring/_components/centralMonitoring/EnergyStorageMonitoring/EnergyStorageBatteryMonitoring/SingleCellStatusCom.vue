@@ -29,7 +29,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import CellListCom from "./CellListCom.vue";
 import {reactive, defineComponent, toRefs} from "vue";
 import {SystemVarTimeChartCom} from "@/views/centralMonitoring/_components/centralMonitoring/PublicComponents";

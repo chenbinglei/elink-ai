@@ -1,4 +1,9 @@
 // 图形数据列表
+import imageAsset from "@/assets/meta2d/image.png";
+import firewallAsset from "@/assets/meta2d/firewall.gif";
+import videoAsset from "@/assets/image/video.mp4";
+import audioAsset from "@/assets/image/audio.mp3";
+
 export const basicGraphicsCom = [
     {
         type: 1,
@@ -303,7 +308,7 @@ export const customControlCom = [
                     name: "image",
                     imageRatio: true,
                     crossOrigin: "undefined",
-                    image: require("@/assets/meta2d/image.png")
+                    image: imageAsset
                 }
             },
             {
@@ -315,7 +320,7 @@ export const customControlCom = [
                     name: "gif",
                     imageRatio: true,
                     crossOrigin: "undefined",
-                    image: require("@/assets/meta2d/firewall.gif")
+                    image: firewallAsset
                 }
             },
         ]
@@ -335,7 +340,7 @@ export const customControlCom = [
                     autoPlay: true,
                     videoType: "video",
                     externElement: true,
-                    video: require("@/assets/image/video.mp4")
+                    video: videoAsset
                 }
             },
             {
@@ -362,7 +367,7 @@ export const customControlCom = [
                     autoPlay: true,
                     videoType: "audio",
                     externElement: true,
-                    audio: require("@/assets/image/audio.mp3")
+                    audio: audioAsset
                 }
             },
             {

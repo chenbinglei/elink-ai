@@ -12,7 +12,7 @@
   </div></div>
 </template>
 
-<script>
+<script lang="ts">
 import { getLeftTreeDataFun } from "@/utils";
 import { onMounted, reactive, toRefs, defineComponent } from "vue";
 import PvProfitAnalysis from './_components/operationManagement/PhotovoltaicOperation/PvCompositeAnalysis/PvProfitAnalysis.vue';

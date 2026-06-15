@@ -99,7 +99,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {ElMessage} from "element-plus";
 import {exportCustomExcel} from "@/common/exportExcel";

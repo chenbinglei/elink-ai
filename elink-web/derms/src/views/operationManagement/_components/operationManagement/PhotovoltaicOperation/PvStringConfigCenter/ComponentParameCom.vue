@@ -79,7 +79,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {module_type_array} from "@/utils/setVariate";
 import {defineComponent, getCurrentInstance, reactive, toRefs, watch} from "vue";
 

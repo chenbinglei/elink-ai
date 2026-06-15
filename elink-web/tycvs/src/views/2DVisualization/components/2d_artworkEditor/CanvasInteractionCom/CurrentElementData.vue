@@ -26,7 +26,7 @@
   </el-collapse>
 </template>
 
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import {deepClone} from "@meta2d/core";

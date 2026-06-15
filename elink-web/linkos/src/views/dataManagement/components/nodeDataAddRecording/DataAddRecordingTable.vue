@@ -2,7 +2,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import CreateNodeTask from "./CreateNodeTask";
 import {reactive, toRefs, onMounted, ref, watch} from "vue";
 import {Search, CirclePlus} from '@element-plus/icons-vue';

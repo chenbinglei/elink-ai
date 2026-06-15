@@ -20,7 +20,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {getDataListFun} from "@/utils";
 import {getCurrentInstance, onMounted, reactive, toRefs, watch, defineComponent, ref} from "vue";

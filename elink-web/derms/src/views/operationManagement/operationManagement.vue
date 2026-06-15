@@ -2,7 +2,7 @@
   <SecondGradeRouterCom ref="secondGradeRouterComRef" />
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs} from "vue";
 import SecondGradeRouterCom from "@/components/component/SecondGradeRouterCom.vue";
 

@@ -74,7 +74,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {notCharmap, onlyNum} from '@/utils/validate';
 import {saveTenantAccount} from "@/api/tenantManagement/merchantConfig";

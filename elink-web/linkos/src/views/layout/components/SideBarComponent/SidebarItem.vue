@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent} from "vue";
 import RouterLinkItemCom from "./RouterLinkItemCom.vue";
 

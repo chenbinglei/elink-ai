@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs, watch} from "vue";
 import {findPvSiteMonitorData} from "@/api/centralMonitoring/centralMonitoring";
 import MeteorologicalInfCom from "./PhotovoltaicStationMonitoring/MeteorologicalInfCom.vue";

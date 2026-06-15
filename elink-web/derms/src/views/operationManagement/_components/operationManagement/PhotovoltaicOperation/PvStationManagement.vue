@@ -127,7 +127,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import pinyin from "tiny-pinyin";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {RefreshRight, Search, Setting} from "@element-plus/icons-vue";

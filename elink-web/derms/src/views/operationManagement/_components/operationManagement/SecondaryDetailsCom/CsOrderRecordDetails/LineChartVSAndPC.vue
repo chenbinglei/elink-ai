@@ -3,7 +3,7 @@
     <v-chart :option="chartOption" autoresize></v-chart>
   </div>
 </template>
-<script>
+<script lang="ts">
 import cloneDeep from "lodash/cloneDeep";
 import {reactive, toRefs, watch} from "vue";
 

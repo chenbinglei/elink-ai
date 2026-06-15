@@ -18,7 +18,7 @@
   </el-row>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent} from "vue";
 
 export default defineComponent({

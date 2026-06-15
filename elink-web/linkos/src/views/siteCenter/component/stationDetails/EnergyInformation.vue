@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {operateButtonIsClick} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {setTimerSplitTallyFun} from "@/utils/dateTime";

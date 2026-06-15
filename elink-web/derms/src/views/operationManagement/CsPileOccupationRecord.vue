@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useOperationManagementStore } from '@/stores/index';
 
 import { getLeftTreeDataFun } from "@/utils";
@@ -30,7 +30,7 @@ import { computed, defineComponent, onMounted, reactive, toRefs, ref } from "vue
 import SecondaryDetailsCom from "./_components/operationManagement/SecondaryDetailsCom.vue";
 import {
   CsPileOccupationRecord,
-} from "./_components/operationManagement/ChargingStationOperation"
+} from "./_components/operationManagement/ChargingStationOperation/index"
 export default defineComponent({
   components: {
     CsPileOccupationRecord,

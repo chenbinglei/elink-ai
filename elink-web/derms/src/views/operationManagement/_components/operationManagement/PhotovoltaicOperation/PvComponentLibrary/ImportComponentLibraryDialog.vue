@@ -19,7 +19,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {downloadFiles} from "@/utils";
 import {ElLoading, ElMessage} from "element-plus";
 import UploadFileCustom from "@/components/uploadFileCom/UploadFileCustom.vue";

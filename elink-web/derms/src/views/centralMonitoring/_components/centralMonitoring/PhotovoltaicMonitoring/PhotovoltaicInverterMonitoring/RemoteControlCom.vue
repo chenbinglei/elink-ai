@@ -21,7 +21,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs} from "vue";
 import {ControlModelDialog,PowerSettingDialog} from "@/views/centralMonitoring/_components/centralMonitoring/PublicComponents";
 

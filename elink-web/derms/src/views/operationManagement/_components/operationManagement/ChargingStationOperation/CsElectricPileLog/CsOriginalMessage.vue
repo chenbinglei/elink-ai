@@ -90,7 +90,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {pickerOptionsGthanAcTime} from "@/utils/dateTime";
 import {RefreshRight,Search} from '@element-plus/icons-vue';

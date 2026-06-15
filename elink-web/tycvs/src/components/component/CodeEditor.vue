@@ -4,7 +4,7 @@
   <!--  @ready="log('ready', $event)" @change="log('change', $event)" @focus="log('focus', $event)" @blur="log('blur', $event)"-->
 </template>
 
-<script>
+<script lang="ts">
 import {Codemirror} from "vue-codemirror";
 import {oneDark} from "@codemirror/theme-one-dark";
 import {javascript} from "@codemirror/lang-javascript";

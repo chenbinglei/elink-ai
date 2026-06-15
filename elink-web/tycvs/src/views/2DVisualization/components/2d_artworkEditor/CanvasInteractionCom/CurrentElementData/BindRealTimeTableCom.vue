@@ -46,7 +46,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import PelBindVariableDialog from "./PelBindVariableDialog.vue";
 import PelFieldAssociationVarDialog from "./PelFieldAssociationVarDialog.vue";
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance} from "vue";

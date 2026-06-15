@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useSidebarStore } from '@/stores/index';
 
 import { computed, reactive, toRefs, defineComponent } from "vue";
@@ -22,7 +22,7 @@ export default defineComponent({
 
     const sidebarStore = useSidebarStore();
     const isCollapse = computed(() => {
-      return store.state?.sidebar.isCollapse;
+      return sidebarStore.isCollapse;
     });
 
     const that = reactive({

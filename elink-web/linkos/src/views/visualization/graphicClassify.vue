@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 import {getAssetTypeList} from "@/api/modelCenter/modelManagement";

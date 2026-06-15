@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs, watch } from "vue";
 import { findPcsMonitorList } from "@/api/centralMonitoring/centralMonitoring";
 import PCSDeviceInfoCom from "./EnergyStoragePCSMonitoring/PCSDeviceInfoCom.vue";

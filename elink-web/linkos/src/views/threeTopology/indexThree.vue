@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import * as THREE from "three"; // 导入所有Three.js模块
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js"

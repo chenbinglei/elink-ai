@@ -90,7 +90,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessage, ElMessageBox } from "element-plus";
 import { strategy_type_array } from "@/utils/setVariate";
 import { RefreshRight, Search, Plus } from '@element-plus/icons-vue';

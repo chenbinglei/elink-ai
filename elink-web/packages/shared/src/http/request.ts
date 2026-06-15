@@ -1,30 +1,62 @@
 import { createTransform } from "../utils/transformRequest.js";
+import type { AxiosInstance, AxiosRequestConfig, AxiosStatic, CancelTokenSource } from "axios";
+import type { CookiesStatic } from "js-cookie";
+
+interface AuthManager {
+  getToken: (cookieKey?: string) => string | undefined;
+  setToken: (cookieData: string, cookieKey?: string, expires?: number) => string | undefined;
+  removeToken: (cookieKey?: string) => void;
+}
+
+interface Ref<T> {
+  value: T;
+}
+
+interface PendingItem {
+  u: string;
+  f: (message?: string) => void;
+  t: number;
+}
+
+interface ServiceState {
+  pending: PendingItem[];
+  canRequestRef: Ref<number>;
+  isIdenticalRef: Ref<number>;
+}
+
+interface HttpClientOptions {
+  axios: AxiosStatic;
+  ElMessage: (options: { message: string; type?: string; showClose?: boolean; duration?: number; onClose?: () => void }) => void;
+  qs: { stringify: (obj: Record<string, unknown>) => string };
+  auth: AuthManager;
+  baseURL: string;
+  timeout?: number;
+  getStoreGetters?: () => { oldUserId?: string; userInfo?: Record<string, unknown> } | null;
+  onAuthExpired?: () => void;
+  perRequestIsolation?: boolean;
+  enablePortNum?: boolean;
+}
+
+interface CancelAbleResult {
+  cancel: (message?: string) => void;
+  run: Promise<unknown>;
+}
+
+interface HttpClientResult {
+  request: (config: AxiosRequestConfig & { portNum?: number; noLoginRequired?: boolean }) => Promise<unknown>;
+  cancelAbleService: (config: AxiosRequestConfig & { portNum?: number }) => CancelAbleResult;
+}
 
 /**
  * 创建 HTTP 客户端（工厂函数）
  *
  * 【依赖注入设计】不再 import axios/element-plus/qs，由调用方注入。
- * 这样 @elink/shared 包是零外部依赖的纯函数库，避免 monorepo 中
- * 跨工作空间的模块解析问题，且各项目可使用自己版本的依赖。
  *
  * 【两种重复请求隔离模式】保持各项目原有行为：
  * - 单例模式（linkos/tycvs，perRequestIsolation=false）: 共享 pending 队列
  * - 每请求隔离（derms，perRequestIsolation=true）: 每请求独立实例 + 独立 pending
- *
- * @param {object} options
- * @param {object} options.axios - axios 模块实例（必传）
- * @param {object} options.ElMessage - element-plus ElMessage（必传）
- * @param {object} options.qs - qs 模块实例（必传）
- * @param {object} options.auth - auth管理器 { getToken, setToken, removeToken }
- * @param {string} options.baseURL - 基础URL
- * @param {number} [options.timeout=120000] - 超时时间
- * @param {Function} [options.getStoreGetters] - 获取store getters的函数
- * @param {Function} [options.onAuthExpired] - 登录失效回调（code=9999时触发）
- * @param {boolean} [options.perRequestIsolation=false] - 每请求隔离模式
- * @param {boolean} [options.enablePortNum=false] - 是否启用 portNum 动态端口路由（derms 启用，linkos/tycvs 关闭）
- * @returns {{ request, cancelAbleService }}
  */
-export function createHttpClient(options) {
+export function createHttpClient(options: HttpClientOptions): HttpClientResult {
   const {
     axios,
     ElMessage,
@@ -45,22 +77,20 @@ export function createHttpClient(options) {
 
   const transform = createTransform(qs);
 
-  // 创建基础 axios 实例
-  const createService = (customBaseURL) =>
+  const createService = (customBaseURL?: string): AxiosInstance =>
     axios.create({
       timeout,
-      transformRequest: [transform],
+      transformRequest: [transform as (data: unknown, headers?: Record<string, string>) => string | FormData | null | undefined],
       baseURL: customBaseURL || baseURL,
     });
 
-  // 配置拦截器
-  const setupInterceptors = (service, state) => {
+  const setupInterceptors = (service: AxiosInstance, state: ServiceState): void => {
     const { pending, canRequestRef, isIdenticalRef } = state;
     const CancelToken = axios.CancelToken;
 
-    const removePending = (config) => {
+    const removePending = (config: AxiosRequestConfig): void => {
       const time = Date.now();
-      const key = config.url + "&" + config.method + JSON.stringify(config.data);
+      const key = (config.url || "") + "&" + config.method + JSON.stringify(config.data);
       for (let i = pending.length - 1; i >= 0; i--) {
         if (pending[i] && pending[i].u === key) {
           if (time - pending[i].t < 1500) {
@@ -75,12 +105,11 @@ export function createHttpClient(options) {
       canRequestRef.value = 1;
     };
 
-    // request 拦截器
     service.interceptors.request.use(
       (config) => {
         const noToken =
           config.headers?.["X-No-Token"] === "true" ||
-          config.noLoginRequired === true;
+          (config as AxiosRequestConfig & { noLoginRequired?: boolean }).noLoginRequired === true;
 
         if (config.headers?.["X-No-Token"]) {
           delete config.headers["X-No-Token"];
@@ -89,26 +118,25 @@ export function createHttpClient(options) {
           delete config.headers["X-Skip-Transform"];
         }
 
-        let userInfo = null;
+        let userInfo: Record<string, unknown> | null = null;
         try {
           const userInfoStr = localStorage.getItem("USER_INFO");
           if (userInfoStr) userInfo = JSON.parse(userInfoStr);
-        } catch (e) {
+        } catch (_e) {
           userInfo = null;
         }
 
-        // 文件类需更改 Content-Type
         if (config.data instanceof FormData) {
           Object.assign(config.headers, {
             "Content-Type": "multipart/form-data",
           });
           if (auth.getToken() && userInfo) {
-            config.data.append("userId", userInfo.userId);
+            config.data.append("userId", userInfo.userId as string);
             if (!noToken) {
-              config.data.append("access_token", auth.getToken());
+              config.data.append("access_token", auth.getToken()!);
             }
             if (!config.data.get("tenantId") && userInfo.tenantId) {
-              config.data.append("tenantId", userInfo.tenantId);
+              config.data.append("tenantId", userInfo.tenantId as string);
             }
           }
         } else if (auth.getToken() && userInfo && config.data) {
@@ -121,7 +149,7 @@ export function createHttpClient(options) {
                 dataObj.tenantId = userInfo.tenantId;
               }
               config.data = JSON.stringify(dataObj);
-            } catch (e) {
+            } catch (_e) {
               // 非 JSON 字符串，跳过
             }
           } else if (typeof config.data === "object") {
@@ -133,7 +161,6 @@ export function createHttpClient(options) {
           }
         }
 
-        // 检测用户登录状态切换
         const storeGetters = getStoreGetters ? getStoreGetters() : null;
         if (
           userInfo &&
@@ -161,7 +188,7 @@ export function createHttpClient(options) {
             return;
           }
           pending.push({
-            u: config.url + "&" + config.method + JSON.stringify(config.data),
+            u: (config.url || "") + "&" + config.method + JSON.stringify(config.data),
             f: c,
             t: Date.now(),
           });
@@ -171,14 +198,12 @@ export function createHttpClient(options) {
       (error) => Promise.reject(error)
     );
 
-    // response 拦截器
     service.interceptors.response.use(
       (response) => {
-        if (auth.getToken()) auth.setToken(auth.getToken());
+        if (auth.getToken()) auth.setToken(auth.getToken()!);
         const res = response.data;
 
         if (res.code && res.code !== 20000 && res.code !== 200) {
-          // 兼容 derms 旧逻辑：特殊端点不弹错误窗
           const isSpecialEndpoint =
             response.config.url ===
             "/together/electConfig/applyElectConfigToOtherSite";
@@ -206,7 +231,6 @@ export function createHttpClient(options) {
         return response.data;
       },
       (error) => {
-        // 使用 axios.isCancel 官方 API 检测取消
         const isCanceled =
           axios.isCancel(error) ||
           (error?.name && String(error.name).includes("Cancel")) ||
@@ -227,17 +251,13 @@ export function createHttpClient(options) {
     );
   };
 
-  const newState = () => ({
+  const newState = (): ServiceState => ({
     pending: [],
     canRequestRef: { value: 1 },
     isIdenticalRef: { value: 1 },
   });
 
-  // 动态端口路由：仅当 enablePortNum=true 时启用
-  // - derms：旧逻辑生效，根据 config.portNum 替换 baseURL 端口
-  // - linkos/tycvs：旧逻辑已被注释（所有请求统一走网关:5000），保持禁用
-  // 始终移除 config.portNum，避免污染 axios config
-  const applyPortNum = (config) => {
+  const applyPortNum = (config: AxiosRequestConfig & { portNum?: number }): void => {
     if (config.portNum) {
       if (enablePortNum) {
         config.baseURL = (config.baseURL || baseURL).replace(
@@ -247,55 +267,52 @@ export function createHttpClient(options) {
       }
       delete config.portNum;
     }
-    return config;
   };
 
   if (perRequestIsolation) {
-    // derms 模式：每请求独立实例 + 独立 pending
-    const request = (config) => {
+    const request = (config: AxiosRequestConfig & { portNum?: number; noLoginRequired?: boolean }): Promise<unknown> => {
       applyPortNum(config);
       const instance = createService(config.baseURL || baseURL);
       setupInterceptors(instance, newState());
       return instance(config);
     };
 
-    const cancelAbleService = (config) => {
+    const cancelAbleService = (config: AxiosRequestConfig & { portNum?: number }): CancelAbleResult => {
       applyPortNum(config);
-      let resolve;
+      let resolve: (value: unknown) => void;
       const promise = new Promise((_resolve) => {
         resolve = _resolve;
       });
-      const cancel = (message) => resolve({ message });
+      const cancel = (message?: string) => resolve!({ message });
       const instance = createService(config.baseURL || baseURL);
       setupInterceptors(instance, newState());
       return {
         cancel,
-        run: instance({ ...config, cancelToken: { promise } }),
+        run: instance({ ...config, cancelToken: { promise } } as AxiosRequestConfig),
       };
     };
 
     return { request, cancelAbleService };
   }
 
-  // linkos/tycvs 模式：单例 + 共享 pending
   const service = createService();
   setupInterceptors(service, newState());
 
-  const request = (config) => {
+  const request = (config: AxiosRequestConfig & { portNum?: number; noLoginRequired?: boolean }): Promise<unknown> => {
     applyPortNum(config);
     return service(config);
   };
 
-  const cancelAbleService = (config) => {
+  const cancelAbleService = (config: AxiosRequestConfig & { portNum?: number }): CancelAbleResult => {
     applyPortNum(config);
-    let resolve;
+    let resolve: (value: unknown) => void;
     const promise = new Promise((_resolve) => {
       resolve = _resolve;
     });
-    const cancel = (message) => resolve({ message });
+    const cancel = (message?: string) => resolve!({ message });
     return {
       cancel,
-      run: service({ ...config, cancelToken: { promise } }),
+      run: service({ ...config, cancelToken: { promise } } as AxiosRequestConfig),
     };
   };
 

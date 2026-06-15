@@ -41,7 +41,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {Upload} from "@element-plus/icons-vue";
 import {exportExcelTable} from "./generateExcel";
 import {ElMessage, genFileId} from "element-plus";

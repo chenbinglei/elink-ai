@@ -22,7 +22,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {findDeviceTelemetryList, saveDeviceDeviceFieldSet} from "@/api/centralMonitoring/centralMonitoring";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, onMounted} from "vue";

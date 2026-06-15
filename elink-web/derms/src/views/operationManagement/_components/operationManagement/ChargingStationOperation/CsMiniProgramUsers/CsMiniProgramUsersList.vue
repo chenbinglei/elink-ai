@@ -97,7 +97,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useOperationManagementStore } from '@/stores/index';
 
 import {queryUserAuthorityIsHaveFun} from "@/utils";

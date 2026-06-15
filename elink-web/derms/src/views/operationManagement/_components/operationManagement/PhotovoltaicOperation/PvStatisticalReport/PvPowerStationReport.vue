@@ -94,7 +94,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import SiteCityNameCom from "./SiteCityNameCom.vue";
 import {exportCustomExcel} from "@/common/exportExcel";

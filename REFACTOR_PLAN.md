@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v2.8 | 编制日期：2026-06-03 | 最后更新：2026-06-12 | 状态：**执行中**
+> 版本：v2.12 | 编制日期：2026-06-03 | 最后更新：2026-06-12（P4-D） | 状态：**执行中**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -14,7 +14,7 @@
 | PHASE-1：安全加固与紧急修复 | ✅ 已完成 | 100% | P1-T1~T9+P1-V全部完成，2项因环境限制手动回退 |
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线：5场景3轮压测+8项指标+JVM GC+容器资源+DB连接数+质量验收全部通过） |
-| PHASE-4：前端现代化改造 | ⏳ 进行中 | 67% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送） |
+| PHASE-4：前端现代化改造 | ✅ 已完成 | 100% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送）；P4-BC-hotfix完成（router/index.js 工作树损坏还原 + getComponent 适配 Vite 多级动态 import + gallery.js require→ESM，3 dev server 入口 200）；P4-BC-hotfix2完成（derms `directive.js` v-resize 守卫修复 TypeError；`element.scss` 列表表格补深色 CSS 变量与行/单元格背景覆盖，根治白底）；P4-BC-hotfix3完成（derms `permission.js` `afterEach` 跨闭包 `appStore` 引用修复；`permission1.js` 同步修复闭包+删除多余右括号语法错误）；P4-D完成（3项目+shared包tsconfig.json创建allowJs:true，shared包8文件+derms 13文件+linkos/tycvs utils/api层.js→.ts迁移，645个SFC组件添加lang="ts"，修复6处ChargingStationOperation循环导入，3项目vite build全部通过） |
 | PHASE-5：构建部署与持续优化 | ⏳ 待开始 | 0% | 4项任务 |
 
 ### PHASE-1 任务进度明细
@@ -59,6 +59,9 @@
 |----------|----------|------|----------|----------|
 | P4-A | 创建 @elink/shared 公共包 | ✅ 已完成 | 2026-06-11 | elink-web/packages/shared + 3项目request.js/auth.js + 构建配置 |
 | P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia | ✅ 已完成 | 2026-06-12 | linkos/tycvs vite.config.js+index.html创建，3项目 stores/目录创建并迁移完成，175+组件Vuex→Pinia调用替换，192文件变更已提交推送(ff0c1be)；derms element.scss深色背景修复+postcss配置修复 |
+| P4-BC-hotfix | P4-BC 后三前端 router/index.js 加载报错修复 | ✅ 已完成 | 2026-06-12 | derms/linkos/tycvs `router/index.js` 工作树损坏（HEAD 版本可解析）→ `git checkout HEAD --` 还原；linkos/tycvs `getComponent` 改造为 `import.meta.glob("@/views/**/*.vue")` 查表方案（Vite 仅支持单层动态 import）；tycvs `2DVisualization/.../gallery.js` 4 处 `require()` → ESM `import`；3 dev server 入口/main.js/router 全部 200，linkos/tycvs 浏览器预览无错误 |
+| P4-BC-hotfix2 | derms v-resize 指令 TypeError + 列表表格白底深色化 | ✅ 已完成 | 2026-06-12 | derms `src/common/directive/directive.js` 的 `v-resize` 自定义指令对 `binding.value=undefined` 加守卫（`mounted` 早返回 + `debounce.fn.apply` 类型校验 + `unmounted._resizer` 存在性检测）；`src/styles/element.scss` `.el-table` 作用域补 `--el-table-tr-bg-color`/`--el-fill-color`/`--el-fill-color-blank`/`--el-table-text-color`/`--el-table-border-color` 等深色变量并强制覆盖 `tr/.el-table__row/.el-table__cell` 背景色与 hover/斑马纹，根治列表白底 |
+| P4-BC-hotfix3 | derms permission.js appStore 闭包作用域修复 | ✅ 已完成 | 2026-06-12 | derms `src/permission.js` 中 `appStore` 在 `router.beforeEach` 闭包内通过 `useAppStore()` 声明，`router.afterEach` 闭包不可见 → 在 `afterEach` 内重新 `const appStore = useAppStore();`，消除 `[Promise Error] appStore is not defined` ReferenceError；`src/permission1.js` 同步修复闭包问题并删除 `appStore.isSwitching = false);` 多余右括号 SyntaxError；全项目 28 个 `appStore` 引用文件均已确认 `useAppStore` import 完整 |
 
 ### 已完成任务的影响分析
 

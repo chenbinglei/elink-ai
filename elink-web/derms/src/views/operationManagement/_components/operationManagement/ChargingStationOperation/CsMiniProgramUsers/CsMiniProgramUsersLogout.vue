@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {RefreshRight, Search, Plus} from '@element-plus/icons-vue';
 import {onMounted, reactive, ref, toRefs, defineComponent, nextTick} from "vue";

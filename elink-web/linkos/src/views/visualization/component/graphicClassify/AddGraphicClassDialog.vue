@@ -19,7 +19,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {ElMessage} from "element-plus";
 import {saveGraphType} from "@/api/visualization/graphicClassify";

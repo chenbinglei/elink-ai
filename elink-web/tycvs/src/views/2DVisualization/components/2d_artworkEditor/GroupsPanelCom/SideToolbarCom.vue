@@ -8,7 +8,7 @@
     </template>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent, onMounted, getCurrentInstance} from "vue";
 
 export default defineComponent({

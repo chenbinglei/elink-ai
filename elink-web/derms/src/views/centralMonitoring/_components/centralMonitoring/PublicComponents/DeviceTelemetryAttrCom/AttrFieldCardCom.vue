@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {isNumber} from "@/utils";
 import {defineComponent, nextTick, reactive, toRefs, watch} from "vue";
 

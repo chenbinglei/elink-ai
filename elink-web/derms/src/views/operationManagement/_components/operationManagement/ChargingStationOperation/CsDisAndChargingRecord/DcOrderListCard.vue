@@ -94,7 +94,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useOperationManagementStore } from '@/stores/index';
 
 import {MoreFilled} from '@element-plus/icons-vue';

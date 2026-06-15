@@ -25,7 +25,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {notCharmap, validateURL} from "@/utils/validate";
 import {saveGraph} from "@/api/visualization/graphicAssociation";

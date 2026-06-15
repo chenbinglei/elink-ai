@@ -49,7 +49,7 @@
   </el-collapse-item>
 </template>
 
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import {DArrowLeft} from '@element-plus/icons-vue';

@@ -46,7 +46,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getDataListFun, setTreeData} from "@/utils";
 import {ElMessage, genFileId} from "element-plus";
 import {Delete, Plus} from "@element-plus/icons-vue";

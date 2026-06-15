@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {FilterDropDown} from "@/components/FromFilterComponent";
 import {onMounted, reactive, defineComponent, toRefs, watch} from "vue";

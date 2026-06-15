@@ -96,7 +96,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {pickerOptionsMinutesTimer} from "@/utils/dateTime";
 import {commonCharName,hasWhiteSpace} from "@/utils/validate";
 import {getAreaAddressByCoordinates} from "@/api/siteCenter/siteManagement";

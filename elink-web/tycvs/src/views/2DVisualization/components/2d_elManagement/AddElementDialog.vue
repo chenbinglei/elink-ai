@@ -49,7 +49,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {generateUUID} from '@/utils';
 import {ElMessage} from 'element-plus';
 import {hasWhiteSpace} from "@/utils/validate";

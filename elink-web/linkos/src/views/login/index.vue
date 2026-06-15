@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {onMounted, toRefs, reactive} from "vue";
 import {AccountPasswordLogin} from "./components";
 

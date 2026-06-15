@@ -31,7 +31,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {findDischargeTradeById} from "@/api/operationManagement/CsTransactionDetails";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, onMounted} from "vue";
 

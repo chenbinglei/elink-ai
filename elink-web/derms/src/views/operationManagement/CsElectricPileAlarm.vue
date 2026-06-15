@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs } from "vue";
 import SecondaryDetailsCom from "./_components/operationManagement/SecondaryDetailsCom.vue";
 import {

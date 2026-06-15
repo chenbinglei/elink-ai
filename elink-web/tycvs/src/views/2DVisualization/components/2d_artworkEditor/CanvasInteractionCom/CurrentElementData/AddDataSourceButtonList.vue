@@ -22,7 +22,7 @@
   </el-popover>
 </template>
 
-<script>
+<script lang="ts">
 import {pelAttributeNameList} from "@/utils/publicParam";
 import {reactive, toRefs, defineComponent, getCurrentInstance} from "vue";
 import PelFieldAssociationVarDialog from "./PelFieldAssociationVarDialog.vue";

@@ -9,7 +9,7 @@
     <parkingOverview v-if="tabActive == 9" :siteId="siteId"></parkingOverview>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { reactive, defineComponent, toRefs, provide, computed } from "vue";
 import {
   ChargingPileOverview,

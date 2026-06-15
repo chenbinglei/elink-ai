@@ -25,7 +25,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {ElMessage} from "element-plus";
 import {Delete, Plus} from "@element-plus/icons-vue";

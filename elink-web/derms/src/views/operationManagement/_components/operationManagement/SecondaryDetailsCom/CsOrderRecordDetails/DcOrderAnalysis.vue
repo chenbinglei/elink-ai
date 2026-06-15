@@ -16,7 +16,7 @@
     </el-row>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {colorHexTurnRgba} from "@/utils";
 import LineChartVSAndPC from "./LineChartVSAndPC.vue";
 import {defineComponent, reactive, toRefs, onMounted, watch} from "vue";

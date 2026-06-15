@@ -41,7 +41,7 @@
   </el-form>
 </template>
 
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import { Setting } from '@element-plus/icons-vue';

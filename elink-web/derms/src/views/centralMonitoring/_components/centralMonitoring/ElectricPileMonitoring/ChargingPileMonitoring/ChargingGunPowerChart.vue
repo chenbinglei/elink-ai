@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getNowDate, getNowDateAll} from "@/utils/dateTime";
 import {reactive, defineComponent, toRefs, watch} from "vue";
 import {findSystemVarOrFunctionCurveData} from "@/api/centralMonitoring/centralMonitoring";

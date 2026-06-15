@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {clickCopyValue, nullToDelete} from "@/utils";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";

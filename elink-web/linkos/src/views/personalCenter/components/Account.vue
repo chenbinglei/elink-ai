@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore } from '@/stores/index';
 
 import {nullToDelete} from "@/utils";

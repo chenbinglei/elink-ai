@@ -46,7 +46,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 import HistoryDataChart from "./HistoryDataChart";

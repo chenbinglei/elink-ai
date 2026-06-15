@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useRouter} from "vue-router";
 import {reactive, toRefs} from "vue";
 import img_404_cloud from '@/assets/image/404_cloud.png';

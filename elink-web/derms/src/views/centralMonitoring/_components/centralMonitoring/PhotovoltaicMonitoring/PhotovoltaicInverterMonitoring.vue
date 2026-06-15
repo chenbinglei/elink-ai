@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, defineComponent, toRefs, watch } from "vue";
 import { findPvInverterList } from "@/api/centralMonitoring/centralMonitoring";
 import RemoteControlCom from "./PhotovoltaicInverterMonitoring/RemoteControlCom.vue";

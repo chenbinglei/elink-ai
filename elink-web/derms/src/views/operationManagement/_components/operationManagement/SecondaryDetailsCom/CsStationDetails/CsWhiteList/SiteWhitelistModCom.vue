@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {reactive, toRefs, ref, watch, onMounted, defineComponent} from "vue";
 import {findRosterModeBySiteId, saveOrUpdateRosterMode} from "@/api/operationManagement/CsStationDetails";

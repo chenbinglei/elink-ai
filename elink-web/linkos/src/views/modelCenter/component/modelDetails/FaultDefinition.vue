@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getNowDateAll} from "@/utils/dateTime";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {onMounted, reactive, ref, toRefs} from "vue";

@@ -15,7 +15,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import RefundOperationCom from "./RefundOperationCom.vue";
 import CustomSteps from "@/components/component/CustomSteps.vue";

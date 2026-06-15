@@ -47,7 +47,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useEnergyManagementStore } from '@/stores/index';
 
 import {Plus, Picture} from '@element-plus/icons-vue';

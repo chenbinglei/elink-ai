@@ -20,7 +20,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessage } from "element-plus";
 import { importGraph } from "@/api/2DVisualization/2d_elManagement";
 import { getCurrentInstance, onMounted, reactive, ref, toRefs, watch, defineComponent } from "vue";

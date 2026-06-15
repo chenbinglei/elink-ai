@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { onMounted, reactive, toRefs, defineComponent } from "vue";
 import HandleMenus from "@/components/handleMenu/HandleMenus.vue";
 import PvStringConfigTable from './_components/operationManagement/PhotovoltaicOperation/PvStringConfigCenter/PvStringConfigTable.vue';

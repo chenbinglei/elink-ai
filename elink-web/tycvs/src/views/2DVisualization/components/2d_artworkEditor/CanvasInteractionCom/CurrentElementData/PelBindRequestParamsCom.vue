@@ -55,7 +55,7 @@
   </el-form>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent, onMounted, watch, getCurrentInstance} from "vue";
 
 export default defineComponent({

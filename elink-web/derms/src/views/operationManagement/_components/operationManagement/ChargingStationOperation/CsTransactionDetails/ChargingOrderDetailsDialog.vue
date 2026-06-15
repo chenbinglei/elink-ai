@@ -31,7 +31,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, ref, onMounted} from "vue";
 import {findRechargeTradeById} from "@/api/operationManagement/CsTransactionDetails";
 

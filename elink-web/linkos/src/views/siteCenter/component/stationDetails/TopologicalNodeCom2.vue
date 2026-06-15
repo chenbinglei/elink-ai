@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Plus} from "@element-plus/icons-vue";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 import {findTopoNodeListBySiteId} from "@/api/siteCenter/stationDetails";

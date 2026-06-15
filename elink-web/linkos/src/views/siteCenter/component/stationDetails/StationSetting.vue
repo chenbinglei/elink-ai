@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Edit,RefreshRight} from "@element-plus/icons-vue";
 import OtherSetting from "./StationSetting/OtherSetting.vue";
 import SecuritySetting from "./StationSetting/SecuritySetting.vue";

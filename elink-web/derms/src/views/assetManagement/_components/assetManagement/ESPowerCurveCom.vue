@@ -11,7 +11,7 @@
   </title-icon-view>
 </template>
 
-<script>
+<script lang="ts">
 import { useAssetManagementStore } from '@/stores/index';
 
 import cloneDeep from "lodash/cloneDeep";

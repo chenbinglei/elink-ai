@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {Search} from '@element-plus/icons-vue';
 import {findModelFunctionListByPage} from "@/api/dataManagement/systemVariables";

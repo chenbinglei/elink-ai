@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Plus } from '@element-plus/icons-vue';
 import { ElMessage, genFileId } from "element-plus";
 import { defineComponent, getCurrentInstance, reactive, ref, toRefs, watch } from "vue";

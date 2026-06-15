@@ -30,7 +30,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {operateButtonIsClick} from "@/utils";
 import AddChannelDialog from "./AddChannelDialog";
 import {CirclePlus} from '@element-plus/icons-vue';

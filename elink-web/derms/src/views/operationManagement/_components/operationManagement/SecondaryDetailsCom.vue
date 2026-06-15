@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useOperationManagementStore } from '@/stores/index';
 
 import {findSiteInfoByUserId} from "@/api/operationManagement/CsStationManagement";

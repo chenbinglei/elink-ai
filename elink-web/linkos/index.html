@@ -56,9 +56,22 @@
   </div>
 </div>
 <script src="/config.js"></script>
-<script src="/l7-mapbox/l7.js"></script>
-<script src="/l7-mapbox/mapbox-gl.js"></script>
-<script src="/l7-mapbox/l7-draw.min.js"></script>
+<script>
+// 临时调试：捕获所有浏览器端错误并显示在页面上
+window.onerror = function(msg, url, line, col, err) {
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:red;color:white;padding:10px;font-size:12px;word-break:break-all;';
+  d.textContent = '[JS Error] ' + msg + ' at ' + url + ':' + line + ':' + col;
+  document.body.appendChild(d);
+};
+window.onunhandledrejection = function(e) {
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:orange;color:white;padding:10px;font-size:12px;word-break:break-all;';
+  d.textContent = '[Promise Error] ' + (e.reason && e.reason.message || e.reason);
+  document.body.appendChild(d);
+};
+</script>
+<!-- l7-mapbox scripts loaded on demand by map components -->
 <script type="module" src="/src/main.js"></script>
 </body>
 </html>

@@ -12,6 +12,8 @@
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/theme-one-dark": "^6.1.2",
+    "@element-plus/icons-vue": "^2.3.1",
+    "@elink/shared": "workspace:*",
     "@meta2d/activity-diagram": "^1.0.1",
     "@meta2d/chart-diagram": "^1.0.11",
     "@meta2d/class-diagram": "^1.0.2",
@@ -43,7 +45,6 @@
     "svg-path-parser": "^1.1.0",
     "viewerjs": "^1.11.6",
     "vue": "^3.2.13",
-    "@elink/shared": "workspace:*",
     "vue-codemirror": "^6.1.1",
     "vue-echarts": "^6.2.3",
     "vue-pick-colors": "^1.6.5",
@@ -52,6 +53,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@antv/l7-draw": "^3.1.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",

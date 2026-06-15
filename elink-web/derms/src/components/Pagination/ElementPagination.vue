@@ -51,7 +51,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {
   getCurrentInstance,
   defineComponent,

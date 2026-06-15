@@ -86,7 +86,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useTagsViewStore } from '@/stores/index';
 
 import { getLeftTreeDataFun } from "@/utils";

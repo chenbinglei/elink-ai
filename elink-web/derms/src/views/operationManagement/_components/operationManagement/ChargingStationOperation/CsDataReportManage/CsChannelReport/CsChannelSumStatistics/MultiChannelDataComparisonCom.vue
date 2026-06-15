@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import cloneDeep from "lodash/cloneDeep";
 import {defineComponent, reactive, toRefs, watch} from "vue";
 

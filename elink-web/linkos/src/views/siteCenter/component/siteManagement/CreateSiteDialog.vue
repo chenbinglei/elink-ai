@@ -90,7 +90,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore } from '@/stores/index';
 
 import {ElMessage} from "element-plus";

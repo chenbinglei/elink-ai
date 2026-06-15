@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useRoute } from "vue-router";
 import { getLeftTreeDataFun } from "@/utils";
 import { reactive, defineComponent, toRefs, onMounted } from "vue";

@@ -28,7 +28,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {commonCharName} from "@/utils/validate";
 import {site_status_array} from "@/utils/setVariate";

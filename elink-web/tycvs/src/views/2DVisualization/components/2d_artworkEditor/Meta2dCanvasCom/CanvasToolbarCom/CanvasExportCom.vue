@@ -8,7 +8,7 @@
     </template>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import FileSaver from 'file-saver';

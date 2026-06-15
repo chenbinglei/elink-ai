@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "vue";
 import {findBatteryMonitorList} from "@/api/centralMonitoring/centralMonitoring";
 import SingleCellStatusCom from "./EnergyStorageBatteryMonitoring/SingleCellStatusCom.vue";

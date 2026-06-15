@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 // https://sangtian152.github.io/vue3-tree-org/demo/#attributes  官网
 import {setTreeData} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";

@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useEnergyManagementStore } from '@/stores/index';
 
 import {ElMessage, ElMessageBox} from "element-plus";

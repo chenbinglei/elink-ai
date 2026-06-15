@@ -14,7 +14,7 @@
     </el-table>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {reactive, toRefs, watch, ref} from "vue";
 
 export default {

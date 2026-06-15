@@ -17,7 +17,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import {reactive, toRefs, defineComponent, computed, watch} from "vue";

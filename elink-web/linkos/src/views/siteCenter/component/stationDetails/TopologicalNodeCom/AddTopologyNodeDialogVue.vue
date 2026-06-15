@@ -105,7 +105,7 @@
     :nodeType="formDialog.nodeType" :siteTopItemList='siteTopItemList'></DataItemDialog>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessage, ElMessageBox, } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { commonCharName, validateURL } from "@/utils/validate";

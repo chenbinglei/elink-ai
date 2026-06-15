@@ -19,7 +19,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {getNowDateAll} from "@/utils/dateTime";
 import {Folder} from "@element-plus/icons-vue";
 import {exportCustomExcel} from "@/common/exportExcel";

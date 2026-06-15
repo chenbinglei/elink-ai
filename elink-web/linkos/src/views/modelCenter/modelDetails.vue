@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {reactive, ref, toRefs, defineComponent} from "vue";
 import {DeviceList, FunctionDefine, EventComponent, ExtendedAttr, TopologyNode, ModelDetailsCard, FaultDefinition} from "@/views/modelCenter/component";

@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useSidebarStore } from '@/stores/index';
 
 import SidebarItem from "./SidebarItem.vue";

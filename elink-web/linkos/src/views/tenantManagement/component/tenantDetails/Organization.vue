@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData, treeToArray} from "@/utils";
 import {commonCharName} from "@/utils/validate";
 import {ElMessage, ElMessageBox} from "element-plus";

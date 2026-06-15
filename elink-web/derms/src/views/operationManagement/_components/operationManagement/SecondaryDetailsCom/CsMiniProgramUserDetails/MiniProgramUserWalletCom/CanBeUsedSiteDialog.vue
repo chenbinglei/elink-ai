@@ -14,7 +14,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onMounted, watch } from "vue";
 
 export default {

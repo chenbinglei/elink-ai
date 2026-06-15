@@ -145,7 +145,7 @@
   </el-collapse>
 </template>
 
-<script>
+<script lang="ts">
 import { useMeta2dStore } from '@/stores/index';
 
 import {clearLineCross, lineCross} from "@meta2d/utils";

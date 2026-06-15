@@ -61,7 +61,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {ArrowDown} from '@element-plus/icons-vue';
 import {getNowDate, pickerOptionsGthanAcTime} from "@/utils/dateTime";

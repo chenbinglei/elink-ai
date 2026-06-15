@@ -45,6 +45,16 @@ import 'vxe-table/es/style.css'
 const pinia = createPinia();
 const app = createApp(App);
 
+// 临时全局错误捕获，用于调试白屏问题
+app.config.errorHandler = (err, instance, info) => {
+  console.error('[Vue Error]', info, err);
+  // 将错误写入页面，方便无控制台时查看
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:red;color:white;padding:10px;font-size:14px;word-break:break-all;';
+  div.textContent = `[Vue Error] ${info}: ${err && err.message || err}`;
+  document.body.appendChild(div);
+};
+
 resizeDocument(app); //注册全局指令
 
 //注册自定义组件

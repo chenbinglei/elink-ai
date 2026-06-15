@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs, onMounted} from "vue";
 import {AssetStatisticsNumber, AssetStatisticsCard, AssetStatisticsTimeNum} from "./AssetStatisticsCom/index";
 

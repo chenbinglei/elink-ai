@@ -10,7 +10,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import FileShowView from "@/components/uploadFileCom/FileShowView.vue";
 import {parseTemplateContent} from "@/api/centralMonitoring/energyManagement";
 import { reactive, toRefs, watch, getCurrentInstance, onMounted, defineComponent } from "vue";

@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getCurrentInstance, onMounted, reactive, toRefs, watch } from "vue";
 
 export default {

@@ -56,7 +56,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { Upload } from "@element-plus/icons-vue";
 import { ElMessage, genFileId } from "element-plus";
 import { deleteTreeArray, setTreeData, treeToArray } from "@/utils";

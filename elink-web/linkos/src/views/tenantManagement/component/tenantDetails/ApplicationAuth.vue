@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore } from '@/stores/index';
 
 import { setTreeData, treeToArray } from "@/utils";

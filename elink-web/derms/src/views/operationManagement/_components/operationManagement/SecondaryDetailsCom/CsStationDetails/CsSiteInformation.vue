@@ -47,7 +47,7 @@
     <RealisticViewDialog v-if="realisticViewVisible" v-model:isVisible="realisticViewVisible" :returnDataInfo="returnDataInfo" @changeEvent="querySiteBasicInfoById" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import { Edit,Search } from '@element-plus/icons-vue';
 import Viewer from "@/components/component/Viewer.vue";
 import {setTimerSplitTallyFun} from "@/utils/dateTime";

@@ -16,7 +16,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useRouter } from "vue-router";
 import { defineComponent, onMounted, onUnmounted, reactive, toRefs } from "vue";
 import { formatDateTime } from "@/utils/dateTime";

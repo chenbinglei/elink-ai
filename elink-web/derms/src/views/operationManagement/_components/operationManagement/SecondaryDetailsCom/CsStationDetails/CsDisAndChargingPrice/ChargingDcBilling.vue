@@ -25,7 +25,7 @@
     </el-table>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {reactive, toRefs, watch,defineComponent} from "vue";
 
 export default defineComponent({

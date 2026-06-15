@@ -108,7 +108,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useTagsViewStore } from '@/stores/index';
 
 import {useRouter,useRoute} from "vue-router";

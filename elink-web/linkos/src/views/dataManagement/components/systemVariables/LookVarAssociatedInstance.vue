@@ -24,7 +24,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {deleteVariableNodeById} from "@/api/dataManagement/systemVariables";
 import {getCurrentInstance, onMounted, reactive, toRefs, watch, defineComponent} from "vue";

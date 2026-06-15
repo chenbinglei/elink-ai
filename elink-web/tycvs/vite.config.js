@@ -25,6 +25,7 @@ export default defineConfig({
   },
   plugins: [vue()],
   resolve: {
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
       '@': resolve('src'),
       '@elink/shared': path.resolve(__dirname, '../packages/shared/src'),

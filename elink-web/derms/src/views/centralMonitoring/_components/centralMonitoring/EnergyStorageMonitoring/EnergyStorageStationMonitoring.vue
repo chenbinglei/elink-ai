@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs, watch} from "vue";
 import {findStorageMonitorData} from "@/api/centralMonitoring/centralMonitoring";
 import {BubblePercentageCom, DeviceDetailedInfoCom, SystemVarTimeChartCom} from "@/views/centralMonitoring/_components/centralMonitoring/PublicComponents";

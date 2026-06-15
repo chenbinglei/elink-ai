@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import AddDeviceDialog from "../deviceList/AddDeviceDialog";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 import {findDeviceBasicInfoById} from "@/api/deviceCenter/deviceList";

@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore } from '@/stores/index';
 
 import {computed, reactive, toRefs} from "vue";

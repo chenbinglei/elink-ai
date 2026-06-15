@@ -18,7 +18,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import CodeEditor from "@/components/component/CodeEditor.vue";
 import {reactive, toRefs, watch, getCurrentInstance, defineComponent, onMounted} from 'vue';
 

@@ -7,6 +7,9 @@ createRouter.prototype.push = function push(location) {
     return routerPush.call(this, location).catch((error) => error);
 };
 
+// 使用 import.meta.glob 预加载 views 下所有 vue 组件，支持多级路径动态加载
+const viewModules = import.meta.glob("@/views/**/*.vue");
+
 // 获取所有页面权限列表数据
 let authListArray = [];
 let authListString = localStorage.getItem("AUTH_ROUTER");
@@ -99,14 +102,26 @@ function makeSidebarTreeNode(id = "root",isFullScreen = false) {
 // 获取模块的组件信息
 function getComponent(comp_str) {
     if (!comp_str) {
-        return () => import("@/views/layout/components/AppMain");
+        return () => import("@/views/layout/components/AppMain.vue");
     }
-    switch (comp_str) {
-        case "root":
-            return () => import("@/views/layout");
-        default:
-            return () => import(`@/views/${comp_str}.vue`)
+    if (comp_str === "root") {
+        return () => import("@/views/layout/index.vue");
     }
+    // 优先匹配 /src/views/<comp_str>.vue
+    const pathDirect = `/src/views/${comp_str}.vue`;
+    // 其次匹配 /src/views/<comp_str>/index.vue
+    const pathIndex = `/src/views/${comp_str}/index.vue`;
+    let loader = viewModules[pathDirect] || viewModules[pathIndex];
+    if (!loader) {
+        // 兜底：模糊匹配以 comp_str 结尾的文件
+        const suffix1 = `${comp_str}.vue`;
+        const suffix2 = `${comp_str}/index.vue`;
+        const matchedKey = Object.keys(viewModules).find(
+            (k) => k.endsWith(suffix1) || k.endsWith(suffix2)
+        );
+        if (matchedKey) loader = viewModules[matchedKey];
+    }
+    return loader || (() => import("@/views/404.vue"));
 }
 
 // console.log(routes);

@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getLeftTreeDataFun} from "@/utils";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 import CsOperationOverview from "./CsBusinessAnalysis/CsOperationOverview.vue";

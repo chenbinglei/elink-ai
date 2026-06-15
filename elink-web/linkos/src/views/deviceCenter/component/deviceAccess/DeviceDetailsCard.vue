@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Box, Picture} from '@element-plus/icons-vue';
 import {findDeviceBasicInfoById} from "@/api/deviceCenter/deviceList";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent} from "vue";

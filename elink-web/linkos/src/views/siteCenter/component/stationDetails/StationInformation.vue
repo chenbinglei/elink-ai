@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { clickCopyValue } from "@/utils";
 import { Edit } from "@element-plus/icons-vue";
 import { setTimerSplitTallyFun } from "@/utils/dateTime";

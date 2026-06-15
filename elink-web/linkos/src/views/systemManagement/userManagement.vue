@@ -90,7 +90,7 @@
     <AddToOrganDialog v-if="addToOrganVisible" v-model:isVisible="addToOrganVisible" :titleName="titleName" :userIdsArray="userIdsArray" :formDialog="formDialog" @changeEvent="changeEvent"></AddToOrganDialog>
   </div>
 </template>
-<script>
+<script lang="ts">
 
 import pinyin from "js-pinyin";
 import {ElMessage, ElMessageBox} from "element-plus";

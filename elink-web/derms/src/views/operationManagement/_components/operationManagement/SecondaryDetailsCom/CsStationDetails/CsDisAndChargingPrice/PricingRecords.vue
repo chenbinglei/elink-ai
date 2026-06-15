@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import SetPriceDialog from "./SetPriceDialog.vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import PricingDetailsDialog from "./PricingDetailsDialog.vue";

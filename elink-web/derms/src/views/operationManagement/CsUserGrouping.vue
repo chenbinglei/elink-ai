@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, defineComponent, toRefs } from "vue";
 import CsUserGrouping from "./_components/operationManagement/ChargingStationOperation/CsUserGrouping.vue";
 

@@ -166,7 +166,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useOperationManagementStore } from '@/stores/index';
 
 import pinyin from "tiny-pinyin";

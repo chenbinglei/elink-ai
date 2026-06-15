@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAssetManagementStore } from '@/stores/index';
 
 import AssetStatisticsChart from "./AssetStatisticsChart.vue";

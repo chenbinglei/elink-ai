@@ -24,7 +24,7 @@
   </el-container>
 </template>
 
-<script>
+<script lang="ts">
 import { useAppStore, useSidebarStore } from '@/stores/index';
 
 import {filterTreeArray} from "@/utils";

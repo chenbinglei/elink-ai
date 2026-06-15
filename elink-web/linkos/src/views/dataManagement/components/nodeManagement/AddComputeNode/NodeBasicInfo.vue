@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {someCharmap,notCharmap} from "@/utils/validate";
 import {reactive, ref, toRefs, defineComponent} from "vue";
 import {getNowDateMin,pickerOptionsDHSMTimer} from "@/utils/dateTime";

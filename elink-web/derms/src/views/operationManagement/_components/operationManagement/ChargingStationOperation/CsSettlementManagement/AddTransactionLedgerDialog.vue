@@ -8,7 +8,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import AccountInfoFormCom from "./AccountInfoFormCom.vue";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, ref, onMounted} from "vue";
 import {saveSiteAccount} from "@/api/operationManagement/CsSettlementManagement";

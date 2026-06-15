@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getLeftTreeDataFun} from "@/utils";
 import {onMounted, reactive, toRefs, defineComponent, getCurrentInstance} from "vue";
 import {ElectricPileInfoCom, RealTimeStatusCom, ChargingRateCom, DisChargingRateCom, OccupancyRateCom, FirmwareInfoCom} from "./CsChargingPileDetails/index";

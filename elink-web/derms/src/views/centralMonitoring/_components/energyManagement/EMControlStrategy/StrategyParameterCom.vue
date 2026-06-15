@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useEnergyManagementStore } from '@/stores/index';
 
 import {generateUUID} from "@/utils";

@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {operateButtonIsClick} from "@/utils";
 import {CirclePlus} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";

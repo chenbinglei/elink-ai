@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {calcNumberFun} from "@/utils";
 import {reactive, defineComponent, toRefs, watch} from "vue";
 

@@ -23,7 +23,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {isCheckVIN, mobile} from "@/utils/validate";
 import {saveWhiteRosterInfo} from "@/api/operationManagement/CsStationDetails";

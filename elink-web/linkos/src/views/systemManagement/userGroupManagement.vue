@@ -60,7 +60,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {computed, onActivated, reactive, ref, toRefs} from "vue"
 import {CirclePlus, Delete, Refresh, Search} from "@element-plus/icons-vue";

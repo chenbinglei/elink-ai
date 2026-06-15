@@ -7,7 +7,7 @@
   </TableHeaderTitle>
 </template>
 
-<script>
+<script lang="ts">
 import {Folder} from "@element-plus/icons-vue";
 import {exportCustomExcel} from "@/common/exportExcel";
 import {reactive, toRefs, defineComponent, watch} from "vue";

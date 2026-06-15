@@ -14,7 +14,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import { useEnergyManagementStore } from '@/stores/index';
 
 import {reactive, defineComponent, toRefs, computed, watch} from "vue";

@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useAssetManagementStore } from '@/stores/index';
 
 import { Mapbox } from '@antv/l7-maps';

@@ -18,7 +18,7 @@
   </title-view>
 </template>
 
-<script>
+<script lang="ts">
 import {RefreshRight} from '@element-plus/icons-vue';
 import {defineComponent, reactive, toRefs, watch} from "vue";
 import {queryDeviceFunCurveData, queryFunctionList} from "@/api/centralMonitoring/energyManagement";

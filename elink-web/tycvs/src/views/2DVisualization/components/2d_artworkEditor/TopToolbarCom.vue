@@ -20,7 +20,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useAppStore, useMeta2dStore } from '@/stores/index';
 
 import {useRouter, useRoute} from "vue-router";
