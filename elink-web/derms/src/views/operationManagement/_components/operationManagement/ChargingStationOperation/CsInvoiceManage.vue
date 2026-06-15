@@ -125,7 +125,8 @@ import { ref, onMounted, computed, nextTick } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { queryInvoiceList, updateInvoiceStatus } from '@/api/operationManagement/CsInvoiceManage';
 import { pickerOptionsGthanAcTime } from "@/utils/dateTime";
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import { findAccountListByUserId } from "@/api/operationManagement/CsSettlementManagement";
 const formInline = ref({
   id: '',
@@ -273,9 +274,9 @@ const clickInvoice = (row, type) => {
   invoiceOrderId.value = row.id;
   title.value = type // 设置标题为 '发票' 或其他内容
 }
-const store = useStore();
+const appStore = useAppStore();
 const userInfo = computed(() => {
-  return store.state.app.userInfo;
+  return appStore.userInfo;
 })
 const accountIdArray = ref([])
 const getfindAccountList = () => {

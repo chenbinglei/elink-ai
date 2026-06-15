@@ -149,7 +149,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, toRefs, defineComponent, watch, getCurrentInstance, } from "vue";
 import AddTopologyNodeDialog from "./AddTopologyNodeDialogVue.vue";
 import { findTopNodeInfoById } from "@/api/siteCenter/stationDetails";

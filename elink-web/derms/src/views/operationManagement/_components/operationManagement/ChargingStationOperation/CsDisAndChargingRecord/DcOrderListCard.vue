@@ -94,8 +94,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import {MoreFilled} from '@element-plus/icons-vue';
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -119,7 +120,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const {emit} = getCurrentInstance();
 
     const that = reactive({
@@ -140,14 +141,14 @@ export default defineComponent({
           return;
         }
 
-        store.dispatch("updateSecondaryInfo", {
+        operationManagementStore.updateSecondaryInfo({
           type: that.orderType,
           id: props.orderInfo.id,
           componentName: "CsOrderRecordDetails",
           backComponentName: "CsDisAndChargingRecord",
           subTitle: `${that.orderType === 2 ? '放' : '充'}电记录详情`,
         });
-        store.dispatch("updateSecondaryVisible", true);
+        operationManagementStore.updateSecondaryVisible(true);
       }
 
       if (operateType === 2) {

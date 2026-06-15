@@ -1,6 +1,7 @@
 import moment from "moment";
 import { ref, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import { disabledDate } from "@/views/monitor/constant";
 
 const dateFormat = "YYYY-MM-DD";
@@ -9,8 +10,8 @@ const format = `${dateFormat} ${timeFormat}`;
 export default function useSearchBar() {
   const startTime = moment().startOf("day").format(format);
   const endTime = moment().format(format);
-  const store = useStore();
-  const deviceFieldList = computed(() => store.state.monitor.deviceFieldList);
+  const monitorStore = useMonitorStore();
+  const deviceFieldList = computed(() => monitorStore.deviceFieldList);
   const searchConfig = ref([
     {
       key: "dateList",

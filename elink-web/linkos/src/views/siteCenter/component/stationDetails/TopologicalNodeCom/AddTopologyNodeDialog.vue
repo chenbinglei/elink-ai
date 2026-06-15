@@ -53,7 +53,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {commonCharName} from "@/utils/validate";
 import {getCurrentInstance, onMounted, reactive, ref, toRefs, watch, defineComponent} from "vue";

@@ -6,8 +6,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import { getFileNameFromPath } from "@/utils";
 import { readOSSFile } from "@/common/readOSSFile";
 import GroupsPanelCom from "./GroupsPanelCom.vue";
@@ -25,10 +26,10 @@ export default defineComponent({
   },
   components: { GroupsPanelCom, Meta2dCanvasCom, CanvasInteractionCom },
   setup (props) {
-    const store = useStore();
-    const canvasMeta2d = computed(() => store.state.meta2d.canvasMeta2d);
-    const canvasMeta2dData = computed(() => store.state.meta2d.canvasMeta2dData);
-    const customCanvasOptionsList = computed(() => store.state.meta2d.customCanvasOptionsList);
+    const meta2dStore = useMeta2dStore();
+    const canvasMeta2d = computed(() => meta2dStore.canvasMeta2d);
+    const canvasMeta2dData = computed(() => meta2dStore.canvasMeta2dData);
+    const customCanvasOptionsList = computed(() => meta2dStore.customCanvasOptionsList);
 
     const that = reactive({ loading: false });
 
@@ -108,7 +109,7 @@ export default defineComponent({
     };
 
     const meta2dCanvasLoadSFun = () => {
-      store.dispatch("updateCanvasMeta2dAllLoad", true);
+      meta2dStore.updateCanvasMeta2dAllLoad(true);
       that.loading = false;
     };
 
@@ -117,7 +118,7 @@ export default defineComponent({
     const canvasMeta2dToComponentFun = () => JSON.stringify(canvasMeta2d.value.toComponent());
 
     onMounted(() => {
-      store.dispatch("updateCanvasModeType", props.modeType);
+      meta2dStore.updateCanvasModeType(props.modeType);
     });
 
     return {

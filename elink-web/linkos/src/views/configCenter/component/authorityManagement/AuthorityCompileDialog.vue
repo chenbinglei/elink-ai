@@ -62,7 +62,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {databaseName, someCharmap} from "@/utils/validate";
 import {saveOrUpdatePermission} from "@/api/configCenter/authorityManagement";

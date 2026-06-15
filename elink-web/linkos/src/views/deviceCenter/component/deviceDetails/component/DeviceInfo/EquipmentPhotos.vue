@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Viewer from "@/components/component/Viewer";
 import {ElMessage, ElMessageBox} from "element-plus";
 import UploadDevicePhotos from "./UploadDevicePhotos";

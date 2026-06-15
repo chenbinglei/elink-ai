@@ -138,7 +138,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessageBox } from "element-plus";
 import ConfigDescDialog from "./ConfigDescDialog.vue";
 import { defineComponent, reactive, toRefs } from "vue";

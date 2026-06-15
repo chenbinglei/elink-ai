@@ -23,7 +23,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 import { ControlModelDialog, PowerSettingDialog, AlarmResetDialog } from "@/views/centralMonitoring/_components/centralMonitoring/PublicComponents";
 

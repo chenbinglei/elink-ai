@@ -44,7 +44,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import $filters from "@/common/filters";
 import {getUrlFileName, setTreeData} from "@/utils";

@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Refresh} from '@element-plus/icons-vue';
 import kongtTiaoIcon from "@/assets/image/kongtTiao_icon.png";
 import {reactive, defineComponent, toRefs, watch, getCurrentInstance} from "vue";

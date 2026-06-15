@@ -21,7 +21,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {someCharmap} from "@/utils/validate";
 import {saveStrategy,queryTemplateList} from "@/api/centralMonitoring/energyManagement";

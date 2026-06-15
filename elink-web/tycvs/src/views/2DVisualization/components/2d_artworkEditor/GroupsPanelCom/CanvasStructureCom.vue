@@ -47,8 +47,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {setTreeData, treeToArray} from "@/utils";
 import {reactive, toRefs, defineComponent, ref, computed, watch} from "vue";
 import {ElMessage} from "element-plus";
@@ -57,19 +58,19 @@ export default defineComponent({
   name: "CanvasStructureCom",
   setup() {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     // 代表画布初始化成功
     const canvasMeta2dAllLoad = computed(() => {
-      return store.state.meta2d.canvasMeta2dAllLoad;
+      return meta2dStore.canvasMeta2dAllLoad;
     });
 
     // 当前选中的图元
     const current_active_pel_list = computed(() => {
-      return store.state.meta2d.current_active_pel_list;
+      return meta2dStore.current_active_pel_list;
     });
 
     const that = reactive({

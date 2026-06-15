@@ -87,7 +87,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getNowDateAll} from "@/utils/dateTime";
 import {module_type_array} from "@/utils/setVariate";
 import {ElMessage, ElMessageBox} from "element-plus";

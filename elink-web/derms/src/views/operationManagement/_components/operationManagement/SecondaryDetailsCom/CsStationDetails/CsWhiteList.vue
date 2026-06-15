@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Plus} from "@element-plus/icons-vue";
 import {ElMessage,ElMessageBox} from "element-plus";
 import AddWhiteListDialog from "./CsWhiteList/AddWhiteListDialog.vue";

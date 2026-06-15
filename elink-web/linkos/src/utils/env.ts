@@ -1,5 +1,5 @@
 const isEnv = (env) => {
-  return process.env.NODE_ENV === env;
+  return import.meta.env.MODE === env;
 };
 
 const isDev = () => isEnv("development");

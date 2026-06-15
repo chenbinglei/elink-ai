@@ -64,7 +64,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Refresh } from "@element-plus/icons-vue";
 import TableFilterPopCom from "@/components/FromFilterComponent/TableFilterPopCom.vue";
 import { getDeviceVersionList, queryDeviceUpdateList } from "@/api/deviceCenter/deviceUpgrade";

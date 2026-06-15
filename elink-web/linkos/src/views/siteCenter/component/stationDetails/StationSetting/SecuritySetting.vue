@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import OperationPasswordDialog from "./OperationPasswordDialog.vue";
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance} from "vue";
 

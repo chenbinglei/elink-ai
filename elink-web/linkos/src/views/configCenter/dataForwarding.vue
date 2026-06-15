@@ -62,7 +62,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {operateButtonIsClick} from "@/utils";
 import {ElMessage,ElMessageBox} from "element-plus";
 import {CirclePlus,Search} from "@element-plus/icons-vue";

@@ -1,6 +1,7 @@
 import { ref, onMounted, onActivated, onDeactivated, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import SystemMonitorController from "@/api/together/systemMonitor";
 import { EventLevelList, AlarmStatusList } from "@/common/enum";
 import AlarmStatusView from "./alarmStatusView.vue";
@@ -8,8 +9,8 @@ import EventLevelView from "./eventLevelView.vue";
 
 export default function useTable ({ formData, initData }) {
   const route = useRoute();
-  const store = useStore();
-  const deviceTypeMap = computed(() => store.state.monitor.deviceTypeMap); // 设备类型映射
+  const monitorStore = useMonitorStore();
+  const deviceTypeMap = computed(() => monitorStore.deviceTypeMap); // 设备类型映射
   const siteId = route.params.id;
   const tableRef = ref(null);
   const columns = ref([

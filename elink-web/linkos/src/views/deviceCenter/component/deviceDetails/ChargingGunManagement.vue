@@ -64,8 +64,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import {ElMessage, ElMessageBox} from "element-plus";
 import {CirclePlus,DocumentCopy} from "@element-plus/icons-vue";
 import {AddChargingGunDialog,CloneChargingGunDialog} from "./component";
@@ -82,9 +83,9 @@ export default defineComponent({
     }
   },
   setup(props){
-    const store = useStore();
+    const appStore = useAppStore();
     const contentMainMaxHeight = computed(() => {
-      return store.state.app.contentMainMaxHeight;
+      return appStore.contentMainMaxHeight;
     });
 
     const that = reactive({

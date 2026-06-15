@@ -22,7 +22,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {commonCharName} from "@/utils/validate";
 import {saveOrUpdateOrganStructure} from "@/api/tenantManagement/tenantTabulation";

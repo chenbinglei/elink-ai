@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import $filters from "@/common/filters";
 import {Folder} from "@element-plus/icons-vue";
 import {getNowDateAll} from "@/utils/dateTime";

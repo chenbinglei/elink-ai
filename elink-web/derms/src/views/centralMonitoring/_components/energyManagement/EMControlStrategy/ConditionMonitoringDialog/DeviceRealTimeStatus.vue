@@ -50,7 +50,7 @@
   </title-view>
 </template>
 
-<script>
+<script lang="ts">
 import {RefreshRight} from '@element-plus/icons-vue';
 import {defineComponent, reactive, toRefs, watch} from "vue";
 import {findDeviceFunctionListById} from "@/api/centralMonitoring/energyManagement";

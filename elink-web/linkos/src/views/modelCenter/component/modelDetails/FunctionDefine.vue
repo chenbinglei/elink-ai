@@ -62,7 +62,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { AddStandardFeatures } from "./component";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {onMounted, reactive, ref, toRefs, defineComponent} from "vue";

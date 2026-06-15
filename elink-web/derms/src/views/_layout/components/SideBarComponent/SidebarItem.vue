@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, toRefs} from "vue";
 
 export default {

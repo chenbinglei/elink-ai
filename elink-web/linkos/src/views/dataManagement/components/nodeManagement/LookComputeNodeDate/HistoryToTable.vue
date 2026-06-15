@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, ref, toRefs} from "vue";
 import {ElMessage} from "element-plus";
 

@@ -28,7 +28,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {saveChannel} from "@/api/deviceCenter/deviceAccess";
 import {notCharmap,isValidIP,integer1tox} from "@/utils/validate";

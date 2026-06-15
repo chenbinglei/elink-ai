@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, reactive, toRefs, defineComponent} from "vue";
 
 export default defineComponent({

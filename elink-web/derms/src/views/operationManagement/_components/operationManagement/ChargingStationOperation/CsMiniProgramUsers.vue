@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getLeftTreeDataFun} from "@/utils";
 import {onMounted, reactive, toRefs, defineComponent, getCurrentInstance} from "vue";
 import CsMiniProgramUsersList from "./CsMiniProgramUsers/CsMiniProgramUsersList.vue";

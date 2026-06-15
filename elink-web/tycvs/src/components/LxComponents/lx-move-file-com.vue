@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {getCurrentInstance, onMounted, reactive, toRefs, watch, defineComponent, ref, nextTick} from "vue";
 

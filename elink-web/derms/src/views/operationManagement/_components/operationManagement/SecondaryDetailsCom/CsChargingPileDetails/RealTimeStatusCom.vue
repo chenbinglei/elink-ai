@@ -109,8 +109,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useAppStore, useOperationManagementStore } from '@/stores/index';
+
 import { ElMessage } from "element-plus";
 import { MoreFilled } from '@element-plus/icons-vue';
 import { queryUserAuthorityIsHaveFun } from "@/utils";
@@ -134,11 +135,12 @@ export default defineComponent({
   },
   setup (props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
+    const operationManagementStore = useOperationManagementStore();
     const { emit } = getCurrentInstance();
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({
@@ -283,7 +285,7 @@ export default defineComponent({
 
         let componentName = row.gunWorkState === 2 ? 'CsDisChargingRecord' : 'CsChargingRecord';
         emit("changEvent", { keywordType: "5", keyword: props.routeInfo.pileCode, operateType: "switchComponents", componentName: componentName });
-        store.dispatch("updateSecondaryVisible", false);
+        operationManagementStore.updateSecondaryVisible(false);
       }
 
       if (operateType === 2) {

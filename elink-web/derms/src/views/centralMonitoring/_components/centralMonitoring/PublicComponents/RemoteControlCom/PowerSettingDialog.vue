@@ -20,7 +20,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, ref, onMounted} from "vue";
 
 export default defineComponent({

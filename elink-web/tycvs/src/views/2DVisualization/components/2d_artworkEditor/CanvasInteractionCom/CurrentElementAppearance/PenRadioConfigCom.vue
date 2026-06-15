@@ -27,7 +27,7 @@
   </el-collapse-item>
 </template>
 
-<script>
+<script lang="ts">
 import {DArrowLeft} from "@element-plus/icons-vue";
 import PenCodeOptionDialog from "./PenCodeOptionDialog.vue";
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance} from "vue";

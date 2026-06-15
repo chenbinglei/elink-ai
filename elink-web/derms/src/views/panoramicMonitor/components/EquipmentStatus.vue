@@ -44,7 +44,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs, computed } from "vue";
 export default defineComponent({
   name: "equipmentStatus",

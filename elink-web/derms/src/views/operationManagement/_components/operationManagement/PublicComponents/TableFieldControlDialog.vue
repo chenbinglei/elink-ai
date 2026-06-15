@@ -12,7 +12,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, onMounted} from "vue";
 

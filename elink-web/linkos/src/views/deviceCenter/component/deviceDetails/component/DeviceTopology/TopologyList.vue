@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import AddTopologyDialog from "./AddTopologyDialog";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getCurrentInstance, reactive, ref, toRefs} from "vue";

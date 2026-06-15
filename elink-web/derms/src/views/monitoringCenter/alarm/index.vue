@@ -134,7 +134,8 @@
 </template>
 <script setup>
 import emptyImg from '@/assets/image/empty.png';
-import { useStore } from 'vuex';
+import { useMonitorStore } from '@/stores/index';
+
 import moment from "moment";
 import { ElMessage } from "element-plus";
 import { ref, reactive, watch, onMounted, computed } from "vue";
@@ -152,7 +153,7 @@ import { findSiteListByUserId } from "@/api/centralMonitoring/centralMonitoring"
 
 
 import { color } from 'echarts';
-const store = useStore();
+const monitorStore = useMonitorStore();
 const activeTab = ref(1);
 const activeRow = ref({});
 const activeTopRow = ref({});
@@ -307,7 +308,7 @@ const searchAlarmDeviceCountFun = (data) => {
 };
 onMounted(() => {
   fetchSiteList()
-  store.dispatch('getAssetTypeList');
+  monitorStore.getAssetTypeList();
   searchAlarmSiteCountFun({ startDate: dateT.value[0], endDate: dateT.value[1] });
 });
 const onSearch = () => {

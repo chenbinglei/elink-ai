@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { treeToArray } from '@/utils';
 import { ElMessageBox } from 'element-plus';
 import { Search, ArrowDown } from "@element-plus/icons-vue";

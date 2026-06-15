@@ -11,8 +11,9 @@
   </title-icon-view>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAssetManagementStore } from '@/stores/index';
+
 import cloneDeep from "lodash/cloneDeep";
 import {findPvSiteQtCurve} from "@/api/assetManagement/assetManagement";
 import {computed, defineComponent, reactive, ref, toRefs, watch} from "vue";
@@ -22,13 +23,13 @@ export default defineComponent({
   name: "PvPowerGenerationAnalysisCom",
   setup() {
 
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const siteAllIds = computed(() => {
-      return store.state.assetManagement.siteAllIds;
+      return assetManagementStore.siteAllIds;
     });
 
     const updateTimeNum = computed(() => {
-      return store.state.assetManagement.updateTimeNum;
+      return assetManagementStore.updateTimeNum;
     });
 
     const that = reactive({

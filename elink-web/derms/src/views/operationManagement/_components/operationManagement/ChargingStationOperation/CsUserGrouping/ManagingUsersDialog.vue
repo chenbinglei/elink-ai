@@ -65,7 +65,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {Search, CirclePlusFilled, RemoveFilled} from '@element-plus/icons-vue';
 import {queryAppletUserList} from "@/api/operationManagement/CsMiniProgramUsers";

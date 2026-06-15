@@ -22,15 +22,17 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useAppStore, useMonitorStore } from '@/stores/index';
+
 import { useRoute, useRouter } from "vue-router";
 import { ElMessageBox } from "element-plus";
 
 const route = useRoute();
 const router = useRouter();
-const store = useStore();
-const isFullscreen = computed(() => store.state.monitor.isFullscreen);
-const systemName = computed(() => store.state.monitor.systemName);
+const monitorStore = useMonitorStore();
+    const appStore = useAppStore();
+const isFullscreen = computed(() => monitorStore.isFullscreen);
+const systemName = computed(() => monitorStore.systemName);
 const inFrame = computed(() => window.top !== window);
 const iconClass = 'header-icon iconfont text-15px text-white cursor-pointer hover:filter-brightness-120 rounded-50% flex items-center justify-center w-30px h-30px ml-18px';
 const fullscreenTip = computed(() => {
@@ -38,7 +40,7 @@ const fullscreenTip = computed(() => {
 });
 const switchFullscreen = () => {
     const payload = !isFullscreen.value;
-    store.dispatch('updateIsFullscreen', payload);
+    monitorStore.updateIsFullscreen(payload);
     window.top.postMessage({
         action: "fullScreenChange",
         payload
@@ -52,7 +54,7 @@ const exitSystem = () => {
         window.top.postMessage({
             action: "exitSystem"
         });
-        store.dispatch('exitSystem', { noReload: true });
+        appStore.exitSystem({ noReload: true });
         setTimeout(() => {
             router.replace(`/login?id=${route.params.id}`);
         });

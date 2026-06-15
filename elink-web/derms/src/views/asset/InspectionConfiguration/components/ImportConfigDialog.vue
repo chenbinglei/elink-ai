@@ -21,7 +21,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { ElLoading, ElMessage } from "element-plus";
 import UploadFileCustom from "@/components/uploadFileCom/UploadFileCustom.vue";
 import { importInspectionItem } from "@/api/assetManagement/inspection";

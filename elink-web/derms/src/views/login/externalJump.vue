@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {useRoute, useRouter} from "vue-router";
 import {getToken, setToken} from "@/utils/auth";

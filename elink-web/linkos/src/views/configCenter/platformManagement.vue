@@ -51,7 +51,7 @@
     <AddPlatformDialog v-if="addPlatformVisible" v-model:isVisible="addPlatformVisible" :titleName="titleName" :activeEditInfo="formDialog" @changeEvent="listArray('resetPage')" />
   </div>
 </template>
-<script>
+<script lang="ts">
 
 import {operateButtonIsClick} from "@/utils";
 import {ElMessage,ElMessageBox} from "element-plus";

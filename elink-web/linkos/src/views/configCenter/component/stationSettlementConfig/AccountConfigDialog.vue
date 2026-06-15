@@ -24,7 +24,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, onMounted, reactive, ref, toRefs, watch, defineComponent} from "vue";
 
 export default defineComponent({

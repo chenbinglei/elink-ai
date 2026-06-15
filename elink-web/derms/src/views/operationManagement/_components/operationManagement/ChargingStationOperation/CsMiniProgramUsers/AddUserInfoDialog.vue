@@ -31,7 +31,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {pay_plat_form_array} from "@/utils/setVariate";
 import {isValidEmail, mobile, someCharmap} from "@/utils/validate";

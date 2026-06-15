@@ -36,8 +36,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useTagsViewStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {useRoute, useRouter} from "vue-router";
 import {computed, onMounted, reactive, toRefs} from "vue"
@@ -50,7 +51,7 @@ export default {
   name: "modelClassification",
   components:{ModelClassCard,AddModelClassDialog},
   setup() {
-    const store = useStore();
+    const tagsViewStore = useTagsViewStore();
     const route = useRoute();
     const vueRouter = useRouter();
 
@@ -99,7 +100,7 @@ export default {
       }
 
       vueRouter.push({ path: routeName, query: { id: cardInfo.id,subTitle: cardInfo.sortName } });
-      store.dispatch("addBackButViews",{ id: cardInfo.id,backRouteName: route.name, showButRoute: routeName });
+      tagsViewStore.addBackButViews({ id: cardInfo.id,backRouteName: route.name, showButRoute: routeName });
     }
 
     const clickAddBut = () => {

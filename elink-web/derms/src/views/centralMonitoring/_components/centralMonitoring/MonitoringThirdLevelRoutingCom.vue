@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {getLeftTreeDataFun} from "@/utils";
 import PhotovoltaicTopologyMonitoring from "./WebCanvasCom.vue";

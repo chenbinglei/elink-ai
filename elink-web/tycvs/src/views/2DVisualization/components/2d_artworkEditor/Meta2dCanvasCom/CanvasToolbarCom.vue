@@ -34,8 +34,9 @@
     <CanvasMeta2dPublishDialog v-if="canvasMeta2dPublishVisible" v-model:isVisible="canvasMeta2dPublishVisible" />
   </div>
 </template>
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {deepClone} from "@meta2d/core";
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -49,36 +50,36 @@ export default defineComponent({
   components: {CanvasExportCom,ConnectionMethodCom,StartingPointCom,EndingPointCom,AddDataSourceDialog,AddBindVariableDialog, CanvasMeta2dPublishDialog},
   setup() {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const route = useRoute();
     const vueRouter = useRouter();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     //normal:正常开发   module： 组件开发
     const canvasModeType = computed(() => {
-      return store.state.meta2d.canvasModeType;
+      return meta2dStore.canvasModeType;
     });
 
     const canvas_scale = computed(() => {
-      return store.state.meta2d.canvas_scale;
+      return meta2dStore.canvas_scale;
     });
 
     const canvasEyeMap = computed(() => {
-      return store.state.meta2d.canvasEyeMap;
+      return meta2dStore.canvasEyeMap;
     });
 
     const disableScale = computed(() => {
-      return store.state.meta2d.disableScale;
+      return meta2dStore.disableScale;
     });
 
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
 
     const canvasLocked = computed(() => {
-      return store.state.meta2d.canvasLocked;
+      return meta2dStore.canvasLocked;
     });
 
     const that = reactive({
@@ -128,7 +129,7 @@ export default defineComponent({
 
       // 钢笔
       if(fieldName === "pen"){
-        store.dispatch('updateDrawLineStatus',false);
+        meta2dStore.updateDrawLineStatus(false);
         canvasMeta2d.value.drawLine('curve');
       }
       // 铅笔
@@ -157,13 +158,13 @@ export default defineComponent({
         const iconName = disableScaleValue ? "icon-yunxusuofang" : "icon-jinzhisuofang";
         setCanvasToolbarValueFun({ name: name, fieldName: "ban-scale", iconName: iconName });
         canvasMeta2d.value.setOptions({ disableScale: disableScaleValue });
-        store.dispatch("updateDisableScale", disableScaleValue);
+        meta2dStore.updateDisableScale(disableScaleValue);
       }
 
 
       if(fieldName === "eye-map"){
         const canvasEyeMapValue = !canvasEyeMap.value;
-        store.dispatch("updateCanvasEyeMap", canvasEyeMapValue);
+        meta2dStore.updateCanvasEyeMap(canvasEyeMapValue);
         canvasEyeMapValue ? canvasMeta2d.value.hideMap() : canvasMeta2d.value.showMap();
       }
 
@@ -180,7 +181,7 @@ export default defineComponent({
         const iconName = canvasLockedValue ? "icon-jiesuo" : "icon-suoding";
         setCanvasToolbarValueFun({ name: name, fieldName: "lock-mode", iconName: iconName });
         canvasMeta2d.value.lock(canvasLockedValue);
-        store.dispatch("updateCanvasLocked", canvasLockedValue);
+        meta2dStore.updateCanvasLocked(canvasLockedValue);
         // console.log(canvasLockedValue);
       }
 
@@ -254,7 +255,7 @@ export default defineComponent({
     const dblClickItemFun = (fieldName)=>{
       // 钢笔 连续绘画
       if(fieldName === "pen"){
-        store.dispatch('updateDrawLineStatus',true);
+        meta2dStore.updateDrawLineStatus(true);
         canvasMeta2d.value.drawLine('curve');
       }
     }

@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Box, Picture} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
 import {deleteSortById} from "@/api/modelCenter/modelClassification";

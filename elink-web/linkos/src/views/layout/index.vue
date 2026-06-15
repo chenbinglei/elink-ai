@@ -24,8 +24,9 @@
   </el-container>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore, useSidebarStore } from '@/stores/index';
+
 import {filterTreeArray} from "@/utils";
 import {useRouter, useRoute} from "vue-router";
 import {computed, onMounted, reactive, toRefs, ref} from "vue";
@@ -37,16 +38,17 @@ export default {
   components: {SystemLogo, SideBarComponent, CollapseMenu, AppMain, PageHeader, TagsView},
   setup() {
 
-    const store = useStore();
+    const appStore = useAppStore();
+    const sidebarStore = useSidebarStore();
     const route = useRoute();
     const vueRouter = useRouter();
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const isCollapse = computed(() => {
-      return store.state.sidebar.isCollapse
+      return sidebarStore.isCollapse
     });
 
     const routes = computed(() => {
@@ -59,7 +61,7 @@ export default {
     // 根据用户id查询控件权限列表
     const getControlPermissionList = () => {
       findControlPermissionListByUserId({timer: new Date()}).then(res => {
-        store.dispatch("updatePermissionList", res.data);
+        appStore.updatePermissionList(res.data);
       })
     }
 
@@ -92,7 +94,7 @@ export default {
     const contentMainRef = ref(null);
     const setContentMainMaxHeight = ()=>{
       let contentMainMaxHeight = contentMainRef.value.$el.offsetHeight;
-      store.dispatch("updateContentMainMaxHeight", contentMainMaxHeight - 24);
+      appStore.updateContentMainMaxHeight(contentMainMaxHeight - 24);
     }
 
     onMounted(() => {

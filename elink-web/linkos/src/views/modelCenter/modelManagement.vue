@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import { ModelTableList } from "@/views/modelCenter/component";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";

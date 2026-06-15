@@ -31,7 +31,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {getCurrentInstance, defineComponent, toRefs, reactive, watch} from "vue";
 import {CirclePlus, Delete, Folder, EditPen, Download, Upload, Refresh, SwitchButton} from '@element-plus/icons-vue'
 

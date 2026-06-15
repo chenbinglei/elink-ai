@@ -60,3 +60,6 @@ logs/
 backups/
 *.zip
 *.tar.gz
+
+# Frontend build output
+**/sunos/

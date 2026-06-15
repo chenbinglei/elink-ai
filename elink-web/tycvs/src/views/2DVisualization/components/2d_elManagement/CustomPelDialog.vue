@@ -8,8 +8,9 @@
   </Dialog>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import Meta2dEditorCom from "@/views/2DVisualization/components/2d_artworkEditor/Meta2dEditorCom.vue";
 import {reactive, toRefs, watch, getCurrentInstance, ref, defineComponent, onMounted, nextTick} from 'vue';
 
@@ -28,7 +29,7 @@ export default defineComponent({
   },
   emits: ["update:isVisible","update:codeValue"],
   setup(props) {
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
     const meta2dEditorComRef = ref(null);
 
@@ -54,7 +55,7 @@ export default defineComponent({
     })
 
     onMounted(()=>{
-      store.dispatch('updateCanvasMeta2dData', { fileData: props.codeValue });
+      meta2dStore.updateCanvasMeta2dData({ fileData: props.codeValue });
       nextTick(()=> meta2dEditorComRef.value.activeRegistrationMeta2dFun()); // 打开组件
     })
 

@@ -98,8 +98,9 @@
   </el-collapse-item>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {deepClone} from "@meta2d/core";
 import {reactive, toRefs, defineComponent, computed, getCurrentInstance, watch} from "vue";
 
@@ -116,11 +117,11 @@ export default defineComponent({
   emits: ["changeEvent"],
   setup(props) {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({

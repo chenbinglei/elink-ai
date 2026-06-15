@@ -56,7 +56,7 @@
     <SetPriceDialog v-if="setPriceVisible" v-model:isVisible="setPriceVisible" :siteId="siteId" :activeFormDialog="activeFormDialog" @changeEvent="queryOccupyPilePriceInfoById" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import SetPriceDialog from "./CsOccupyingPilePrice/SetPriceDialog.vue";
 import {onMounted, reactive, toRefs, watch, defineComponent} from "vue";

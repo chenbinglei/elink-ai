@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Search} from '@element-plus/icons-vue';
 import ElementDragCom from "./ElementDragCom.vue";
 import {selectTreeData, setTreeData} from "@/utils";

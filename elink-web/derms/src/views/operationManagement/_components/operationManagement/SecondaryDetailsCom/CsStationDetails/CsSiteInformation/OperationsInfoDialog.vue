@@ -95,7 +95,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {mobile} from "@/utils/validate";
 import {Plus,Delete} from '@element-plus/icons-vue';

@@ -96,8 +96,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useTagsViewStore } from '@/stores/index';
+
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {CirclePlus, Search} from "@element-plus/icons-vue";
@@ -117,7 +118,7 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const tagsViewStore = useTagsViewStore();
     const route = useRoute();
     const vueRouter = useRouter();
     const isAddButtonClick = computed(() => {
@@ -171,7 +172,7 @@ export default defineComponent({
         }
 
         vueRouter.push({ path: routeName, query: { id: row.id } });
-        store.dispatch("addBackButViews",{ id: row.id,backRouteName: route.path,showButRoute: routeName });
+        tagsViewStore.addBackButViews({ id: row.id,backRouteName: route.path,showButRoute: routeName });
       }
 
       if(index === 2){

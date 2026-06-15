@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs, watch} from "vue";
 import {getNowDate, queryDateWeekdayFun} from "@/utils/dateTime";
 import {Picture} from "@element-plus/icons-vue";

@@ -28,7 +28,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {saveOrUpdatePlatformInfo} from "@/api/configCenter/platformManagement";
 import {letterNumLine, onlyNum, serviceAddressVerification, someCharmap} from "@/utils/validate";

@@ -22,6 +22,10 @@
     "dev:logs:derms": "node dev-manager.js logs derms",
     "dev:logs:tycvs": "node dev-manager.js logs tycvs"
   },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.4"
+  },
   "engines": {
     "node": ">=14.0.0"
   }

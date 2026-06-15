@@ -83,7 +83,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Right} from "@element-plus/icons-vue";
 import {pelAttributeNameList} from "@/utils/publicParam";
 import CodeEditor from "@/components/component/CodeEditor.vue";

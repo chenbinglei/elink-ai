@@ -23,7 +23,7 @@
   </el-row>
 </template>
 
-<script>
+<script lang="ts">
 import DragElementCom from "./DragElementCom.vue";
 import {LxCollapse} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, watch, ref} from "vue";

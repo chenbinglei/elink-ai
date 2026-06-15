@@ -17,7 +17,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import HandleMenus from "@/components/handleMenu/HandleMenus.vue";
 import {querySystemDeviceList} from "@/api/centralMonitoring/energyManagement";

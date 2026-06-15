@@ -10,7 +10,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {Close} from '@element-plus/icons-vue';
 import {getCurrentInstance, reactive, toRefs} from "vue";
 

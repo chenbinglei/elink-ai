@@ -1,6 +1,6 @@
 import { ref, onMounted, onActivated, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+
 import AlarmStatusView from "./alarmStatusView.vue";
 import SystemsetController from "@/api/system/index";
 

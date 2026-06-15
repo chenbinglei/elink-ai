@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, getCurrentInstance, reactive, toRefs} from "vue";
 import MiniProgramUserInfoCom from "./CsMiniProgramUserDetails/MiniProgramUserInfoCom.vue";
 import MiniProgramUserWalletCom from "./CsMiniProgramUserDetails/MiniProgramUserWalletCom.vue";

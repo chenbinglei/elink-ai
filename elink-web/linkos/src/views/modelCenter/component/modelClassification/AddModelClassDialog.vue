@@ -29,7 +29,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {someCharmap} from "@/utils/validate";
 import {Plus, Delete} from '@element-plus/icons-vue';
 import {saveSort} from "@/api/modelCenter/modelClassification";

@@ -145,8 +145,9 @@
   </el-collapse>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {clearLineCross, lineCross} from "@meta2d/utils";
 import {LxInputColorPicker} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, computed, watch} from "vue";
@@ -157,14 +158,14 @@ export default defineComponent({
   components: {LxInputColorPicker, UploadPicturesCom},
   setup() {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     // 代表画布初始化成功
     const canvasMeta2dAllLoad = computed(() => {
-      return store.state.meta2d.canvasMeta2dAllLoad;
+      return meta2dStore.canvasMeta2dAllLoad;
     });
 
     const that = reactive({

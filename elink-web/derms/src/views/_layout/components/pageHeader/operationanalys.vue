@@ -17,8 +17,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import { useRouter, useRoute } from "vue-router";
 import { defineComponent, onMounted, getCurrentInstance, reactive, toRefs, watch } from "vue";
 
@@ -48,7 +49,7 @@ export default defineComponent({
     });
     const vueRouter = useRouter();
     const route = useRoute();
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const { emit } = getCurrentInstance();
 
     const that = reactive({
@@ -79,7 +80,7 @@ export default defineComponent({
       // }
 
       vueRouter.push(childItem.path); // 直接跳转到 /user/detail
-      store.dispatch("updateSecondaryVisible", false);
+      operationManagementStore.updateSecondaryVisible(false);
       emit("update:componentName", that.routeName);
     };
 

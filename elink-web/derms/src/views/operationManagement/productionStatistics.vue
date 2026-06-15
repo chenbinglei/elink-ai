@@ -20,7 +20,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
 import { getLeftTreeDataFun } from "@/utils";
 import {
   defineComponent,

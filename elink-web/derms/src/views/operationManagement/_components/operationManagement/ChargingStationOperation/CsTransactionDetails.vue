@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getLeftTreeDataFun} from "@/utils";
 import {defineComponent, getCurrentInstance, onMounted, reactive, toRefs} from "vue";
 import CsTransactionChargingOrder from "./CsTransactionDetails/CsTransactionChargingOrder.vue";

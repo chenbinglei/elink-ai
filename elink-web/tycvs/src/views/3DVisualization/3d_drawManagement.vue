@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Plus, Search} from "@element-plus/icons-vue";
 import {reactive, ref, toRefs} from "vue";
 

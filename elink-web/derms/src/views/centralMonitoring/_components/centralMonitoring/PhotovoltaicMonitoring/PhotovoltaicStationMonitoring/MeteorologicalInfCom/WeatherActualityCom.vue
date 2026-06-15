@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Picture } from '@element-plus/icons-vue';
 import { reactive, defineComponent, toRefs, watch } from "vue";
 import qx_xfzd_icon from "@/assets/image/qx_xfzd_icon.png";

@@ -22,7 +22,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, nextTick, ref, reactive, toRefs, computed } from "vue";
 import EchartsTwo from "@/components/echart2/echartsTwo.vue";
 export default defineComponent({

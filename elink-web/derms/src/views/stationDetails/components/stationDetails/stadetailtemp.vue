@@ -102,7 +102,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import emptyImg1 from '@/assets/image/empty.png';
 import { reactive, defineComponent, toRefs, watch, inject, ref } from "vue";
 import EChartsCategory from "@/components/echart2/echartsCategory.vue";

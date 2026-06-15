@@ -209,7 +209,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs, watchEffect } from "vue";
 import { TabGroup } from "@/views/panoramicMonitor/components/index";
 import EchartsTwo from "@/components/echart2/echartsTwo.vue";

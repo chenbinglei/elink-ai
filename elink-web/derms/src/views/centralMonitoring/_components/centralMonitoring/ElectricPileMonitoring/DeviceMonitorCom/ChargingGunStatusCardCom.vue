@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import BatteryCartoon from "./BatteryCartoon.vue";
 import {defineComponent, reactive, toRefs, watch} from "vue";
 

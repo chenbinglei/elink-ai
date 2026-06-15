@@ -14,7 +14,7 @@
     </TopologyNodeInfoCom>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { Plus } from "@element-plus/icons-vue";
 import { onMounted, reactive, toRefs, ref, defineComponent } from "vue";
 import { findTopoNodeListBySiteId, findTopNodeListBySiteId } from "@/api/siteCenter/stationDetails";

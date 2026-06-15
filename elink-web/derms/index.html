@@ -28,13 +28,24 @@
   </style>
   <title>综合能源聚合管理平台</title>
   <script type="module" src="/config.js"></script>
-  <script defer src="/l7-mapbox/l7.js"></script>
-  <script defer src="/l7-mapbox/mapbox-gl.js"></script>
-  <script defer src="/l7-mapbox/l7-draw.min.js"></script>
 </head>
 
 <body class="ui-design">
   <div id="app"></div>
+  <script>
+  window.onerror = function(msg, url, line, col, err) {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:red;color:white;padding:10px;font-size:12px;word-break:break-all;';
+    d.textContent = '[JS Error] ' + msg + ' at ' + url + ':' + line + ':' + col;
+    document.body.appendChild(d);
+  };
+  window.onunhandledrejection = function(e) {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:orange;color:white;padding:10px;font-size:12px;word-break:break-all;';
+    d.textContent = '[Promise Error] ' + (e.reason && e.reason.message || e.reason);
+    document.body.appendChild(d);
+  };
+  </script>
   <script type="module" src="/src/main.js"></script>
 </body>
 

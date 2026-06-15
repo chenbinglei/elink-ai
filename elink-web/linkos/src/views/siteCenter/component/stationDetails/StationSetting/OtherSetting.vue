@@ -8,7 +8,7 @@
   </el-form>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {updateSiteSetUp} from "@/api/siteCenter/stationDetails";
 import {reactive, toRefs, defineComponent, watch, getCurrentInstance } from "vue";

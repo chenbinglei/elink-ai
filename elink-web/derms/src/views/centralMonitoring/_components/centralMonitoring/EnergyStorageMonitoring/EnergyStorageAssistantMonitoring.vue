@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs, watch } from "vue";
 import { findAuxiliaryMonitorList } from "@/api/centralMonitoring/centralMonitoring";
 import RemoteControlCom from "./EnergyStorageAssistantMonitoring/RemoteControlCom.vue";

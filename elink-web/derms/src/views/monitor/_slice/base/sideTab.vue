@@ -1,18 +1,19 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from 'vuex';
+import { useMonitorStore } from '@/stores/index';
+
 
 const route = useRoute();
 const router = useRouter();
-const store = useStore();
+const monitorStore = useMonitorStore();
 const activeTab = ref('');
 
 const parentRoute = computed(() => {
     const matched = route.matched;
     return matched[1];
 });
-const authList = computed(() => store.state.monitor.authMenuList);
+const authList = computed(() => monitorStore.authMenuList);
 const children = computed(() => {
     return parentRoute.value.children.filter(({ name }) => !authList.value || authList.value?.length === 0 || authList.value?.includes(name)).map(({ name, path, meta }) => ({ name, path, meta }));
 });

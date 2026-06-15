@@ -1,5 +1,5 @@
 import {ElMessage} from "element-plus";
-import store from "@/store/index.js";
+import { useAppStore } from "@/stores/index";
 
 //普通数据组成树形结构  调用时，字段名以字符串的形式传参，如treeData(source, 'id', 'parentId', 'children')
 export function setTreeData(data = []) {
@@ -295,8 +295,9 @@ export function getBracketPreStr(str) {
 export function operateButtonIsClick(requestPath) {
     // console.log(requestPath);
     let permissionList = [],authority = true;
-    if(store.getters.permissionList && store.getters.permissionList.length){
-        permissionList = JSON.parse(JSON.stringify(store.getters.permissionList));
+    const appStore = useAppStore();
+    if(appStore.permissionList && appStore.permissionList.length){
+        permissionList = JSON.parse(JSON.stringify(appStore.permissionList));
     }
     let findItem = permissionList.find(item => item.url === requestPath);
     if(findItem)authority = false;

@@ -48,7 +48,7 @@
     "vue-infinite-scroll": "^2.0.2",
     "vue-json-viewer": "^3.0.4",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0",
+    "pinia": "^2.1.7",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {exportCustomEcharts} from "@/common/common/exportExcel";
 import {reactive, toRefs, watch, ref, defineComponent, getCurrentInstance} from "vue";
 

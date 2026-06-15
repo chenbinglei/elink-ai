@@ -2,7 +2,7 @@
   <MonitoringThirdLevelRoutingCom ref="monitoringThirdLevelRoutingComRef" :code="code" :routeName="routeName" :siteId="siteId" :siteName="siteName"/>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, defineComponent, toRefs, ref} from "vue";
 import MonitoringThirdLevelRoutingCom from "./MonitoringThirdLevelRoutingCom.vue";
 

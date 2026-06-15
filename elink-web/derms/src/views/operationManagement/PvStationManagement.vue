@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs } from "vue";
 import {
   PvStationManagement, PvStatisticalReport, PvCompositeAnalysis, PvComponentLibrary, PvStringConfigCenter

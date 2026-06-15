@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {getLeftTreeDataFun} from "@/utils";
 import {defineComponent, onMounted, reactive, toRefs} from "vue";
 import CsProtocolLog from "./CsElectricPileLog/CsProtocolLog.vue";

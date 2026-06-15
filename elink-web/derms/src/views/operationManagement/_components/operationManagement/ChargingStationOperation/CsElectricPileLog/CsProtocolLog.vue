@@ -92,7 +92,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ElMessage } from "element-plus";
 import { RefreshRight, Search,Folder } from '@element-plus/icons-vue';
 import MessageParsingDialog from "./MessageParsingDialog.vue";

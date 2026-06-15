@@ -85,8 +85,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {queryUserAuthorityIsHaveFun} from "@/utils";
 import {pickerOptionsGthanAcTime} from "@/utils/dateTime";
@@ -98,7 +99,7 @@ import {computed, onMounted, reactive, ref, toRefs, defineComponent, getCurrentI
 export default defineComponent({
   name: "CsUserFeedback",
   setup() {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const that = reactive({
       Folder,
       Search,
@@ -155,8 +156,8 @@ export default defineComponent({
           return;
         }
 
-        store.dispatch("updateSecondaryInfo",{ subTitle: "反馈详情", id: row.id, componentName: "CsFeedbackDetails"});
-        store.dispatch("updateSecondaryVisible",true);
+        operationManagementStore.updateSecondaryInfo({ subTitle: "反馈详情", id: row.id, componentName: "CsFeedbackDetails"});
+        operationManagementStore.updateSecondaryVisible(true);
       }
 
       if(operateType === 2){

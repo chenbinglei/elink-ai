@@ -15,7 +15,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "vue";
 import AttrFieldCardCom from "./DeviceTelemetryAttrCom/AttrFieldCardCom.vue";
 import {findSystemVarDataListById} from "@/api/centralMonitoring/centralMonitoring";

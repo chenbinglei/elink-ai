@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import pinyin from "js-pinyin";
 import { ElMessage } from "element-plus";
 import { exportCustomExcel } from "@/common/common/exportExcel";

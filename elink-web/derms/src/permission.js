@@ -3,7 +3,7 @@ import "nprogress/nprogress.css";
 import NProgress from "nprogress";
 import { getToken } from "@/utils/auth";
 import { ElMessage } from "element-plus";
-import store from "@/store/index";
+import { useAppStore } from "@/stores/index";
 import { removeToken } from "@/utils/auth";
 
 // 不重定向白名单
@@ -54,7 +54,8 @@ const isSystemModule = (path) => {
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  store.commit("UPDATE_SWITCHING", true);
+  const appStore = useAppStore();
+  appStore.isSwitching = true;
 
   // 关键：每次路由跳转都获取最新的数据
   const sidebar = getLatestSidebar();
@@ -118,7 +119,7 @@ router.beforeEach((to, from, next) => {
             }
           });
           NProgress.done();
-          store.commit("UPDATE_SWITCHING", false);
+          appStore.isSwitching = false;
           return;
         }
       }
@@ -142,7 +143,7 @@ router.beforeEach((to, from, next) => {
           }
         });
         NProgress.done();
-        store.commit("UPDATE_SWITCHING", false);
+        appStore.isSwitching = false;
         return;
       }
 
@@ -192,7 +193,7 @@ router.beforeEach((to, from, next) => {
           action: "unAuth",
         });
         NProgress.done();
-        store.commit("UPDATE_SWITCHING", false);
+        appStore.isSwitching = false;
         return;
       }
 
@@ -214,12 +215,14 @@ router.beforeEach((to, from, next) => {
         });
       }
       NProgress.done();
-      store.commit("UPDATE_SWITCHING", false);
+      appStore.isSwitching = false;
     }
   }
 });
 
 router.afterEach(() => {
   NProgress.done();
-  store.commit("UPDATE_SWITCHING", false);
+  // 修复：appStore 在 beforeEach 闭包内定义，afterEach 闭包不可见，需重新获取
+  const appStore = useAppStore();
+  appStore.isSwitching = false;
 });

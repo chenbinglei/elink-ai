@@ -67,7 +67,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Search } from "@element-plus/icons-vue";
 import { defineComponent, onMounted, ref, computed } from "vue";
 

@@ -37,7 +37,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import QRCode from 'qrcode';
 import { Picture as IconPicture } from '@element-plus/icons-vue';
 import { appendObjectToUrl, downloadFiles, getParameterByName } from "@/utils";

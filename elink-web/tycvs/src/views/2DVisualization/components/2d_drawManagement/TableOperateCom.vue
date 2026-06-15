@@ -28,7 +28,7 @@
   </el-popover>
 </template>
 
-<script>
+<script lang="ts">
 import {useRouter} from "vue-router";
 import {readOSSFile} from "@/common/readOSSFile";
 import MoveFileDialog from "./MoveFileDialog.vue";

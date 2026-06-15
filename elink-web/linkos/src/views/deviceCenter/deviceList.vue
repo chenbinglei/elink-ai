@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {DeviceListTable} from "@/views/deviceCenter/component";
 import {onActivated, reactive, toRefs, defineComponent} from "vue";
 import {getSiteDeviceTreeList} from "@/api/deviceCenter/deviceList";

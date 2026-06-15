@@ -132,8 +132,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import { ElMessage } from "element-plus";
 import { pay_plat_form_array } from "@/utils/setVariate";
 import { pickerOptionsGthanAcTime } from "@/utils/dateTime";
@@ -157,10 +158,10 @@ export default defineComponent({
   components: { OrderTotalAndExportCom, V2GOrderDetailsDialog },
   setup (props) {
     const route = useRoute();
-    const store = useStore();
+    const appStore = useAppStore();
     const { emit } = getCurrentInstance();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
     const tableRef = ref(null);
 

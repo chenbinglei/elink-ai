@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TinymceEditor from '@tinymce/tinymce-vue';
 import {reactive, toRefs, onMounted, defineComponent} from "vue";
 

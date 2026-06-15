@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {RefreshRight,Setting} from "@element-plus/icons-vue";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 import {FunctionalAttrCard,FunctionAttrFieldDialog} from "./component";

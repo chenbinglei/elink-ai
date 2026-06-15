@@ -8,8 +8,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 // import {parseSvg} from "@meta2d/svg";
 import {deepClone} from "@meta2d/core";
 import {computed, defineComponent, reactive, toRefs, watch} from "vue";
@@ -26,9 +27,9 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({

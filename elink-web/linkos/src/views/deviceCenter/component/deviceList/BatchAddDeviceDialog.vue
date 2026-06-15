@@ -63,7 +63,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {Upload} from "@element-plus/icons-vue";
 import {ElMessage, genFileId} from "element-plus";

@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import ChargingDcBilling from "./ChargingDcBilling.vue";
 import ChargingAcBilling from "./ChargingAcBilling.vue";
 import {defineComponent, onMounted, reactive, toRefs, watch} from "vue";

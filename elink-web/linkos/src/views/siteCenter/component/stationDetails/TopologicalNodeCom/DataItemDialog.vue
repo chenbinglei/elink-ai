@@ -33,7 +33,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import { getCurrentInstance, reactive, toRefs, watch, defineComponent, onMounted } from "vue";
 import { getTopItemList } from "@/api/siteCenter/stationDetails";
 

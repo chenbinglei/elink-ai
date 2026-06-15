@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {isNumber} from "@/utils";
 import {defineComponent, reactive, toRefs} from "vue";
 

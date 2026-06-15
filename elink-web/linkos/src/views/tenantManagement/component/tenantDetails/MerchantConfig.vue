@@ -26,8 +26,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import {ElMessage, ElMessageBox} from "element-plus";
 import AddMerchantDialog from "./MerchantConfig/AddMerchantDialog.vue";
 import {computed, onMounted, reactive, toRefs, watch, defineComponent} from "vue";
@@ -48,9 +49,9 @@ export default defineComponent({
   },
   setup(props){
 
-    const store = useStore();
+    const appStore = useAppStore();
     const contentMainMaxHeight = computed(() => {
-      return store.state.app.contentMainMaxHeight;
+      return appStore.contentMainMaxHeight;
     });
 
     const that = reactive({

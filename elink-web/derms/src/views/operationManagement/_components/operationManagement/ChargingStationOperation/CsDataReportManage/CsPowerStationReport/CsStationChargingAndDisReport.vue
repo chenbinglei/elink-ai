@@ -170,8 +170,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import pinyin from "tiny-pinyin";
 import { ElMessage } from "element-plus";
 import { calcNumberFun, isNumber } from "@/utils";
@@ -195,9 +196,9 @@ export default defineComponent({
   },
   setup (props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

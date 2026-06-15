@@ -12,7 +12,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {updateSiteImageById} from "@/api/operationManagement/CsStationDetails";
 import UploadPicturesCom from "@/components/uploadFileCom/UploadPicturesCom.vue";

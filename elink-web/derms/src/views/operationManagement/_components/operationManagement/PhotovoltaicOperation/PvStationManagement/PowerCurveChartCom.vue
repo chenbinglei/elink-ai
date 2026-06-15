@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {colorHexTurnRgba} from "@/utils";
 import {defineComponent, reactive, toRefs, watch} from "vue";
 

@@ -5,7 +5,7 @@
     <v-md-preview v-if="file_type === 'md'" :text="file_content"></v-md-preview>
   </div>
 </template>
-<script>
+<script lang="ts">
 import JsonViewer from 'vue-json-viewer';
 import { reactive, toRefs, watch, defineComponent } from "vue";
 

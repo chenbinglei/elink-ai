@@ -1,7 +1,7 @@
 import {createApp} from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import store from './store'
 
 //引入资源文档
 import "@/permission"; // permissionU control
@@ -30,7 +30,17 @@ import ElementPagination from '@/components/Pagination/ElementPagination'; //自
 import {resizeDocument} from '@/common/directive/directive.js';// 自定义全局指令
 import filters from "@/common/filters"; // 过滤器
 
+const pinia = createPinia();
 const app = createApp(App);
+
+// 临时全局错误捕获，用于调试白屏问题
+app.config.errorHandler = (err, instance, info) => {
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:red;color:white;padding:10px;font-size:14px;word-break:break-all;';
+  div.textContent = `[Vue Error] ${info}: ${err && err.message || err}`;
+  document.body.appendChild(div);
+};
+
 resizeDocument(app); //注册全局指令
 
 //注册自定义组件
@@ -50,4 +60,4 @@ app.config.warnHandler = () => null;  //屏蔽警告信息
 app.config.globalProperties.echarts = echarts;
 app.config.globalProperties.$filters = filters;
 
-app.use(store).use(router).use(ElementPlus, {locale: zhCn}).mount("#app");
+app.use(pinia).use(router).use(ElementPlus, {locale: zhCn}).mount("#app");

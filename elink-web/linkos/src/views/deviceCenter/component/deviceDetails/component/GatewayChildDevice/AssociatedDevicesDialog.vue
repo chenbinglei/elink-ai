@@ -14,7 +14,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {findSiteSubDeviceList,batchUpdateGatewaySubDevice} from "@/api/deviceCenter/deviceList";
 import {getCurrentInstance, onMounted, reactive, ref, toRefs, watch, defineComponent} from "vue";

@@ -21,7 +21,7 @@
   </el-form>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {updateSiteSetUp} from "@/api/siteCenter/stationDetails";
 import {defineComponent, getCurrentInstance, reactive, ref, toRefs, watch} from "vue";

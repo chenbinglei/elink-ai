@@ -81,7 +81,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {addRecordNodeDataById, findNodeListByDeviceId, saveNodeAddRecord} from "@/api/dataManagement/nodeAddRecording";

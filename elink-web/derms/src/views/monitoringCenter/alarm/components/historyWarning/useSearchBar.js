@@ -1,4 +1,5 @@
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import moment from "moment";
 import { ref, reactive, computed, onMounted } from "vue";
 import { EventLevelList, AlarmStatusList } from "@/common/enum";
@@ -9,8 +10,8 @@ const format = "YYYY-MM-DD";
 export default function useSearchBar(props) {
   const startTime = moment().subtract(29, "days").format(format);
   const endTime = moment().format(format);
-  const store = useStore();
-  const assetTypeList = computed(() => store.state.monitor.assetTypeList.filter(item => item.id == '3'));
+  const monitorStore = useMonitorStore();
+  const assetTypeList = computed(() => monitorStore.assetTypeList.filter(item => item.id == '3'));
   // 响应式站点列表
   // const siteList = ref([]);
   // 获取站点列表

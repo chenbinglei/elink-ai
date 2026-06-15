@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import DeviceMonitorCom from "./DeviceMonitorCom.vue";
 import {reactive, defineComponent, toRefs, watch} from "vue";
 import {findChargeSiteMonitorData} from "@/api/centralMonitoring/centralMonitoring";

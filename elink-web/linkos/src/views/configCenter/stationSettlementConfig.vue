@@ -60,7 +60,7 @@
     <AccountConfigDialog v-if="accountConfigVisible" v-model:isVisible="accountConfigVisible" :activeSiteId="activeSiteId"></AccountConfigDialog>
   </div>
 </template>
-<script>
+<script lang="ts">
 import pinyin from "js-pinyin";
 import {setTreeData} from "@/utils";
 import {RefreshRight, Search} from "@element-plus/icons-vue";

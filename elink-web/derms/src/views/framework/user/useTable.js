@@ -1,13 +1,13 @@
 import { ref, onMounted, onActivated, onDeactivated, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+
 import SystemsetController from "@/api/system/index";
 import { ElMessage } from "element-plus";
 import expireStateView from "./expireStateView.vue";
 import alarmStatusView from "./alarmStatusView.vue";
 export default function useTable(otherParams) {
   const route = useRoute();
-  const store = useStore();
+  
   const tableRef = ref(null);
   const columns = ref([
     {

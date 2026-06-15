@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {watch, reactive, toRefs, defineComponent} from "vue";
 
 export default defineComponent({

@@ -14,8 +14,9 @@
   </TitleView>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useEnergyManagementStore } from '@/stores/index';
+
 import {reactive, defineComponent, toRefs, computed, watch} from "vue";
 import {findWeatherForecast} from "@/api/centralMonitoring/centralMonitoring";
 import WeatherForecastCom from "./MeteorologicalInfCom/WeatherForecastCom.vue";
@@ -35,9 +36,9 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const energyManagementStore = useEnergyManagementStore();
     const activeSlSiteInfo = computed(() => {
-      return store.state.energyManagement.activeSlSiteInfo;
+      return energyManagementStore.activeSlSiteInfo;
     });
 
     const that = reactive({

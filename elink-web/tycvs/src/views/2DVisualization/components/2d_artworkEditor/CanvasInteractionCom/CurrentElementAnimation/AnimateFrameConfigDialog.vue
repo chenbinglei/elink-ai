@@ -91,7 +91,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {LxCollapse} from "@/components/LxComponents";
 import {LxInputColorPicker} from "@/components/LxComponents";
 import AddFrameButtonListCom from "./AddFrameButtonListCom.vue";

@@ -17,7 +17,7 @@
     <SetPriceDialog v-if="setPriceVisible" v-model:isVisible="setPriceVisible" :chargingType="chargingType" :siteId="siteId" @changeEvent="changeEvent" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import {reactive, toRefs, ref, defineComponent} from "vue";
 import SetPriceDialog from "./CsDisAndChargingPrice/SetPriceDialog.vue";
 import PricingRecords from "./CsDisAndChargingPrice/PricingRecords.vue";

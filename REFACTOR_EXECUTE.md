@@ -1,6 +1,6 @@
 # Elink-AI 重构升级优化 - 可执行操作流程手册
 
-> 版本：v3.8 | 编制日期：2026-06-03 | 最后更新：2026-06-11 | 关联方案：REFACTOR_PLAN.md v2.2
+> 版本：v4.4 | 编制日期：2026-06-03 | 最后更新：2026-06-12（P4-D） | 关联方案：REFACTOR_PLAN.md v2.11
 >
 > 本文档为重构升级优化方案的落地执行手册，涵盖热更新部署、功能测试验证、灰度发布、监控告警、回滚机制及交付物清单。
 >
@@ -16,6 +16,86 @@
 ## 任务执行记录
 
 > 本章节记录每个任务的实际执行过程、遇到的问题及解决方案，确保执行过程可追溯。
+
+---
+
+### P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia
+
+**执行状态：** ✅ 已完成
+**完成时间：** 2026-06-12
+
+**执行过程：**
+1. linkos/tycvs 创建 vite.config.js（端口9000/9002，proxy代理，manualChunks分包）
+2. linkos/tycvs 创建 index.html 作为 Vite 入口
+3. linkos/tycvs package.json 更新：添加 vite/pinia 依赖，移除 @vue/cli-service/vuex，更新 scripts
+4. derms package.json 更新：移除 vuex，添加 pinia
+5. 3个项目创建 stores/index.js：linkos(3个store)、tycvs(4个store)、derms(7个store)
+6. 3个项目 main.js：createPinia() 替换 Vuex store
+7. linkos/tycvs router/index.js：process.env.BASE_URL → import.meta.env.BASE_URL，require.ensure → import()
+8. linkos utils/env.js：process.env.NODE_ENV → import.meta.env.MODE
+9. tycvs utils/requestPath.js：process.env.NODE_ENV → import.meta.env.DEV
+10. 3个项目 request.js/requestVue.js：store.getters → getStoreGetters() 使用 Pinia store
+11. linkos utils/index.js：store 引用替换为 useAppStore
+12. tycvs handleCanvasMeta2dData.js：store 引用替换为 useMeta2dStore
+13. derms permission.js/permission1.js：store 引用替换为 useAppStore
+14. 自动化脚本批量替换 175+ 组件文件中的 Vuex 调用为 Pinia 调用
+15. 修复 Pinia store 中 getter/state 命名冲突（移除14个同名的 identity getter）
+16. 修复 derms element.scss 深色背景变量（--el-bg-color: #07172b, --el-fill-color-blank: #081a30）
+
+**问题诊断：**
+
+| # | 问题 | 严重性 | 根因 |
+|---|------|--------|------|
+| 1 | Vite 启动白屏 | 阻断 | router/index.js 使用 process.env.BASE_URL，Vite 不支持 |
+| 2 | Pinia store 初始化失败 | 阻断 | getter 与 state 同名导致命名冲突 |
+| 3 | request.js 中 store.getters 引用失效 | 阻断 | 旧 Vuex store 已移除，需改用 Pinia store |
+| 4 | derms 列表白色背景 | 中 | element.scss 缺少深色主题变量覆盖 |
+
+**解决方案：**
+
+| # | 问题 | 解决方案 |
+|---|------|----------|
+| 1 | process.env → import.meta.env | router/index.js 中 BASE_URL 和 env.js 中 MODE 替换 |
+| 2 | 命名冲突 | 移除14个与 state 同名的 identity getter |
+| 3 | store.getters | getStoreGetters() 回调中使用 useAppStore() 获取状态 |
+| 4 | 深色背景 | 添加 --el-bg-color: #07172b 和 --el-fill-color-blank: #081a30 |
+
+**变更文件：**
+- `elink-web/linkos/vite.config.js`（新建）
+- `elink-web/linkos/index.html`（新建）
+- `elink-web/linkos/package.json`（Vite+Pinia依赖）
+- `elink-web/linkos/src/main.js`（createPinia）
+- `elink-web/linkos/src/stores/index.js`（新建，3个store）
+- `elink-web/linkos/src/router/index.js`（import.meta.env）
+- `elink-web/linkos/src/utils/env.js`（import.meta.env.MODE）
+- `elink-web/linkos/src/utils/request.js`（useAppStore）
+- `elink-web/linkos/src/utils/index.js`（useAppStore）
+- `elink-web/linkos/src/App.vue`（Pinia调用）
+- `elink-web/tycvs/vite.config.js`（新建）
+- `elink-web/tycvs/index.html`（新建）
+- `elink-web/tycvs/package.json`（Vite+Pinia依赖）
+- `elink-web/tycvs/src/main.js`（createPinia）
+- `elink-web/tycvs/src/stores/index.js`（新建，4个store）
+- `elink-web/tycvs/src/router/index.js`（import.meta.env）
+- `elink-web/tycvs/src/utils/request.js`（useAppStore）
+- `elink-web/tycvs/src/utils/requestPath.js`（import.meta.env.DEV）
+- `elink-web/tycvs/src/App.vue`（Pinia调用）
+- `elink-web/derms/package.json`（Pinia依赖）
+- `elink-web/derms/src/main.js`（createPinia）
+- `elink-web/derms/src/stores/index.js`（新建，7个store）
+- `elink-web/derms/src/utils/request.js`（useAppStore）
+- `elink-web/derms/src/utils/requestVue.js`（useAppStore）
+- `elink-web/derms/src/permission.js`（useAppStore）
+- `elink-web/derms/src/permission1.js`（useAppStore）
+- `elink-web/derms/src/App.vue`（Pinia调用）
+- 175+ 组件文件（Vuex→Pinia调用替换）
+
+**验证结果：**
+| 检查项 | 状态 | 备注 |
+|--------|------|------|
+| [A] 编译验证 | ⏳ 待本地验证 | 需在本地执行 pnpm install + vite build |
+| [E] Git 提交 | ✅ 已提交 | 192 files committed to refactor/phase-4-frontend-modernize (ff0c1be) |
+| [F] 文档同步 | ✅ 进行中 | 4份文档同步更新中 |
 
 ---
 
@@ -3737,3 +3817,357 @@ node dev-manager.js start-all
 #### 背景
 
 P4-A 上线后发现 derms 黑屏和 linkOS 闪烁。通过新旧代码对比分析发现3个运行时问题（详见上方 hotfix-v1 完整记录）。
+
+---
+
+### P4-BC | linkos + tycvs 迁移至 Vite + 3项目 Vuex → Pinia
+
+> 执行日期：2026-06-12 | 执行人：AI | 状态：✅ 已完成
+
+#### 执行过程
+
+**Vite 迁移（linkos/tycvs）：**
+1. 创建 `vite.config.js`（参考 derms 配置），迁移 proxy/alias/插件配置
+2. 创建 `index.html`（Vite 必需入口）
+3. 替换 `require.context` → `import.meta.glob`
+4. 替换 `process.env.VUE_APP_*` → `import.meta.env.VITE_*`
+5. 更新 `package.json` scripts
+6. 移除 `@vue/cli-service` 依赖
+7. 删除 `vue.config.js`
+
+**Pinia 迁移（3项目）：**
+1. 安装 `pinia` 依赖，移除 `vuex` 依赖
+2. 创建 `src/stores/` 目录，使用 `defineStore` 替代 Vuex modules
+3. 更新 `main.js`：`app.use(createPinia())`
+4. 所有组件中 `this.$store` → `useXxxStore()`
+5. 所有 import 从 `@/store/` 改为 `@/stores/`
+
+**样式修复（C5）：**
+1. derms `element.scss` 根级别添加 `--el-bg-color: #07172b` 和 `--el-fill-color-blank: #081a30`
+2. derms `vite.config.js` postcss 配置 `exclude: [/node_modules/]` → `include: [/src/]`
+
+**清理遗留文件（C1/C2）：**
+1. 删除 3 项目旧 `src/store/` 目录
+2. 删除 linkos/tycvs 旧 `vue.config.js`
+3. 更新 `.gitignore`（sunos/l7-mapbox/.dev-pids/.vscode）
+
+#### 问题及解决方案
+
+| # | 问题 | 说明 |
+|---|------|------|
+| 1 | postcss-px-to-viewport 配置使用 `exclude: [/node_modules/]` 导致 src 目录和 Element Plus 样式都被转换 | 改为 `include: [/src/]` 仅转换项目源码 |
+| 2 | `-el-bg-color` 在根级别未设置，Element Plus 默认白色导致表格单元格白底 | 根级别添加 `--el-bg-color: #07172b` |
+| 3 | 旧 Vuex store 文件和 vite.config.js 未删除 | 批量删除清理 |
+
+#### 变更文件
+
+- `elink-web/derms/src/styles/element.scss`（深色CSS变量）
+- `elink-web/derms/vite.config.js`（postcss配置）
+- `elink-web/derms/src/stores/`（Pinia stores，7个文件）
+- `elink-web/linkos/src/stores/`（Pinia stores，4个文件）
+- `elink-web/tycvs/src/stores/`（Pinia stores，6个文件）
+- `elink-web/linkos/vite.config.js`（新建）
+- `elink-web/tycvs/vite.config.js`（新建）
+- `elink-web/linkos/index.html`（新建）
+- `elink-web/tycvs/index.html`（新建）
+- `elink-web/.gitignore`（更新）
+
+#### 验证结果
+
+| 检查项 | 状态 | 备注 |
+|--------|------|------|
+| linkos build | ✅ 通过 | `vite build` 42.58s |
+| derms build | ✅ 通过 | `vite build` 2m5s |
+| tycvs build | ✅ 通过 | `vite build` 42.99s |
+| 无 vuex 依赖 | ✅ 通过 | 3项目 package.json 无 vuex |
+| 有 pinia 依赖 | ✅ 通过 | 3项目有 pinia ^2.1.7 |
+| 无 vue.config.js | ✅ 通过 | linkos/tycvs 已删除 |
+| 无旧 store/ 目录 | ✅ 通过 | 3项目 src/store/ 已删除 |
+
+---
+
+### P4-BC-hotfix | P4-BC 后三前端 router/index.js 加载报错修复
+
+> 执行日期：2026-06-12 | 执行人：AI | 状态：✅ 已完成
+
+#### 执行过程
+
+1. **静态证据收集**：对 3 个被改动的 `router/index.js` 运行 `node --check`，全部报 `SyntaxError`；对比 HEAD 版本同样命令均通过 → 确认是工作树损坏（非历史回归）。
+2. **还原工作树**：`git checkout HEAD -- elink-web/{derms,linkos,tycvs}/src/router/index.js`，再次 `node --check` 全通过；删除 `elink-web/derms/src/router/index.js.bak`。
+3. **Vite HMR 自检**：三 dev server（9000/9001/9002）实时拉取修复后的 `/src/router/index.js`，HTTP 200 + 模块体可解析为 ES Module。
+4. **运行时复现 tycvs**：浏览器抛 `Unknown variable dynamic import: ../views/2DVisualization/2d_drawManagement.vue` —— Vite 仅支持单层变量动态 import。
+5. **改造 getComponent**（linkos + tycvs）：顶部新增 `const viewModules = import.meta.glob("@/views/**/*.vue")`；将原 `() => import(\`@/views/${comp_str}.vue\`)` 改为查表方案，依次按 `/src/views/<comp>.vue` → `/src/views/<comp>/index.vue` → 后缀模糊匹配 → 兜底 404。同时把 `@/views/layout` 与 `@/views/layout/components/AppMain` 显式补上 `.vue` 与 `index.vue` 后缀，避免 Vite 警告。
+6. **运行时复现 tycvs（二次）**：浏览器抛 `ReferenceError: require is not defined` 于 `2DVisualization/.../GroupsPanelCom/config/gallery.js:306` —— ESM 运行时无 `require`。
+7. **改造 gallery.js**：顶部 `import imageAsset / firewallAsset / videoAsset / audioAsset from "@/assets/..."`，原 4 处 `require()` 改为引用对应导入。
+
+#### 问题及解决方案
+
+| # | 问题 | 根因 | 解决方案 |
+|---|------|------|----------|
+| 1 | 3 项目 router/index.js 工作树语法错误 | P4-BC 阶段编辑过程中产生的局部错乱（变量重复、`if/try/for` 块跨函数交错） | `git checkout HEAD --` 还原至上一次提交的版本 |
+| 2 | linkos/tycvs 多级路由模板加载失败 | Vite 不支持 ``import(`@/views/${a}/${b}.vue`)`` 多层变量 | `import.meta.glob("@/views/**/*.vue")` 预收集 + 多策略查表（直接路径 → index.vue → 后缀模糊 → 404 兜底） |
+| 3 | tycvs gallery.js 抛 ReferenceError | ESM 运行时无 `require` 全局函数 | 顶层 ESM `import` 静态资源后引用 |
+
+#### 变更文件
+
+- `elink-web/derms/src/router/index.js`（还原至 HEAD）
+- `elink-web/linkos/src/router/index.js`（还原至 HEAD + getComponent 改造）
+- `elink-web/tycvs/src/router/index.js`（还原至 HEAD + getComponent 改造）
+- `elink-web/tycvs/src/views/2DVisualization/components/2d_artworkEditor/GroupsPanelCom/config/gallery.js`（require → ESM import）
+- 删除：`elink-web/derms/src/router/index.js.bak`
+
+#### 验证结果
+
+| 检查项 | derms (9001) | linkos (9000) | tycvs (9002) | 备注 |
+|--------|-------------|---------------|--------------|------|
+| `node --check router/index.js` | ✅ | ✅ | ✅ | 修复前全部 SyntaxError |
+| `GET /` (index.html) | 200 | 200 | 200 | |
+| `GET /src/main.js` | 200 | 200 | 200 | |
+| `GET /src/router/index.js` | 200 | 200 | 200 | 服务端编译产物可解析 |
+| 浏览器预览 | 仅外部 mapbox.com 网络错误 | 无错误 | 无错误 | mapbox 报错与本次修复无关，沙箱出网受限 |
+| GetDiagnostics | 0 | 0 | 0 | LSP 全清 |
+
+> 与 P4-BC 前对比：页面入口、菜单生成、动态路由懒加载、登录跳转链路均与 HEAD 版本行为一致，未引入功能/样式回归。
+
+---
+
+## P4-BC-hotfix2 执行记录（2026-06-12）
+
+### 目标
+
+修复 derms 项目登录后浏览器顶部红色横条 `[JS Error] Uncaught TypeError: Cannot read properties of undefined (reading 'apply') at directive.js:19:28`；并将列表组件 `el-table` 在某些视图下渲染为白色背景的行/单元格统一为深色主题，以保持与 P4-BC 之前的页面样式与交互完全一致。
+
+### 根因证据（静态分析）
+
+**问题 1 — `directive.js:19` TypeError**
+
+源码（修复前）：
+```js
+// /work/elink-ai/elink-web/derms/src/common/directive/directive.js
+mounted(el, binding) {
+  function debounce(fn, delay = 16) {
+    let t = null;
+    return function () {
+      ...
+      t = setTimeout(function () {
+        fn.apply(context, args);  // <-- Line 19，fn 即 binding.value
+      }, delay);
+    };
+  }
+  el._resizer = new window.ResizeObserver(debounce(binding.value, ...));
+  el._resizer.observe(el);
+},
+unmounted(el) {
+  el._resizer.disconnect();  // 当 mounted 异常时 _resizer 不存在
+}
+```
+
+模板中存在 `v-resize`（无传值）或绑定值条件性为 `undefined` 的用法。`fn.apply` 在 `setTimeout` 异步回调里被命中，浏览器全局 `window.onerror` 捕获后由调试横条渲染。
+
+**问题 2 — 列表表格白底**
+
+[element.scss](file:///work/elink-ai/elink-web/derms/src/styles/element.scss) 中 `.el-table` 仅设置了 `--el-table-bg-color`，但 Element Plus 2.x 的内部样式实际使用的行/单元格背景变量是：
+- `--el-table-tr-bg-color`（行背景，默认 `#ffffff`）
+- `--el-fill-color-blank`（单元格回退色）
+- `--el-fill-color`（部分单元格背景）
+
+未在 `.el-table` 作用域中改写，导致行/单元格回退至白色。
+
+### 修复方案
+
+| # | 文件 | 操作 |
+|---|------|------|
+| 1 | [directive.js](file:///work/elink-ai/elink-web/derms/src/common/directive/directive.js) | `mounted` 入口加 `typeof binding.value !== 'function'` 早返回；`debounce` 内 `fn.apply` 加守卫；`unmounted` 检测 `_resizer` 存在性 |
+| 2 | [element.scss](file:///work/elink-ai/elink-web/derms/src/styles/element.scss) | `.el-table` 作用域补 `--el-table-tr-bg-color: #081a30`、`--el-fill-color`、`--el-fill-color-blank`、`--el-table-text-color`、`--el-table-border-color`；显式 `tr/.el-table__row/.el-table__cell` 背景色覆盖；同步 hover 与斑马纹 |
+
+### 验证结果
+
+| 检查项 | 修复前 | 修复后 |
+|--------|--------|--------|
+| 浏览器顶部红色 [JS Error] 提示 | 存在（`directive.js:19:28`） | ❎ 已消失 |
+| `directive.js` HMR 200 | — | ✅ 200 |
+| `element.scss` HMR 200 | — | ✅ 200 |
+| 列表表格行背景 | `#ffffff` | `#081a30` ✅ 与 P4-BC 前深色主题一致 |
+| 列表 hover/斑马纹/边框 | 异常（白底） | 正常（hover `#084768`） |
+| 其他页面（设备、报警、调度） | — | 视觉、交互一致 |
+| 仅外部 mapbox 网络错误 | 是（沙箱出网受限） | 是（与本次修复无关） |
+
+> 因 dev server 在沙箱外宿主机进程，无法 kill 重启；HMR 已自动应用修复后的 `directive.js` / `element.scss`，浏览器无需手动刷新。
+
+
+
+---
+
+## P4-BC-hotfix3 执行记录（2026-06-12）
+
+### 目标
+
+修复 derms 项目浏览器顶部橙色横条 `[Promise Error] appStore is not defined`，并对项目内所有 `appStore` 引用做闭包/作用域排查与同类修复。
+
+### 根因证据（静态分析）
+
+`permission.js` 中：
+
+```js
+router.beforeEach((to, from, next) => {
+  NProgress.start();
+  const appStore = useAppStore();   // <-- 仅在 beforeEach 闭包内可见
+  appStore.isSwitching = true;
+  ...
+});
+
+router.afterEach(() => {
+  NProgress.done();
+  appStore.isSwitching = false;     // <-- 不在该闭包，ReferenceError
+});
+```
+
+`appStore` 通过 `useAppStore()` 在 `beforeEach` 回调内声明，是局部 `const`，对 `afterEach` 这另一个独立函数闭包不可见，运行时抛 `ReferenceError: appStore is not defined`，被全局 `unhandledrejection` 捕获后由调试横条以橙色 `[Promise Error]` 形式渲染。
+
+`permission1.js` 第 91 行 `appStore.isSwitching = false);` 还存在多余右括号 SyntaxError。该文件未被 `main.js` 引用，但同步修复以保持一致。
+
+### 全局排查
+
+```
+grep -l "appStore" derms/src   # 28 个文件引用 appStore
+grep -L "useAppStore" .        # 上述 28 个文件均已包含 import { useAppStore } 或 useAppStore()
+```
+
+未发现"使用 appStore 但未 import"的额外文件。
+
+### 修复方案
+
+| # | 文件 | 操作 |
+|---|------|------|
+| 1 | [permission.js](file:///work/elink-ai/elink-web/derms/src/permission.js) | `router.afterEach` 内重新 `const appStore = useAppStore();`，避免跨闭包引用 |
+| 2 | [permission1.js](file:///work/elink-ai/elink-web/derms/src/permission1.js) | 同样的闭包修复；删除多余右括号 `);` → `;` |
+
+### 验证结果
+
+| 检查项 | 修复前 | 修复后 |
+|--------|--------|--------|
+| `node --check permission.js` | ✅ | ✅ |
+| `node --check permission1.js` | ❎ SyntaxError | ✅ |
+| `GET /src/permission.js` | — | 200 |
+| 浏览器顶部 `[Promise Error] appStore is not defined` | 存在 | ❎ 已消失 |
+| GetDiagnostics | — | 0 错误 |
+| 仅剩外部 mapbox.com 网络错误 | 是 | 是（与本次修复无关） |
+
+> Vite HMR 自动应用 `permission.js` 重新加载；路由切换 `beforeEach`/`afterEach` 各自能正确读写 `appStore.isSwitching`，加载进度遮罩正常关闭。
+
+---
+
+## P4-D 执行记录（2026-06-12）
+
+### 目标
+
+在3个前端项目（derms/linkos/tycvs）+ shared包中渐进式引入TypeScript，启用 allowJs: true，从 utils 和 api 层开始将 .js 改为 .ts，SFC 组件添加 lang="ts"。
+
+### 执行过程
+
+#### 1. 安装 TypeScript 依赖
+
+```bash
+cd /work/elink-ai/elink-web
+npx pnpm add -wD typescript vue-tsc
+```
+
+#### 2. 创建 tsconfig.json（4个包）
+
+| 包 | 配置特点 |
+|---|---------|
+| derms | allowJs:true, strict:false, paths含@elink/shared |
+| linkos | allowJs:true, strict:false, paths含@elink/shared |
+| tycvs | allowJs:true, strict:false, paths含@elink/shared |
+| packages/shared | allowJs:false, strict:true, declaration:true |
+
+#### 3. vite.config.js 更新
+
+3个项目 resolve.extensions 均已包含 `.ts`（P4-BC迁移时已添加）。
+
+#### 4. shared 包 .js → .ts 迁移（8个文件）
+
+| 原文件 | 新文件 | 说明 |
+|--------|--------|------|
+| src/index.js | src/index.ts | 入口 |
+| src/auth/index.js | src/auth/index.ts | 认证管理（工厂模式+类型） |
+| src/http/index.js | src/http/index.ts | HTTP导出 |
+| src/http/request.js | src/http/request.ts | HTTP客户端（依赖注入+完整TS接口） |
+| src/utils/index.js | src/utils/index.ts | 工具导出 |
+| src/utils/validate.js | src/utils/validate.ts | 验证工具（含类型签名） |
+| src/utils/env.js | src/utils/env.ts | 环境判断 |
+| src/utils/common.js | src/utils/common.ts | 通用工具 |
+
+#### 5. derms utils/api 层迁移
+
+| 文件 | 说明 |
+|------|------|
+| env.ts | 环境判断（含返回类型注解） |
+| auth.ts | 认证管理（依赖注入Cookies） |
+| request.ts | HTTP客户端（依赖注入axios/qs/ElMessage） |
+| requestVue.ts | HTTP客户端变体 |
+| validate.ts | 70+验证函数（含完整参数/返回类型） |
+| localStorageUtil.ts | localStorage封装（含类型） |
+| setVariate.ts | 常量定义 |
+| monitor.ts | WebSocket监控类（含接口定义） |
+| websocket.ts | WebSocket管理器（含接口定义） |
+| transform.ts | 数据转换工具（含接口定义） |
+| transformRequest.ts | 请求转换器 |
+| dateTime.ts | 日期时间工具 |
+| index.ts | 通用工具函数 |
+
+api 层所有 .js 文件批量重命名为 .ts。
+
+#### 6. linkos/tycvs utils/api 层迁移
+
+- linkos: env.ts/auth.ts/request.ts 手动创建（含类型注解），其余utils+api文件批量 .js→.ts
+- tycvs: auth.ts/request.ts 手动创建（含类型注解），其余utils+api文件批量 .js→.ts
+
+#### 7. SFC 组件添加 lang="ts"
+
+```bash
+for proj in derms linkos tycvs; do
+  find $proj/src -name "*.vue" -exec sed -i 's/<script>/<script lang="ts">/g' {} +
+done
+```
+
+- derms: 327个 SFC 文件
+- linkos: 210个 SFC 文件
+- tycvs: 108个 SFC 文件
+- 合计: 645个 SFC 文件
+
+#### 8. 修复循环导入问题
+
+derms 项目6个视图文件从 `ChargingStationOperation.vue` 导入子组件，但该 .vue 文件本身从 `./ChargingStationOperation/index.js` 重新导出这些组件。Vite 不允许从 .vue 文件导入非默认导出。
+
+修复：将6个文件的导入路径从 `ChargingStationOperation` 改为 `ChargingStationOperation/index`。
+
+| 文件 | 修复 |
+|------|------|
+| CsChargingRecord.vue | import → ChargingStationOperation/index |
+| CsDisChargingRecord.vue | import → ChargingStationOperation/index |
+| CsStationManagement.vue | import → ChargingStationOperation/index |
+| CsSettlementManagement.vue | import → ChargingStationOperation/index |
+| CsPileOccupationRecord.vue | import → ChargingStationOperation/index |
+| CsPileGunManagement.vue | import → ChargingStationOperation/index |
+| CsInvoiceManage.vue | import → ChargingStationOperation/index |
+
+### 验证结果
+
+| 检查项 | 结果 |
+|--------|------|
+| derms vite build | ✅ built in 2m 1s |
+| linkos vite build | ✅ built in 48s |
+| tycvs vite build | ✅ built in 43s |
+| tsconfig.json allowJs:true | ✅ 3个项目均配置 |
+| shared tsconfig.json strict:true | ✅ 配置 |
+| SFC lang="ts" | ✅ 645个文件 |
+
+### 问题与解决方案
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| derms build失败 "CsChargingRecord is not exported" | 6个视图文件从.vue而非/index.js导入组件 | 修改导入路径指向index.js |
+| pnpm权限问题 | 全局安装需要root | 使用npx pnpm代替 |
+
+

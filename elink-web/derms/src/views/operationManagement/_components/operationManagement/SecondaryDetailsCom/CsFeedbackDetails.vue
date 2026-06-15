@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, onMounted, reactive, toRefs} from "vue";
 
 export default defineComponent({

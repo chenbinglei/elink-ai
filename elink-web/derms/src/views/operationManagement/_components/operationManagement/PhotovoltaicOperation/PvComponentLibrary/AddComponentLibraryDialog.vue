@@ -99,7 +99,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {onlyNum} from "@/utils/validate";
 import {Document} from "@element-plus/icons-vue";

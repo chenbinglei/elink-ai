@@ -19,7 +19,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {Setting} from '@element-plus/icons-vue';
 import {defineComponent, reactive, toRefs, watch} from "vue";
 import AttrFieldCardCom from "./DeviceTelemetryAttrCom/AttrFieldCardCom.vue";

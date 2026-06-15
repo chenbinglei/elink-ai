@@ -92,7 +92,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {CirclePlus, Search} from '@element-plus/icons-vue';
 import {getSiteDeviceTreeList} from "@/api/deviceCenter/deviceList";

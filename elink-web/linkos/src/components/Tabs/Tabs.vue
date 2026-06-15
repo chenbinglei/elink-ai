@@ -19,7 +19,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {defineComponent, getCurrentInstance, reactive, toRefs, ref, nextTick, watch} from "vue";
 
 export default defineComponent({

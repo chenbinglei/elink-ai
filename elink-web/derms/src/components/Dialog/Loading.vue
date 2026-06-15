@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import loadingSvg from "./loadingSvg.vue";
 import {defineComponent, getCurrentInstance, onMounted, reactive, toRefs} from "vue";
 

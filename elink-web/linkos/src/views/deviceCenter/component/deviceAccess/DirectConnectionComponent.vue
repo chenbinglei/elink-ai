@@ -24,7 +24,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox} from "element-plus";
 import {reactive, toRefs, watch, defineComponent, getCurrentInstance} from "vue";
 import {findAccessDetailByDeviceId, updateDeviceStatus} from "@/api/deviceCenter/deviceAccess";

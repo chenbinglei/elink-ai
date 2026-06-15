@@ -62,7 +62,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {reactive, toRefs, onMounted, ref, nextTick, computed} from "vue";
 import {operateButtonIsClick, setTreeData} from "@/utils";

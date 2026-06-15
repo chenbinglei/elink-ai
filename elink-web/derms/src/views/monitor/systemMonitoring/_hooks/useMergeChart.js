@@ -7,7 +7,8 @@ import {
     onMounted,
     onUnmounted,
 } from "vue";
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import moment from "moment";
 //
 import SystemMonitorController from "@/api/together/systemMonitor";
@@ -176,7 +177,7 @@ export default function useBlockChart({
     fileNameFun,
 }) {
     const { deviceId } = inject(INJECT_KEY_DEVICE_INFO);
-    const store = useStore();
+    const monitorStore = useMonitorStore();
     // 获取当前图表块的配置
     const blockChartConfig = computed(
         () => TypeBlockChartConfig[unref(typeId)] ?? TypeBlockChartConfig["1"]
@@ -286,7 +287,7 @@ export default function useBlockChart({
             return;
         }
         loading.value = true;
-        const siteName = store.state.monitor.siteName;
+        const siteName = monitorStore.siteName;
         const { series, xAxis } = chartOptions.value;
         if (!(xAxis.data.length > 0) || series.length === 0) {
             return;

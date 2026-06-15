@@ -10,21 +10,23 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore, useTagsViewStore } from '@/stores/index';
+
 import {computed, reactive, toRefs} from "vue";
 
 export default {
   name: "AppMain",
   setup() {
-    const store = useStore();
+    const appStore = useAppStore();
+    const tagsViewStore = useTagsViewStore();
 
     const cachedViews = computed(() => {
-      return store.state.tagsView.cachedViews;
+      return tagsViewStore.cachedViews;
     });
 
     const contentMainMaxHeight = computed(() => {
-      return store.state.app.contentMainMaxHeight;
+      return appStore.contentMainMaxHeight;
     });
 
     const that = reactive({});

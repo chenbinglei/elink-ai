@@ -57,7 +57,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {letterNumLine, someCharmap} from "@/utils/validate";
 import {saveDeviceGun} from "@/api/deviceCenter/deviceDetails";

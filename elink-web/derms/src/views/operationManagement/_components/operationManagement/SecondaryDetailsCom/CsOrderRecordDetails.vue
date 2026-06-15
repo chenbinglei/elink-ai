@@ -10,7 +10,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {onMounted, reactive, toRefs, ref, defineComponent} from "vue";
 import {findOccupyPileRecordInfoById, findOrderRecordInfoById} from "@/api/operationManagement/CsDisAndChargingRecord";
 import {OcOrderingInfo, OcOrderTrajectory, OcBillingRules,DcOrderingInfo,DcOrderTrajectory,DcBillingDetails,DcOrderAnalysis,DcFinancialSettlement} from "./CsOrderRecordDetails/index";

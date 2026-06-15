@@ -40,8 +40,9 @@
   </Dialog>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {clickCopyValue} from "@/utils";
 import {useRoute, useRouter} from "vue-router";
@@ -61,17 +62,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const route = useRoute();
     const vueRouter = useRouter();
     const {emit} = getCurrentInstance();
 
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
 
     const validateDomainId = (rule, value, callback) => {

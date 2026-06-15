@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getActiveTimeStampFun } from "@/utils/dateTime";
 import WebView from "@/components/component/WebView.vue";
 import { reactive, defineComponent, toRefs, watch, getCurrentInstance } from "vue";

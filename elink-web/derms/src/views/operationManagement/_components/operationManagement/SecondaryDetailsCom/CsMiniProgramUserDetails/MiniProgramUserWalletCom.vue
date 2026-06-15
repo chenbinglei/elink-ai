@@ -48,8 +48,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import { ElMessage } from "element-plus";
 import { queryUserAuthorityIsHaveFun } from "@/utils";
 import { defineComponent, getCurrentInstance, onMounted, reactive, toRefs } from "vue";
@@ -69,7 +70,7 @@ export default defineComponent({
   },
   setup (props) {
     const vueRouter = useRouter();
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const { emit } = getCurrentInstance();
 
     const that = reactive({
@@ -121,7 +122,7 @@ export default defineComponent({
             accountId: item.accountId,
           },
         });
-        // store.dispatch("updateSecondaryVisible",false);
+        // operationManagementStore.updateSecondaryVisible(false);
       }
     };
 

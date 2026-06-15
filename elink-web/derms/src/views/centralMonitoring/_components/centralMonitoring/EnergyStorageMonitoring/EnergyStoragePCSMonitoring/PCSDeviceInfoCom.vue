@@ -59,7 +59,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Refresh} from '@element-plus/icons-vue';
 import pcsIcon from "@/assets/image/pcs_icon.png";
 import {reactive, defineComponent, toRefs, watch, getCurrentInstance} from "vue";

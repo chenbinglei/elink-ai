@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import TabBackground from "@/components/Tabs/TabBackground.vue";
 import {reactive, toRefs, defineComponent, onMounted, watch} from "vue";

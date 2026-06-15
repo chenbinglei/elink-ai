@@ -151,8 +151,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import { ElMessage } from "element-plus";
 import { exportCustomExcel } from "@/common/exportExcel";
 import { RefreshRight, Search, Folder } from "@element-plus/icons-vue";
@@ -183,11 +184,11 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const { emit } = getCurrentInstance();
 
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
     const format = 'YYYY-MM-DD';
     const defAbnormalType = 0;

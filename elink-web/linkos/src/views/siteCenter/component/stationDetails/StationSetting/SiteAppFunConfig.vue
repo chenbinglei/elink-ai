@@ -19,7 +19,7 @@
   </el-form>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { updateSiteSetUp } from "@/api/siteCenter/stationDetails";

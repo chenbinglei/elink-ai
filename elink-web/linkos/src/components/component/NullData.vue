@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {toRefs, reactive} from "vue";
 
 export default {

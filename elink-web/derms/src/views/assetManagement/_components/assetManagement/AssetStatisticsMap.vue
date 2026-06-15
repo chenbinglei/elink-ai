@@ -37,8 +37,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useAssetManagementStore } from '@/stores/index';
+
 import { Mapbox } from '@antv/l7-maps';
 import { querySiteNum } from "@/api/assetManagement/assetManagement";
 import { reactive, defineComponent, toRefs, onMounted, computed, watch, nextTick } from "vue";
@@ -49,12 +50,12 @@ export default defineComponent({
   name: "AssetStatisticsMap",
   setup() {
 
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const scenarioType = computed(() => {
-      return store.state.assetManagement.scenarioType;
+      return assetManagementStore.scenarioType;
     });
     const activeSiteId = computed(() => {
-      return store.state.assetManagement.activeSiteId;
+      return assetManagementStore.activeSiteId;
     });
 
     const that = reactive({
@@ -207,7 +208,7 @@ export default defineComponent({
 
       that.areaType = data?.areaType;
       that.areaName = data?.name ?? "";
-      store.dispatch("updateActiveSiteId", ""); // 清除当前选中的站点
+      assetManagementStore.updateActiveSiteId(""); // 清除当前选中的站点
       const location_list = that.location_list.slice(0, index + 1);
       that.location_list = JSON.parse(JSON.stringify(location_list));
       if (isCreateMap) createMapPolygonLayerFun(data?.adcode); // 重新构建地图
@@ -244,16 +245,16 @@ export default defineComponent({
         }
 
         // that.siteAllIds = JSON.parse(JSON.stringify(siteAllIds));
-        store.dispatch("updateSiteAllIds", siteAllIds); // 全部站点ids
-        store.dispatch("updateTimeNumFun", getNowDateAll()); // 更新资产数据
+        assetManagementStore.updateSiteAllIds(siteAllIds); // 全部站点ids
+        assetManagementStore.updateTimeNumFun(getNowDateAll()); // 更新资产数据
         that.siteAllList = JSON.parse(JSON.stringify(that.areaType <= 1 ? siteAllNumList : siteAllInfoList));
         that.sceneMap?.removeAllMarkers(); //移除所有的图层对象
         createMapAggregationNumFun();
       }).catch(() => {
         that.mapLoading = false;
         that.sceneMap?.removeAllMarkers(); //移除所有的图层对象
-        store.dispatch("updateSiteAllIds", []); // 全部站点ids
-        store.dispatch("updateTimeNumFun", getNowDateAll()); // 更新资产数据
+        assetManagementStore.updateSiteAllIds([]); // 全部站点ids
+        assetManagementStore.updateTimeNumFun(getNowDateAll()); // 更新资产数据
       });
     };
 
@@ -305,9 +306,9 @@ export default defineComponent({
         that.location_list[findIndex] = { isSiteData: true, ...properties };
       }
 
-      store.dispatch("updateActiveSiteId", properties.id);
-      store.dispatch("updateSiteAllIds", [properties.id]); // 全部站点ids
-      store.dispatch("updateTimeNumFun", getNowDateAll()); // 更新资产数据
+      assetManagementStore.updateActiveSiteId(properties.id);
+      assetManagementStore.updateSiteAllIds([properties.id]); // 全部站点ids
+      assetManagementStore.updateTimeNumFun(getNowDateAll()); // 更新资产数据
       that.mapPopup.setLnglat(properties); //设置信息框展示经纬度
       that.mapPopup.setHTML(mapPopupShowHtml);//设置信息框展示html
       that.mapPopup.open();

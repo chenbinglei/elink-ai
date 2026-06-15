@@ -6,8 +6,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import { getFileNameFromPath } from "@/utils";
 import { readOSSFile } from "@/common/readOSSFile";
 import GroupsPanelCom from "./GroupsPanelCom.vue";
@@ -26,17 +27,17 @@ export default defineComponent({
   components: { GroupsPanelCom, Meta2dCanvasCom, CanvasInteractionCom },
   setup (props) {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const canvasMeta2dData = computed(() => {
-      return store.state.meta2d.canvasMeta2dData;
+      return meta2dStore.canvasMeta2dData;
     });
 
     const customCanvasOptionsList = computed(() => {
-      return store.state.meta2d.customCanvasOptionsList;
+      return meta2dStore.customCanvasOptionsList;
     });
 
     const that = reactive({
@@ -93,7 +94,7 @@ export default defineComponent({
 
     // 画布全部加载完成
     const meta2dCanvasLoadSFun = () => {
-      store.dispatch("updateCanvasMeta2dAllLoad", true);
+      meta2dStore.updateCanvasMeta2dAllLoad(true);
       console.log("画布资源全部加载完成！！！");
       that.loading = false;
     }
@@ -111,7 +112,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      store.dispatch("updateCanvasModeType", props.modeType); // 全局更新类型
+      meta2dStore.updateCanvasModeType(props.modeType); // 全局更新类型
     })
 
     return {

@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {getLeftTreeDataFun} from "@/utils";
 import {defineComponent, onMounted, reactive, toRefs} from "vue";

@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs} from "vue";
 import VerificationCode from "@/components/component/VerificationCode.vue";
 

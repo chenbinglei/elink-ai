@@ -29,10 +29,11 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { reactive, defineComponent, watch, toRefs, ref, nextTick, onMounted, inject, computed } from "vue";
 import { pickerOptionsGthanAcTime } from "@/utils/dateTime";
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import { TpjdTypeList } from "@/common/enum";
 import EChartsCategory from "@/components/echart2/echartsCategory.vue";
 import { PowerStationGraph, StationTabGroup, tablist, } from "@/views/stationDetails/components";
@@ -46,7 +47,7 @@ export default defineComponent({
   components: { PowerStationGraph, StationTabGroup, EChartsCategory },
   setup () {
     const siteId = inject('siteId')
-    const store = useStore();
+    const monitorStore = useMonitorStore();
     const route = useRoute();
     const options = ref([]);
     const tab_list = ref([]);

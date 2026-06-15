@@ -7,8 +7,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {useRoute} from "vue-router";
 import {findGraphById} from "@/api/2DVisualization/2d_artworkEditor";
 import {reactive, toRefs, defineComponent, ref, onMounted, nextTick} from "vue";
@@ -20,7 +21,7 @@ export default defineComponent({
   setup() {
 
     const route = useRoute();
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const topToolbarComRef = ref(null);
     const meta2dEditorComRef = ref(null);
 
@@ -36,7 +37,7 @@ export default defineComponent({
         let canvasMeta2dData = res.data ? res.data : {};
 
         // if(history.state.copy) delete canvasMeta2dData.id; // 复制一张图
-        store.dispatch('updateCanvasMeta2dData', canvasMeta2dData);
+        meta2dStore.updateCanvasMeta2dData(canvasMeta2dData);
         nextTick(()=>{
           meta2dEditorComRef.value.activeRegistrationMeta2dFun(); // 注册画布
           that.listLoading = false;

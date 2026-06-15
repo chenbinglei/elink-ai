@@ -17,8 +17,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from 'vuex';
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import { getLeftTreeDataFun } from "@/utils";
 import { RouteHandleMenus } from "./_components/operationManagement/PublicComponents/index";
 import { computed, defineComponent, onMounted, reactive, toRefs, ref } from "vue";
@@ -30,9 +31,9 @@ export default defineComponent({
   name: "ChargingStationOperation",
   components: { SecondaryDetailsCom, CsDisChargingRecord, RouteHandleMenus, CsPileGunRunningStatus, CsChargingRecord, CsPileOccupationRecord, CsSettlementManagement },
   setup () {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const secondaryDetailsVisible = computed(() => {
-      return store.state.operationManagement.secondaryDetailsVisible
+      return operationManagementStore.secondaryDetailsVisible
     });
 
     const that = reactive({
@@ -57,8 +58,8 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      store.dispatch("updateSecondaryVisible", false);
-      store.dispatch("updateSecondaryInfo", {});
+      operationManagementStore.updateSecondaryVisible(false);
+      operationManagementStore.updateSecondaryInfo({});
       findRouteMenuListFun()
     })
 

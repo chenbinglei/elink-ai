@@ -1,6 +1,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import SystemMonitorController from "@/api/together/systemMonitor";
 import { ElMessage } from "element-plus";
 import moment from "moment";
@@ -27,7 +28,7 @@ const columnBase = [
 export default function useTable ({ formData }) {
   const route = useRoute();
   const siteId = route.params.id;
-  const store = useStore();
+  const monitorStore = useMonitorStore();
   const tableRef = ref(null);
   const rawData = ref({});
   const columns = ref([...columnBase]);
@@ -153,7 +154,7 @@ export default function useTable ({ formData }) {
 
   onMounted(() => {
     console.log("useTable");
-    store.dispatch("getDeviceFieldList", siteId);
+    monitorStore.getDeviceFieldList(siteId);
   });
 
   return {

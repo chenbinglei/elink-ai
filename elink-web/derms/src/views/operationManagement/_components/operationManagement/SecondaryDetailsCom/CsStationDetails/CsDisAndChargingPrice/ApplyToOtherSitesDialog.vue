@@ -34,7 +34,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {Search} from "@element-plus/icons-vue";
 import {findSiteInfoByUserId} from "@/api/operationManagement/CsStationManagement";
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent, onMounted} from "vue";

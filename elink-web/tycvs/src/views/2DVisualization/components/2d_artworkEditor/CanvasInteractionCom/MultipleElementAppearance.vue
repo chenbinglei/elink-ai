@@ -300,8 +300,9 @@
   </el-collapse>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {MoreFilled} from "@element-plus/icons-vue";
 import {LxInputColorPicker} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, computed, watch} from "vue";
@@ -312,13 +313,13 @@ export default defineComponent({
   components: {LxInputColorPicker},
   setup() {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const current_active_pel_list = computed(() => {
-      return store.state.meta2d.current_active_pel_list;
+      return meta2dStore.current_active_pel_list;
     });
 
     const that = reactive({

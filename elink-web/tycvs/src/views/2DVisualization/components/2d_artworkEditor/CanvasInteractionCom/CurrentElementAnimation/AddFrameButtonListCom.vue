@@ -17,7 +17,7 @@
   </el-popover>
 </template>
 
-<script>
+<script lang="ts">
 import {reactive, toRefs, defineComponent, getCurrentInstance} from "vue";
 
 export default defineComponent({

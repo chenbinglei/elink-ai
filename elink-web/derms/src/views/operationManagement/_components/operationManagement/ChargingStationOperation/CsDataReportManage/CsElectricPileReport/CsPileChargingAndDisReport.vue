@@ -108,8 +108,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {pile_type_array} from "@/utils/setVariate";
 import {RefreshRight,Search} from '@element-plus/icons-vue';
@@ -132,9 +133,9 @@ export default defineComponent({
   setup(props) {
     const tableRef = ref(null);
 
-    const store = useStore();
+    const appStore = useAppStore();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

@@ -11,8 +11,9 @@
   </title-icon-view>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAssetManagementStore } from '@/stores/index';
+
 import cloneDeep from "lodash/cloneDeep";
 import {getNowDate, getNowDateAll} from "@/utils/dateTime";
 import {findPvSitePowerCurve} from "@/api/assetManagement/assetManagement";
@@ -21,13 +22,13 @@ import {reactive, defineComponent, toRefs, watch, computed, ref} from "vue";
 export default defineComponent({
   name: "PvPowerCurveCom",
   setup() {
-    const store = useStore();
+    const assetManagementStore = useAssetManagementStore();
     const siteAllIds = computed(() => {
-      return store.state.assetManagement.siteAllIds;
+      return assetManagementStore.siteAllIds;
     });
 
     const updateTimeNum = computed(() => {
-      return store.state.assetManagement.updateTimeNum;
+      return assetManagementStore.updateTimeNum;
     });
 
     const that = reactive({

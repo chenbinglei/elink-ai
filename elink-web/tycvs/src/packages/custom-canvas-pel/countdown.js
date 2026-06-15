@@ -60,4 +60,3 @@ function getFirstDayOfNextYear() {
     now.setMilliseconds(0);
     return now;
 }
-//# sourceMappingURL=time.js.map

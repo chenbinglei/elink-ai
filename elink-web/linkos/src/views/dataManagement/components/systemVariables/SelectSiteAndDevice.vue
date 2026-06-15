@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {setTreeData} from "@/utils";
 import {getAssetTypeList} from "@/api/modelCenter/modelManagement";
 import {getSiteDeviceTreeList} from "@/api/deviceCenter/deviceList";

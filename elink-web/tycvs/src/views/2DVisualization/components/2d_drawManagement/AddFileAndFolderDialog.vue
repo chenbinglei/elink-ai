@@ -13,7 +13,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {someCharMap} from "@/utils/validate";
 import {saveGraph} from "@/api/2DVisualization/2d_drawManagement";

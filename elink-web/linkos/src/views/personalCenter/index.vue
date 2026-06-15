@@ -14,7 +14,7 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 	import { reactive, toRefs } from "vue";
   import {Account,AmendPassword} from "./components";
 

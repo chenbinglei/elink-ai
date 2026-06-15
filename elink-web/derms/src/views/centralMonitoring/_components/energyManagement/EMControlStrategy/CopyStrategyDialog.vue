@@ -26,8 +26,9 @@
   </Dialog>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useEnergyManagementStore } from '@/stores/index';
+
 import {ElMessage} from "element-plus";
 import {findSiteListByUserId} from "@/api/centralMonitoring/centralMonitoring";
 import {cloneStrategy, findGatewayDataBySiteId} from "@/api/centralMonitoring/energyManagement";
@@ -48,10 +49,10 @@ export default defineComponent({
     },
   },
   setup(props){
-    const store = useStore();
+    const energyManagementStore = useEnergyManagementStore();
     const {emit} = getCurrentInstance();
     const strategyName = computed(() => {
-      return store.state.energyManagement.strategyName;
+      return energyManagementStore.strategyName;
     });
 
     const validateSiteId = (rule, value, callback) => {

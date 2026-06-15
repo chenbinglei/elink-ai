@@ -86,8 +86,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from 'vuex';
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import { ElMessage, } from "element-plus";
 import { queryUserAuthorityIsHaveFun } from "@/utils";
 import { RefreshRight } from '@element-plus/icons-vue';
@@ -100,7 +101,7 @@ export default defineComponent({
   name: "CsPileGunRunningStatus",
   components: { ChargingGunStatusCardCom },
   setup () {
-    const store = useStore();
+    const operationManagementStore = useOperationManagementStore();
     const that = reactive({
       RefreshRight,
       siteIdArray: [],
@@ -162,11 +163,11 @@ export default defineComponent({
         return;
       }
 
-      store.dispatch("updateSecondaryInfo", {
+      operationManagementStore.updateSecondaryInfo({
         subTitle: `设备详情`, id: childItem.pileId, pileCode: childItem.pileCode,
         componentName: "CsChargingPileDetails", backComponentName: "CsPileGunRunningStatus"
       });
-      store.dispatch("updateSecondaryVisible", true);
+      operationManagementStore.updateSecondaryVisible(true);
     };
 
     onMounted(() => {

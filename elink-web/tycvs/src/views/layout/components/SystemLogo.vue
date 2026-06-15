@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import UserOperationDrawer from "./UserOperationDrawer.vue";
 import {onMounted, reactive, toRefs, defineComponent} from "vue";
 

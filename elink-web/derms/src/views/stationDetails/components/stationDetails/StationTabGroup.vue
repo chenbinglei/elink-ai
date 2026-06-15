@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { reactive, defineComponent, toRefs, watch } from "vue";
 
 export default defineComponent({

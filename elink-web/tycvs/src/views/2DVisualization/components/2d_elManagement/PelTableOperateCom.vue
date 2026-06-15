@@ -20,7 +20,7 @@
   </el-popover>
 </template>
 
-<script>
+<script lang="ts">
 import {useRouter} from "vue-router";
 import MoveFileDialog from "./MoveFileDialog.vue";
 import {ElMessage, ElMessageBox} from "element-plus";

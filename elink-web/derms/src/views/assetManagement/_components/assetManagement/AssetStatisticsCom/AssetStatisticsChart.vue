@@ -3,7 +3,7 @@
     <v-chart ref="chartComponentRef" :option="chartOption" autoresize></v-chart>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "vue";
 
 export default defineComponent({

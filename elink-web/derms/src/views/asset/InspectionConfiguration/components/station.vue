@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Search} from '@element-plus/icons-vue';
 import StationInfoCard from '@/views/centralMonitoring/_components/centralMonitoring/StationMenuListCom/StationInfoCard.vue';
 import {findSiteListByUserId} from "@/api/centralMonitoring/centralMonitoring";

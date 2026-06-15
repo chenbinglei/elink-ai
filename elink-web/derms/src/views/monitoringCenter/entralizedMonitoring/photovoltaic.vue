@@ -142,7 +142,7 @@
     <Pagination v-model:currentPage="page" v-model:pageSize="size" :layout="layout" :totalNumber="totalNumber" @pageChange="queryPage" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import {
   defineComponent,
   onMounted,

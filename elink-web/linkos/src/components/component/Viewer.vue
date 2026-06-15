@@ -6,7 +6,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import Viewer from 'viewerjs';
 import 'viewerjs/dist/viewer.css';
 import {onMounted, reactive, toRefs, ref} from "vue";

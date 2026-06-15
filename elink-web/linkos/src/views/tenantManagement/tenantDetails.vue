@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {reactive, toRefs} from "vue";
 import {CompanyPublicComponent} from "@/views/tenantManagement/component"

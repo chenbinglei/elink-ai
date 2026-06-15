@@ -62,7 +62,8 @@ import selectUsers from './selectUsers.vue'
 import { ref, onMounted, nextTick, onUnmounted, watch, computed } from 'vue'
 import { getInspectionUserList, saveInspectionUser } from "@/api/assetManagement/inspection";
 import SystemsetController from "@/api/system/index";
-import { useStore } from "vuex";
+import { useAppStore, useAssetManagementStore } from '@/stores/index';
+
 const props = defineProps({
   isVisible: {
     type: Boolean,

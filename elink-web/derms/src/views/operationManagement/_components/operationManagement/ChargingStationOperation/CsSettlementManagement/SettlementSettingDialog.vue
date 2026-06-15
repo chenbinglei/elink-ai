@@ -9,7 +9,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import PaymentAccountCom from "./AccountInfoFormCom.vue";
 import ReceivingAccountCom from "./AccountInfoFormCom.vue";

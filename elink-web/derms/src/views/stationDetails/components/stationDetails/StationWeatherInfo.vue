@@ -13,7 +13,7 @@
     <div class="gap" v-if="index !== 0"></div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {
   reactive,
   defineComponent,

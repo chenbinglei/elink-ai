@@ -132,7 +132,8 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
+import { useAppStore } from '@/stores/index';
+
 import { ElMessage } from "element-plus";
 import { onMounted, ref, computed, onBeforeUnmount } from "vue";
 import { useRouter } from 'vue-router';
@@ -379,9 +380,9 @@ const handleClick = () => {
   });
 }
 const userInfo = computed(() => {
-  return store.state.app.userInfo;
+  return appStore.userInfo;
 });
-const store = useStore();
+const appStore = useAppStore();
 const timer = ref(null)
 // ------------------------------------------------------------
 let ws = null;

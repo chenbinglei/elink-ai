@@ -61,7 +61,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {colorHexTurnRgba} from "@/utils";
 import {RefreshRight, Search} from "@element-plus/icons-vue";

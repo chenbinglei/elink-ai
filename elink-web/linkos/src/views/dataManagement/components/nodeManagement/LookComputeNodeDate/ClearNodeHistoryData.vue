@@ -15,7 +15,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, reactive, toRefs, watch, ref} from "vue";
 import {getNowDateAll, pickerOptionsGthanAcTime} from "@/utils/dateTime";

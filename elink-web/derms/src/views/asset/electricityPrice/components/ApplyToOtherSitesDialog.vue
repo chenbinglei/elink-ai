@@ -55,7 +55,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { Search } from "@element-plus/icons-vue";
 import { findSiteListByUserId } from "@/api/centralMonitoring/centralMonitoring";
 import { getCurrentInstance, ref, reactive, toRefs, watch, defineComponent, onMounted } from "vue";

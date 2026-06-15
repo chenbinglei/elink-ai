@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {nullToDelete} from "@/utils";
 import { ElMessage } from "element-plus";
 import { isvalidPassword } from "@/utils/validate";

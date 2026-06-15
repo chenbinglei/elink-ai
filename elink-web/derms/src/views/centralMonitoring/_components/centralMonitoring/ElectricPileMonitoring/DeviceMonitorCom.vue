@@ -19,7 +19,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import { RefreshRight } from '@element-plus/icons-vue';
 import { defineComponent, reactive, toRefs, watch } from "vue";
 import { countSitePileMonitor } from "@/api/operationManagement/CsPileGunRunningStatus";

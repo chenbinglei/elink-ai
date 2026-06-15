@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getLeftTreeDataFun } from "@/utils";
 import { onMounted, reactive, toRefs, defineComponent } from "vue";
 import { CsPowerStationReport, CsElectricPileReport, CsChannelReport, CsFleetReport } from "./_components/operationManagement/ChargingStationOperation/CsDataReportManage/index";

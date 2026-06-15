@@ -15,7 +15,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import Draggable from "vuedraggable";
 import {ElMessage} from "element-plus";
 import {commonCharName} from "@/utils/validate";

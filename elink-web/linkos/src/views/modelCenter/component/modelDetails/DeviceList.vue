@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {DisplaySettingTable} from "./component";
 import {onMounted, reactive, ref, toRefs} from "vue";
 import {View, Delete, Refresh, Search} from "@element-plus/icons-vue";

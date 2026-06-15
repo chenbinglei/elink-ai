@@ -132,7 +132,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import pinyin from "tiny-pinyin";
 import {ElMessage} from "element-plus";
 import {area_type_array} from "@/utils/setVariate";

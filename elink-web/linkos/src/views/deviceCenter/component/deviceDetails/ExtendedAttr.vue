@@ -26,8 +26,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import {setTimerSplitTallyFun} from "@/utils/dateTime";
 import {findDeviceReaListById} from "@/api/deviceCenter/deviceList";
 import {computed, onMounted, reactive, toRefs, defineComponent} from "vue";
@@ -44,9 +45,9 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const appStore = useAppStore();
     const contentMainMaxHeight = computed(() => {
-      return store.state.app.contentMainMaxHeight;
+      return appStore.contentMainMaxHeight;
     });
 
     const that = reactive({

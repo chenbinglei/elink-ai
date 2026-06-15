@@ -17,7 +17,7 @@
     </template>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {reactive, toRefs, watch, defineComponent} from "vue";
 import {CircleCheck, CloseBold, CircleCheckFilled, CircleCloseFilled, Clock} from '@element-plus/icons-vue';
 

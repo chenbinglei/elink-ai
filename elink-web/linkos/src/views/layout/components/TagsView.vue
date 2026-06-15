@@ -61,8 +61,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from 'vuex';
+<script lang="ts">
+import { useTagsViewStore } from '@/stores/index';
+
 import {getLeftTreeDataFun} from "@/utils";
 import { useRouter, useRoute } from "vue-router";
 import {ArrowLeft, Close, ArrowRight} from '@element-plus/icons-vue';
@@ -72,12 +73,12 @@ export default defineComponent({
   name: "TagsView",
   components: {ArrowLeft, Close, ArrowRight},
   setup() {
-    const store = useStore();
+    const tagsViewStore = useTagsViewStore();
     const route = useRoute();
     const vueRouter = useRouter();
 
     const visitedViews = computed(() => {
-      return store.state.tagsView.visitedviews
+      return tagsViewStore.visitedviews
     });
 
     const routeViews = computed(()=>{
@@ -86,7 +87,7 @@ export default defineComponent({
 
     // 缓存的路由（需要返回的页面）
     const backButArray = computed(() => {
-      return store.state.tagsView.backButArray
+      return tagsViewStore.backButArray
     });
 
     const that = reactive({
@@ -97,7 +98,7 @@ export default defineComponent({
     // 点击返回按钮
     const clickBackBut = () => {
       const findItem = backButArray.value.find(item => item.showButRoute === route.path);
-      store.dispatch('delVisitedViews', routeViews.value).then((views)=>{
+      tagsViewStore.delVisitedViews(routeViews.value).then((views)=>{
         vueRouter.push({ path: findItem.backRouteName });
       })
     }
@@ -121,7 +122,7 @@ export default defineComponent({
 
     // 点击关闭某个标签卡
     const clickCloseRoute = (data)=>{
-      store.dispatch('delVisitedViews', data).then(views=>{
+      tagsViewStore.delVisitedViews(data).then(views=>{
         //只有在关闭当前打开的标签页才会有影响
         if(isActiveRoute(data)){
           let query = {};
@@ -174,7 +175,7 @@ export default defineComponent({
 
     // 点击关闭所有标签
     const clickCloseAllRoute = ()=>{
-      store.dispatch("delAllRouteViews",[]).then((views)=>{
+      tagsViewStore.delAllRouteViews([]).then((views)=>{
         // console.log(views);
         vueRouter.push({ path: '/homePage/index' });
       })
@@ -182,7 +183,7 @@ export default defineComponent({
 
     // 关闭其他标签
     const clickCloseOtherRoute = ()=>{
-      store.dispatch("delOthersViews",routeViews.value);
+      tagsViewStore.delOthersViews(routeViews.value);
     }
 
     // 判断是否是当前路由
@@ -191,7 +192,7 @@ export default defineComponent({
     }
 
     const recordRouteFun = (data)=> {
-      store.dispatch("addVisitedViews",data);
+      tagsViewStore.addVisitedViews(data);
 
       // 设置显示按钮是否显示
       let isShowBackBut = false;

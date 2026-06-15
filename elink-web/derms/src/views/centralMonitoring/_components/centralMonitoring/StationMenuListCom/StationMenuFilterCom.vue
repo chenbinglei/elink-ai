@@ -38,8 +38,9 @@
   </el-popover>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useAppStore } from '@/stores/index';
+
 import pinyin from "tiny-pinyin";
 import {Filter} from "@element-plus/icons-vue";
 import {area_type_array} from "@/utils/setVariate";
@@ -52,10 +53,10 @@ export default defineComponent({
   components: {Filter},
   emits: ["changeEvent"],
   setup() {
-    const store = useStore();
+    const appStore = useAppStore();
     const {emit} = getCurrentInstance();
     const userInfo = computed(() => {
-      return store.state.app.userInfo;
+      return appStore.userInfo;
     });
 
     const that = reactive({

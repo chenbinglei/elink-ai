@@ -56,7 +56,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Refresh} from '@element-plus/icons-vue';
 import dianZhuangIcon from "@/assets/image/dianzhuang_icon.png";
 import {reactive, defineComponent, toRefs, watch, getCurrentInstance} from "vue";

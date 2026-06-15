@@ -19,7 +19,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import cloneDeep from "lodash/cloneDeep";
 import {downloadFiles} from "@/utils";
 import {ElMessage} from "element-plus";

@@ -57,10 +57,11 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed, reactive, defineComponent, toRefs, unref } from "vue";
-import { useStore } from "vuex";
+import { useMonitorStore } from '@/stores/index';
+
 import plantList from "./plantList.vue";
 
 export default defineComponent({
@@ -71,7 +72,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const vueRouter = useRouter();
-    const store = useStore();
+    const monitorStore = useMonitorStore();
     const routes = computed(() => {
       console.log(route);
       console.log(JSON.parse(localStorage.getItem("SIDEBAR")));
@@ -87,7 +88,7 @@ export default defineComponent({
           siteName,
         },
       });
-      store.dispatch("updateSiteInfo", {
+      monitorStore.updateSiteInfo({
         siteId: id,
         siteName: siteName,
       });

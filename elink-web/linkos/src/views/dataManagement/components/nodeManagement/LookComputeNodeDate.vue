@@ -19,7 +19,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, reactive, toRefs, watch, onMounted} from "vue";
 import {findLocalCacheDataByIds} from "@/api/dataManagement/nodeManagement";
 

@@ -56,7 +56,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {Search} from '@element-plus/icons-vue';
 import {findNotComputeNodeByPage} from "@/api/dataManagement/systemVariables";

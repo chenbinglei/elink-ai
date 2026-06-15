@@ -30,8 +30,9 @@
   </div>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useEnergyManagementStore } from '@/stores/index';
+
 import {generateUUID} from "@/utils";
 import {ElMessage, ElMessageBox} from "element-plus";
 import CopyStrategyDialog from "./CopyStrategyDialog.vue";
@@ -63,11 +64,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const energyManagementStore = useEnergyManagementStore();
     const {emit} = getCurrentInstance();
 
     const strategyName = computed(() => {
-      return store.state.energyManagement.strategyName;
+      return energyManagementStore.strategyName;
     });
 
     const that = reactive({
@@ -95,7 +96,7 @@ export default defineComponent({
       findStrategyById({id: props.activeStrategyId,type: that.queryType,timer: new Date() }).then(res=>{
         let returnDataInfo = res.data ? res.data : {};
         // console.log(returnDataInfo);
-        store.dispatch("updateIssueStrategyTime",returnDataInfo.issueTime);
+        energyManagementStore.updateIssueStrategyTime(returnDataInfo.issueTime);
         that.configContent = returnDataInfo.configContent; // 配置文件 保存的数据
 
         let configFileData = JSON.parse(returnDataInfo.templateContent ?? "{}");

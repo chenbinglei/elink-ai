@@ -13,7 +13,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import PriceStrategy from "./PricingDetailsDialog/PriceStrategy.vue";
 import BasicInformation from "./PricingDetailsDialog/BasicInformation.vue";
 import ApplicationScope from "./PricingDetailsDialog/ApplicationScope.vue";

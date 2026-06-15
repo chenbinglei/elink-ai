@@ -61,7 +61,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {AddModelEvent} from "./component";
 import {event_level_array} from "@/utils/setVariate";
 import {ElMessage, ElMessageBox} from "element-plus";

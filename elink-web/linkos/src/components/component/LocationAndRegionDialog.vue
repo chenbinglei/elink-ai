@@ -36,7 +36,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 // import {Mapbox} from '@antv/l7-maps';
 import {ElMessage} from "element-plus";
 import {Search} from "@element-plus/icons-vue";

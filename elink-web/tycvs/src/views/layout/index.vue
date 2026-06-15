@@ -11,13 +11,15 @@
 </template>
 
 <script setup>
-import {useStore} from "vuex";
+import { useAppStore, useSidebarStore } from '@/stores/index';
+
 import {filterTreeArray} from "@/utils";
 import {useRouter, useRoute} from "vue-router";
 import {computed, onMounted, reactive} from "vue";
 import {SystemLogo, SideBarComponent, AppMain} from "@/views/layout/components";
 
-const store = useStore();
+const appStore = useAppStore();
+    const sidebarStore = useSidebarStore();
 const route = useRoute();
 const vueRouter = useRouter();
 

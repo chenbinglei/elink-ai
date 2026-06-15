@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Search, CirclePlus} from "@element-plus/icons-vue";
 import {getAssetTypeList} from "@/api/modelCenter/modelManagement";
 import {getLeftTreeDataFun, operateButtonIsClick, setTreeData} from "@/utils";

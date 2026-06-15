@@ -14,8 +14,9 @@
   </div>
 </template>
 
-<script>
-import { useStore } from 'vuex';
+<script lang="ts">
+import { useOperationManagementStore } from '@/stores/index';
+
 import { getLeftTreeDataFun } from "@/utils";
 import { onMounted, reactive, toRefs, defineComponent, getCurrentInstance, computed } from "vue";
 import CsMiniProgramUsersList from "./_components/operationManagement/ChargingStationOperation/CsMiniProgramUsers/CsMiniProgramUsersList.vue";
@@ -29,9 +30,9 @@ export default defineComponent({
 
     const { emit } = getCurrentInstance();
     const secondaryDetailsVisible = computed(() => {
-      return store.state.operationManagement.secondaryDetailsVisible;
+      return operationManagementStore.secondaryDetailsVisible;
     });
-        const store = useStore();
+        const operationManagementStore = useOperationManagementStore();
     const that = reactive({
       componentName: "",
       routeMenuList: [],
@@ -48,8 +49,8 @@ export default defineComponent({
 
     onMounted(() => {
       findRouteMenuListFun();
-      store.dispatch("updateSecondaryVisible", false);
-      store.dispatch("updateSecondaryInfo", {});
+      operationManagementStore.updateSecondaryVisible(false);
+      operationManagementStore.updateSecondaryInfo({});
     });
 
     return { ...toRefs(that), findRouteMenuListFun, changEvent,secondaryDetailsVisible };

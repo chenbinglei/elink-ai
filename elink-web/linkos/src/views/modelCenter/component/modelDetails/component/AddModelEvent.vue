@@ -115,7 +115,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {onlyNum, someCharmap} from "@/utils/validate";
 import {event_level_array} from "@/utils/setVariate";

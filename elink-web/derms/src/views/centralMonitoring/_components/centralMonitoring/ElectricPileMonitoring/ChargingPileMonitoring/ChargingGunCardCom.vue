@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {reactive, defineComponent, toRefs} from "vue";
 import tingzhi_icon from "@/assets/image/tingzhi_icon.png";

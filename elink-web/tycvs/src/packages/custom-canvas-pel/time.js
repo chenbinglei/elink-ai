@@ -48,4 +48,3 @@ function onDestroy(pen) {
         pen.interval = undefined;
     }
 }
-//# sourceMappingURL=time.js.map

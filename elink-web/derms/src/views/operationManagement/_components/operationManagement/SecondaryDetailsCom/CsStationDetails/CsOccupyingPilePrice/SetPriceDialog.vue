@@ -79,7 +79,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {getNowDateAll} from "@/utils/dateTime";
 import {num0to9999999dot, onlyNum} from "@/utils/validate";

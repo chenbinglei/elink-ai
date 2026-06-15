@@ -7,7 +7,7 @@
   </TableHeaderTitle>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {Folder} from "@element-plus/icons-vue";
 import {getNowDateAll} from "@/utils/dateTime";

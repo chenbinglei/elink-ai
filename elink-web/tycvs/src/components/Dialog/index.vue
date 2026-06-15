@@ -19,7 +19,7 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {getCurrentInstance, reactive, toRefs, watch, defineComponent} from "vue";
 
 export default defineComponent({

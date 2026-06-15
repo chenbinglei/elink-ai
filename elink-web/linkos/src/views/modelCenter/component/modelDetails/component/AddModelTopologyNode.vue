@@ -13,7 +13,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {someCharmap} from "@/utils/validate";
 import {saveModelTopology} from "@/api/modelCenter/modelManagement";

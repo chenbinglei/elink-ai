@@ -118,7 +118,7 @@
     </template>
   </Dialog>
 </template>
-<script>
+<script lang="ts">
 import {ElMessage} from "element-plus";
 import {num0to9999999dot} from "@/utils/validate";
 import DayPartingSelect from "./SetPriceDialog/DayPartingSelect.vue";

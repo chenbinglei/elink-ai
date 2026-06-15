@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent, reactive, toRefs, ref, onMounted} from "vue";
 import {findOrderTradeMoneyById} from "@/api/operationManagement/CsDisAndChargingRecord";
 

@@ -5,4 +5,4 @@ const locationProtocol = location.protocol;
 const serverIpAddress = process.env.VUE_APP_API_HOST ? `${locationProtocol}//${process.env.VUE_APP_API_HOST}${portNum}` : `${locationProtocol}//${locationHostname}${portNum}`;
 const onlineServerIpAddress = `${locationProtocol}//${locationHost}${locationProtocol === "http:" ? portNum : ":5000"}`;
 
-export const requestPath = process.env.NODE_ENV === 'development' ? "/proxy" : (locationHost === myLocationHost ? serverIpAddress : onlineServerIpAddress);
+export const requestPath = import.meta.env.DEV ? "/proxy" : (locationHost === myLocationHost ? serverIpAddress : onlineServerIpAddress);

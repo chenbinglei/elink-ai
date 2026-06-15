@@ -82,8 +82,9 @@
   </el-form>
 </template>
 
-<script>
-import {useStore} from "vuex";
+<script lang="ts">
+import { useMeta2dStore } from '@/stores/index';
+
 import {LxInputColorPicker} from "@/components/LxComponents";
 import {reactive, toRefs, defineComponent, onMounted, computed, watch, getCurrentInstance, nextTick} from "vue";
 
@@ -111,10 +112,10 @@ export default defineComponent({
   },
   setup(props) {
 
-    const store = useStore();
+    const meta2dStore = useMeta2dStore();
     const {emit} = getCurrentInstance();
     const canvasMeta2d = computed(() => {
-      return store.state.meta2d.canvasMeta2d;
+      return meta2dStore.canvasMeta2d;
     });
 
     const that = reactive({

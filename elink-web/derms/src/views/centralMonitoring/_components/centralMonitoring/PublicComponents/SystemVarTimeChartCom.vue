@@ -46,7 +46,7 @@
   </TitleView>
 </template>
 
-<script>
+<script lang="ts">
 import pinyin from "tiny-pinyin";
 import cloneDeep from "lodash/cloneDeep";
 import {ElMessage} from 'element-plus';

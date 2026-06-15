@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {Meta2d} from '@meta2d/core';
 import {ElMessage} from "element-plus";

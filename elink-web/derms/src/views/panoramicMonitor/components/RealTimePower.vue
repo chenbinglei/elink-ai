@@ -28,7 +28,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { computed, defineComponent, watchEffect, reactive, ref, toRefs, watch } from "vue";
 import { TabGroup, EChartsLine } from "./index";
 

@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ArrowRightBold, Delete} from "@element-plus/icons-vue";
 import {getCurrentInstance, reactive, toRefs, defineComponent} from "vue";
 

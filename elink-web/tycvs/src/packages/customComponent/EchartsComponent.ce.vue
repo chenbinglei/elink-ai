@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import vChart from "vue-echarts";
 import {deepClone} from "@meta2d/core";
 import {reactive, toRefs, onMounted, defineComponent, ref} from "vue";

@@ -53,7 +53,7 @@
   </Dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {useRoute} from "vue-router";
 import {Search, Plus} from '@element-plus/icons-vue';
 import {ElMessage,ElMessageBox} from "element-plus";

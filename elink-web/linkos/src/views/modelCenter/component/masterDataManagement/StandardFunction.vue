@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {ElMessage, ElMessageBox, ElSwitch} from "element-plus";
 import {FilterDropDown} from "@/components/FromFilterComponent";
 import {DataValueDefinition,AddStandardFunDialog} from "./component/index";
