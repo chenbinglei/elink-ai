@@ -107,10 +107,10 @@ springdoc:
 management:
   endpoint:
     health:
-      show-details: never
+      show-details: when-authorized
       cache:
         time-to-live: 30s
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,prometheus,metrics,info
