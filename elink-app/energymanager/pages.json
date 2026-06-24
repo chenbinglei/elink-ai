@@ -1,0 +1,288 @@
+{
+	"pages": [
+		{
+			"path": "pages/welcome/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "欢迎回来"
+			}
+		},
+		{
+			"path": "pages/homePage/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/operations/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/monitor/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50
+			}
+		},
+		{
+			"path": "pages/service/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/MyProfile/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": ""
+			}
+		}
+	],
+	"subPackages": [
+		{
+			"root": "firstPackage",
+			"pages": [
+				{
+					"path": "pages/operations/operationDetails/operationDetails",
+					"style": {
+						"navigationBarTitleText": "详情"
+					}
+				},
+				{
+					"path": "pages/operations/operationDetails/backPage",
+					"style": {
+						"navigationBarTitleText": "填写退回意见"
+					}
+				},
+				{
+					"path": "pages/operations/operationDetails/handoverPage",
+					"style": {
+						"navigationBarTitleText": "交接"
+					}
+				},
+				{
+					"path": "pages/operations/operationDetails/selectRecipient",
+					"style": {
+						"navigationBarTitleText": "选择交接人"
+					}
+				},
+				{
+					"path": "pages/operations/operationDetails/submitPage",
+					"style": {
+						"navigationBarTitleText": "提交"
+					}
+				},
+				{
+					"path": "pages/operations/operationDetails/submitUser",
+					"style": {
+						"navigationBarTitleText": "提交"
+					}
+				},
+				{
+					"path": "pages/operations/reports/addReport",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				},
+				{
+					"path": "pages/operations/reports/checkReport",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				}
+			]
+		},
+		{
+			"root": "thirdPackage",
+			"pages": [
+				{
+					"path": "login/login",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": ""
+					}
+				},
+				{
+					"path": "pages/setting/loginOut",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "pages/components/selectSite",
+					"style": {
+						"navigationBarTitleText": "选择场站"
+					}
+				},
+				{
+					"path": "pages/homePage/screenEcharts",
+					"style": {
+						"navigationBarTitleText": "",
+						"pageOrientation": "landscape"
+					}
+				},
+				{
+					"path": "pages/mine/profile",
+					"style": {
+						"navigationBarTitleText": "个人资料"
+					}
+				},
+				{
+					"path": "pages/mine/messageCenter",
+					"style": {
+						"navigationBarTitleText": "消息中心"
+					}
+				},
+				{
+					"path": "pages/mine/companyInformation",
+					"style": {
+						"navigationBarTitleText": "企业信息"
+					}
+				},
+				{
+					"path": "pages/mine/messageFile/systemAnnouncement",
+					"style": {
+						"navigationBarTitleText": "系统公告"
+					}
+				},
+				{
+					"path": "pages/mine/messageFile/todoTask",
+					"style": {
+						"navigationBarTitleText": "待办任务"
+					}
+				},
+				{
+					"path": "pages/mine/messageFile/eventNotification",
+					"style": {
+						"navigationBarTitleText": "事件通知"
+					}
+				},
+				{
+					"path": "pages/mine/messageFile/systemDetails",
+					"style": {
+						"navigationBarTitleText": "消息详情"
+					}
+				},
+				{
+					"path": "pages/setting/accountSecurity",
+					"style": {
+						"navigationBarTitleText": "账号安全"
+					}
+				}
+			]
+		},
+		{
+			"root": "secondPackage",
+			"pages": [
+				{
+					"path": "pages/detailsInformation",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
+		},{
+			"root": "fourthPackage",
+			"pages": [
+				{
+					"path": "pages/chargingOrder",
+					"style": {
+						"navigationBarTitleText": "充电订单",
+						"backgroundColor": "#FFFFFF"
+					}
+				},{
+					"path": "pages/OrderDetail",
+					"style": {
+						"navigationBarTitleText": "订单详情",
+						"backgroundColor": "#f5f5f5"
+					}
+				},{
+					"path": "pages/disChargingOrder",
+					"style": {
+						"navigationBarTitleText": "放电订单",
+						"backgroundColor": "#FFFFFF"
+					}
+				},{
+					"path": "pages/disChargingOrderDetail",
+					"style": {
+						"navigationBarTitleText": "订单详情",
+						"backgroundColor": "#f5f5f5"
+					}
+				},
+				{
+					"path": "pages/CsBusinessAnalysis",
+					"style": {
+						"navigationBarTitleText": "经营分析",
+						"backgroundColor": "#f5f5f5"
+					}
+				}
+			]
+		}
+	],
+	"tabBar": {
+		"color": "#989898",
+		"borderStyle": "black",
+		"selectedColor": "#107BE9",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/homePage/index",
+				"iconPath": "static/image/tabBar/home.png",
+				"selectedIconPath": "static/image/tabBar/home-select.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/operations/index",
+				"iconPath": "static/image/tabBar/Ops.png",
+				"selectedIconPath": "static/image/tabBar/Ops-select.png",
+				"text": "运维"
+			},
+			{
+				"pagePath": "pages/monitor/index",
+				"iconPath": "static/image/tabBar/Monitor.png",
+				"selectedIconPath": "static/image/tabBar/Monitor-select.png",
+				"text": "监控"
+			},
+			{
+				"pagePath": "pages/service/index",
+				"iconPath": "static/image/tabBar/Service.png",
+				"selectedIconPath": "static/image/tabBar/Service-select.png",
+				"text": "服务"
+			},
+			{
+				"pagePath": "pages/MyProfile/index",
+				"iconPath": "static/image/tabBar/mine.png",
+				"selectedIconPath": "static/image/tabBar/mine-select.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^sm-(.*)": "@/components/uni-custom/sm-$1.vue",
+			"^u--(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			"^u-([^-].*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue"
+			// "l-echart": "@/uni_modules/lime-echart/components/l-echart/l-echart.vue"
+		}
+	},
+	"uniIdRouter": {}
+}

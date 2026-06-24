@@ -1,6 +1,6 @@
 # Elink-AI 前后端项目重构升级优化方案
 
-> 版本：v2.13 | 编制日期：2026-06-03 | 最后更新：2026-06-15（P5方案调整） | 状态：**执行中**
+> 版本：v2.16 | 编制日期：2026-06-03 | 最后更新：2026-06-24（P5-15验收评审完成，全部重构任务完成） | 状态：**已完成**
 >
 > 配套执行手册：[REFACTOR_EXECUTE.md](file:///work/elink-ai/REFACTOR_EXECUTE.md)
 
@@ -15,7 +15,7 @@
 | PHASE-2：框架升级与核心重构 | ✅ 已完成 | 100% | P2-2a完成（Boot 2.7.18+SpringDoc+Resilience4j），P2-2b完成（Java 17+JPMS兼容+热更新验证+冒烟测试通过），P2-2c完成（Boot 3.3.6+Cloud 2023.0.4+SCA 2023.0.3.2+javax→jakarta+OAuth2迁移至spring-authorization-server+3个TODO认证提供者实现），P2-2c-2完成（@Transactional补全），P2-2c-3完成（SCA版本配置），P2-2c-4完成（Feign调用重构：55个FeignClient接口+GenericFeignFallbackFactory+42个FeignEndpoint+52个消费者接口迁移）|
 | PHASE-3：代码质量与性能优化 | ✅ 已完成 | 100% | P3-A完成（e.printStackTrace()+System.out/err→SLF4J），P3-B完成（OSS SDK 3.17.4+Redisson 3.36.0+groupId迁移+CSS extract），P3-C完成（异常收窄+Hibernate统计关闭），P3-C2完成（Gateway/HikariCP/Redis超时参数优化），P3-D完成（R1性能基线：5场景3轮压测+8项指标+JVM GC+容器资源+DB连接数+质量验收全部通过） |
 | PHASE-4：前端现代化改造 | ✅ 已完成 | 100% | P4-A完成（@elink/shared公共包创建+3项目迁移+构建验证通过）；P4-BC完成（linkos/tycvs Vite迁移+3项目 Vuex→Pinia，192文件变更已提交推送）；P4-BC-hotfix完成（router/index.js 工作树损坏还原 + getComponent 适配 Vite 多级动态 import + gallery.js require→ESM，3 dev server 入口 200）；P4-BC-hotfix2完成（derms `directive.js` v-resize 守卫修复 TypeError；`element.scss` 列表表格补深色 CSS 变量与行/单元格背景覆盖，根治白底）；P4-BC-hotfix3完成（derms `permission.js` `afterEach` 跨闭包 `appStore` 引用修复；`permission1.js` 同步修复闭包+删除多余右括号语法错误）；P4-D完成（3项目+shared包tsconfig.json创建allowJs:true，shared包8文件+derms 13文件+linkos/tycvs utils/api层.js→.ts迁移，645个SFC组件添加lang="ts"，修复6处ChargingStationOperation循环导入，3项目vite build全部通过） |
-| PHASE-5：构建部署与持续优化 | ⏳ 执行中 | 0% | 15项子任务（4个Sprint），覆盖率目标30%，性能建立R4基线 |
+| PHASE-5：构建部署与持续优化 | ✅ 已完成 | 100% | P5-9完成（GitHub Actions CI/CD流水线），P5-10/P5-11达标完成（4服务核心Service层覆盖率全部≥30%：auth 100%/device 32.05%/data 38.88%/together 34.88%，共1500+测试用例），P5-13完成（R4性能基线：5端点×3轮压测全部达标，P95最高204ms/P99最高216ms/错误率0%，与R1对比无退化），P5-14完成（达标验证：4项指标全部达标，P95余量59.2%/P99余量78.4%/错误率0%/GC无波动），P5-15完成（验收评审：4份文档更新+Git Tag v3.0创建+最终验收报告生成），15项子任务（4个Sprint） |
 
 ### PHASE-1 任务进度明细
 
@@ -311,13 +311,13 @@ grep -r "e\.printStackTrace" --include="*.java" . | wc -l
 | 6 | P5-6 | 5条核心告警规则 | 服务不可用/API P99>1s/JVM堆>85%/慢查询>3s/容器重启频繁 | P0 | S2 |
 | 7 | P5-7 | Grafana Dashboard配置 | JVM概览/Spring Boot概览/Docker容器/业务概览4个Dashboard | P1 | S2 |
 | 8 | P5-8 | 告警通知渠道 | Alertmanager配置（邮件/Webhook） | P2 | S2 |
-| 9 | P5-9 | CI/CD流水线基础 | lint→compile→test→package→docker build→deploy | P0 | S3 |
-| 10 | P5-10 | 核心服务单元测试 | auth/device/together/data 4服务Service层测试 | P0 | S3 |
-| 11 | P5-11 | JaCoCo覆盖率验证 | 验证4服务覆盖率≥30% | P1 | S3 |
+| 9 | P5-9 | CI/CD流水线基础 | lint→compile→test→package→docker build→deploy | P0 | S3 | ✅ 已完成 |
+| 10 | P5-10 | 核心服务单元测试 | auth/device/together/data 4服务Service层测试 | P0 | S3 | ✅ 已完成 |
+| 11 | P5-11 | JaCoCo覆盖率验证 | 验证4服务覆盖率≥30% | P1 | S3 | ✅ 已完成 |
 | 12 | P5-12 | CI/CD流水线集成完善 | JaCoCo报告上传+覆盖率徽章+灰度部署 | P2 | S3 |
-| 13 | P5-13 | 性能基线测试 | wrk压测5核心API+JVM GC+容器资源数据采集 | P0 | S4 |
-| 14 | P5-14 | 达标验证 | P95≤500ms/P99≤1000ms/错误率≤0.5%/GC停顿≤100ms | P0 | S4 |
-| 15 | P5-15 | 验收评审 | 4份文档更新+Tag v3.0创建+验收报告 | P0 | S4 |
+| 13 | P5-13 | 性能基线测试 | wrk压测5核心API+JVM GC+容器资源数据采集 | P0 | S4 | ✅ 已完成 |
+| 14 | P5-14 | 达标验证 | P95≤500ms/P99≤1000ms/错误率≤0.5%/GC停顿≤100ms | P0 | S4 | ✅ 已完成 |
+| 15 | P5-15 | 验收评审 | 4份文档更新+Tag v3.0创建+验收报告 | P0 | S4 | ✅ 已完成 |
 
 **Sprint执行顺序与依赖关系：**
 ```

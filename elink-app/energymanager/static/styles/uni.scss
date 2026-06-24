@@ -1,0 +1,15 @@
+page {
+	height: 100%;
+	font-size: 28rpx;
+	background-color: $uni-bg-color;
+
+}
+
+uni-toast {
+	z-index: 10000;
+}
+
+.status_bar {
+	width: 100%;
+	height: var(--status-bar-height);
+}

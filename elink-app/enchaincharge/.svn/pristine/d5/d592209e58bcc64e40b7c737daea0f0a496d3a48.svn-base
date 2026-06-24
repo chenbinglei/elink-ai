@@ -1,0 +1,65 @@
+/* 弹性盒属性 公共样式页面 */
+
+.uni-flex {
+	display: flex;
+	flex-direction: row;
+}
+
+.uni-flex-item {
+	flex: 1;
+}
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+}
+
+.flex-around {
+	display: flex;
+	justify-content: space-around;
+}
+
+.flex-between {
+	display: flex;
+	justify-content: space-between;
+}
+
+.flex-start {
+	display: flex;
+}
+
+.flex-none {
+	flex: none;
+}
+
+.align-center {
+	align-items: center;
+}
+
+.jc-center {
+	justify-content: center;
+}
+
+.jc-left {
+	justify-content: left;
+}
+
+.uni-row {
+	flex-direction: row;
+}
+
+.uni-column {
+	flex-direction: column;
+}
+
+.uni-ellipsis {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.flex-jc-ai-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

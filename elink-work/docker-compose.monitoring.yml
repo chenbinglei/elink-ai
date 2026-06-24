@@ -3,7 +3,7 @@ version: "3.8"
 services:
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:v2.51.0
+    image: docker.m.daocloud.io/prom/prometheus:v2.51.0
     ports:
       - "9090:9090"
     volumes:
@@ -20,7 +20,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana:10.4.1
+    image: docker.m.daocloud.io/grafana/grafana:10.4.1
     ports:
       - "3000:3000"
     environment:
@@ -39,7 +39,7 @@ services:
 
   cadvisor:
     container_name: cadvisor
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    image: docker.m.daocloud.io/google/cadvisor:latest
     ports:
       - "8080:8080"
     volumes:
@@ -55,7 +55,7 @@ services:
 
   node-exporter:
     container_name: node-exporter
-    image: prom/node-exporter:v1.7.0
+    image: docker.m.daocloud.io/prom/node-exporter:v1.7.0
     ports:
       - "9100:9100"
     volumes:
@@ -72,7 +72,7 @@ services:
 
   alertmanager:
     container_name: alertmanager
-    image: prom/alertmanager:v0.27.0
+    image: docker.m.daocloud.io/prom/alertmanager:v0.27.0
     ports:
       - "9093:9093"
     volumes:
@@ -88,6 +88,7 @@ services:
 networks:
   elink-network:
     external: true
+    name: elink-work_elink-network
 
 volumes:
   prometheus-data:

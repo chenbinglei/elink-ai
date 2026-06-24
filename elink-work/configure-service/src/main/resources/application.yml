@@ -29,7 +29,7 @@ spring:
     static-locations: file:${FILE_PATH:/opt/sunos/file},file:${IMAGE_PATH:/opt/sunos/image}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/sunos-configure?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/sunos-configure?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD}
     type: com.zaxxer.hikari.HikariDataSource

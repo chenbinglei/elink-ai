@@ -1,0 +1,364 @@
+{
+	"pages": [
+		{
+			"path": "pages/welcome/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "欢迎回来"
+			}
+		},
+		{
+			"path": "pages/station/index",
+			"style": {
+				"navigationBarTitleText": "地图找桩"
+			}
+		},
+		{
+			"path": "pages/charging/index",
+			"style": {
+				"navigationBarTitleText": "扫码充电"
+			}
+		},
+		{
+			"path": "pages/workbench/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "工作台"
+			}
+		}
+	],
+	"subPackages": [
+		{
+			"root": "firstPackage",
+			"pages": [
+				{
+					"path": "pages/stationDetails",
+					"style": {
+						"navigationBarTitleText": "站点详情"
+					}
+				},
+				{
+					"path": "pages/startDisAndcharging",
+					"style": {
+						"navigationBarTitleText": "启动充电"
+					}
+				},
+				{
+					"path": "orderManagement/orderDetails",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "pages/dataStatistics",
+					"style": {
+						"navigationBarTitleText": "数据统计"
+					}
+				}
+			]
+		},
+		{
+			"root": "secondPackage",
+			"pages": [
+				{
+					"path": "orderManagement/occupyOrderList",
+					"style": {
+						"navigationBarTitleText": "占位订单"
+					}
+				},
+				{
+					"path": "orderManagement/occupyDetails",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "orderManagement/orderlist",
+					"style": {
+						"navigationBarTitleText": "订单列表"
+					}
+				},
+				{
+					"path": "orderManagement/chargeInvoice",
+					"style": {
+						"navigationBarTitleText": "充电开票"
+					}
+				},
+				{
+					"path": "orderManagement/orderSettlement",
+					"style": {
+						"navigationBarTitleText": "订单结算"
+					}
+				},
+				{
+					"path": "vehicleManagement/vehicleList",
+					"style": {
+						"navigationBarTitleText": "车辆列表"
+					}
+				},
+				{
+					"path": "vehicleManagement/addVehicle",
+					"style": {
+						"navigationBarTitleText": "添加车辆"
+					}
+				},
+				{
+					"path": "vehicleManagement/vehicleBrand",
+					"style": {
+						"navigationBarTitleText": "品牌"
+					}
+				},
+				{
+					"path": "vehicleManagement/vehicleSeries",
+					"style": {
+						"navigationBarTitleText": "车系"
+					}
+				},
+				{
+					"path": "vehicleManagement/vehicleModel",
+					"style": {
+						"navigationBarTitleText": "车型"
+					}
+				},
+				{
+					"path": "vehicleManagement/drivinglicenseUpload",
+					"style": {
+						"navigationBarTitleText": "上传行驶证"
+					}
+				},{
+					"path": "Invoice/ApplyInvoice",
+					"style": {
+						"navigationBarTitleText": "申请开票"
+					}
+				},{
+					"path": "Invoice/InvoiceRecor",
+					"style": {
+						"navigationBarTitleText": "开票记录"
+					}
+				},
+				{
+					"path": "Invoice/InvoiceTitle",
+					"style": {
+						"navigationBarTitleText": "开票抬头"
+					}
+				},
+				{
+					"path": "Invoice/saveApply",
+					"style": {
+						"navigationBarTitleText": "保存申请"
+					}
+				},
+				{
+					"path": "Invoice/checkDetails",
+					"style": {
+						"navigationBarTitleText": "详情"
+					}
+				},
+				{
+					"path": "Invoice/AddInvoiceTitle",
+					"style": {
+						"navigationBarTitleText": "添加发票抬头"
+					}
+				},
+				{
+					"path": "Invoice/checkInvoicePdf",
+					"style": {
+						"navigationBarTitleText": "发票预览"
+					}
+				}
+			
+
+			]
+		},
+		{
+			"root": "thirdPackage",
+			"pages": [
+				{
+					"path": "login/login",
+					"style": {
+						"navigationBarTitleText": "登录"
+					}
+				},
+				{
+					"path": "personalData/index",
+					"style": {
+						"navigationBarTitleText": "个人信息"
+					}
+				},
+				{
+					"path": "systemSettings/aboutUs",
+					"style": {
+						"navigationBarTitleText": "关于"
+					}
+				},
+				{
+					"path": "login/privacyAgreement",
+					"style": {
+						"navigationBarTitleText": "隐私协议"
+					}
+				},
+				{
+					"path": "login/userAgreement",
+					"style": {
+						"navigationBarTitleText": "用户协议"
+					}
+				},
+				{
+					"path": "login/contactUs",
+					"style": {
+						"navigationBarTitleText": "联系我们"
+					}
+				},
+				{
+					"path": "systemSettings/setSystem",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "systemSettings/messagePush",
+					"style": {
+						"navigationBarTitleText": "消息推送"
+					}
+				},
+				{
+					"path": "accountSafe/accounCtancellation",
+					"style": {
+						"navigationBarTitleText": "申请注销账号"
+					}
+				},
+				{
+					"path": "accountSafe/cancellationAgreement",
+					"style": {
+						"navigationBarTitleText": "注销协议"
+					}
+				},
+				{
+					"path": "accountSafe/sendVerCode",
+					"style": {
+						"navigationBarTitleText": "发送验证码"
+					}
+				},
+				{
+					"path": "accountSafe/changePhone",
+					"style": {
+						"navigationBarTitleText": "更换手机号"
+					}
+				},
+				{
+					"path": "Wallet/walletMoney",
+					"style": {
+						"navigationBarTitleText": "钱包提现"
+					}
+				},
+				{
+					"path": "Wallet/walletSuccess",
+					"style": {
+						"navigationBarTitleText": "提现成功"
+					}
+				}
+			]
+		},
+		{
+			"root": "fourthPackage",
+			"pages": [
+				{
+					"path": "pages/stationList",
+					"style": {
+						"navigationBarTitleText": "电站列表"
+					}
+				},
+				{
+					"path": "pages/stationSearch",
+					"style": {
+						"navigationBarTitleText": "搜索"
+					}
+				},
+				{
+					"path": "pages/scanCode",
+					"style": {
+						"navigationBarTitleText": "扫码"
+					}
+				},
+				{
+					"path": "pages/v2gDischarge",
+					"style": {
+						"navigationBarTitleText": "V2G"
+					}
+				},
+				{
+					"path": "pages/transactionDetails",
+					"style": {
+						"navigationBarTitleText": "明细"
+					}
+				}
+			]
+		}
+	],
+	"preloadRule": {
+		"pages/welcome/index": {
+			"network": "all",
+			"packages": [
+				"firstPackage"
+			]
+		},
+		"pages/station/index": {
+			"network": "all",
+			"packages": [
+				"fourthPackage"
+			]
+		},
+		"pages/workbench/index": {
+			"network": "all",
+			"packages": [
+				"secondPackage",
+				"thirdPackage"
+			]
+		}
+	},
+	"tabBar": {
+		"color": "#989898",
+		"borderStyle": "black",
+		"selectedColor": "#107BE9",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/station/index",
+				"iconPath": "static/image/station.png",
+				"selectedIconPath": "static/image/station_on.png",
+				"text": "找桩"
+			},
+			{
+				"pagePath": "pages/charging/index",
+				"iconPath": "static/image/have.png",
+				"selectedIconPath": "static/image/have_on.png",
+				"text": "进行中"
+			},
+			{
+				"pagePath": "pages/workbench/index",
+				"iconPath": "static/image/workbench.png",
+				"selectedIconPath": "static/image/workbench_on.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"backgroundColor": "#FFFFFF",
+		"backgroundColorTop": "#FFFFFF",
+		"backgroundColorBottom": "#F4F5F9",
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "晟曼e充",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"mp-alipay": {
+			"allowsBounceVertical": "NO",
+			"pullRefresh": false
+		}
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^sm-(.*)": "@/components/uni-custom/sm-$1.vue",
+			"SliderRange": "@/components/slider-range/index.vue"
+		}
+	}
+}
