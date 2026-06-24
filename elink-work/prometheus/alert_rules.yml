@@ -1,0 +1,55 @@
+groups:
+  - name: service_health
+    rules:
+      - alert: ServiceHealthCheck
+        expr: up == 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "服务不可达: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} 实例 {{ $labels.instance }} 已停止响应，持续时间超过0分钟。"
+
+  - name: api_latency
+    rules:
+      - alert: APIP99Latency
+        expr: histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, job)) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API P99延迟过高: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} 的P99延迟超过1秒，当前值: {{ $value | printf \"%.2f\" }}秒。"
+
+  - name: jvm_health
+    rules:
+      - alert: JVMHeapHigh
+        expr: jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"} > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "JVM堆内存使用率过高: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} JVM堆内存使用率超过85%，当前值: {{ $value | printf \"%.2f\" }}。"
+
+  - name: mysql_health
+    rules:
+      - alert: MySQLSlowQuery
+        expr: increase(mysql_slow_queries_total[5m]) > 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MySQL慢查询过多"
+          description: "过去5分钟内慢查询数量超过3，当前值: {{ $value | printf \"%.0f\" }}。"
+
+  - name: container_health
+    rules:
+      - alert: ContainerRestart
+        expr: rate(container_restart_count[5m]) > 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "容器频繁重启: {{ $labels.name }}"
+          description: "容器 {{ $labels.name }} 在5分钟内重启率超过3次/分钟，当前值: {{ $value | printf \"%.2f\" }}。"

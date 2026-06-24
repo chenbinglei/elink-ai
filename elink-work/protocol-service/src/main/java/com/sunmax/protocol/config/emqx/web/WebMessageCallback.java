@@ -24,6 +24,8 @@ import com.sunmax.common.vo.protocol.mqtt.web.request.*;
 import com.sunmax.common.vo.protocol.mqtt.web.response.*;
 import com.sunmax.protocol.util.platform.SmWebControlHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -141,8 +143,18 @@ public class WebMessageCallback implements MqttCallback {
                                     //获取转发数据
                                     Optional<DataSubscribeVo.ServiceVo> iegMqttOption = serviceList.stream().filter(s ->
                                             Objects.equals(s.getServiceId(), IEGConstant.Param.IEG_MQTT_ZF)).findFirst();
-                                    iegMqttOption.ifPresent(serviceVo -> iegMqtt.set(JSON.parseObject(JSON.toJSONString(serviceVo.getData()), ZFPointsSubscribeVo.class)));
-
+                                    iegMqttOption.ifPresent(serviceVo -> {
+                                        ZFPointsSubscribeVo zfPointsVo = iegMqtt.get();
+                                        ZFPointsSubscribeVo zfPointsSubscribeVo = JSON.parseObject(JSON.toJSONString(serviceVo.getData()), ZFPointsSubscribeVo.class);
+                                        if (CollectionUtils.isNotEmpty(zfPointsSubscribeVo.getIegGroupList())) {
+                                            zfPointsVo.getIegGroupList().addAll(zfPointsSubscribeVo.getIegGroupList());
+                                        }
+                                        if (CollectionUtils.isNotEmpty(zfPointsSubscribeVo.getIegPointList())) {
+                                            zfPointsVo.getIegPointList().addAll(zfPointsSubscribeVo.getIegPointList());
+                                        }
+                                        iegMqtt.set(zfPointsVo);
+                                    });
+                                    
                                     //获取整站信息
                                     Optional<DataSubscribeVo.ServiceVo> stationInfoOption = serviceList.stream().filter(s ->
                                             Objects.equals(s.getServiceId(), IEGConstant.Param.GATEWAY_STATION_INFO)).findFirst();

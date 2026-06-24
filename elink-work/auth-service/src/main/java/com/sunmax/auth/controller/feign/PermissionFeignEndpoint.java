@@ -20,14 +20,13 @@ import java.util.List;
 @RequestMapping("/feign/permission")
 @Tag(name = "提供权限相关的接口")
 @Hidden()
-public class PermissionFeignEndpoint implements AuthPermissionFeignClient {
+public class PermissionFeignEndpoint {
 
     @Autowired
     private UserLoginService userLoginService;
 
     @PostMapping("findPermissionByUserAccount")
     @Operation(summary = "根据用户账号查询权限数据")
-    @Override
     public ResponseResult<List<PermissionInfoListDto>> findPermissionByUserAccount(@RequestParam String userAccount, @RequestParam String clientId) {
         return userLoginService.findPermissionByUserAccount(userAccount, clientId);
     }

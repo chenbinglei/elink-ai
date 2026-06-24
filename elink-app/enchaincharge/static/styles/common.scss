@@ -1,0 +1,134 @@
+/*  公共样式配置文件  */
+* {
+	box-sizing: border-box;
+}
+
+// @/static/iconfont/
+
+.container {
+	height: 100%;
+	display: flex;
+	overflow: auto;
+	position: relative;
+	flex-direction: column;
+	box-sizing: border-box;
+	background: #F4F5F9;
+
+	.container_content {
+		flex: 1;
+		height: 2rpx;
+		z-index: 100;
+		display: flex;
+		flex-direction: column;
+		overflow-y: auto;
+
+		.container_flex {
+			flex: 1;
+			height: 2rpx;
+			display: flex;
+			flex-direction: column;
+			box-sizing: border-box;
+			overflow: auto;
+		}
+	}
+
+	.z-paging-content {
+		overflow: initial !important;
+	}
+}
+
+//三角箭头
+.u-arrow {
+	width: 16rpx;
+	height: 16rpx;
+	display: inline-block;
+	border-top: 4rpx solid #ffffff;
+	border-right: 4rpx solid #ffffff;
+	transform: rotate(45deg);
+}
+.u-arrow-up {
+	margin-bottom: -4rpx;
+	transform: rotate(-45deg);
+}
+.u-arrow-down {
+	margin-bottom: 4rpx;
+	transform: rotate(135deg);
+}
+.u-arrow-left {
+	transform: rotate(-135deg);
+}
+.u-arrow-right {
+	transform: rotate(45deg);
+}
+
+//实心三角形
+.triangle-down:after {
+	content: '';
+	position: relative;
+	top: 25rpx;
+	left: 5rpx;
+	border-style: solid;
+	border-color: black transparent;
+	border-width: 10rpx 10rpx 0px 10rpx;
+}
+
+.triangle-up:after {
+	content: '';
+	position: relative;
+	bottom: 20rpx;
+	left: 4rpx;
+	border-style: solid;
+	border-color: black transparent;
+	border-width: 0 10rpx 10rpx 10rpx;
+}
+
+// 文字两行展示
+.twoShowText {
+	word-break: break-all;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+
+// ...动画
+.dotting {
+	display: inline-block;
+	width: 20rpx;
+	min-height: 4rpx;
+	padding-right: 4rpx;
+	border-left: 4rpx solid currentColor;
+	border-right: 4rpx solid currentColor;
+	background-color: currentColor;
+	background-clip: content-box;
+	box-sizing: border-box;
+	-webkit-animation: dot 1.5s infinite step-start both;
+	animation: dot 1.5s infinite step-start both;
+
+	&::before {
+		content: '';
+	}
+
+	@keyframes dot {
+		25% {
+			border-color: transparent;
+			background-color: transparent;
+		}
+		50% {
+			border-right-color: transparent;
+			background-color: transparent;
+		}
+		75% {
+			border-right-color: transparent;
+		}
+	}
+}
+
+.amap-logo,
+.csssprite {
+	display: none; //去掉高德地图logo
+}
+.amap-copyright {
+	opacity: 0; //去掉高德的版本号
+}

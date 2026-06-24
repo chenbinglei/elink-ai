@@ -17,10 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 @Deprecated
 public class CustomRefreshTokenGranter implements AuthenticationProvider {
 
-    private final UserLoginService userLoginService;
-
     public CustomRefreshTokenGranter(UserLoginService userLoginService) {
-        this.userLoginService = userLoginService;
     }
 
     @Override

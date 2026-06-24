@@ -29,7 +29,7 @@ spring:
     mysql-server:
       type: com.zaxxer.hikari.HikariDataSource
       driverClassName: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/sunos-data?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/sunos-data?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
       username: ${MYSQL_USERNAME:root}
       password: ${MYSQL_PASSWORD}
       hikari:
@@ -94,10 +94,10 @@ springdoc:
 management:
   endpoint:
     health:
-      show-details: never
+      show-details: when-authorized
       cache:
         time-to-live: 10s
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,prometheus,metrics,info
