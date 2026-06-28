@@ -1,9 +1,7 @@
 package com.sunmax.data.service;
 
 import com.sunmax.data.mapper.tdengine.DataStoreMapper;
-import com.sunmax.data.model.TableFieldModel;
 import com.sunmax.data.service.impl.AccessDataServiceImpl;
-import com.sunmax.data.vo.DeviceDataVo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;

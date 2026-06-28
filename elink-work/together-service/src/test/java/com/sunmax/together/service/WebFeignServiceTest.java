@@ -1,6 +1,5 @@
 package com.sunmax.together.service;
 
-import com.sunmax.common.config.redis.RedisGeneralUtil;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
 import com.sunmax.common.dto.device.DeviceGunInfoDto;
 import com.sunmax.common.dto.together.PileGunMonitorDataDto;

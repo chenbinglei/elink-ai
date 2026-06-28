@@ -262,18 +262,8 @@ function createIconElement() {
 }
 
 .blink-animation {
-  /* animation: blink 1.5s infinite;
-  box-shadow: 0 0 50px var(--color);
-  animation-fill-mode: none; */
   animation: blink 1.5s infinite;
 }
-
-
-/* .blink-animation {
-  animation: blink 3s infinite;
-  box-shadow: 0 0 50px var(--color);
-  animation-fill-mode: none;
-} */
 </style>
 <style scoped lang="scss">
 ::v-deep .mapboxgl-popup-content {

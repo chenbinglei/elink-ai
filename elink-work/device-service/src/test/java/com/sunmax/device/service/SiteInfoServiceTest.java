@@ -1,8 +1,5 @@
 package com.sunmax.device.service;
 
-import com.sunmax.common.dto.AreaDto;
-import com.sunmax.common.dto.CityDto;
-import com.sunmax.common.dto.ProvinceDto;
 import com.sunmax.common.dto.device.SiteSetUpDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.*;

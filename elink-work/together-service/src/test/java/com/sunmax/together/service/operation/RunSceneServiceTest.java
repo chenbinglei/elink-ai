@@ -6,7 +6,6 @@ import com.sunmax.together.service.feign.SystemService;
 import com.sunmax.together.service.operation.impl.RunSceneServiceImpl;
 import com.sunmax.together.vo.operation.runScene.SitePileMonitorQueryVo;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
-import com.sunmax.common.dto.device.SiteInfoDto;
 import com.sunmax.common.dto.system.OrganEmpowerListDto;
 import com.sunmax.common.vo.together.PileGunChangeVo;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,6 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

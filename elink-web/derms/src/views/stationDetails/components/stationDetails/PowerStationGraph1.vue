@@ -670,12 +670,6 @@ onMounted(() => {
 }
 
 .move-left {
-  /* top: auto; */
-  /* top: 10px;
-  bottom: 44px;
-  left: -140px;
-  width: 100px;
-  text-align: right; */
   left: -100px;
   text-align: right;
   display: flex;

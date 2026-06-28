@@ -263,19 +263,6 @@ export default defineComponent({
   background-color: #f5f7fa;
 }
 
-/* 行悬停效果
-.table-row:hover {
-  background-color: #e6f7ff !important; 使用!important确保悬停效果覆盖斑马纹 
-} 
-
-.table-row:hover .fixed-column {
-  background-color: #e6f7ff !important;
-}
-
-.table-row:hover .table-position:nth-child(2) {
-  background-color: #e6f7ff !important;
-}*/
-
 /* 响应式调整 */
 @media (max-width: 768px) {
   .table-cell {

@@ -2,7 +2,6 @@ package com.sunmax.auth.controller.feign;
 
 import com.sunmax.auth.service.UserLoginService;
 import com.sunmax.common.dto.auth.PermissionInfoListDto;
-import com.sunmax.common.feign.auth.AuthPermissionFeignClient;
 import com.sunmax.common.util.ResponseResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;

@@ -4,7 +4,6 @@ import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.*;
 import com.sunmax.device.dao.model.*;
 import com.sunmax.device.entity.access.*;
-import com.sunmax.device.entity.model.ModelEntity;
 import com.sunmax.device.entity.model.ModelReaEntity;
 import com.sunmax.device.entity.model.ReaEntity;
 import com.sunmax.device.service.feign.ConfigureService;

@@ -256,8 +256,7 @@ export default {
           }
         }
       } catch (e) {
-        //TODO handle the exception
-        // console.log(e)
+        console.error("画布 WebSocket 消息解析异常:", e);
       }
     }
 
@@ -300,8 +299,7 @@ export default {
                   active_real_times_data[item.realTimes[rt].key] = item[item.realTimes[rt].key]; // 当前图元上的数据
                 }
               } catch (e) {
-                //TODO handle the exception
-                console.log("数据获取错误！！！", e);
+                console.error("图元实时数据获取错误:", e);
               }
             }
             // 数据对比，更新图元数据
@@ -314,8 +312,7 @@ export default {
             }
           }
         } catch (e) {
-          //TODO handle the exception
-          console.log("数据解析错误！！！", e);
+          console.error("图元数据解析错误:", e);
         }
       })
       that.canvasMeta2d.render();
@@ -400,8 +397,7 @@ export default {
             if (typeof findVarData === "object") findVarData.dateList = JSON.parse(JSON.stringify(requestData.dateList ?? []));
             returnDataValue = JSON.parse(JSON.stringify(findVarData));
           } catch (e) {
-            //TODO handle the exception
-            // console.log("dateList设置失败", e);
+            console.error("dateList 设置失败:", e);
           }
         }
 
@@ -424,8 +420,7 @@ export default {
                 }
               }
             } catch (e) {
-              //TODO handle the exception
-              console.log("数据查询错误：", e);
+              console.error("自定义变量数据查询错误:", e);
             }
           }
         }
@@ -496,8 +491,7 @@ export default {
                 }
               }
             } catch (e) {
-              //TODO handle the exception
-              // console.log("ArrayList中文名称设置失败", e);
+              console.error("ArrayList 中文名称设置失败:", e);
             }
           }
         }

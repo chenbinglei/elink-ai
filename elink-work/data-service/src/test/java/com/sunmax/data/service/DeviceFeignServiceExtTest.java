@@ -1,7 +1,5 @@
 package com.sunmax.data.service;
 
-import com.sunmax.common.dto.data.DeviceHistoryDto;
-import com.sunmax.common.dto.data.NodeDifHistoryDto;
 import com.sunmax.common.dto.device.DeviceFieldDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.common.vo.data.DeviceCountQueryVo;

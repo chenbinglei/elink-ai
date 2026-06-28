@@ -6,7 +6,6 @@ import com.sunmax.together.dao.*;
 import com.sunmax.together.dao.asset.OccupyPilePriceDao;
 import com.sunmax.together.dao.order.*;
 import com.sunmax.together.entity.AppletUserEntity;
-import com.sunmax.together.entity.assets.OccupyPilePriceEntity;
 import com.sunmax.together.entity.order.*;
 import com.sunmax.together.service.feign.DataService;
 import com.sunmax.together.service.feign.DeviceService;

@@ -1,6 +1,5 @@
 package com.sunmax.together.service.operation;
 
-import com.sunmax.common.dto.operate.ChargerPriceRateDto;
 import com.sunmax.common.dto.system.OrganEmpowerListDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.together.dao.asset.*;

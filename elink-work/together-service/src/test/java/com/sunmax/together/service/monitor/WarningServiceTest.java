@@ -7,7 +7,6 @@ import com.sunmax.common.dto.device.DeviceBasicInfoDto;
 import com.sunmax.common.dto.device.SiteInfoDto;
 import com.sunmax.common.dto.system.OrganEmpowerListDto;
 import com.sunmax.common.util.ResponseResult;
-import com.sunmax.together.dto.monitor.centralMonitor.AlarmListDto;
 import com.sunmax.together.vo.monitor.centralMonitor.DeviceAlarmQueryVo;
 import com.sunmax.together.service.feign.DeviceService;
 import com.sunmax.together.service.feign.SystemService;

@@ -9,6 +9,9 @@ function resolve(dir) {
 
 export default defineConfig({
   base: '/',
+  esbuild: {
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+  },
   build: {
     outDir: 'sunos',
     assetsDir: 'static',

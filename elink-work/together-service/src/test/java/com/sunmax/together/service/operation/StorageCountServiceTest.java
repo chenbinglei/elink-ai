@@ -18,11 +18,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.util.*;
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +57,6 @@ class StorageCountServiceTest {
     @Test
     @DisplayName("查询电表列表-有站点返回数据")
     void getMeterListBySiteId_hasSite_returnsData() {
-        SiteInfoDto siteInfo = mockSiteInfo();
         when(deviceService.findDeviceInfoByParentIds(any())).thenReturn(ResponseResult.ok(Collections.emptyMap()));
 
         try {

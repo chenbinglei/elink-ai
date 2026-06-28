@@ -1,6 +1,5 @@
 package com.sunmax.together.service.monitor;
 
-import com.sunmax.common.dto.device.DeviceAlarmEventListDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.together.dao.DeviceFieldSetDao;
 import com.sunmax.together.dao.order.OrderRecordDao;

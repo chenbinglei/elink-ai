@@ -240,6 +240,16 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+// 搜索栏下拉框样式（与设备管理页面保持一致）
+.header-form {
+  :deep(.el-select) {
+    .el-select__wrapper {
+      width: 180px;
+      min-height: 32px;
+    }
+  }
+}
+
 .modelStatus{
   padding: 0 8px;
   box-sizing: border-box;

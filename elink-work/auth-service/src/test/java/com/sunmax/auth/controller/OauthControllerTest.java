@@ -1,7 +1,6 @@
 package com.sunmax.auth.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.sunmax.auth.dto.UserLoginDto;
 import com.sunmax.auth.service.UserLoginService;
 import com.sunmax.common.util.ResponseResult;
 import org.junit.jupiter.api.BeforeEach;

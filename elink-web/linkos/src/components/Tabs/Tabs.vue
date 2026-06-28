@@ -83,6 +83,9 @@ export default defineComponent({
     };
 
     const setSlideActiveLeft = (tabsIndex) => {
+      // 空值检查：防止 DOM 元素尚未渲染时访问 offsetLeft 导致报错
+      if (!tabsRefArray.value || !tabsRefArray.value[tabsIndex] || !tabsRef.value) return;
+
       // 获取li的宽度
       let tabs_li_width = tabsRefArray.value[tabsIndex].offsetWidth;
       let tabs_li_left = tabsRefArray.value[tabsIndex].offsetLeft;

@@ -1,20 +1,16 @@
 package com.sunmax.device.service;
 
 import com.sunmax.common.config.redis.*;
-import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.dto.device.DeviceBasicInfoDto;
 import com.sunmax.common.util.ResponseResult;
-import com.sunmax.device.constants.DBConstants;
 import com.sunmax.device.dao.access.*;
 import com.sunmax.device.dao.model.*;
 import com.sunmax.device.dto.model.ModelFieldUpdateDto;
-import com.sunmax.device.entity.access.DeviceEntity;
 import com.sunmax.device.service.feign.ConfigureService;
 import com.sunmax.device.service.feign.DataService;
 import com.sunmax.device.service.feign.ProtocolService;
 import com.sunmax.device.service.feign.SystemService;
 import com.sunmax.device.service.impl.DeviceServiceImpl;
-import com.sunmax.device.vo.device.DeviceQueryVo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

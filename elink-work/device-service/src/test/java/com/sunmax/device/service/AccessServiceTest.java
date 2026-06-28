@@ -14,7 +14,6 @@ import com.sunmax.device.entity.access.DeviceEntity;
 import com.sunmax.device.entity.access.GatewaySubDeviceEntity;
 import com.sunmax.device.entity.access.PointTableEntity;
 import com.sunmax.device.entity.model.FunctionEntity;
-import com.sunmax.device.entity.model.ModelEntity;
 import com.sunmax.device.entity.model.ModelFunctionEntity;
 import com.sunmax.device.service.feign.ProtocolService;
 import com.sunmax.device.service.impl.AccessServiceImpl;

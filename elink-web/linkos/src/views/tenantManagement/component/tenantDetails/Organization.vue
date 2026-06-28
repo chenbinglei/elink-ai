@@ -198,7 +198,7 @@ export default defineComponent({
 
   .content_table_right{
     flex: 1;
-    width: 2px;
+    min-width: 400px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -207,8 +207,27 @@ export default defineComponent({
     padding: 12px 16px;
     box-sizing: border-box;
 
-    .el-select{
+    .form_top {
       width: 100%;
+      max-width: 600px;
+    }
+
+    .el-select{
+      width: 468px;
+
+      .el-select__wrapper {
+        width: 468px !important;
+        height: 30px !important;
+        position: static !important;
+      }
+
+      .el-select__selected-item.el-select__placeholder {
+        width: 422px !important;
+      }
+
+      .el-select__selected-item.el-select__placeholder span {
+        color: #606266 !important;
+      }
     }
 
     .button_btm {

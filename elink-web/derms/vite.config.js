@@ -29,6 +29,9 @@ function bypass (req, res) {
 export default defineConfig(({ mode }) => {
   return {
     base: "/", // 等同于 publicPath
+    esbuild: {
+      drop: mode === "production" ? ["console", "debugger"] : [],
+    },
     optimizeDeps: {
       include: [
         'echarts',

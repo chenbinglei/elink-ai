@@ -179,6 +179,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header-form {
+  :deep(.el-select) {
+    min-width: 160px;
+    .el-select__wrapper {
+      width: 180px;
+      min-height: 32px;
+    }
+    .el-select__selected-item.el-select__placeholder {
+      z-index: 1 !important;
+      position: absolute !important;
+      opacity: 1 !important;
+      &.is-transparent { opacity: 1 !important; }
+      span { color: #a8abb2 !important; font-size: 14px !important; }
+    }
+  }
+  .el-input {
+    :deep(.el-select) {
+      min-width: 120px;
+      .el-select__wrapper { width: 140px; }
+    }
+  }
+}
+
 .taskStatus1 {
   color: #FD393A;
 }

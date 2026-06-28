@@ -218,10 +218,11 @@ function makeSidebarTreeNode (id = "root") {
     }
     try {
       if (activeRouteInfo?.router_path) {
-        router_path_array = activeRouteInfo?.router_path?.split("/");
+        router_path_array = activeRouteInfo?.router_path?.split("/") || [];
       }
     } catch (e) {
-      //TODO handle the exception
+      console.error("路由路径解析异常:", e);
+      router_path_array = [];
     }
     // 过滤逻辑：如果路由名称在过滤列表中，则跳过
     if (filterRoutes.includes(activeRouteInfo.name)) {

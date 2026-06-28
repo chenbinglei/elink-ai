@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMPOSE="/work/elink-ai/docker-compose"
+COMPOSE="/work/elink-ai/elink-work/docker-compose"
 PROJECT_DIR="/work/elink-ai/elink-work"
 ENV_FILE="/work/elink-ai/elink-work/.env"
 

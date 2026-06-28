@@ -319,6 +319,15 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+// 设备列表筛选区域下拉框宽度调整
+.header-form {
+  :deep(.el-select) {
+    .el-select__wrapper {
+      width: 210px;
+    }
+  }
+}
+
 .txStatus,.alarmStatus{
   color: #666666;
 }

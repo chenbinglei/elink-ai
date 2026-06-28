@@ -8,7 +8,7 @@
           </el-form-item>
           <el-form-item label="设备类型：">
             <el-tree-select v-model="formInline.typeId" :data="deviceAssetTypeList" :indent="0" :props="treeProps" :render-after-expand="false"
-                            placeholder="请选择设备类型" class="leftArrowClass" default-expand-all filterable clearable/>
+                            placeholder="请选择设备类型" class="leftArrowClass fw-type-select" default-expand-all filterable clearable/>
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" class="whiteFontButtons" @click="listArray('resetPage')">查询</el-button>
@@ -224,5 +224,13 @@ export default defineComponent({
   &:last-child {
     margin-right: 0;
   }
+}
+</style>
+
+<!-- 固件管理页面设备类型下拉框宽度 - 非 scoped 样式，确保穿透所有组件边界 -->
+<style lang="scss">
+.app-container-right .header-form .fw-type-select,
+.app-container-right .header-form .fw-type-select .el-select__wrapper {
+  width: 200px !important;
 }
 </style>

@@ -111,11 +111,19 @@
 .selectAndInput {
 
   .el-select {
-    max-width: 110px;
+    min-width: 140px;
+    max-width: 220px;
 
-    .el-input__wrapper{
+    .el-select__wrapper {
+      width: 100%;
+      min-height: 32px;
       padding: 0 12px;
       border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
+    }
+
+    // 占位符文字颜色：统一为目标色，避免闪烁
+    .el-select__selected-item.el-select__placeholder span {
+      color: rgb(168, 171, 178) !important;
     }
   }
 
@@ -131,3 +139,116 @@
   display: none !important;
   border: 1px dashed var(--el-border-color-darker);
 }
+
+/* ==================== el-select 全局可见性保障 ====================
+ * 确保所有 el-select / el-tree-select 下拉框元素在所有状态下保持可见
+ * 覆盖 Element Plus 默认的 is-transparent 占位符透明行为
+ * 参照设备管理页面搜索栏参考图片风格（尺寸/颜色/边框/字体/交互反馈）
+ * 项目主色：#1F74E2（与 public.scss 中按钮风格一致）
+ * 兼容 Chrome/Firefox/Safari/Edge 最新版本 */
+.el-select,
+.el-tree-select {
+  // 基础可见性：强制阻止任何隐藏属性
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  // 宽度保障：确保下拉框有足够空间显示占位符和选项文字
+  min-width: 160px;
+
+  .el-select__wrapper {
+    background-color: #ffffff !important; // 确保背景不透明
+    border: 1px solid #dcdfe6 !important; // 统一灰色边框
+    border-radius: 4px;
+    box-shadow: none !important; // 清除 Element Plus 默认的 inset 阴影
+
+    &:hover {
+      border-color: #c0c4cc !important;
+      box-shadow: none !important;
+    }
+
+    &.is-focused {
+      border-color: #1F74E2 !important; // 项目主色，与按钮风格一致
+      box-shadow: 0 0 0 1px #1F74E2 inset !important; // 蓝色内阴影，参照参考图片
+    }
+  }
+
+  // 核心修复：覆盖 is-transparent 类，确保占位符文字始终可见
+  // 根因：Element Plus 默认设置 z-index:-1 + position:absolute，导致占位符被 wrapper 背景色覆盖
+  .el-select__selected-item.el-select__placeholder {
+    z-index: 1 !important; // 修复 z-index:-1 导致的文字被背景覆盖问题
+    position: absolute !important; // 保持 Element Plus 的绝对定位居中布局
+
+    &.is-transparent {
+      opacity: 1 !important;
+    }
+
+    span {
+      color: rgb(168, 171, 178) !important; // 统一占位符颜色，避免闪烁
+    }
+  }
+
+  // 已选中项字体属性
+  .el-select__selected-item:not(.el-select__placeholder) {
+    color: #606266 !important;
+  }
+
+  // 下拉箭头图标
+  .el-select__suffix .el-select__icon {
+    color: #c0c4cc !important;
+
+    svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
+}
+
+// 下拉面板（popup）独立选择器：Element Plus 默认将 popper teleport 到 body，
+// 不能嵌套在 .el-select 内部，否则 teleport 后无法匹配样式
+.el-select-dropdown {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e4e7ed !important;
+  border-radius: 4px !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+              0 3px 6px -4px rgba(0, 0, 0, 0.12),
+              0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
+  z-index: 3000 !important; // 确保弹出层在最上层
+
+  .el-select-dropdown__item {
+    font-size: 14px !important;
+    padding: 0 12px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    color: #606266 !important;
+
+    &.is-hovering,
+    &:hover {
+      background-color: #f5f7fa !important;
+      color: #1F74E2 !important; // 项目主色
+    }
+
+    &.is-selected {
+      color: #1F74E2 !important; // 项目主色
+      font-weight: normal !important;
+    }
+  }
+
+  // 滚动条样式（跨浏览器兼容）
+  .el-scrollbar__bar {
+    &.is-vertical > .el-scrollbar__thumb {
+      width: 6px;
+      background-color: #909399;
+      border-radius: 3px;
+
+      &:hover {
+        background-color: #606266;
+      }
+    }
+  }
+}
+
+/* ==================== el-select 全局可见性保障结束 ==================== */

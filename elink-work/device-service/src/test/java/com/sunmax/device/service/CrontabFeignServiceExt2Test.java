@@ -6,8 +6,6 @@ import com.sunmax.device.dao.model.*;
 import com.sunmax.device.entity.access.*;
 import com.sunmax.device.entity.model.FunctionEntity;
 import com.sunmax.device.entity.model.ModelEntity;
-import com.sunmax.device.entity.model.ModelReaEntity;
-import com.sunmax.device.entity.model.ReaEntity;
 import com.sunmax.device.service.feign.SystemService;
 import com.sunmax.device.service.impl.CrontabFeignServiceImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +20,6 @@ import org.mockito.quality.Strictness;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

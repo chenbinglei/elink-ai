@@ -5,7 +5,6 @@ import com.sunmax.common.dto.device.ModelDetailDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.*;
 import com.sunmax.device.dao.model.*;
-import com.sunmax.device.entity.access.DeviceEntity;
 import com.sunmax.device.entity.model.FunctionEntity;
 import com.sunmax.device.entity.model.ModelEntity;
 import com.sunmax.device.service.feign.SystemService;

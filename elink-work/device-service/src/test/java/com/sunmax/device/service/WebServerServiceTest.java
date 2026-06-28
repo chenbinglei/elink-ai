@@ -1,6 +1,5 @@
 package com.sunmax.device.service;
 
-import com.sunmax.common.dto.system.OrganEmpowerListDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.DeviceDao;
 import com.sunmax.device.dao.access.SiteInfoDao;

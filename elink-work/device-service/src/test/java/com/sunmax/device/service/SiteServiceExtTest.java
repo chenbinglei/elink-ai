@@ -2,8 +2,6 @@ package com.sunmax.device.service;
 
 import com.sunmax.common.dto.device.SiteBasicInfoDto;
 import com.sunmax.common.dto.device.SiteEnergyInfoDto;
-import com.sunmax.common.dto.system.TenantDetailsDto;
-import com.sunmax.common.dto.system.UserDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.*;
 import com.sunmax.device.entity.access.*;

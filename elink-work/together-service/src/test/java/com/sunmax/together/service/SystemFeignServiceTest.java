@@ -2,7 +2,6 @@ package com.sunmax.together.service;
 
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.together.dao.asset.GatWayPlatformDao;
-import com.sunmax.together.entity.assets.GatWayPlatformEntity;
 import com.sunmax.together.service.feign.DeviceService;
 import com.sunmax.together.service.feign.ProtocolService;
 import com.sunmax.together.service.feign.SystemService;

@@ -4,3 +4,23 @@
 @import "./element.scss";
 @import "./normalize.scss";
 @import "@/assets/iconfont/iconfont.css";  //字体图标
+
+/* ==================== el-select 最终可见性覆盖（必须在所有样式之后） ====================
+ * 根因：Element Plus 默认设置 .el-select__placeholder { z-index: -1 }
+ * 导致占位符文字被 .el-select__wrapper 背景色完全覆盖，用户看不到 placeholder
+ * 此处为最终覆盖层，优先级最高，确保所有页面的下拉框占位符始终可见 */
+.el-select__selected-item.el-select__placeholder {
+  z-index: 1 !important; /* 覆盖 Element Plus 的 z-index:-1 */
+  position: absolute !important;
+  opacity: 1 !important;
+
+  &.is-transparent {
+    opacity: 1 !important;
+  }
+
+  span {
+    color: rgb(168, 171, 178) !important;
+    font-size: 14px !important;
+  }
+}
+/* ==================== el-select 最终可见性覆盖结束 ==================== */

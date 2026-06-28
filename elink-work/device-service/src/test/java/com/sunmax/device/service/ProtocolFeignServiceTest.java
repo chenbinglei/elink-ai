@@ -5,7 +5,6 @@ import com.sunmax.device.dao.access.*;
 import com.sunmax.device.dao.model.ModelDao;
 import com.sunmax.device.dao.model.PileFaultDao;
 import com.sunmax.device.entity.access.*;
-import com.sunmax.device.entity.model.ModelEntity;
 import com.sunmax.device.entity.model.PileFaultEntity;
 import com.sunmax.device.service.feign.SystemService;
 import com.sunmax.device.service.impl.ProtocolFeignServiceImpl;

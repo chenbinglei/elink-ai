@@ -1,8 +1,6 @@
 package com.sunmax.device.service;
 
-import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.*;
-import com.sunmax.device.entity.access.SiteEntity;
 import com.sunmax.device.service.feign.SystemService;
 import com.sunmax.device.service.impl.SiteServiceImpl;
 import org.junit.jupiter.api.DisplayName;

@@ -142,12 +142,30 @@ export default defineComponent({
 
   .el-pagination {
 
+    // 分页大小选择器（sizes）宽度调整
+    .el-select {
+      .el-select__wrapper {
+        min-height: 28px;
+        width: 110px;
+      }
+    }
+
+    // 页码跳转输入框宽度调整
+    .el-input {
+      .el-input__wrapper {
+        min-height: 28px;
+        width: 60px;
+      }
+    }
+
     .btn-prev,
     .btn-next {
       color: #242424;
       border-radius: 4px;
       background: #FFFFFF;
       border: 1px solid #E3E3E3;
+      min-width: 28px;
+      height: 28px;
     }
 
     .el-pager {
@@ -158,6 +176,9 @@ export default defineComponent({
         color: #242424;
         background: #FFFFFF;
         border: 1px solid #E3E3E3;
+        min-width: 28px;
+        height: 28px;
+        line-height: 28px;
       }
 
       .active {

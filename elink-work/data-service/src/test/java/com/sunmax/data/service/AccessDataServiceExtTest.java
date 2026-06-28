@@ -1,7 +1,6 @@
 package com.sunmax.data.service;
 
 import com.sunmax.data.mapper.tdengine.DataStoreMapper;
-import com.sunmax.data.model.TableDataModel;
 import com.sunmax.data.model.TableFieldModel;
 import com.sunmax.data.service.impl.AccessDataServiceImpl;
 import com.sunmax.data.vo.DeviceDataVo;
@@ -200,9 +199,6 @@ class AccessDataServiceExtTest {
         when(dataStoreMapper.findFieldNameTypeList("t_dev001")).thenReturn(List.of(fieldModel));
         when(dataStoreMapper.queryfirstTableDataList(anyString(), any(), anyString(), anyString(), anyString()))
                 .thenReturn(Collections.emptyList());
-
-        Map<String, List<String>> queryMap = Map.of("t_dev001", List.of("voltage"));
-        var result = accessDataService.queryDifferenceTableDataList(queryMap, "2026-01-01", "2026-01-31", "1h", 1);
 
         verify(dataStoreMapper).queryfirstTableDataList(anyString(), any(), anyString(), anyString(), anyString());
     }

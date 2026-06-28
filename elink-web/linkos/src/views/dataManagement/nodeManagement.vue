@@ -276,5 +276,56 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+// 搜索栏下拉框样式（与设备管理页面保持一致）
+.header-form {
+  :deep(.el-select) {
+    min-width: 160px;
 
+    .el-select__wrapper {
+      width: 180px;
+      min-height: 32px;
+      background-color: #ffffff;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+
+      &:hover {
+        border-color: #c0c4cc;
+      }
+
+      &.is-focused {
+        border-color: #1F74E2;
+        box-shadow: 0 0 0 1px #1F74E2 inset;
+      }
+    }
+
+    // 占位符可见性修复
+    .el-select__selected-item.el-select__placeholder {
+      z-index: 1 !important;
+      position: absolute !important;
+      opacity: 1 !important;
+
+      &.is-transparent {
+        opacity: 1 !important;
+      }
+
+      span {
+        color: #a8abb2 !important;
+        font-size: 14px !important;
+      }
+    }
+  }
+
+  // 输入框前缀下拉框（selectAndInput 场景）
+  .el-input {
+    :deep(.el-select) {
+      min-width: 140px;
+      max-width: 220px;
+
+      .el-select__wrapper {
+        width: 100%;
+        min-height: 32px;
+      }
+    }
+  }
+}
 </style>

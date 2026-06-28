@@ -37,6 +37,7 @@ public class DeviceUtil {
         return result;
     }
 
+    @SuppressWarnings("removal")
     public static Double dataTypeConvert(Integer dataType, Object data) {
         if (StringUtil.isEmpty(dataType) || StringUtil.isEmpty(data)) {
             return null;

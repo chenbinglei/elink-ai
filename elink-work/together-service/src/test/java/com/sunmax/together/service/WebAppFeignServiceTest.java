@@ -15,7 +15,6 @@ import com.sunmax.together.entity.AppletUserEntity;
 import com.sunmax.together.entity.SiteAccountEntity;
 import com.sunmax.together.entity.UserDisWalletEntity;
 import com.sunmax.together.entity.order.OrderRecordEntity;
-import com.sunmax.together.entity.order.SettlementRecordEntity;
 import com.sunmax.together.service.feign.DeviceService;
 import com.sunmax.together.service.feign.SystemService;
 import com.sunmax.together.service.impl.WebAppFeignServiceImpl;

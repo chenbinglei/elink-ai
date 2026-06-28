@@ -41,6 +41,24 @@
       @keyframes app-loading-spin {
         to { transform: rotate(360deg); }
       }
+
+      /* ========== 组织架构页面下拉框宽度修复 ========== */
+      .content_table_right .el-select {
+        width: 468px !important;
+      }
+      .content_table_right .el-select .el-select__wrapper {
+        width: 468px !important;
+        height: 30px !important;
+        position: static !important;
+      }
+      .content_table_right .el-select .el-select__placeholder {
+        width: 422px !important;
+      }
+      .content_table_right .el-select .el-select__placeholder span {
+        color: rgb(168, 171, 178) !important;
+        font-size: 14px !important;
+      }
+      /* ========== 修复结束 ========== */
     </style>
     <title>设备管理</title>
 </head>
@@ -56,6 +74,59 @@
   </div>
 </div>
 <script src="/config.js"></script>
+<script>
+// ========== el-select 占位符可见性 + 组织架构下拉框宽度修复 ==========
+(function() {
+  function fixSelects() {
+    // 1. 占位符可见性修复
+    var placeholders = document.querySelectorAll('.el-select__selected-item.el-select__placeholder');
+    for (var i = 0; i < placeholders.length; i++) {
+      var el = placeholders[i];
+      el.style.setProperty('z-index', '1', 'important');
+      el.style.setProperty('position', 'absolute', 'important');
+      el.style.setProperty('opacity', '1', 'important');
+      var span = el.querySelector('span');
+      if (span) {
+        span.style.setProperty('color', 'rgb(168, 171, 178)', 'important');
+        span.style.setProperty('font-size', '14px', 'important');
+      }
+    }
+
+    // 2. 组织架构页面下拉框宽度修复
+    var contentRights = document.querySelectorAll('.content_table_right');
+    for (var j = 0; j < contentRights.length; j++) {
+      var selects = contentRights[j].querySelectorAll('.el-select');
+      for (var k = 0; k < selects.length; k++) {
+        var sel = selects[k];
+        sel.style.setProperty('width', '468px', 'important');
+        var wrapper = sel.querySelector('.el-select__wrapper');
+        if (wrapper) {
+          wrapper.style.setProperty('width', '468px', 'important');
+          wrapper.style.setProperty('height', '30px', 'important');
+          wrapper.style.setProperty('position', 'static', 'important');
+        }
+        var ph = sel.querySelector('.el-select__placeholder');
+        if (ph) {
+          ph.style.setProperty('width', '422px', 'important');
+        }
+      }
+    }
+  }
+
+  setTimeout(fixSelects, 200);
+  setTimeout(fixSelects, 800);
+  setTimeout(fixSelects, 1500);
+  setTimeout(fixSelects, 3000);
+
+  if (typeof MutationObserver !== 'undefined') {
+    var observer = new MutationObserver(function() { fixSelects(); });
+    document.addEventListener('DOMContentLoaded', function() {
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  }
+})();
+// ========== 修复脚本结束 ==========
+</script>
 <script>
 // 临时调试：捕获所有浏览器端错误并显示在页面上
 window.onerror = function(msg, url, line, col, err) {

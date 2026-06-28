@@ -261,8 +261,7 @@ export default defineComponent({
 
         }
       } catch (e) {
-        //TODO handle the exception
-        console.log(e);
+        console.error("WebSocket 消息解析异常:", e);
       }
     }
 

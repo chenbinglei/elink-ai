@@ -196,8 +196,7 @@ export default defineComponent({
           }
         }
       } catch (e) {
-        //TODO handle the exception
-        console.log(e);
+        console.error("Echarts 组件配置解析异常:", e);
       }
     }
 

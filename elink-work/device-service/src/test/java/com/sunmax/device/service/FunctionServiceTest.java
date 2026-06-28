@@ -3,18 +3,13 @@ package com.sunmax.device.service;
 import com.sunmax.common.config.redis.RedisDeviceUtil;
 import com.sunmax.common.config.redis.RedisLockUtil;
 import com.sunmax.common.config.redis.RedisUtil;
-import com.sunmax.common.dto.PageDto;
 import com.sunmax.common.util.ResponseResult;
 import com.sunmax.device.dao.access.DeviceDao;
 import com.sunmax.device.dao.model.FunctionDao;
 import com.sunmax.device.dao.model.ModelFunctionDao;
-import com.sunmax.device.dto.model.FunctionListDto;
-import com.sunmax.device.entity.access.DeviceEntity;
 import com.sunmax.device.entity.model.FunctionEntity;
-import com.sunmax.device.entity.model.ModelFunctionEntity;
 import com.sunmax.device.service.impl.FunctionServiceImpl;
 import com.sunmax.device.vo.model.FunctionChangeVo;
-import com.sunmax.device.vo.model.FunctionQueryVo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Example;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
