@@ -20,6 +20,8 @@ public class SMAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+        // 返回 HTTP 403（保留业务码 50015 供前端兼容）
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         ResponseResult<ObjectMapper> responseVo = new ResponseResult<>(ResponseResult.CodeStatus.ACCESS_FAIL,"无权访问,请联系管理员开通权限");
         response.setHeader("Content-Type", "application/json;charset=utf-8");
         // CORS 由 Gateway 统一处理，下游服务不再设置 Access-Control-Allow-Origin

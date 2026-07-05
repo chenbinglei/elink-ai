@@ -19,7 +19,8 @@ public class SMAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
         try {
-            response.setStatus(200);
+            // 返回 HTTP 401（保留业务码 9999 供前端兼容）
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setHeader("Content-Type", "application/json;charset=utf-8");
             // CORS 由 Gateway 统一处理，下游服务不再设置 Access-Control-Allow-Origin
             // 避免与 Gateway CORS 配置冲突（* 与 credentials=true 不兼容）

@@ -112,8 +112,10 @@ services:
       - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,prometheus,metrics,info
       - MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS=when-authorized
       - TZ=Asia/Shanghai
+      - JWT_ENABLED=${JWT_ENABLED:-false}
     volumes:
       - ./auth-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/auth-service-exec.jar"]
     depends_on:
       nacos:
@@ -195,6 +197,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./system-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/system-service-exec.jar"]
     depends_on:
       nacos:
@@ -237,6 +240,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./device-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/device-service-exec.jar"]
     depends_on:
       nacos:
@@ -281,6 +285,7 @@ services:
       - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
     volumes:
       - ./data-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
       - /usr/lib/libtaos.so.1:/usr/lib/libtaos.so.1:ro
       - /usr/local/taos/driver/libtaos.so.3.0.7.1:/usr/local/taos/driver/libtaos.so.3.0.7.1:ro
       - /etc/taos/taos.cfg:/etc/taos/taos.cfg:ro
@@ -328,6 +333,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./protocol-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/protocol-service-exec.jar"]
     depends_on:
       nacos:
@@ -380,6 +386,7 @@ services:
       - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
     volumes:
       - ./crontab-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
       - /usr/lib/libtaos.so.1:/usr/lib/libtaos.so.1:ro
       - /usr/local/taos/driver/libtaos.so.3.0.7.1:/usr/local/taos/driver/libtaos.so.3.0.7.1:ro
       - /etc/taos/taos.cfg:/etc/taos/taos.cfg:ro
@@ -427,6 +434,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./devops-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/devops-service-exec.jar"]
     depends_on:
       nacos:
@@ -469,6 +477,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./configure-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/configure-service-exec.jar"]
     depends_on:
       nacos:
@@ -513,6 +522,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./together-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms1536m", "-Xmx1536m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/together-service-exec.jar"]
     depends_on:
       nacos:
@@ -555,6 +565,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./webapp-service/target:/app/target:ro
+      - ./keys:/work/elink-ai/elink-work/keys:ro
     command: ["java", "-Xms512m", "-Xmx512m", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/app/logs/", "-jar", "target/webapp-service-exec.jar"]
     depends_on:
       nacos:

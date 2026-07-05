@@ -4,10 +4,9 @@ import com.sunmax.common.feign.fallback.GenericFeignFallbackFactory;
 
 
 /**
- * @deprecated 此接口已迁移至 com.sunmax.common.feign.auth.AuthPermissionNoContextFeignClient
- * 请直接使用 com.sunmax.common.feign.auth.AuthPermissionNoContextFeignClient
+ * 修复：auth-service context-path 为 /sauth，Feign 路径需带 /sauth 前缀
+ * 原 AuthPermissionNoContextFeignClient path 缺失 /sauth 前缀导致 404
  */
-@FeignClient(value = "sauth-service", path = "/feign/permission", fallbackFactory = GenericFeignFallbackFactory.class)
-@Deprecated
-public interface SauthService extends com.sunmax.common.feign.auth.AuthPermissionNoContextFeignClient {
+@FeignClient(value = "sauth-service", path = "/sauth", fallbackFactory = GenericFeignFallbackFactory.class)
+public interface SauthService extends com.sunmax.common.feign.auth.AuthPermissionFeignClient {
 }
