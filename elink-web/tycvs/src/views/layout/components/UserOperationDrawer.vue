@@ -28,6 +28,7 @@ import { useAppStore } from '@/stores/index';
 
 import {useRouter} from "vue-router";
 import {removeToken} from "@/utils/auth";
+import {logout} from "@/api/login/login";
 import {onMounted, reactive, toRefs, defineComponent, computed, getCurrentInstance, watch} from "vue";
 
 export default defineComponent({
@@ -62,9 +63,12 @@ export default defineComponent({
 
       // 退出登录
       if (type === "quit") {
-        removeToken(); //清除用户token
-        localStorage.clear();
-        location.reload(); // 为了重新实例化vue-router对象 避免bug
+        // 调用后端登出接口，使服务端 token 失效（失败不阻塞前端清理）
+        logout().catch(() => {}).finally(() => {
+          removeToken(); //清除用户token
+          localStorage.clear();
+          location.reload(); // 为了重新实例化vue-router对象 避免bug
+        });
       }
 
       //跳转用户详情页

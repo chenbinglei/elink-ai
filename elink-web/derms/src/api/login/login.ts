@@ -9,6 +9,15 @@ export function login(data) {
         data: data
     });
 }
+
+// 登出（通过 Authorization Header 传递 token，由拦截器自动注入）
+export function logout() {
+    return request({
+        url: '/sauth/oauth/logout',
+        method: 'post'
+    });
+}
+
 // 根据用户账号获取密码
 export function getPasswordByAccount(data) {
     return request({

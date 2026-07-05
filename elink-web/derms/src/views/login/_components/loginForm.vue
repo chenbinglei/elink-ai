@@ -77,7 +77,7 @@ import { setToken, getToken, removeToken } from "@/utils/auth";
 const props = defineProps({
   clientId: {
     type: String,
-    default: "iems-client",
+    default: "derms-client",
   },
 });
 const router = useRouter();

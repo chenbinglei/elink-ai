@@ -61,8 +61,8 @@ export default defineComponent({
     const handleLogin = () => {
       login({
         grant_type: "sys_pwd",
-        client_id: "iems-client",
-        client_secret: "iems-client",
+        client_id: "derms-client",
+        client_secret: "derms-client",
         password: that.params.password,
         userAccount: that.params.account,
       }).then(result => {

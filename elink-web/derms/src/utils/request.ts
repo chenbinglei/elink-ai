@@ -22,7 +22,7 @@ const { request, cancelAbleService } = createHttpClient({
     return { oldUserId: appStore.oldUserId, userInfo: appStore.userInfo };
   },
   perRequestIsolation: true,
-  enablePortNum: true,
+  enablePortNum: false,
   onAuthExpired: () => {
     if (window.top !== window) {
       window.top.postMessage({ action: "unAuth" });

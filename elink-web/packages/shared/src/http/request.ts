@@ -1,4 +1,5 @@
 import { createTransform } from "../utils/transformRequest.js";
+import { createTokenRefreshHandler } from "./tokenRefresh.js";
 import type { AxiosInstance, AxiosRequestConfig, AxiosStatic, CancelTokenSource } from "axios";
 import type { CookiesStatic } from "js-cookie";
 
@@ -77,6 +78,35 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
 
   const transform = createTransform(qs);
 
+  // service 实例引用（延迟绑定，供 tokenRefresh 重发请求使用）
+  // 单例模式：指向共享的 service 实例
+  // perRequestIsolation 模式：每次请求创建新实例，serviceRef 为 null，由响应拦截器传入当前实例
+  let serviceRef: AxiosInstance | null = null;
+
+  // 创建 Token 自动刷新处理器
+  // 当业务请求返回 401 时，自动调用 /sauth/oauth/token 刷新令牌
+  // 刷新期间并发请求排队，刷新失败则跳转登录页
+  const handleTokenExpired = createTokenRefreshHandler({
+    auth,
+    baseURL,
+    onRefreshFailed: () => {
+      if (onAuthExpired) {
+        onAuthExpired();
+      } else if (window.top !== window) {
+        window.top.postMessage({ action: "unAuth" });
+      } else {
+        auth.removeToken();
+        localStorage.removeItem("USER_INFO");
+        localStorage.removeItem("AUTH_ROUTER");
+        location.reload();
+      }
+    },
+    // 传入 service 实例用于重发请求，确保经过完整拦截器链
+    // - 单例模式：返回共享的 serviceRef
+    // - perRequestIsolation 模式：返回当前请求的 service 实例（通过闭包捕获）
+    serviceGetter: () => serviceRef as AxiosInstance,
+  });
+
   const createService = (customBaseURL?: string): AxiosInstance =>
     axios.create({
       timeout,
@@ -131,9 +161,10 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
             "Content-Type": "multipart/form-data",
           });
           if (auth.getToken() && userInfo) {
-            config.data.append("userId", userInfo.userId as string);
-            if (!noToken) {
-              config.data.append("access_token", auth.getToken()!);
+            // 幂等性检查：避免 tokenRefresh 重发请求时重复 append userId
+            // 场景：请求返回 401 → tokenRefresh 用 service 实例重发 → 请求拦截器再次执行
+            if (!config.data.get("userId")) {
+              config.data.append("userId", userInfo.userId as string);
             }
             if (!config.data.get("tenantId") && userInfo.tenantId) {
               config.data.append("tenantId", userInfo.tenantId as string);
@@ -144,7 +175,6 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
             try {
               const dataObj = JSON.parse(config.data);
               dataObj.userId = userInfo.userId;
-              if (!noToken) dataObj.access_token = auth.getToken();
               if (!dataObj.tenantId && userInfo.tenantId) {
                 dataObj.tenantId = userInfo.tenantId;
               }
@@ -154,11 +184,17 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
             }
           } else if (typeof config.data === "object") {
             config.data.userId = userInfo.userId;
-            if (!noToken) config.data.access_token = auth.getToken();
             if (!config.data.tenantId && userInfo.tenantId) {
               config.data.tenantId = userInfo.tenantId;
             }
           }
+        }
+
+        // 通过 Authorization Header 传递 token（统一方式）
+        // 【过渡期清理】已移除 data.access_token 注入，避免 URL 暴露 token 和 GET 请求 URL 过长
+        if (auth.getToken() && !noToken) {
+          if (!config.headers) config.headers = {};
+          (config.headers as Record<string, string>)["Authorization"] = `Bearer ${auth.getToken()}`;
         }
 
         const storeGetters = getStoreGetters ? getStoreGetters() : null;
@@ -240,6 +276,24 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
         if (isCanceled) {
           return Promise.reject({ code: 88886, message: "重复点击请求关闭" });
         }
+
+        // 新增：处理 HTTP 401/403 状态码（后端异常处理器已标准化）
+        const httpStatus = error?.response?.status;
+        if (httpStatus === 401) {
+          // 优先尝试 Refresh Token 自动刷新
+          // 刷新成功后会自动重发原请求；刷新失败则由 onRefreshFailed 跳转登录页
+          return handleTokenExpired(error);
+        }
+        if (httpStatus === 403) {
+          ElMessage({
+            message: "无权访问，请联系管理员开通权限",
+            type: "warning",
+            showClose: true,
+            duration: 3000,
+          });
+          return Promise.reject({ code: 50015, message: "无权访问" });
+        }
+
         const msg = error?.message || "请求失败";
         ElMessage({
           message: msg.includes("timeout") ? "请求超时，请稍后再试哦" : msg,
@@ -274,6 +328,9 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
       applyPortNum(config);
       const instance = createService(config.baseURL || baseURL);
       setupInterceptors(instance, newState());
+      // 临时绑定 serviceRef，供本次请求的 tokenRefresh 重发使用
+      // 注意：perRequestIsolation 模式下每次请求创建新实例，serviceRef 仅在当前请求生命周期内有效
+      serviceRef = instance;
       return instance(config);
     };
 
@@ -286,6 +343,7 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
       const cancel = (message?: string) => resolve!({ message });
       const instance = createService(config.baseURL || baseURL);
       setupInterceptors(instance, newState());
+      serviceRef = instance;
       return {
         cancel,
         run: instance({ ...config, cancelToken: { promise } } as AxiosRequestConfig),
@@ -297,6 +355,8 @@ export function createHttpClient(options: HttpClientOptions): HttpClientResult {
 
   const service = createService();
   setupInterceptors(service, newState());
+  // 绑定 serviceRef 供 tokenRefresh 重发请求使用（单例模式）
+  serviceRef = service;
 
   const request = (config: AxiosRequestConfig & { portNum?: number; noLoginRequired?: boolean }): Promise<unknown> => {
     applyPortNum(config);
