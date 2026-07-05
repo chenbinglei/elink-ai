@@ -64,3 +64,6 @@ backups/
 # Frontend build output
 **/sunos/
 
+
+# Prometheus token (auto-refreshed, contains real JWT)
+prometheus_token

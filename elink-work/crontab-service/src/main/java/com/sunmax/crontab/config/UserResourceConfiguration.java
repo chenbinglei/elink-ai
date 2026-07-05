@@ -60,6 +60,7 @@ public class UserResourceConfiguration {
                 .requestMatchers("/v3/api-docs").permitAll()
                 .requestMatchers("/feign/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/error").permitAll()
                 .requestMatchers("/configFuncPoint/**").permitAll()
                 .requestMatchers("/*WebSocket/**").permitAll()
                 .requestMatchers("/*Websocket/**").permitAll()

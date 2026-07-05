@@ -60,6 +60,8 @@ public class UserResourceConfig {
                 .requestMatchers("/v3/api-docs").permitAll()
                 .requestMatchers("/feign/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/prometheus").authenticated()
+                .requestMatchers("/error").permitAll()
                 .requestMatchers("/*WebSocket/**").permitAll()
                 .requestMatchers("/*Websocket/**").permitAll()
                 .requestMatchers("/**").access((authSupplier, context) -> {

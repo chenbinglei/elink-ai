@@ -26,58 +26,69 @@ scrape_configs:
     static_configs:
       - targets: ["cadvisor:8080"]
 
-  # === 应用服务 ===
+  # === 应用服务（携带 bearer token 抓取） ===
   - job_name: "auth-service"
     metrics_path: "/sauth/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["auth-service:60001"]
 
   - job_name: "sunmax-gateway"
     metrics_path: "/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["sunmax-gateway:5000"]
 
   - job_name: "system-service"
     metrics_path: "/system/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["system-service:60002"]
 
   - job_name: "device-service"
     metrics_path: "/device/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["device-service:60003"]
 
   - job_name: "data-service"
     metrics_path: "/data/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["data-service:60004"]
 
   - job_name: "protocol-service"
     metrics_path: "/protocol/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["protocol-service:60005"]
 
   - job_name: "crontab-service"
     metrics_path: "/scrontab/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["crontab-service:60006"]
 
   - job_name: "devops-service"
     metrics_path: "/devops/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["devops-service:60007"]
 
   - job_name: "configure-service"
     metrics_path: "/configure/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["configure-service:60008"]
 
   - job_name: "together-service"
     metrics_path: "/together/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["together-service:60009"]
 
   - job_name: "webapp-service"
     metrics_path: "/swebapp/actuator/prometheus"
+    bearer_token_file: /etc/prometheus/prometheus_token
     static_configs:
       - targets: ["webapp-service:60010"]

@@ -62,6 +62,8 @@ public class UserResourceConfig {
                 .requestMatchers("/customSystem/**").permitAll()
                 .requestMatchers("/feign/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/prometheus").authenticated()
+                .requestMatchers("/error").permitAll()
                 .requestMatchers("/**").access((authSupplier, context) -> {
                     HttpServletRequest request = context.getRequest();
                     Authentication authObj = authSupplier.get();

@@ -53,3 +53,53 @@ groups:
         annotations:
           summary: "容器频繁重启: {{ $labels.name }}"
           description: "容器 {{ $labels.name }} 在5分钟内重启率超过3次/分钟，当前值: {{ $value | printf \"%.2f\" }}。"
+
+  # === JWT 认证监控告警 ===
+  - name: jwt_auth_monitoring
+    rules:
+      # JWT 验签失败率告警：5分钟内验签失败率 > 10%
+      - alert: JWTVerifyFailureRateHigh
+        expr: |
+          sum(rate(jwt_verify_total{result="failure"}[5m])) by (job)
+          / sum(rate(jwt_verify_total[5m])) by (job)
+          > 0.1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "JWT 验签失败率过高: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} 的 JWT 验签失败率超过 10%，当前值: {{ $value | printf \"%.2f\" }}。可能存在 token 伪造、密钥泄漏或时钟不同步问题。"
+
+      # JWT 验签失败次数突增：5分钟内失败次数 > 50
+      - alert: JWTVerifyFailureSpike
+        expr: increase(jwt_verify_total{result="failure"}[5m]) > 50
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "JWT 验签失败次数突增: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} 在 5 分钟内 JWT 验签失败 {{ $value | printf \"%.0f\" }} 次，可能遭受 token 伪造攻击。"
+
+      # 黑名单命中率过高告警：5分钟内黑名单命中率 > 20%
+      - alert: JWTBlacklistHitRateHigh
+        expr: |
+          sum(rate(jwt_blacklist_check_total{result="hit"}[5m])) by (job)
+          / sum(rate(jwt_blacklist_check_total[5m])) by (job)
+          > 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Token 黑名单命中率过高: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} 的 Token 黑名单命中率超过 20%，当前值: {{ $value | printf \"%.2f\" }}。可能存在大量登出/刷新后旧 token 仍被使用的情况。"
+
+      # 黑名单加入次数突增：5分钟内加入黑名单 > 100
+      - alert: JWTBlacklistAddSpike
+        expr: increase(jwt_blacklist_add_total[5m]) > 100
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Token 黑名单加入次数突增: {{ $labels.job }}"
+          description: "服务 {{ $labels.job }} 在 5 分钟内加入黑名单 {{ $value | printf \"%.0f\" }} 次，可能存在异常登出/刷新行为。"
+
